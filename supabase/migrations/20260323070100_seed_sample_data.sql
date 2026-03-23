@@ -48,19 +48,19 @@ INSERT INTO inquiries (
   id, source, source_id, message, intent_classified, urgency_detected, sentiment,
   ai_response, ai_confidence, tenant_id, property_id, status, ai_responded_at
 ) VALUES
-('inq-1111-1111-1111-111111111111', 'whatsapp', '27821234567', 
+('aaaaaaaa-1111-1111-1111-111111111111', 'whatsapp', '27821234567', 
  'Hi, I saw your property listing. Is it still available? Can I schedule a viewing for this weekend?',
  'availability', 'medium', 'positive',
  'Hello! Thank you for your interest. Yes, the property is still available. We''d be happy to schedule a viewing this weekend. Would Saturday at 10 AM or Sunday at 2 PM work better for you?',
  0.92, 'cccccccc-cccc-cccc-cccc-cccccccccccc', '11111111-1111-1111-1111-111111111111', 'ai_responded', NOW()),
 
-('inq-2222-2222-2222-222222222222', 'email', 'sarah.j@email.com',
+('aaaaaaaa-2222-2222-2222-222222222222', 'email', 'sarah.j@email.com',
  'I''m looking for a 2 bedroom apartment in Sandton area. What do you have available?',
  'availability', 'low', 'neutral',
  'Thank you for reaching out! We have several 2-bedroom properties available in Sandton. Our current listings range from R14,500 to R18,500 per month. Would you like me to send you detailed information on available units?',
  0.88, NULL, NULL, 'ai_responded', NOW()),
 
-('inq-3333-3333-3333-333333333333', 'whatsapp', '27843456789',
+('aaaaaaaa-3333-3333-3333-333333333333', 'whatsapp', '27843456789',
  'URGENT: My toilet is leaking and water is everywhere! I need help immediately!',
  'maintenance', 'high', 'urgent',
  'I understand this is urgent! I''m escalating this to our maintenance team immediately. Someone will contact you within 30 minutes. In the meantime, please turn off the water main if possible and place towels to prevent damage.',
@@ -75,17 +75,17 @@ INSERT INTO rent_reminders (
   id, tenant_id, property_id, reminder_type, days_until_due, days_overdue,
   ai_message, message_channel, status, scheduled_for
 ) VALUES
-('rem-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 
+('bbbbbbbb-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 
  '22222222-2222-2222-2222-222222222222', 'upcoming', 2, NULL,
  'Hi John! Just a friendly reminder that your rent of R14,500 is due in 2 days (1st of the month). If you''ve already paid, please ignore this message. Thank you! 🏠',
  'whatsapp', 'pending', CURRENT_DATE + INTERVAL '2 days'),
 
-('rem-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+('bbbbbbbb-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
  '22222222-2222-2222-2222-222222222222', 'overdue', NULL, 5,
  'Hi Sarah, this is a reminder that your rent payment of R14,500 was due 5 days ago. Please arrange payment as soon as possible to avoid late fees. If you''re experiencing difficulties, please contact us to discuss payment arrangements.',
  'email', 'pending', CURRENT_DATE),
 
-('rem-3333-3333-3333-333333333333', 'dddddddd-dddd-dddd-dddd-dddddddddddd',
+('bbbbbbbb-3333-3333-3333-333333333333', 'dddddddd-dddd-dddd-dddd-dddddddddddd',
  '33333333-3333-3333-3333-333333333333', 'due_today', 0, NULL,
  'Hi Emily! Your rent of R25,000 is due today. Thank you for being such a reliable tenant. If you have any questions, feel free to reach out.',
  'whatsapp', 'sent', CURRENT_DATE)
@@ -99,7 +99,7 @@ INSERT INTO property_descriptions (
   id, property_id, input_features, input_style, input_tone,
   generated_description, headline, bullet_points, model_used, status
 ) VALUES
-('desc-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111',
+('cccccccc-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111',
  '{"bedrooms": 3, "bathrooms": 2, "garage": true, "pool": false, "garden": true}'::jsonb,
  'modern', 'professional',
  'Discover modern luxury living in the heart of Sandton! This stunning 3-bedroom, 2-bathroom home offers contemporary design with premium finishes throughout. The open-plan living area flows seamlessly to a private garden, perfect for entertaining. Features include a double garage, modern kitchen with granite countertops, and 24-hour security. Located minutes from Sandton City and major transport routes. Available immediately at R18,500/month.',
@@ -108,7 +108,7 @@ INSERT INTO property_descriptions (
  'llama-3.3-70b-versatile',
  'approved'),
 
-('desc-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333',
+('cccccccc-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333',
  '{"bedrooms": 4, "bathrooms": 3, "garage": true, "pool": true, "garden": true}'::jsonb,
  'luxury', 'professional',
  'Experience unparalleled luxury in this exquisite 4-bedroom family estate in prestigious Fourways. This architectural masterpiece features 3 bathrooms, a sparkling swimming pool, and expansive gardens. The gourmet kitchen, multiple living areas, and entertainment spaces make this home perfect for discerning families seeking the finest in Johannesburg living.',

@@ -182,7 +182,7 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Sample inquiries
 INSERT INTO inquiries (id, source, source_id, message, intent_classified, sentiment, status) VALUES
-('inq-1111-1111-1111-111111111111', 'whatsapp', '27821234567', 'Hi, is the property still available?', 'availability', 'positive', 'new')
+('aaaaaaaa-1111-1111-1111-111111111111', 'whatsapp', '27821234567', 'Hi, is the property still available?', 'availability', 'positive', 'new')
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================
