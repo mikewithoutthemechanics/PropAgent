@@ -1,4 +1,4 @@
-{
+{"id": "5cf4ce04-ad8f-4206-9eab-60c73cb568bc",
   "name": "Rent Reminder Sequence",
   "nodes": [
     {
@@ -296,3 +296,4 @@
   },
   "tags": ["financial", "automation", "reminders"]
 }
+

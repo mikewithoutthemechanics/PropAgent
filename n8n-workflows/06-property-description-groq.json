@@ -1,0 +1,123 @@
+{
+  "id": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+  "name": "Property Description Generator (Groq Free)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-description",
+        "responseMode": "responseNode"
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "generate-description"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build property prompt from webhook data\nconst body = $json.body || {};\n\nconst prompt = `Write a compelling real estate listing description for:\n\nProperty Type: ${body.property_type || 'House'}\nLocation: ${body.suburb || 'Unknown'}, ${body.city || 'South Africa'}\nPrice: R${body.price || '0'}\nBedrooms: ${body.bedrooms || '0'}\nBathrooms: ${body.bathrooms || '0'}\nGarages: ${body.garages || '0'}\nStand Size: ${body.stand_size || '0'} sqm\nFloor Size: ${body.floor_size || '0'} sqm\nFeatures: ${body.features || 'None specified'}\n\nGenerate 3 versions:\n1. LUXURY - Premium, sophisticated tone\n2. FAMILY - Warm, practical, family-focused\n3. INVESTMENT - ROI-focused, rental yield angle\n\nReturn as JSON:\n{\n  \"headline\": \"catchy headline\",\n  \"luxury\": \"description...\",\n  \"family\": \"description...\",\n  \"investment\": \"description...\",\n  \"key_selling_points\": [\"point1\", \"point2\", \"point3\"]\n}`;\n\nreturn [{\n  json: {\n    property_data: body,\n    prompt: prompt\n  }\n}];"
+      },
+      "name": "Build Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": {
+          "model": "llama-3.1-70b-versatile",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are an expert real estate copywriter specializing in South African property market. Create compelling, SEO-friendly property descriptions."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.prompt }}"
+            }
+          ],
+          "temperature": 0.8,
+          "max_tokens": 800
+        }
+      },
+      "name": "Groq Generate Description",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq response\nconst groqResponse = $json;\nconst content = groqResponse.choices?.[0]?.message?.content || '{}';\nconst propertyData = $('Build Prompt').item.json.property_data;\n\n// Extract JSON from response\nlet parsed;\ntry {\n  // Find JSON in markdown code blocks or raw\n  const jsonMatch = content.match(/```json\\s*([\\s\\S]*?)```/) || content.match(/\\{[\\s\\S]*\\}/);\n  const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content;\n  parsed = JSON.parse(jsonStr);\n} catch (e) {\n  // Fallback if JSON parsing fails\n  parsed = {\n    headline: propertyData.suburb ? `Beautiful ${propertyData.property_type} in ${propertyData.suburb}` : 'Stunning Property Available',\n    luxury: content.substring(0, 500),\n    family: content.substring(0, 500),\n    investment: content.substring(0, 500),\n    key_selling_points: ['Prime location', 'Modern features', 'Great value']\n  };\n}\n\nreturn [{\n  json: {\n    property_id: propertyData.id || 'temp-' + Date.now(),\n    headline: parsed.headline || 'Property Available',\n    luxury_description: parsed.luxury || parsed.luxury_description || '',\n    family_description: parsed.family || parsed.family_description || '',\n    investment_description: parsed.investment || parsed.investment_description || '',\n    key_selling_points: parsed.key_selling_points || [],\n    generated_at: new Date().toISOString()\n  }\n}];"
+      },
+      "name": "Parse Description",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "property_descriptions",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "property_id": "={{ $json.property_id }}",
+            "headline": "={{ $json.headline }}",
+            "luxury_description": "={{ $json.luxury_description }}",
+            "family_description": "={{ $json.family_description }}",
+            "investment_description": "={{ $json.investment_description }}",
+            "key_selling_points": "={{ JSON.stringify($json.key_selling_points) }}",
+            "generated_at": "={{ $json.generated_at }}"
+          }
+        }
+      },
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1250, 300],
+      "respondWith": "json",
+      "responseBody": "={{ $json }}"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [[{"node": "Build Prompt", "type": "main", "index": 0}]]
+    },
+    "Build Prompt": {
+      "main": [[{"node": "Groq Generate Description", "type": "main", "index": 0}]]
+    },
+    "Groq Generate Description": {
+      "main": [[{"node": "Parse Description", "type": "main", "index": 0}]]
+    },
+    "Parse Description": {
+      "main": [[{"node": "Save to Supabase", "type": "main", "index": 0}]]
+    },
+    "Save to Supabase": {
+      "main": [[{"node": "Respond to Webhook", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": []
+}

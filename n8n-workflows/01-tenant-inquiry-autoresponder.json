@@ -1,4 +1,4 @@
-{
+{"id": "40b82721-4b38-4bb9-886c-3cd9f254216a",
   "name": "Tenant Inquiry Auto-Responder",
   "nodes": [
     {
@@ -416,3 +416,4 @@
   "staticData": null,
   "tags": ["communication", "ai", "whatsapp"]
 }
+

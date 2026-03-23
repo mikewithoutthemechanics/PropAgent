@@ -1,0 +1,251 @@
+{
+  "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+  "name": "Rent Reminder Sequence (Groq Free)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "expression": "9"
+            }
+          ]
+        }
+      },
+      "name": "Daily 9AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "value": "tenants",
+          "mode": "list"
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "rent_due_date",
+              "value": "={{ $today.plus({ days: 3 }).format('YYYY-MM-DD') }}",
+              "condition": "eq"
+            },
+            {
+              "column": "payment_status",
+              "value": "pending",
+              "condition": "eq"
+            }
+          ]
+        }
+      },
+      "name": "Query Due in 3 Days",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "value": "tenants",
+          "mode": "list"
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "rent_due_date",
+              "value": "={{ $today.format('YYYY-MM-DD') }}",
+              "condition": "eq"
+            },
+            {
+              "column": "payment_status",
+              "value": "pending",
+              "condition": "eq"
+            }
+          ]
+        }
+      },
+      "name": "Query Due Today",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [450, 350]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "value": "tenants",
+          "mode": "list"
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "rent_due_date",
+              "value": "={{ $today.minus({ days: 3 }).format('YYYY-MM-DD') }}",
+              "condition": "eq"
+            },
+            {
+              "column": "payment_status",
+              "value": "pending",
+              "condition": "eq"
+            }
+          ]
+        }
+      },
+      "name": "Query 3 Days Overdue",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge all tenant queries\nconst threeDays = $('Query Due in 3 Days').all()[0]?.json?.data || [];\nconst today = $('Query Due Today').all()[0]?.json?.data || [];\nconst overdue = $('Query 3 Days Overdue').all()[0]?.json?.data || [];\n\n// Tag with reminder type\nconst taggedThreeDays = threeDays.map(t => ({...t, reminder_type: 'friendly', days: 3}));\nconst taggedToday = today.map(t => ({...t, reminder_type: 'due_today', days: 0}));\nconst taggedOverdue = overdue.map(t => ({...t, reminder_type: 'urgent', days: -3}));\n\nconst allTenants = [...taggedThreeDays, ...taggedToday, ...taggedOverdue];\n\nif (allTenants.length === 0) {\n  return [{ json: { message: 'No reminders needed today' } }];\n}\n\nreturn allTenants.map(t => ({ json: t }));"
+      },
+      "name": "Merge Tenants",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 350]
+    },
+    {
+      "parameters": {
+        "batchSize": 10,
+        "options": {}
+      },
+      "name": "Batch Process",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [850, 350]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": {
+          "model": "mixtral-8x7b-32768",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a rent collection assistant for PropAgent property management. Write personalized, polite but firm rent reminders. Keep under 160 characters for SMS."
+            },
+            {
+              "role": "user",
+              "content": "={{\n  `Write a rent reminder message for:\n  Tenant: ${$json.first_name} ${$json.last_name}\n  Amount: R${$json.rent_amount}\n  Reminder type: ${$json.reminder_type}\n  Days: ${$json.days}\n  \n  Types:\n  - friendly: Due in 3 days, warm and helpful\n  - due_today: Due today, firm but polite\n  - urgent: 3 days overdue, serious tone\n  \n  Keep under 160 characters for SMS.`\n}}"
+            }
+          ],
+          "temperature": 0.7,
+          "max_tokens": 150
+        }
+      },
+      "name": "Groq Generate Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 250]
+    },
+    {
+      "parameters": {
+        "jsCode": "const groqResponse = $json;\nconst message = groqResponse.choices?.[0]?.message?.content || 'Please pay your rent.';\n\nreturn {\n  json: {\n    ...$('Batch Process').item.json,\n    sms_message: message.substring(0, 160)\n  }\n};"
+      },
+      "name": "Extract Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 250]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/{{$credentials.twilioApi.accountSid}}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{ $json.phone }}"
+            },
+            {
+              "name": "From",
+              "value": "={{ $credentials.twilioApi.phoneNumber }}"
+            },
+            {
+              "name": "Body",
+              "value": "={{ $json.sms_message }}"
+            }
+          ]
+        }
+      },
+      "name": "Send SMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1450, 250]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "rent_reminders",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "tenant_id": "={{ $json.id }}",
+            "phone": "={{ $json.phone }}",
+            "message": "={{ $json.sms_message }}",
+            "reminder_type": "={{ $json.reminder_type }}",
+            "sent_at": "={{ $now }}"
+          }
+        }
+      },
+      "name": "Log Reminder",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1650, 250]
+    }
+  ],
+  "connections": {
+    "Daily 9AM Trigger": {
+      "main": [
+        [{"node": "Query Due in 3 Days", "type": "main", "index": 0}],
+        [{"node": "Query Due Today", "type": "main", "index": 0}],
+        [{"node": "Query 3 Days Overdue", "type": "main", "index": 0}]
+      ]
+    },
+    "Query Due in 3 Days": {
+      "main": [[{"node": "Merge Tenants", "type": "main", "index": 0}]]
+    },
+    "Query Due Today": {
+      "main": [[{"node": "Merge Tenants", "type": "main", "index": 0}]]
+    },
+    "Query 3 Days Overdue": {
+      "main": [[{"node": "Merge Tenants", "type": "main", "index": 0}]]
+    },
+    "Merge Tenants": {
+      "main": [[{"node": "Batch Process", "type": "main", "index": 0}]]
+    },
+    "Batch Process": {
+      "main": [[{"node": "Groq Generate Message", "type": "main", "index": 0}]]
+    },
+    "Groq Generate Message": {
+      "main": [[{"node": "Extract Message", "type": "main", "index": 0}]]
+    },
+    "Extract Message": {
+      "main": [[{"node": "Send SMS", "type": "main", "index": 0}]]
+    },
+    "Send SMS": {
+      "main": [[{"node": "Log Reminder", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": []
+}
