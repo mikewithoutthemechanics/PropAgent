@@ -217,7 +217,24 @@ These features use AI for assistance but require human approval:
 
 ## 💰 COST ANALYSIS
 
-### What We Can Automate
+### Option A: Free Stack (Groq + Supabase)
+
+| Category | AI Automations | Monthly AI Cost | Monthly Op Cost | Total |
+|----------|----------------|-----------------|-----------------|-------|
+| Communication | 10 | **$0** (Groq free) | $200 (SMS/WhatsApp) | $200 |
+| Property Management | 6 | **$0** (Groq free) | $50 | $50 |
+| CRM & Leads | 8 | **$0** (Groq free) | $0 | $0 |
+| Trust Accounting | 3 | **$0** (Groq free) | $0 | $0 |
+| Documents | 5 | **$0** (Groq free) | $20 (OCR) | $20 |
+| Marketing | 7 | **$0** (Groq free) | $0 | $0 |
+| Maintenance | 3 | **$0** (Groq free) | $0 | $0 |
+| **TOTAL** | **42** | **$0** | **$270** | **$270** |
+
+**Groq Free Tier**: 1,000,000 tokens/day (~30M/month)  
+**Supabase Free Tier**: 500MB DB + 2GB bandwidth  
+**Twilio**: Trial credits for testing
+
+### Option B: OpenAI Stack
 
 | Category | AI Automations | Monthly AI Cost | Monthly Op Cost | Total |
 |----------|----------------|-----------------|-----------------|-------|

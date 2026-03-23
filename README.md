@@ -38,11 +38,21 @@ AI-powered real estate management platform leveraging n8n automation to reduce d
 
 | Workflow | File | Purpose | Status |
 |----------|------|---------|--------|
-| Tenant Inquiry Auto-Responder | `n8n-workflows/01-tenant-inquiry-autoresponder.json` | AI WhatsApp responses | ✅ Ready |
-| Rent Reminder Sequence | `n8n-workflows/02-rent-reminder-sequence.json` | Automated rent reminders | ✅ Ready |
-| Property Description Generator | `n8n-workflows/03-property-description-generator.json` | AI listing descriptions | ✅ Ready |
+| Tenant Inquiry Auto-Responder | `n8n-workflows/01-tenant-inquiry-autoresponder.json` | AI WhatsApp responses (OpenAI) | ✅ Ready |
+| Rent Reminder Sequence | `n8n-workflows/02-rent-reminder-sequence.json` | Automated rent reminders (OpenAI) | ✅ Ready |
+| Property Description Generator | `n8n-workflows/03-property-description-generator.json` | AI listing descriptions (OpenAI) | ✅ Ready |
+| **Tenant Inquiry (Groq Free)** | `n8n-workflows/04-tenant-inquiry-groq.json` | WhatsApp AI (Llama 3.1) | ✅ **FREE** |
+| **Rent Reminder (Groq Free)** | `n8n-workflows/05-rent-reminder-groq.json` | SMS reminders (Mixtral) | ✅ **FREE** |
+| **Property Description (Groq)** | `n8n-workflows/06-property-description-groq.json` | Listing generator (Llama 3.1) | ✅ **FREE** |
 
-**Total Workflows**: 3 ready | 39 planned | 186 remaining
+**Total Workflows**: 6 ready (3 OpenAI, 3 Free) | 36 planned | 183 remaining
+
+### 🆓 Free Stack (Groq + Supabase = $0/month)
+
+Use the Groq-based workflows for **completely free** automation:
+- **Groq AI**: 1,000,000 tokens/day (Llama 3.1 70B, Mixtral 8x7B)
+- **Supabase DB**: 500MB PostgreSQL + 2GB bandwidth
+- See `n8n-workflows/FREE-STACK-SETUP.md` for setup instructions
 
 ---
 
