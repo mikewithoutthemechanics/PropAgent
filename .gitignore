@@ -1,0 +1,12 @@
+
+# n8n Credentials (sensitive)
+n8n-workflows/*-credential.json
+n8n-workflows/*-CREDENTIAL-SETUP.md
+n8n-workflows/QUICK-CREDENTIAL-SETUP.md
+n8n-workflows/groq-credential.json
+n8n-workflows/supabase-credential.json
+
+# Environment files
+.env
+.env.local
+.env.*.local
