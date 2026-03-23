@@ -210,20 +210,6 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "AI",
-      "id": "tag-ai"
-    },
-    {
-      "name": "Supabase",
-      "id": "tag-supabase"
-    },
-    {
-      "name": "Property",
-      "id": "tag-property"
-    }
-  ],
   "connections": {
     "Webhook: Photos Uploaded": {
       "main": [

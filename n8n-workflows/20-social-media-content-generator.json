@@ -19,7 +19,10 @@
       "name": "Daily 10AM Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 200]
+      "position": [
+        250,
+        200
+      ]
     },
     {
       "parameters": {
@@ -30,7 +33,10 @@
       "name": "Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [250, 500],
+      "position": [
+        250,
+        500
+      ],
       "webhookId": "generate-social-content"
     },
     {
@@ -58,7 +64,10 @@
       "name": "Query New Listings",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [450, 200]
+      "position": [
+        450,
+        200
+      ]
     },
     {
       "parameters": {
@@ -80,7 +89,10 @@
       "name": "Query Specific Property",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [450, 500]
+      "position": [
+        450,
+        500
+      ]
     },
     {
       "parameters": {
@@ -89,7 +101,10 @@
       "name": "Prepare Property Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [650, 350]
+      "position": [
+        650,
+        350
+      ]
     },
     {
       "parameters": {
@@ -99,7 +114,10 @@
       "name": "Batch Process",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [850, 350]
+      "position": [
+        850,
+        350
+      ]
     },
     {
       "parameters": {
@@ -128,16 +146,22 @@
       "name": "Groq Generate Content",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1050, 350]
+      "position": [
+        1050,
+        350
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// Parse Groq AI response\nconst groqResponse = $json;\nconst content = groqResponse.choices?.[0]?.message?.content || '{}';\nconst propertyData = $('Batch Process').item.json;\n\n// Extract JSON from response\nlet parsed;\ntry {\n  // Find JSON in markdown code blocks or raw\n  const jsonMatch = content.match(/```json\\s*([\\s\\S]*?)```/) || content.match(/\\{[\\s\\S]*\\}/);\n  const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content;\n  parsed = JSON.parse(jsonStr);\n} catch (e) {\n  // Fallback if JSON parsing fails\n  console.log('JSON parsing failed:', e.message);\n  parsed = {\n    facebook: {\n      post: `🏠 New ${propertyData.property_type} available in ${propertyData.suburb}! ${propertyData.bedrooms} bed, ${propertyData.bathrooms} bath. Contact us for details.`,\n      call_to_action: 'message us',\n      character_count: 150\n    },\n    instagram: {\n      caption: `Dream home alert in ${propertyData.suburb} ✨`,\n      hashtags: ['#realestate', '#southafrica', '#property', '#home', '#forsale'],\n      alt_text: `${propertyData.property_type} for sale in ${propertyData.suburb}`,\n      character_count: 100\n    },\n    linkedin: {\n      post: `New property listing: ${propertyData.property_type} in ${propertyData.suburb}. Contact us for viewing.`,\n      hashtags: ['#RealEstate', '#Property'],\n      character_count: 120\n    },\n    twitter: {\n      post: `New ${propertyData.property_type} in ${propertyData.suburb}! 🏠`,\n      hashtags: '#RealEstate #SAProperty',\n      character_count: 80\n    },\n    image_suggestions: ['Front exterior photo', 'Main bedroom'],\n    best_posting_time: 'Weekday 6-8 PM',\n    content_theme: 'general'\n  };\n}\n\n// Calculate character counts\nconst fb = parsed.facebook || {};\nconst ig = parsed.instagram || {};\nconst li = parsed.linkedin || {};\nconst tw = parsed.twitter || {};\n\nreturn [{\n  json: {\n    property_id: propertyData.property_id,\n    content_type: propertyData.content_type,\n    target_audience: propertyData.target_audience,\n    facebook_post: fb.post || '',\n    facebook_cta: fb.call_to_action || 'message us',\n    facebook_chars: (fb.post || '').length,\n    instagram_caption: ig.caption || '',\n    instagram_hashtags: ig.hashtags || [],\n    instagram_alt_text: ig.alt_text || '',\n    instagram_chars: (ig.caption || '').length + (ig.hashtags || []).join(' ').length,\n    linkedin_post: li.post || '',\n    linkedin_hashtags: li.hashtags || [],\n    linkedin_chars: (li.post || '').length,\n    twitter_post: tw.post || '',\n    twitter_hashtags: tw.hashtags || '',\n    twitter_chars: (tw.post || '').length + (tw.hashtags || '').length,\n    image_suggestions: parsed.image_suggestions || [],\n    best_posting_time: parsed.best_posting_time || 'Weekday 6-8 PM',\n    content_theme: parsed.content_theme || 'general',\n    generated_at: new Date().toISOString(),\n    raw_response: content\n  }\n}];"
+        "jsCode": "// Parse Groq AI response\nconst groqResponse = $json;\nconst content = groqResponse.choices?.[0]?.message?.content || '{}';\nconst propertyData = $('Batch Process').item.json;\n\n// Extract JSON from response\nlet parsed;\ntry {\n  // Find JSON in markdown code blocks or raw\n  const jsonMatch = content.match(/```json\\s*([\\s\\S]*?)```/) || content.match(/\\{[\\s\\S]*\\}/);\n  const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content;\n  parsed = JSON.parse(jsonStr);\n} catch (e) {\n  // Fallback if JSON parsing fails\n  console.log('JSON parsing failed:', e.message);\n  parsed = {\n    facebook: {\n      post: `\ud83c\udfe0 New ${propertyData.property_type} available in ${propertyData.suburb}! ${propertyData.bedrooms} bed, ${propertyData.bathrooms} bath. Contact us for details.`,\n      call_to_action: 'message us',\n      character_count: 150\n    },\n    instagram: {\n      caption: `Dream home alert in ${propertyData.suburb} \u2728`,\n      hashtags: ['#realestate', '#southafrica', '#property', '#home', '#forsale'],\n      alt_text: `${propertyData.property_type} for sale in ${propertyData.suburb}`,\n      character_count: 100\n    },\n    linkedin: {\n      post: `New property listing: ${propertyData.property_type} in ${propertyData.suburb}. Contact us for viewing.`,\n      hashtags: ['#RealEstate', '#Property'],\n      character_count: 120\n    },\n    twitter: {\n      post: `New ${propertyData.property_type} in ${propertyData.suburb}! \ud83c\udfe0`,\n      hashtags: '#RealEstate #SAProperty',\n      character_count: 80\n    },\n    image_suggestions: ['Front exterior photo', 'Main bedroom'],\n    best_posting_time: 'Weekday 6-8 PM',\n    content_theme: 'general'\n  };\n}\n\n// Calculate character counts\nconst fb = parsed.facebook || {};\nconst ig = parsed.instagram || {};\nconst li = parsed.linkedin || {};\nconst tw = parsed.twitter || {};\n\nreturn [{\n  json: {\n    property_id: propertyData.property_id,\n    content_type: propertyData.content_type,\n    target_audience: propertyData.target_audience,\n    facebook_post: fb.post || '',\n    facebook_cta: fb.call_to_action || 'message us',\n    facebook_chars: (fb.post || '').length,\n    instagram_caption: ig.caption || '',\n    instagram_hashtags: ig.hashtags || [],\n    instagram_alt_text: ig.alt_text || '',\n    instagram_chars: (ig.caption || '').length + (ig.hashtags || []).join(' ').length,\n    linkedin_post: li.post || '',\n    linkedin_hashtags: li.hashtags || [],\n    linkedin_chars: (li.post || '').length,\n    twitter_post: tw.post || '',\n    twitter_hashtags: tw.hashtags || '',\n    twitter_chars: (tw.post || '').length + (tw.hashtags || '').length,\n    image_suggestions: parsed.image_suggestions || [],\n    best_posting_time: parsed.best_posting_time || 'Weekday 6-8 PM',\n    content_theme: parsed.content_theme || 'general',\n    generated_at: new Date().toISOString(),\n    raw_response: content\n  }\n}];"
       },
       "name": "Parse AI Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1250, 350]
+      "position": [
+        1250,
+        350
+      ]
     },
     {
       "parameters": {
@@ -167,7 +191,10 @@
       "name": "Save to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1450, 350]
+      "position": [
+        1450,
+        350
+      ]
     },
     {
       "parameters": {
@@ -194,7 +221,10 @@
       "name": "Auto-Post Enabled?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [1450, 550]
+      "position": [
+        1450,
+        550
+      ]
     },
     {
       "parameters": {
@@ -212,7 +242,10 @@
       "name": "Post to Facebook",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1650, 450]
+      "position": [
+        1650,
+        450
+      ]
     },
     {
       "parameters": {
@@ -230,7 +263,10 @@
       "name": "Post to Instagram",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1650, 550]
+      "position": [
+        1650,
+        550
+      ]
     },
     {
       "parameters": {
@@ -268,7 +304,10 @@
       "name": "Post to LinkedIn",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1650, 650]
+      "position": [
+        1650,
+        650
+      ]
     },
     {
       "parameters": {
@@ -285,7 +324,10 @@
       "name": "Post to Twitter/X",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1650, 750]
+      "position": [
+        1650,
+        750
+      ]
     },
     {
       "parameters": {
@@ -315,7 +357,10 @@
       "name": "Mark Posted",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1850, 550]
+      "position": [
+        1850,
+        550
+      ]
     },
     {
       "parameters": {
@@ -324,64 +369,180 @@
       "name": "Respond Success",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1850, 350],
+      "position": [
+        1850,
+        350
+      ],
       "respondWith": "json",
       "responseBody": "={{ JSON.stringify({\n  success: true,\n  message: 'Social media content generated successfully',\n  data: {\n    property_id: $json.property_id,\n    content_type: $json.content_type,\n    platforms: {\n      facebook: {\n        post: $json.facebook_post?.substring(0, 100) + '...',\n        characters: $json.facebook_chars\n      },\n      instagram: {\n        caption: $json.instagram_caption?.substring(0, 100) + '...',\n        hashtags: $json.instagram_hashtags,\n        characters: $json.instagram_chars\n      },\n      linkedin: {\n        post: $json.linkedin_post?.substring(0, 100) + '...',\n        characters: $json.linkedin_chars\n      },\n      twitter: {\n        post: $json.twitter_post,\n        characters: $json.twitter_chars\n      }\n    },\n    image_suggestions: $json.image_suggestions,\n    best_posting_time: $json.best_posting_time,\n    content_theme: $json.content_theme,\n    generated_at: $json.generated_at\n  }\n}, null, 2) }}"
     }
   ],
   "connections": {
     "Daily 10AM Trigger": {
-      "main": [[{"node": "Query New Listings", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Query New Listings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Webhook Trigger": {
-      "main": [[{"node": "Query Specific Property", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Query Specific Property",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Query New Listings": {
-      "main": [[{"node": "Prepare Property Data", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Prepare Property Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Query Specific Property": {
-      "main": [[{"node": "Prepare Property Data", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Prepare Property Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Prepare Property Data": {
-      "main": [[{"node": "Batch Process", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Batch Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Batch Process": {
-      "main": [[{"node": "Groq Generate Content", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Groq Generate Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Groq Generate Content": {
-      "main": [[{"node": "Parse AI Response", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Parse AI Response": {
       "main": [
-        [{"node": "Save to Supabase", "type": "main", "index": 0}],
-        [{"node": "Auto-Post Enabled?", "type": "main", "index": 0}]
+        [
+          {
+            "node": "Save to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Auto-Post Enabled?",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Save to Supabase": {
-      "main": [[{"node": "Respond Success", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Auto-Post Enabled?": {
       "main": [
-        [{"node": "Post to Facebook", "type": "main", "index": 0}],
+        [
+          {
+            "node": "Post to Facebook",
+            "type": "main",
+            "index": 0
+          }
+        ],
         []
       ]
     },
     "Post to Facebook": {
-      "main": [[{"node": "Post to Instagram", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Post to Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Post to Instagram": {
-      "main": [[{"node": "Post to LinkedIn", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Post to LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Post to LinkedIn": {
-      "main": [[{"node": "Post to Twitter/X", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Post to Twitter/X",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Post to Twitter/X": {
-      "main": [[{"node": "Mark Posted", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Mark Posted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
-  "tags": ["social-media", "groq", "supabase", "marketing", "content-generation"]
+  "staticData": null
 }

@@ -11,7 +11,10 @@
       "name": "Email Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [250, 300],
+      "position": [
+        250,
+        300
+      ],
       "webhookId": "email-received"
     },
     {
@@ -42,7 +45,10 @@
       "name": "Groq AI Classify Email",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [450, 300]
+      "position": [
+        450,
+        300
+      ]
     },
     {
       "parameters": {
@@ -51,7 +57,10 @@
       "name": "Parse Groq Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [650, 300]
+      "position": [
+        650,
+        300
+      ]
     },
     {
       "parameters": {
@@ -80,7 +89,10 @@
       "name": "Log to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [850, 400]
+      "position": [
+        850,
+        400
+      ]
     },
     {
       "parameters": {
@@ -125,7 +137,10 @@
       "name": "Auto-Response Check",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [850, 300]
+      "position": [
+        850,
+        300
+      ]
     },
     {
       "parameters": {
@@ -140,7 +155,10 @@
       "name": "Send Auto-Response",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1050, 250]
+      "position": [
+        1050,
+        250
+      ]
     },
     {
       "parameters": {
@@ -153,7 +171,10 @@
       "name": "Route to Department",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1050, 350]
+      "position": [
+        1050,
+        350
+      ]
     },
     {
       "parameters": {
@@ -166,35 +187,89 @@
       "name": "Alert Complaint Team",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [850, 150]
+      "position": [
+        850,
+        150
+      ]
     }
   ],
   "connections": {
     "Email Webhook": {
-      "main": [[{"node": "Groq AI Classify Email", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Groq AI Classify Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Groq AI Classify Email": {
-      "main": [[{"node": "Parse Groq Response", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Parse Groq Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Parse Groq Response": {
-      "main": [[{"node": "Auto-Response Check", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Auto-Response Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Auto-Response Check": {
       "main": [
-        [{"node": "Send Auto-Response", "type": "main", "index": 0}],
-        [{"node": "Route to Department", "type": "main", "index": 0}]
+        [
+          {
+            "node": "Send Auto-Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route to Department",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Send Auto-Response": {
-      "main": [[{"node": "Log to Supabase", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Log to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Route to Department": {
-      "main": [[{"node": "Log to Supabase", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Log to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
-  "tags": ["email", "ai", "classification", "groq", "supabase"]
+  "staticData": null
 }

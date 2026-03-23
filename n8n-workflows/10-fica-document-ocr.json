@@ -11,7 +11,10 @@
       "name": "Document Upload Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [250, 300],
+      "position": [
+        250,
+        300
+      ],
       "webhookId": "fica-document-process"
     },
     {
@@ -21,7 +24,10 @@
       "name": "Build Extraction Prompt",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [450, 300]
+      "position": [
+        450,
+        300
+      ]
     },
     {
       "parameters": {
@@ -53,7 +59,10 @@
       "name": "Groq OCR Extraction",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [650, 300]
+      "position": [
+        650,
+        300
+      ]
     },
     {
       "parameters": {
@@ -62,7 +71,10 @@
       "name": "Parse Extraction Result",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [850, 300]
+      "position": [
+        850,
+        300
+      ]
     },
     {
       "parameters": {
@@ -89,7 +101,10 @@
       "name": "Confidence Check",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [1050, 300]
+      "position": [
+        1050,
+        300
+      ]
     },
     {
       "parameters": {
@@ -115,7 +130,10 @@
       "name": "Save to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1250, 200]
+      "position": [
+        1250,
+        200
+      ]
     },
     {
       "parameters": {
@@ -141,7 +159,10 @@
       "name": "Save Low Confidence",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1250, 400]
+      "position": [
+        1250,
+        400
+      ]
     },
     {
       "parameters": {
@@ -150,7 +171,10 @@
       "name": "Success Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1450, 200],
+      "position": [
+        1450,
+        200
+      ],
       "respondWith": "json",
       "responseBody": "={{ $json }}"
     },
@@ -163,38 +187,100 @@
       "name": "Low Confidence Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1450, 400]
+      "position": [
+        1450,
+        400
+      ]
     }
   ],
   "connections": {
     "Document Upload Webhook": {
-      "main": [[{"node": "Build Extraction Prompt", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Build Extraction Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Build Extraction Prompt": {
-      "main": [[{"node": "Groq OCR Extraction", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Groq OCR Extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Groq OCR Extraction": {
-      "main": [[{"node": "Parse Extraction Result", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Parse Extraction Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Parse Extraction Result": {
-      "main": [[{"node": "Confidence Check", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Confidence Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Confidence Check": {
       "main": [
-        [{"node": "Save to Supabase", "type": "main", "index": 0}],
-        [{"node": "Save Low Confidence", "type": "main", "index": 0}]
+        [
+          {
+            "node": "Save to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Save Low Confidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Save to Supabase": {
-      "main": [[{"node": "Success Response", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Save Low Confidence": {
-      "main": [[{"node": "Low Confidence Response", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Low Confidence Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
-  "tags": []
+  "staticData": null
 }

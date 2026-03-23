@@ -16,7 +16,10 @@
       "name": "Daily 9AM Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [200, 400]
+      "position": [
+        200,
+        400
+      ]
     },
     {
       "parameters": {
@@ -43,7 +46,10 @@
       "name": "Query 7 Days Overdue",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [400, 150]
+      "position": [
+        400,
+        150
+      ]
     },
     {
       "parameters": {
@@ -70,7 +76,10 @@
       "name": "Query 14 Days Overdue",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [400, 300]
+      "position": [
+        400,
+        300
+      ]
     },
     {
       "parameters": {
@@ -97,7 +106,10 @@
       "name": "Query 21 Days Overdue",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [400, 450]
+      "position": [
+        400,
+        450
+      ]
     },
     {
       "parameters": {
@@ -124,7 +136,10 @@
       "name": "Query 30+ Days Overdue",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [400, 600]
+      "position": [
+        400,
+        600
+      ]
     },
     {
       "parameters": {
@@ -133,7 +148,10 @@
       "name": "Merge and Tag Stages",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [650, 400]
+      "position": [
+        650,
+        400
+      ]
     },
     {
       "parameters": {
@@ -143,7 +161,10 @@
       "name": "Split In Batches",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [850, 400]
+      "position": [
+        850,
+        400
+      ]
     },
     {
       "parameters": {
@@ -162,93 +183,35 @@
             },
             {
               "role": "user",
-              "content": "={{
-`Generate a rent collection message:
-
-Tenant: ${$json.first_name} ${$json.last_name}
-Days Overdue: ${$json.days_overdue || $json.stage}
-Amount Owed: R${$json.amount_owed || $json.rent_amount}
-Payment History: ${$json.payment_history || 'good'}
-Previous Late Payments: ${$json.previous_late_count || 0}
-Stage: ${$json.stage}
-
-Message tone by stage:
-- 7 days: Friendly, helpful, assuming oversight
-- 14 days: Firm, professional, mentioning late fees
-- 21 days: Serious, consequences mentioned
-- 30 days: Final notice, legal action imminent
-
-Tenant context: ${$json.known_circumstances || 'None known'}
-
-Return JSON:
-{
-  \"message_sms\": \"under 160 chars\",
-  \"message_email_subject\": \"subject line\",
-  \"message_email_body\": \"full email text\",
-  \"message_whatsapp\": \"formatted for whatsapp\",
-  \"tone\": \"friendly|firm|serious|final\",
-  \"escalation_recommended\": true|false,
-  \"payment_plan_offered\": true|false
-}`
-}}"
+              "content": "={{\n\n`Generate a rent collection message:\n\n\n\nTenant: ${$json.first_name} ${$json.last_name}\n\nDays Overdue: ${$json.days_overdue || $json.stage}\n\nAmount Owed: R${$json.amount_owed || $json.rent_amount}\n\nPayment History: ${$json.payment_history || 'good'}\n\nPrevious Late Payments: ${$json.previous_late_count || 0}\n\nStage: ${$json.stage}\n\n\n\nMessage tone by stage:\n\n- 7 days: Friendly, helpful, assuming oversight\n\n- 14 days: Firm, professional, mentioning late fees\n\n- 21 days: Serious, consequences mentioned\n\n- 30 days: Final notice, legal action imminent\n\n\n\nTenant context: ${$json.known_circumstances || 'None known'}\n\n\n\nReturn JSON:\n\n{\n\n  \"message_sms\": \"under 160 chars\",\n\n  \"message_email_subject\": \"subject line\",\n\n  \"message_email_body\": \"full email text\",\n\n  \"message_whatsapp\": \"formatted for whatsapp\",\n\n  \"tone\": \"friendly|firm|serious|final\",\n\n  \"escalation_recommended\": true|false,\n\n  \"payment_plan_offered\": true|false\n\n}`\n\n}}"
             }
           ],
           "temperature": 0.7,
           "max_tokens": 500,
-          "response_format": { "type": "json_object" }
+          "response_format": {
+            "type": "json_object"
+          }
         }
       },
       "name": "Groq AI Generate Message",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1050, 300]
+      "position": [
+        1050,
+        300
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// Parse Groq JSON response and merge with tenant data\nconst groqResponse = $json;
-let aiResponse = {};
-
-try {
-  // Handle both direct JSON and nested content
-  if (groqResponse.choices && groqResponse.choices[0]) {
-    const content = groqResponse.choices[0].message?.content;
-    aiResponse = typeof content === 'string' ? JSON.parse(content) : content;
-  } else {
-    aiResponse = groqResponse;
-  }
-} catch (error) {
-  // Fallback if JSON parsing fails
-  aiResponse = {
-    message_sms: 'Please contact us urgently regarding your outstanding rent.',
-    message_email_subject: 'Urgent: Rent Payment Required',
-    message_email_body: 'Please contact our office regarding your outstanding rent payment.',
-    message_whatsapp: 'Please contact us regarding your rent payment.',
-    tone: $('Split In Batches').item.json.tone,
-    escalation_recommended: $('Split In Batches').item.json.stage >= 30,
-    payment_plan_offered: false
-  };
-}
-
-const tenant = $('Split In Batches').item.json;
-
-return {
-  json: {
-    ...tenant,
-    message_sms: aiResponse.message_sms?.substring(0, 160) || '',
-    message_email_subject: aiResponse.message_email_subject || '',
-    message_email_body: aiResponse.message_email_body || '',
-    message_whatsapp: aiResponse.message_whatsapp || '',
-    ai_tone: aiResponse.tone || tenant.tone,
-    escalation_recommended: aiResponse.escalation_recommended || tenant.stage >= 30,
-    payment_plan_offered: aiResponse.payment_plan_offered || false,
-    groq_request_id: groqResponse.id || null
-  }
-};"
+        "jsCode": "// Parse Groq JSON response and merge with tenant data\nconst groqResponse = $json;\n\nlet aiResponse = {};\n\n\n\ntry {\n\n  // Handle both direct JSON and nested content\n\n  if (groqResponse.choices && groqResponse.choices[0]) {\n\n    const content = groqResponse.choices[0].message?.content;\n\n    aiResponse = typeof content === 'string' ? JSON.parse(content) : content;\n\n  } else {\n\n    aiResponse = groqResponse;\n\n  }\n\n} catch (error) {\n\n  // Fallback if JSON parsing fails\n\n  aiResponse = {\n\n    message_sms: 'Please contact us urgently regarding your outstanding rent.',\n\n    message_email_subject: 'Urgent: Rent Payment Required',\n\n    message_email_body: 'Please contact our office regarding your outstanding rent payment.',\n\n    message_whatsapp: 'Please contact us regarding your rent payment.',\n\n    tone: $('Split In Batches').item.json.tone,\n\n    escalation_recommended: $('Split In Batches').item.json.stage >= 30,\n\n    payment_plan_offered: false\n\n  };\n\n}\n\n\n\nconst tenant = $('Split In Batches').item.json;\n\n\n\nreturn {\n\n  json: {\n\n    ...tenant,\n\n    message_sms: aiResponse.message_sms?.substring(0, 160) || '',\n\n    message_email_subject: aiResponse.message_email_subject || '',\n\n    message_email_body: aiResponse.message_email_body || '',\n\n    message_whatsapp: aiResponse.message_whatsapp || '',\n\n    ai_tone: aiResponse.tone || tenant.tone,\n\n    escalation_recommended: aiResponse.escalation_recommended || tenant.stage >= 30,\n\n    payment_plan_offered: aiResponse.payment_plan_offered || false,\n\n    groq_request_id: groqResponse.id || null\n\n  }\n\n};"
       },
       "name": "Parse AI Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1250, 300]
+      "position": [
+        1250,
+        300
+      ]
     },
     {
       "parameters": {
@@ -278,7 +241,10 @@ return {
       "name": "Send SMS (Twilio)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1450, 100]
+      "position": [
+        1450,
+        100
+      ]
     },
     {
       "parameters": {
@@ -291,10 +257,17 @@ return {
         "body": {
           "personalizations": [
             {
-              "to": [{ "email": "={{ $json.email }}" }]
+              "to": [
+                {
+                  "email": "={{ $json.email }}"
+                }
+              ]
             }
           ],
-          "from": { "email": "collections@propagent.co.za", "name": "PropAgent Collections" },
+          "from": {
+            "email": "collections@propagent.co.za",
+            "name": "PropAgent Collections"
+          },
           "subject": "={{ $json.message_email_subject }}",
           "content": [
             {
@@ -307,7 +280,10 @@ return {
       "name": "Send Email (SendGrid)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1450, 300]
+      "position": [
+        1450,
+        300
+      ]
     },
     {
       "parameters": {
@@ -330,7 +306,10 @@ return {
       "name": "Send WhatsApp",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1450, 500]
+      "position": [
+        1450,
+        500
+      ]
     },
     {
       "parameters": {
@@ -364,7 +343,10 @@ return {
       "name": "Log to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1650, 300]
+      "position": [
+        1650,
+        300
+      ]
     },
     {
       "parameters": {
@@ -391,7 +373,10 @@ return {
       "name": "Is Stage 30?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [1850, 300]
+      "position": [
+        1850,
+        300
+      ]
     },
     {
       "parameters": {
@@ -404,28 +389,22 @@ return {
         "body": {
           "personalizations": [
             {
-              "to": [{ "email": "legal@propagent.co.za" }]
+              "to": [
+                {
+                  "email": "legal@propagent.co.za"
+                }
+              ]
             }
           ],
-          "from": { "email": "collections@propagent.co.za", "name": "PropAgent Collections" },
+          "from": {
+            "email": "collections@propagent.co.za",
+            "name": "PropAgent Collections"
+          },
           "subject": "URGENT: Legal Escalation Required - Tenant 30+ Days Overdue",
           "content": [
             {
               "type": "text/plain",
-              "value": "={{
-`LEGAL ESCALATION REQUIRED
-
-Tenant: ${$json.first_name} ${$json.last_name}
-Tenant ID: ${$json.id}
-Days Overdue: ${$json.days_overdue || $json.stage}
-Amount Owed: R${$json.amount_owed || $json.rent_amount}
-Stage: ${$json.stage} days
-
-AI Recommendation: ${$json.escalation_recommended ? 'LEGAL ACTION' : 'CONTINUE COLLECTION'}
-
-All collection attempts have been logged in Supabase.
-Please initiate legal proceedings immediately.`
-}}"
+              "value": "={{\n\n`LEGAL ESCALATION REQUIRED\n\n\n\nTenant: ${$json.first_name} ${$json.last_name}\n\nTenant ID: ${$json.id}\n\nDays Overdue: ${$json.days_overdue || $json.stage}\n\nAmount Owed: R${$json.amount_owed || $json.rent_amount}\n\nStage: ${$json.stage} days\n\n\n\nAI Recommendation: ${$json.escalation_recommended ? 'LEGAL ACTION' : 'CONTINUE COLLECTION'}\n\n\n\nAll collection attempts have been logged in Supabase.\n\nPlease initiate legal proceedings immediately.`\n\n}}"
             }
           ]
         }
@@ -433,7 +412,10 @@ Please initiate legal proceedings immediately.`
       "name": "Notify Legal Department",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [2050, 200]
+      "position": [
+        2050,
+        200
+      ]
     },
     {
       "parameters": {
@@ -466,7 +448,10 @@ Please initiate legal proceedings immediately.`
       "name": "Update Legal Notified",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [2250, 200]
+      "position": [
+        2250,
+        200
+      ]
     },
     {
       "parameters": {
@@ -475,72 +460,224 @@ Please initiate legal proceedings immediately.`
       "name": "Complete",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2050, 400]
+      "position": [
+        2050,
+        400
+      ]
     }
   ],
   "connections": {
     "Daily 9AM Trigger": {
       "main": [
-        [{"node": "Query 7 Days Overdue", "type": "main", "index": 0}],
-        [{"node": "Query 14 Days Overdue", "type": "main", "index": 0}],
-        [{"node": "Query 21 Days Overdue", "type": "main", "index": 0}],
-        [{"node": "Query 30+ Days Overdue", "type": "main", "index": 0}]
+        [
+          {
+            "node": "Query 7 Days Overdue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Query 14 Days Overdue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Query 21 Days Overdue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Query 30+ Days Overdue",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Query 7 Days Overdue": {
-      "main": [[{"node": "Merge and Tag Stages", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Merge and Tag Stages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Query 14 Days Overdue": {
-      "main": [[{"node": "Merge and Tag Stages", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Merge and Tag Stages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Query 21 Days Overdue": {
-      "main": [[{"node": "Merge and Tag Stages", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Merge and Tag Stages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Query 30+ Days Overdue": {
-      "main": [[{"node": "Merge and Tag Stages", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Merge and Tag Stages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Merge and Tag Stages": {
-      "main": [[{"node": "Split In Batches", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Split In Batches": {
-      "main": [[{"node": "Groq AI Generate Message", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Groq AI Generate Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Groq AI Generate Message": {
-      "main": [[{"node": "Parse AI Response", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Parse AI Response": {
       "main": [
-        [{"node": "Send SMS (Twilio)", "type": "main", "index": 0}],
-        [{"node": "Send Email (SendGrid)", "type": "main", "index": 0}],
-        [{"node": "Send WhatsApp", "type": "main", "index": 0}]
+        [
+          {
+            "node": "Send SMS (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email (SendGrid)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Send SMS (Twilio)": {
-      "main": [[{"node": "Log to Supabase", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Log to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Send Email (SendGrid)": {
-      "main": [[{"node": "Log to Supabase", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Log to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Send WhatsApp": {
-      "main": [[{"node": "Log to Supabase", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Log to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Log to Supabase": {
-      "main": [[{"node": "Is Stage 30?", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Is Stage 30?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Is Stage 30?": {
       "main": [
-        [{"node": "Notify Legal Department", "type": "main", "index": 0}],
-        [{"node": "Complete", "type": "main", "index": 0}]
+        [
+          {
+            "node": "Notify Legal Department",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Notify Legal Department": {
-      "main": [[{"node": "Update Legal Notified", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Update Legal Notified",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1",
     "errorWorkflow": "error-handler"
   },
-  "staticData": null,
-  "tags": ["rent-collection", "groq-ai", "multi-channel", "escalation"]
+  "staticData": null
 }

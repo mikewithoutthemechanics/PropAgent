@@ -5,7 +5,10 @@
       "id": "trigger-schedule",
       "name": "Weekly Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
-      "position": [250, 300],
+      "position": [
+        250,
+        300
+      ],
       "parameters": {
         "rule": {
           "interval": [
@@ -34,7 +37,10 @@
       "id": "trigger-webhook",
       "name": "Manual Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
-      "position": [250, 500],
+      "position": [
+        250,
+        500
+      ],
       "webhookId": "market-report-manual",
       "parameters": {
         "httpMethod": "POST",
@@ -50,7 +56,10 @@
       "id": "merge-triggers",
       "name": "Merge Triggers",
       "type": "n8n-nodes-base.merge",
-      "position": [450, 400],
+      "position": [
+        450,
+        400
+      ],
       "parameters": {
         "mode": "mergeByPosition"
       }
@@ -59,7 +68,10 @@
       "id": "set-default-params",
       "name": "Set Default Parameters",
       "type": "n8n-nodes-base.set",
-      "position": [650, 400],
+      "position": [
+        650,
+        400
+      ],
       "parameters": {
         "values": {
           "string": [
@@ -96,7 +108,10 @@
       "id": "supabase-query-current",
       "name": "Query Current Period Sales",
       "type": "n8n-nodes-base.supabase",
-      "position": [850, 300],
+      "position": [
+        850,
+        300
+      ],
       "parameters": {
         "operation": "getAll",
         "tableId": "property_sales",
@@ -131,7 +146,10 @@
       "id": "supabase-query-previous",
       "name": "Query Previous Period Sales",
       "type": "n8n-nodes-base.supabase",
-      "position": [850, 500],
+      "position": [
+        850,
+        500
+      ],
       "parameters": {
         "operation": "getAll",
         "tableId": "property_sales",
@@ -166,7 +184,10 @@
       "id": "code-calculate-stats",
       "name": "Calculate Market Statistics",
       "type": "n8n-nodes-base.code",
-      "position": [1050, 400],
+      "position": [
+        1050,
+        400
+      ],
       "parameters": {
         "jsCode": "// Calculate statistics for current and previous periods\nconst currentSales = $input.first().json.data || [];\nconst previousSales = $input.all()[1]?.json?.data || [];\n\n// Helper functions\nfunction calculateMedian(arr) {\n  if (arr.length === 0) return 0;\n  const sorted = [...arr].sort((a, b) => a - b);\n  const mid = Math.floor(sorted.length / 2);\n  return sorted.length % 2 !== 0\n    ? sorted[mid]\n    : (sorted[mid - 1] + sorted[mid]) / 2;\n}\n\nfunction calculateAverage(arr) {\n  if (arr.length === 0) return 0;\n  return arr.reduce((a, b) => a + b, 0) / arr.length;\n}\n\n// Current period stats\nconst currentPrices = currentSales.map(s => s.sale_price).filter(p => p);\nconst currentFloorSizes = currentSales.map(s => s.floor_size).filter(s => s);\nconst currentDaysOnMarket = currentSales.map(s => s.days_on_market).filter(d => d !== null && d !== undefined);\n\n// Previous period stats\nconst previousPrices = previousSales.map(s => s.sale_price).filter(p => p);\nconst previousFloorSizes = previousSales.map(s => s.floor_size).filter(s => s);\nconst previousDaysOnMarket = previousSales.map(s => s.days_on_market).filter(d => d !== null && d !== undefined);\n\n// Calculate averages\nconst currentAvgPrice = Math.round(calculateAverage(currentPrices));\nconst currentMedianPrice = Math.round(calculateMedian(currentPrices));\nconst previousAvgPrice = Math.round(calculateAverage(previousPrices));\n\n// Calculate price per sqm\nconst currentPricePerSqm = currentFloorSizes.length > 0\n  ? Math.round(currentPrices.reduce((a, b) => a + b, 0) / currentFloorSizes.reduce((a, b) => a + b, 0))\n  : 0;\n\nconst previousPricePerSqm = previousFloorSizes.length > 0\n  ? Math.round(previousPrices.reduce((a, b) => a + b, 0) / previousFloorSizes.reduce((a, b) => a + b, 0))\n  : 0;\n\n// Calculate changes\nconst priceChangePercent = previousAvgPrice > 0\n  ? Math.round(((currentAvgPrice - previousAvgPrice) / previousAvgPrice) * 100 * 100) / 100\n  : 0;\n\nconst volumeChangePercent = previousSales.length > 0\n  ? Math.round(((currentSales.length - previousSales.length) / previousSales.length) * 100 * 100) / 100\n  : 0;\n\nconst daysOnMarketChange = previousDaysOnMarket.length > 0 && currentDaysOnMarket.length > 0\n  ? Math.round(calculateAverage(currentDaysOnMarket) - calculateAverage(previousDaysOnMarket))\n  : 0;\n\n// Property type breakdown\nconst propertyTypes = {};\ncurrentSales.forEach(s => {\n  const type = s.property_type || 'Unknown';\n  propertyTypes[type] = (propertyTypes[type] || 0) + 1;\n});\n\n// Most active suburbs\nconst suburbCounts = {};\ncurrentSales.forEach(s => {\n  const suburb = s.area || 'Unknown';\n  suburbCounts[suburb] = (suburbCounts[suburb] || 0) + 1;\n});\n\nconst mostActiveSuburbs = Object.entries(suburbCounts)\n  .sort((a, b) => b[1] - a[1])\n  .slice(0, 5)\n  .map(([name, count]) => name);\n\n// Average days on market\nconst avgDaysOnMarket = currentDaysOnMarket.length > 0\n  ? Math.round(calculateAverage(currentDaysOnMarket))\n  : 0;\n\nconst stats = {\n  area: $input.first().json.area,\n  city: $input.first().json.city,\n  period_start: $input.first().json.period_start,\n  period_end: $input.first().json.period_end,\n  current_period: {\n    total_sales: currentSales.length,\n    average_price: currentAvgPrice,\n    median_price: currentMedianPrice,\n    price_per_sqm: currentPricePerSqm,\n    avg_days_on_market: avgDaysOnMarket,\n    property_types: propertyTypes,\n    most_active_suburbs: mostActiveSuburbs\n  },\n  previous_period: {\n    total_sales: previousSales.length,\n    average_price: previousAvgPrice,\n    price_per_sqm: previousPricePerSqm\n  },\n  comparisons: {\n    price_change_percent: priceChangePercent,\n    volume_change_percent: volumeChangePercent,\n    days_on_market_change: daysOnMarketChange\n  },\n  month: new Date($input.first().json.period_start).toLocaleString('en-ZA', { month: 'long' }),\n  year: new Date($input.first().json.period_start).getFullYear()\n};\n\nreturn [stats];",
         "mode": "runOnceForAllItems"
@@ -176,7 +197,10 @@
       "id": "http-groq-generate",
       "name": "Groq AI - Generate Report",
       "type": "n8n-nodes-base.httpRequest",
-      "position": [1250, 400],
+      "position": [
+        1250,
+        400
+      ],
       "parameters": {
         "method": "POST",
         "url": "https://api.groq.com/openai/v1/chat/completions",
@@ -233,7 +257,10 @@
       "id": "code-parse-groq-response",
       "name": "Parse Groq Response",
       "type": "n8n-nodes-base.code",
-      "position": [1450, 400],
+      "position": [
+        1450,
+        400
+      ],
       "parameters": {
         "jsCode": "const groqResponse = $input.first().json;\nconst stats = $input.first().json;\n\n// Extract the AI-generated content from Groq response\nlet aiContent;\ntry {\n  aiContent = JSON.parse(groqResponse.choices?.[0]?.message?.content || '{}');\n} catch (e) {\n  // Try to extract JSON from markdown code block\n  const content = groqResponse.choices?.[0]?.message?.content || '';\n  const jsonMatch = content.match(/```json\\s*([\\s\\S]*?)```/) || content.match(/{[\\s\\S]*}/);\n  if (jsonMatch) {\n    try {\n      aiContent = JSON.parse(jsonMatch[1] || jsonMatch[0]);\n    } catch (e2) {\n      aiContent = {\n        report_title: `Market Report - ${stats.area} - ${stats.month} ${stats.year}`,\n        executive_summary: 'Error parsing AI response. Please review raw data.',\n        key_findings: ['Data available in raw statistics'],\n        full_report_markdown: content\n      };\n    }\n  } else {\n    aiContent = {\n      report_title: `Market Report - ${stats.area} - ${stats.month} ${stats.year}`,\n      executive_summary: content.substring(0, 500),\n      key_findings: ['See full report'],\n      full_report_markdown: content\n    };\n  }\n}\n\n// Combine stats with AI content\nconst report = {\n  id: Math.random().toString(36).substring(2, 15),\n  area: stats.area,\n  city: stats.city,\n  period_start: stats.period_start,\n  period_end: stats.period_end,\n  report_title: aiContent.report_title || `Market Report - ${stats.area} - ${stats.month} ${stats.year}`,\n  executive_summary: aiContent.executive_summary || '',\n  key_findings: Array.isArray(aiContent.key_findings) ? aiContent.key_findings : [],\n  price_analysis: aiContent.price_analysis || '',\n  volume_analysis: aiContent.volume_analysis || '',\n  hotspots: Array.isArray(aiContent.hotspots) ? aiContent.hotspots : [],\n  buyer_insights: aiContent.buyer_insights || '',\n  outlook: aiContent.outlook || '',\n  recommendations_sellers: aiContent.recommendations_for_sellers || '',\n  recommendations_buyers: aiContent.recommendations_for_buyers || '',\n  full_report: aiContent.full_report_markdown || '',\n  statistics: {\n    total_sales: stats.current_period.total_sales,\n    average_price: stats.current_period.average_price,\n    median_price: stats.current_period.median_price,\n    price_per_sqm: stats.current_period.price_per_sqm,\n    avg_days_on_market: stats.current_period.avg_days_on_market,\n    price_change_percent: stats.comparisons.price_change_percent,\n    volume_change_percent: stats.comparisons.volume_change_percent\n  },\n  generated_at: new Date().toISOString()\n};\n\nreturn [report];",
         "mode": "runOnceForAllItems"
@@ -243,7 +270,10 @@
       "id": "supabase-save-report",
       "name": "Save Report to Supabase",
       "type": "n8n-nodes-base.supabase",
-      "position": [1650, 300],
+      "position": [
+        1650,
+        300
+      ],
       "parameters": {
         "operation": "insert",
         "tableId": "market_reports",
@@ -321,15 +351,18 @@
       "id": "sendgrid-email",
       "name": "Email Report to Agents",
       "type": "n8n-nodes-base.sendGrid",
-      "position": [1650, 500],
+      "position": [
+        1650,
+        500
+      ],
       "parameters": {
         "resource": "mail",
         "operation": "send",
         "fromEmail": "reports@propagent.co.za",
         "toEmail": "={{ $credentials.agentEmailList }}",
-        "subject": "🎯 {{ $json.report_title }}",
+        "subject": "\u00f0\u0178\u017d\u00af {{ $json.report_title }}",
         "contentType": "text/html",
-        "message": "=<![CDATA[\n<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px 8px 0 0; }\n    .content { padding: 30px; background: #f9f9f9; }\n    .stat-box { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }\n    .stat-value { font-size: 28px; font-weight: bold; color: #667eea; }\n    .stat-label { color: #666; font-size: 14px; }\n    .change-positive { color: #22c55e; }\n    .change-negative { color: #ef4444; }\n    .section { margin: 25px 0; }\n    .section h3 { color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px; }\n    .bullet-list { padding-left: 20px; }\n    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }\n    .cta-button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin-top: 20px; }\n  </style>\n</head>\n<body>\n  <div class=\"header\">\n    <h1>{{ $json.report_title }}</h1>\n    <p>{{ $json.period_start }} to {{ $json.period_end }}</p>\n  </div>\n  \n  <div class=\"content\">\n    <div style=\"display: flex; gap: 15px; flex-wrap: wrap;\">\n      <div class=\"stat-box\" style=\"flex: 1; min-width: 150px;\">\n        <div class=\"stat-value\">R{{ $json.statistics.average_price.toLocaleString() }}</div>\n        <div class=\"stat-label\">Average Price</div>\n        <div class=\"{{ $json.statistics.price_change_percent >= 0 ? 'change-positive' : 'change-negative' }}\">\n          {{ $json.statistics.price_change_percent >= 0 ? '↑' : '↓' }} {{ Math.abs($json.statistics.price_change_percent) }}% vs last month\n        </div>\n      </div>\n      <div class=\"stat-box\" style=\"flex: 1; min-width: 150px;\">\n        <div class=\"stat-value\">{{ $json.statistics.total_sales }}</div>\n        <div class=\"stat-label\">Sales Volume</div>\n        <div class=\"{{ $json.statistics.volume_change_percent >= 0 ? 'change-positive' : 'change-negative' }}\">\n          {{ $json.statistics.volume_change_percent >= 0 ? '↑' : '↓' }} {{ Math.abs($json.statistics.volume_change_percent) }}% vs last month\n        </div>\n      </div>\n      <div class=\"stat-box\" style=\"flex: 1; min-width: 150px;\">\n        <div class=\"stat-value\">{{ $json.statistics.avg_days_on_market }}</div>\n        <div class=\"stat-label\">Avg Days on Market</div>\n      </div>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Executive Summary</h3>\n      <p>{{ $json.executive_summary }}</p>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Key Findings</h3>\n      <ul class=\"bullet-list\">\n        {{ $json.key_findings.map(f => `<li>${f}</li>`).join('') }}\n      </ul>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Hotspots</h3>\n      <ul class=\"bullet-list\">\n        {{ $json.hotspots.map(h => `<li>${h}</li>`).join('') }}\n      </ul>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Market Outlook</h3>\n      <p>{{ $json.outlook }}</p>\n    </div>\n    \n    <div style=\"text-align: center; margin-top: 30px;\">\n      <a href=\"https://propagent.co.za/reports/{{ $json.id }}\" class=\"cta-button\">View Full Report</a>\n    </div>\n  </div>\n  \n  <div class=\"footer\">\n    <p>Generated by PropAgent AI on {{ new Date().toLocaleDateString('en-ZA') }}</p>\n    <p>To unsubscribe from market reports, <a href=\"https://propagent.co.za/unsubscribe\">click here</a></p>\n  </div>\n</body>\n</html>\n]]>"
+        "message": "=<![CDATA[\n<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px 8px 0 0; }\n    .content { padding: 30px; background: #f9f9f9; }\n    .stat-box { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }\n    .stat-value { font-size: 28px; font-weight: bold; color: #667eea; }\n    .stat-label { color: #666; font-size: 14px; }\n    .change-positive { color: #22c55e; }\n    .change-negative { color: #ef4444; }\n    .section { margin: 25px 0; }\n    .section h3 { color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px; }\n    .bullet-list { padding-left: 20px; }\n    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }\n    .cta-button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin-top: 20px; }\n  </style>\n</head>\n<body>\n  <div class=\"header\">\n    <h1>{{ $json.report_title }}</h1>\n    <p>{{ $json.period_start }} to {{ $json.period_end }}</p>\n  </div>\n  \n  <div class=\"content\">\n    <div style=\"display: flex; gap: 15px; flex-wrap: wrap;\">\n      <div class=\"stat-box\" style=\"flex: 1; min-width: 150px;\">\n        <div class=\"stat-value\">R{{ $json.statistics.average_price.toLocaleString() }}</div>\n        <div class=\"stat-label\">Average Price</div>\n        <div class=\"{{ $json.statistics.price_change_percent >= 0 ? 'change-positive' : 'change-negative' }}\">\n          {{ $json.statistics.price_change_percent >= 0 ? '\u00e2\u2020\u2018' : '\u00e2\u2020\u201c' }} {{ Math.abs($json.statistics.price_change_percent) }}% vs last month\n        </div>\n      </div>\n      <div class=\"stat-box\" style=\"flex: 1; min-width: 150px;\">\n        <div class=\"stat-value\">{{ $json.statistics.total_sales }}</div>\n        <div class=\"stat-label\">Sales Volume</div>\n        <div class=\"{{ $json.statistics.volume_change_percent >= 0 ? 'change-positive' : 'change-negative' }}\">\n          {{ $json.statistics.volume_change_percent >= 0 ? '\u00e2\u2020\u2018' : '\u00e2\u2020\u201c' }} {{ Math.abs($json.statistics.volume_change_percent) }}% vs last month\n        </div>\n      </div>\n      <div class=\"stat-box\" style=\"flex: 1; min-width: 150px;\">\n        <div class=\"stat-value\">{{ $json.statistics.avg_days_on_market }}</div>\n        <div class=\"stat-label\">Avg Days on Market</div>\n      </div>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Executive Summary</h3>\n      <p>{{ $json.executive_summary }}</p>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Key Findings</h3>\n      <ul class=\"bullet-list\">\n        {{ $json.key_findings.map(f => `<li>${f}</li>`).join('') }}\n      </ul>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Hotspots</h3>\n      <ul class=\"bullet-list\">\n        {{ $json.hotspots.map(h => `<li>${h}</li>`).join('') }}\n      </ul>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Market Outlook</h3>\n      <p>{{ $json.outlook }}</p>\n    </div>\n    \n    <div style=\"text-align: center; margin-top: 30px;\">\n      <a href=\"https://propagent.co.za/reports/{{ $json.id }}\" class=\"cta-button\">View Full Report</a>\n    </div>\n  </div>\n  \n  <div class=\"footer\">\n    <p>Generated by PropAgent AI on {{ new Date().toLocaleDateString('en-ZA') }}</p>\n    <p>To unsubscribe from market reports, <a href=\"https://propagent.co.za/unsubscribe\">click here</a></p>\n  </div>\n</body>\n</html>\n]]>"
       },
       "credentials": {
         "sendGridApi": {
@@ -342,7 +375,10 @@
       "id": "respond-webhook",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
-      "position": [1850, 400],
+      "position": [
+        1850,
+        400
+      ],
       "parameters": {
         "options": {
           "responseCode": 200
@@ -355,7 +391,10 @@
       "id": "if-no-data",
       "name": "Check Data Exists",
       "type": "n8n-nodes-base.if",
-      "position": [1050, 200],
+      "position": [
+        1050,
+        200
+      ],
       "parameters": {
         "conditions": {
           "options": {
@@ -382,7 +421,10 @@
       "id": "no-data-response",
       "name": "No Data Response",
       "type": "n8n-nodes-base.respondToWebhook",
-      "position": [1250, 150],
+      "position": [
+        1250,
+        150
+      ],
       "parameters": {
         "options": {
           "responseCode": 400
@@ -397,20 +439,6 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "tags": [
-    {
-      "id": "tag-reports",
-      "name": "Reports"
-    },
-    {
-      "id": "tag-ai",
-      "name": "AI"
-    },
-    {
-      "id": "tag-weekly",
-      "name": "Weekly"
-    }
-  ],
   "connections": {
     "Weekly Schedule Trigger": {
       "main": [

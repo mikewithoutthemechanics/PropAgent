@@ -11,7 +11,10 @@
       "name": "Maintenance Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [250, 300],
+      "position": [
+        250,
+        300
+      ],
       "webhookId": "maintenance-request"
     },
     {
@@ -42,7 +45,10 @@
       "name": "Groq AI Classify Issue",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [450, 300]
+      "position": [
+        450,
+        300
+      ]
     },
     {
       "parameters": {
@@ -51,7 +57,10 @@
       "name": "Parse AI Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [650, 300]
+      "position": [
+        650,
+        300
+      ]
     },
     {
       "parameters": {
@@ -87,7 +96,10 @@
       "name": "Save to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [850, 300]
+      "position": [
+        850,
+        300
+      ]
     },
     {
       "parameters": {
@@ -114,7 +126,10 @@
       "name": "Is Emergency?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [1050, 300]
+      "position": [
+        1050,
+        300
+      ]
     },
     {
       "parameters": {
@@ -136,7 +151,7 @@
             },
             {
               "name": "Body",
-              "value": "🚨 EMERGENCY MAINTENANCE TICKET\n\n📍 Property: {{ $json.property_address }}\n👤 Tenant: {{ $json.tenant_name }}\n📱 Phone: {{ $json.tenant_phone }}\n\n🔧 Issue: {{ $json.issue_type }}\n⚠️ Severity: {{ $json.severity }}\n\n📝 Description: {{ $json.issue_description }}\n\n🎯 Suggested Contractor: {{ $json.contractor_category }}\n📊 Confidence: {{ $json.confidence * 100 }}%\n💰 Est. Cost: {{ $json.estimated_cost_range }}\n\n✅ AUTO-ASSIGNED - Immediate action required!"
+              "value": "\ud83d\udea8 EMERGENCY MAINTENANCE TICKET\n\n\ud83d\udccd Property: {{ $json.property_address }}\n\ud83d\udc64 Tenant: {{ $json.tenant_name }}\n\ud83d\udcf1 Phone: {{ $json.tenant_phone }}\n\n\ud83d\udd27 Issue: {{ $json.issue_type }}\n\u26a0\ufe0f Severity: {{ $json.severity }}\n\n\ud83d\udcdd Description: {{ $json.issue_description }}\n\n\ud83c\udfaf Suggested Contractor: {{ $json.contractor_category }}\n\ud83d\udcca Confidence: {{ $json.confidence * 100 }}%\n\ud83d\udcb0 Est. Cost: {{ $json.estimated_cost_range }}\n\n\u2705 AUTO-ASSIGNED - Immediate action required!"
             }
           ]
         }
@@ -144,7 +159,10 @@
       "name": "Alert Property Manager",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1250, 200]
+      "position": [
+        1250,
+        200
+      ]
     },
     {
       "parameters": {
@@ -166,7 +184,7 @@
             },
             {
               "name": "Body",
-              "value": "Hi {{ $json.tenant_name }},\n\nYour maintenance request has been received and logged.\n\n🔧 Issue Type: {{ $json.issue_type }}\n📋 Ticket Status: {{ $json.status }}\n🎯 Assigned Category: {{ $json.contractor_category }}\n\n{{ $json.questions_for_tenant?.length > 0 ? \"❓ We need more info:\n\" + $json.questions_for_tenant.map((q, i) => (i + 1) + \". \" + q).join(\"\\n\") : \"A contractor will contact you within 24 hours.\" }}\n\nTicket Ref: #{{ $json.tenant_id?.substring(0, 8) }}\n\n- PropAgent Maintenance Team"
+              "value": "Hi {{ $json.tenant_name }},\n\nYour maintenance request has been received and logged.\n\n\ud83d\udd27 Issue Type: {{ $json.issue_type }}\n\ud83d\udccb Ticket Status: {{ $json.status }}\n\ud83c\udfaf Assigned Category: {{ $json.contractor_category }}\n\n{{ $json.questions_for_tenant?.length > 0 ? \"\u2753 We need more info:\n\" + $json.questions_for_tenant.map((q, i) => (i + 1) + \". \" + q).join(\"\\n\") : \"A contractor will contact you within 24 hours.\" }}\n\nTicket Ref: #{{ $json.tenant_id?.substring(0, 8) }}\n\n- PropAgent Maintenance Team"
             }
           ]
         }
@@ -174,7 +192,10 @@
       "name": "Confirm to Tenant",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1450, 300]
+      "position": [
+        1450,
+        300
+      ]
     },
     {
       "parameters": {
@@ -196,7 +217,7 @@
             },
             {
               "name": "Body",
-              "value": "🚨 URGENT: {{ $json.tenant_name }},\n\nYour maintenance issue has been flagged as EMERGENCY.\n\n🔧 Issue: {{ $json.issue_type }}\n📍 Address: {{ $json.property_address }}\n\nA {{ $json.contractor_category }} has been notified and will contact you within 30 minutes.\n\nPlease ensure access is available.\n\nEmergency Hotline: 010-XXX-XXXX\nTicket: #{{ $json.tenant_id?.substring(0, 8) }}"
+              "value": "\ud83d\udea8 URGENT: {{ $json.tenant_name }},\n\nYour maintenance issue has been flagged as EMERGENCY.\n\n\ud83d\udd27 Issue: {{ $json.issue_type }}\n\ud83d\udccd Address: {{ $json.property_address }}\n\nA {{ $json.contractor_category }} has been notified and will contact you within 30 minutes.\n\nPlease ensure access is available.\n\nEmergency Hotline: 010-XXX-XXXX\nTicket: #{{ $json.tenant_id?.substring(0, 8) }}"
             }
           ]
         }
@@ -204,7 +225,10 @@
       "name": "Emergency Notification",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1450, 100]
+      "position": [
+        1450,
+        100
+      ]
     },
     {
       "parameters": {
@@ -214,36 +238,107 @@
       "name": "Response to Tenant",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1650, 300]
+      "position": [
+        1650,
+        300
+      ]
     }
   ],
   "connections": {
     "Maintenance Webhook": {
-      "main": [[{"node": "Groq AI Classify Issue", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Groq AI Classify Issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Groq AI Classify Issue": {
-      "main": [[{"node": "Parse AI Response", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Parse AI Response": {
-      "main": [[{"node": "Save to Supabase", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Save to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Save to Supabase": {
-      "main": [[{"node": "Is Emergency?", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Is Emergency?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Is Emergency?": {
       "main": [
-        [{"node": "Alert Property Manager", "type": "main", "index": 0}],
-        [{"node": "Confirm to Tenant", "type": "main", "index": 0}]
+        [
+          {
+            "node": "Alert Property Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Confirm to Tenant",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Alert Property Manager": {
-      "main": [[{"node": "Emergency Notification", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Emergency Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Emergency Notification": {
-      "main": [[{"node": "Response to Tenant", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Response to Tenant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Confirm to Tenant": {
-      "main": [[{"node": "Response to Tenant", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Response to Tenant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -252,12 +347,5 @@
     "saveManualExecutions": true,
     "callerPolicy": "workflowsFromSameOwner"
   },
-  "staticData": null,
-  "tags": [
-    "maintenance",
-    "routing",
-    "ai",
-    "groq",
-    "supabase"
-  ]
+  "staticData": null
 }
