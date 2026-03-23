@@ -1,0 +1,418 @@
+{
+  "name": "Tenant Inquiry Auto-Responder",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-inquiry",
+        "responseMode": "responseNode"
+      },
+      "name": "WhatsApp Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "whatsapp-inquiry"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "value": "contacts",
+          "mode": "list"
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "phone",
+              "value": "={{ $json.body.from }}",
+              "condition": "equal"
+            }
+          ]
+        }
+      },
+      "name": "Get Tenant Details",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "options": {
+          "temperature": 0.3
+        },
+        "messages": {
+          "message": [
+            {
+              "role": "system",
+              "content": "You are a property management assistant. Classify tenant inquiries into categories: RENT_PAYMENT, MAINTENANCE_REQUEST, LEASE_QUESTION, VIEWING_REQUEST, GENERAL_INQUIRY, URGENT. Respond with JSON: {\"category\": \"...\", \"urgency\": \"low|medium|high\", \"summary\": \"...\"}"
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.body.message }}"
+            }
+          ]
+        }
+      },
+      "name": "Classify Intent",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value": "MAINTENANCE_REQUEST",
+              "output": 0
+            },
+            {
+              "value": "RENT_PAYMENT",
+              "output": 1
+            },
+            {
+              "value": "URGENT",
+              "output": 2
+            }
+          ]
+        },
+        "dataType": "string",
+        "value1": "={{ JSON.parse($json.content).category }}",
+        "fallbackOutput": 3
+      },
+      "name": "Route by Intent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 300
+        },
+        "messages": {
+          "message": [
+            {
+              "role": "system",
+              "content": "You are a helpful property management assistant. Generate a friendly, professional response to a maintenance request. Acknowledge the issue, provide a reference number, and set expectations for response time."
+            },
+            {
+              "role": "user",
+              "content": "Tenant: {{ $('Get Tenant Details').item.json.first_name }} {{ $('Get Tenant Details').item.json.last_name }}\nMessage: {{ $('WhatsApp Webhook').item.json.body.message }}\nProperty: {{ $('Get Tenant Details').item.json.property_address }}"
+            }
+          ]
+        }
+      },
+      "name": "Maintenance Response",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 300
+        },
+        "messages": {
+          "message": [
+            {
+              "role": "system",
+              "content": "You are a helpful property management assistant. Generate a response about rent payment. Include current balance, payment methods, and due date if available. Be professional and helpful."
+            },
+            {
+              "role": "user",
+              "content": "Tenant: {{ $('Get Tenant Details').item.json.first_name }}\nMessage: {{ $('WhatsApp Webhook').item.json.body.message }}"
+            }
+          ]
+        }
+      },
+      "name": "Rent Response",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 300
+        },
+        "messages": {
+          "message": [
+            {
+              "role": "system",
+              "content": "URGENT: Alert the property manager immediately. Generate a message acknowledging urgency and stating that a manager will contact them within 1 hour."
+            },
+            {
+              "role": "user",
+              "content": "Tenant: {{ $('Get Tenant Details').item.json.first_name }}\nMessage: {{ $('WhatsApp Webhook').item.json.body.message }}"
+            }
+          ]
+        }
+      },
+      "name": "Urgent Response",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 300
+        },
+        "messages": {
+          "message": [
+            {
+              "role": "system",
+              "content": "You are a helpful property management assistant. Generate a friendly, professional response to a general inquiry."
+            },
+            {
+              "role": "user",
+              "content": "Tenant: {{ $('Get Tenant Details').item.json.first_name }}\nMessage: {{ $('WhatsApp Webhook').item.json.body.message }}"
+            }
+          ]
+        }
+      },
+      "name": "General Response",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "phoneNumber": "={{ $('WhatsApp Webhook').item.json.body.from }}",
+        "text": "={{ $json.content }}"
+      },
+      "name": "Send WhatsApp Reply",
+      "type": "n8n-nodes-base.whatsappBusiness",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "communications",
+          "mode": "list"
+        },
+        "columns": {
+          "mapping": [
+            {
+              "column": "contact_id",
+              "value": "={{ $('Get Tenant Details').item.json.id }}"
+            },
+            {
+              "column": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "column": "direction",
+              "value": "outbound"
+            },
+            {
+              "column": "content",
+              "value": "={{ $('Send WhatsApp Reply').item.json.content }}"
+            },
+            {
+              "column": "ai_generated",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "name": "Log Communication",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [
+        1650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "json": "={\"status\": \"processed\", \"response_sent\": true}"
+      },
+      "name": "Return Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1850,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "WhatsApp Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Tenant Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Tenant Details": {
+      "main": [
+        [
+          {
+            "node": "Classify Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Intent": {
+      "main": [
+        [
+          {
+            "node": "Route by Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Intent": {
+      "main": [
+        [
+          {
+            "node": "Maintenance Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rent Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Urgent Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "General Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Maintenance Response": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rent Response": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Urgent Response": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "General Response": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Reply": {
+      "main": [
+        [
+          {
+            "node": "Log Communication",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Communication": {
+      "main": [
+        [
+          {
+            "node": "Return Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["communication", "ai", "whatsapp"]
+}

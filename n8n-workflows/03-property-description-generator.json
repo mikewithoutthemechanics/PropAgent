@@ -1,0 +1,203 @@
+{
+  "name": "Property Description Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-description"
+      },
+      "name": "API Endpoint",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "generate-description"
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "options": {
+          "temperature": 0.8,
+          "maxTokens": 500
+        },
+        "messages": {
+          "message": [
+            {
+              "role": "system",
+              "content": "You are an expert real estate copywriter. Write compelling, professional property descriptions that highlight key features and appeal to potential buyers. Use engaging language, focus on lifestyle benefits, and include a call to action."
+            },
+            {
+              "role": "user",
+              "content": "Write a property listing description for:\n\nType: {{ $json.body.property_type }}\nLocation: {{ $json.body.suburb }}, {{ $json.body.city }}\nPrice: R{{ $json.body.price }}\nBedrooms: {{ $json.body.bedrooms }}\nBathrooms: {{ $json.body.bathrooms }}\nGarages: {{ $json.body.garages }}\nStand Size: {{ $json.body.stand_size }} sqm\nFloor Size: {{ $json.body.floor_size }} sqm\nKey Features: {{ $json.body.features }}\n\nInclude:\n1. Attention-grabbing headline\n2. Opening paragraph about the location/lifestyle\n3. Description of interior features\n4. Description of exterior/outdoor features\n5. Call to action\n\nFormat with clear paragraphs. Tone: Professional yet warm."
+            }
+          ]
+        }
+      },
+      "name": "Generate Description",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "options": {
+          "temperature": 0.5,
+          "maxTokens": 150
+        },
+        "messages": {
+          "message": [
+            {
+              "role": "system",
+              "content": "Extract key selling points from a property description. Return as bullet points."
+            },
+            {
+              "role": "user",
+              "content": "Extract 5 key selling points from this description:\n{{ $json.content }}"
+            }
+          ]
+        }
+      },
+      "name": "Extract Key Points",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const description = $input.first().json.content;\nconst keyPoints = $input.all()[1].json.content;\n\n// Clean up the description\nconst cleanDescription = description\n  .replace(/\\n\\n\\n+/g, '\\n\\n')  // Remove excessive newlines\n  .trim();\n\n// Extract headline (first line)\nconst headline = cleanDescription.split('\\n')[0].replace(/^#+\\s*/, '');\n\nreturn [{\n  json: {\n    headline,\n    description: cleanDescription,\n    keyPoints,\n    wordCount: cleanDescription.split(/\\s+/).length,\n    generatedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "name": "Format Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "options": {
+          "responseCode": 200
+        },
+        "json": "={\n  \"headline\": \"{{ $json.headline }}\",\n  \"description\": \"{{ $json.description }}\",\n  \"keyPoints\": \"{{ $json.keyPoints }}\",\n  \"wordCount\": {{ $json.wordCount }},\n  \"generatedAt\": \"{{ $json.generatedAt }}\"\n}"
+      },
+      "name": "Return Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "table": {
+          "value": "properties",
+          "mode": "list"
+        },
+        "columns": {
+          "mapping": [
+            {
+              "column": "ai_description",
+              "value": "={{ $json.description }}"
+            },
+            {
+              "column": "ai_headline",
+              "value": "={{ $json.headline }}"
+            },
+            {
+              "column": "ai_key_points",
+              "value": "={{ $json.keyPoints }}"
+            },
+            {
+              "column": "description_generated_at",
+              "value": "={{ $json.generatedAt }}"
+            }
+          ]
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "id",
+              "value": "={{ $('API Endpoint').item.json.body.property_id }}",
+              "condition": "equal"
+            }
+          ]
+        }
+      },
+      "name": "Save to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [
+        1050,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "API Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Generate Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Description": {
+      "main": [
+        [
+          {
+            "node": "Extract Key Points",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Key Points": {
+      "main": [
+        [
+          {
+            "node": "Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Output": {
+      "main": [
+        [
+          {
+            "node": "Return Result",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["ai", "content", "property"]
+}

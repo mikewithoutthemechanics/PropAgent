@@ -1,0 +1,326 @@
+# PropAgent - Enterprise Real Estate Platform
+## South Africa Property Management System
+
+**Total Features in Scope**: 300+ across 18 categories  
+**Automation Strategy**: n8n + Free/Cheap AI for 60% cost reduction  
+**Documentation**: 
+- [PropAgent-Roadmap.md](./PropAgent-Roadmap.md) - Complete roadmap
+- [PropAgent-n8n-Automation-Strategy.md](./PropAgent-n8n-Automation-Strategy.md) - Automation guide
+- [n8n-workflows/](./n8n-workflows/) - Ready-to-use workflows
+
+**Last Updated**: 2026-03-23
+
+---
+
+## 🤖 AUTOMATION STATUS
+
+| Category | Total | Automated (n8n) | Custom Dev | Savings |
+|----------|-------|-----------------|------------|---------|
+| Communication | 25 | 22 | 3 | 88% |
+| Property Management | 40 | 25 | 15 | 63% |
+| CRM & Contacts | 30 | 20 | 10 | 67% |
+| Trust Accounting | 25 | 12 | 13 | 48% |
+| Deal Tracking | 20 | 10 | 10 | 50% |
+| Document Processing | 15 | 12 | 3 | 80% |
+| Marketing | 25 | 22 | 3 | 88% |
+| Maintenance | 12 | 8 | 4 | 67% |
+| Reporting | 30 | 20 | 10 | 67% |
+| **TOTAL** | **372** | **189** | **114** | **62%** |
+
+---
+
+## 🚀 ACTIVE FEATURE BRANCHES
+
+| # | Feature | Branch | Status | Priority | Automation |
+|---|---------|--------|--------|----------|------------|
+| 001 | **PropAgent Platform Overview** | 001-propagent-platform | ✅ Spec Complete | P0 | - |
+| 002 | **User Authentication & RBAC** | 002-auth-rbac-system | ✅ Spec Complete | P0 | Backend |
+| 003 | **Property & Listing Management** | 003-property-listings | ✅ Spec Complete | P0 | Mixed |
+| 004 | **CRM & Contact Management** | 004-crm-contacts | ✅ Spec Complete | P0 | Mixed |
+| 005 | **Trust Accounting** | 005-trust-accounting | ✅ Spec Complete | P0 | Mixed |
+| 006 | **Communication Platform** | 006-communication-platform | ✅ Spec Complete | P0 | **n8n** |
+
+---
+
+## 🤖 N8N AUTOMATION WORKFLOWS (Ready to Use)
+
+### Communication Workflows
+| Workflow | File | Cost/Month | Status |
+|----------|------|------------|--------|
+| Tenant Inquiry Auto-Responder | `01-tenant-inquiry-autoresponder.json` | $25 | ✅ Ready |
+| Rent Reminder Sequence | `02-rent-reminder-sequence.json` | $30 | ✅ Ready |
+| Email Auto-Response | `04-email-autoresponder.json` | $20 | ⏳ Planned |
+| SMS Bulk Campaign | `05-sms-campaign.json` | $50 | ⏳ Planned |
+| WhatsApp Follow-up | `06-whatsapp-followup.json` | $40 | ⏳ Planned |
+
+### Property Management Workflows
+| Workflow | File | Cost/Month | Status |
+|----------|------|------------|--------|
+| Property Description Generator | `03-property-description-generator.json` | $10 | ✅ Ready |
+| Listing Syndication | `07-listing-syndication.json` | $0 | ⏳ Planned |
+| Duplicate Detection | `08-duplicate-detection.json` | $5 | ⏳ Planned |
+| Photo Processing | `09-photo-processing.json` | $15 | ⏳ Planned |
+| Property Matching | `10-property-matching.json` | $20 | ⏳ Planned |
+
+### CRM & Lead Management Workflows
+| Workflow | File | Cost/Month | Status |
+|----------|------|------------|--------|
+| Lead Scoring | `11-lead-scoring.json` | $15 | ⏳ Planned |
+| Lead Routing | `12-lead-routing.json` | $0 | ⏳ Planned |
+| Follow-up Sequences | `13-followup-sequences.json` | $25 | ⏳ Planned |
+| Property Alerts | `14-property-alerts.json` | $20 | ⏳ Planned |
+
+### Financial & Trust Accounting Workflows
+| Workflow | File | Cost/Month | Status |
+|----------|------|------------|--------|
+| Bank Reconciliation | `15-bank-reconciliation.json` | $10 | ⏳ Planned |
+| Commission Calculation | `16-commission-calc.json` | $5 | ⏳ Planned |
+| Arrears Escalation | `17-arrears-escalation.json` | $15 | ⏳ Planned |
+| Monthly Statements | `18-monthly-statements.json` | $10 | ⏳ Planned |
+
+### Document Processing Workflows
+| Workflow | File | Cost/Month | Status |
+|----------|------|------------|--------|
+| FICA Document OCR | `19-fica-ocr.json` | $30 | ⏳ Planned |
+| Lease Analysis | `20-lease-analysis.json` | $15 | ⏳ Planned |
+| Document Classification | `21-doc-classification.json` | $10 | ⏳ Planned |
+
+### Marketing Workflows
+| Workflow | File | Cost/Month | Status |
+|----------|------|------------|--------|
+| Social Media Generator | `22-social-content.json` | $15 | ⏳ Planned |
+| Market Report Generator | `23-market-reports.json` | $50 | ⏳ Planned |
+| Email Newsletter | `24-newsletter.json` | $20 | ⏳ Planned |
+
+---
+
+## 💰 AUTOMATION COST BREAKDOWN
+
+### Monthly Operating Costs
+
+| Component | Service | Cost/Month |
+|-----------|---------|------------|
+| **n8n Hosting** | AWS/DigitalOcean | $50-100 |
+| **AI (Primary)** | OpenAI GPT-3.5 | $150-250 |
+| **AI (Fallback)** | Claude Instant | $50-100 |
+| **Email** | SendGrid (100K) | $90 |
+| **SMS** | Twilio (~5,000) | $375 |
+| **WhatsApp** | Meta Business API | $50-100 |
+| **OCR** | Google Vision API | $30-50 |
+| **PDF Generation** | PDF.co API | $20 |
+| **Monitoring** | Better Uptime | $30 |
+| **Total (Standard)** | | **$845-1,115** |
+| **Total (Optimized)** | | **$400-600** |
+
+### Cost Savings
+
+| Metric | Traditional | n8n + AI | Savings |
+|--------|-------------|----------|---------|
+| Backend Dev Cost | $800K | $300K | $500K (62%) |
+| Timeline | 145 weeks | 60 weeks | 85 weeks (59%) |
+| Monthly Ops | $5K | $600 | $4.4K (88%) |
+| Features/Week | 2.5 | 6.2 | 148% faster |
+
+---
+
+## 📁 SPECIFICATION STRUCTURE
+
+```
+specs/
+├── 001-propagent-platform/
+│   ├── spec.md                    # Platform overview spec
+│   └── checklists/
+│       └── requirements.md
+├── 002-auth-rbac-system/
+│   ├── spec.md                    # Authentication & RBAC
+│   └── checklists/
+│       └── requirements.md
+├── 003-property-listings/
+│   ├── spec.md                    # Property management
+│   └── checklists/
+│       └── requirements.md
+├── 004-crm-contacts/
+│   ├── spec.md                    # CRM & contacts
+│   └── checklists/
+│       └── requirements.md
+├── 005-trust-accounting/
+│   ├── spec.md                    # Trust accounting
+│   └── checklists/
+│       └── requirements.md
+└── 006-communication-platform/
+    ├── spec.md                    # Communication
+    └── checklists/
+        └── requirements.md
+
+n8n-workflows/
+├── README.md                      # Workflow documentation
+├── 01-tenant-inquiry-autoresponder.json
+├── 02-rent-reminder-sequence.json
+├── 03-property-description-generator.json
+└── ... (more workflows)
+```
+
+---
+
+## 📋 PRIORITY P0 FEATURES (MVP - Must Have)
+
+### Automation Priority: n8n vs Backend
+
+| Feature | Method | Reason |
+|---------|--------|--------|
+| **Communication** | **n8n** | Pre-built integrations, easy templates |
+| **Property Syndication** | **n8n** | HTTP requests, scheduling |
+| **AI Content Generation** | **n8n** | Direct AI API access |
+| **Rent Reminders** | **n8n** | Scheduled workflows |
+| **Lead Scoring** | **n8n** | AI classification |
+| **Auth & RBAC** | Backend | Security-critical, custom logic |
+| **Database Schema** | Backend | Core infrastructure |
+| **Trust Accounting Core** | Backend | Financial compliance |
+| **API Framework** | Backend | System foundation |
+| **File Storage** | Backend | Data management |
+
+### Core Platform (Phase 1) - Automation Status
+
+#### Authentication & User Management (Backend)
+- [x] User registration via invitation
+- [x] Email/password authentication
+- [x] Password reset
+- [x] Role-based access control (6 roles)
+- [x] Multi-office support
+- [x] Office hierarchy
+- [x] MFA (optional)
+- [x] Session timeout
+- [x] Audit logging
+
+#### Property Management (Mixed)
+- [x] Property CRUD (Backend)
+- [x] Property types (Backend)
+- [x] 50+ property specifications (Backend)
+- [x] Photo upload & management (Backend)
+- [ ] **Listing status workflow** (n8n - triggers)
+- [ ] **Grid/Card/Map views** (Backend)
+- [x] Search & filtering (Backend)
+- [ ] **Property matching** (n8n - AI matching)
+- [ ] **Property description generator** (n8n - AI) ✅ Ready
+
+#### CRM & Contacts (Mixed)
+- [x] Contact management (Backend)
+- [ ] **Communication history** (n8n - logging)
+- [ ] **Email integration** (n8n - IMAP/SMTP)
+- [ ] **Lead capture** (n8n - webhooks)
+- [x] FICA tracking (Backend)
+- [ ] **POPIA consent** (n8n - automation)
+- [ ] **Buyer wishlists** (n8n - matching)
+- [ ] **Contact import** (n8n - batch processing)
+
+#### Trust Accounting (Mixed)
+- [x] Trust fund separation (Backend)
+- [x] Rent payment recording (Backend)
+- [x] Landlord disbursements (Backend)
+- [ ] **Commission calculation** (n8n - AI)
+- [x] Payment file generation (Backend)
+- [x] Arrears tracking (Backend)
+- [ ] **Automated reminders** (n8n) ✅ Ready
+- [x] Audit trail (Backend)
+
+#### Communication (n8n-First)
+- [ ] **Email channel** (n8n) ✅ Ready
+- [ ] **SMS channel** (n8n) ✅ Ready
+- [ ] **WhatsApp Business API** (n8n) ✅ Ready
+- [ ] **50+ templates** (n8n)
+- [ ] **Template personalization** (n8n)
+- [ ] **Delivery tracking** (n8n)
+- [ ] **Unified inbox** (Backend + n8n)
+- [ ] **Bulk campaigns** (n8n)
+- [ ] **Automated workflows** (n8n) ✅ Ready
+
+#### Deal Management (Mixed)
+- [x] Deal pipeline (Backend)
+- [x] Deal creation & linking (Backend)
+- [x] Status workflow (Backend)
+- [ ] **Commission tracking** (n8n)
+- [x] Document upload (Backend)
+
+#### Calendar & Scheduling (Mixed)
+- [x] Calendar integration (Backend)
+- [x] Viewing scheduling (Backend)
+- [ ] **Reminders** (n8n) ✅ Ready
+
+#### Reporting (Mixed)
+- [x] Dashboard KPIs (Backend)
+- [ ] **Property inventory report** (n8n)
+- [ ] **Contact growth report** (n8n)
+- [x] Financial reports (Backend)
+
+---
+
+## 🎯 NEXT STEPS
+
+### Immediate (This Week)
+1. [ ] Deploy n8n instance
+2. [ ] Import 3 ready workflows
+3. [ ] Configure credentials
+4. [ ] Test with sample data
+
+### Short Term (Next 2 Weeks)
+1. [ ] Create remaining P0 workflow templates
+2. [ ] Set up monitoring and alerts
+3. [ ] Document workflow usage for team
+4. [ ] Implement backend API endpoints for n8n
+
+### Medium Term (Next Month)
+1. [ ] Migrate communication features to n8n
+2. [ ] Implement AI-powered features
+3. [ ] Set up cost monitoring
+4. [ ] Optimize AI prompts for cost efficiency
+
+---
+
+## 📚 KEY DOCUMENTS
+
+| Document | Description |
+|----------|-------------|
+| [PropAgent-Roadmap.md](./PropAgent-Roadmap.md) | Complete 4-phase roadmap |
+| [PropAgent-n8n-Automation-Strategy.md](./PropAgent-n8n-Automation-Strategy.md) | Automation architecture |
+| [n8n-workflows/README.md](./n8n-workflows/README.md) | Workflow documentation |
+| [specs/001-propagent-platform/spec.md](./specs/001-propagent-platform/spec.md) | Platform spec |
+| [specs/002-auth-rbac-system/spec.md](./specs/002-auth-rbac-system/spec.md) | Authentication spec |
+| [specs/003-property-listings/spec.md](./specs/003-property-listings/spec.md) | Property spec |
+| [specs/004-crm-contacts/spec.md](./specs/004-crm-contacts/spec.md) | CRM spec |
+| [specs/005-trust-accounting/spec.md](./specs/005-trust-accounting/spec.md) | Trust accounting spec |
+| [specs/006-communication-platform/spec.md](./specs/006-communication-platform/spec.md) | Communication spec |
+
+---
+
+## 🔧 SPECKIT COMMANDS
+
+### Create New Feature
+```powershell
+.specify\scripts\powershell\create-new-feature.ps1 "Feature description" -ShortName "feature-name"
+```
+
+### Setup Implementation Plan
+```powershell
+.specify\scripts\powershell\setup-plan.ps1
+```
+
+### Check Prerequisites
+```powershell
+.specify\scripts\powershell\check-prerequisites.ps1
+```
+
+---
+
+**Status Legend**
+- ⏳ Not Started
+- 📝 In Progress
+- ✅ Complete / Ready
+- 🔧 In Development
+- 🤖 Automated (n8n)
+
+---
+
+*Document Version: 2.0*  
+*Created: 2026-03-23*  
+*Automation Strategy: n8n + OpenAI GPT-3.5*  
+*Platform: PropAgent Enterprise Real Estate*

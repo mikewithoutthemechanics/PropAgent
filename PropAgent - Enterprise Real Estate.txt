@@ -1,0 +1,857 @@
+# PropAgent - Enterprise Real Estate Platform
+## Comprehensive Feature Specification for South Africa
+
+---
+
+## 1. FINANCIAL MANAGEMENT & TRUST ACCOUNTING
+
+### 1.1 Automated Client Accounting
+- **Commission Distribution**: Automated payment to agents, contractors, and recipients based on configurable business rules
+- **Same-Day Processing**: Process commission payments on the same day tenant pays rent
+- **Landlord Payments**: Automated rental disbursements to property owners
+- **Contractor Payments**: Scheduled payments to maintenance contractors and service providers
+- **Multi-Party Split Payments**: Support for complex commission splits and referral fees
+- **Payout Recording**: Detailed tracking of internal/external commissions, royalties, and referral fees
+
+### 1.2 Trust Account Management
+- **FICA Compliance**: Built-in identity verification, credit checks, and sanction screening
+- **Secure Fund Handling**: Enterprise-grade security for client money management
+- **Audit Trail**: Complete transaction history with digital signatures
+- **Account Reconciliation**: Automated bank reconciliation tools
+- **Financial Reporting**: Comprehensive trust account statements and reports
+
+### 1.3 Payment Processing
+- **Multiple Payment Methods**: Support for EFT, credit card, debit order, and cash
+- **Payment Gateway Integration**: Secure online payment processing
+- **Arrears Management**: Live payment status tracking with early warning system
+- **Proactive Reminders**: Automated email and SMS payment reminders
+- **Payment History**: Complete payment tracking per tenant/buyer/seller
+
+---
+
+## 2. PROPERTY & LISTING MANAGEMENT
+
+### 2.1 Comprehensive Listing Database
+- **Property Categories**: 
+  - Residential (houses, apartments, townhouses)
+  - Commercial (offices, retail, warehouses)
+  - Industrial
+  - Farms & Agricultural
+  - Retirement villages
+  - Holiday homes
+  - Vacant land
+  - Sectional title units
+  - Gated estates
+
+### 2.2 Detailed Property Specifications
+- **300+ Feature Options**: Comprehensive property attributes
+- **50+ Space Types**: Detailed room specifications (bedrooms, bathrooms, garages, etc.)
+- **Legal Descriptions**: ERF numbers, township details, stand sizes
+- **Ownership History**: Complete transfer history and current ownership
+- **Location Data**: GPS coordinates, suburb, town, municipal boundaries
+- **Property Boundaries**: GIS mapping with ERF boundary visualization
+
+### 2.3 Listing Syndication & Distribution
+- **One-Time Entry**: Enter property details once, publish everywhere
+- **Major Portal Integration**:
+  - Property24
+  - Private Property
+  - Gumtree
+  - ImmoAfrica
+  - JamesEdition
+- **Syndication Workspace**: Centralized control for multi-portal publishing
+- **Auto-Refresh**: Automatic listing updates across all portals
+- **Performance Tracking**: Portal-specific view and inquiry analytics
+
+### 2.4 Listing Presentation Tools
+- **Branded Landing Pages**: Mobile-responsive property pages with agency branding
+- **Unlisted Pages**: Private branded pages for off-market properties
+- **Collections & Collages**: Group multiple listings by location, price, or custom criteria
+- **Single URL Sharing**: Share curated property collections via one link
+- **Virtual Tours**: Integration for 360° property tours
+- **Photo Management**: Unlimited high-resolution images with watermarking
+
+### 2.5 Listing Workspace Views
+- **Syndication Workspace**: Portal management interface
+- **Property Grid View**: Spreadsheet-style listing overview
+- **Card View**: Visual thumbnail gallery
+- **Map View**: Geographic property distribution
+- **Status Filters**: Active, pending, sold, rented, expired, withdrawn
+
+---
+
+## 3. VALUATION & MARKET INTELLIGENCE
+
+### 3.1 Comparative Market Analysis (CMA)
+- **Professional CMA Reports**: Compare subject property to up to 15 recent comparable sales
+- **Proximity Analysis**: Geographic radius-based comparisons
+- **Adjustment Factors**: Size, condition, features, location adjustments
+- **Visual Presentations**: Maps, charts, and formatted PDF outputs
+- **Client-Ready Formats**: Branded reports for buyer/seller presentation
+
+### 3.2 Advanced Analytics
+- **Compound Annual Growth Rate (CAGR)**: Historical appreciation calculations
+- **Indexed Values**: Historical sales adjusted to current market conditions
+- **Price Distribution Graphs**: Visual market price analysis
+- **Sales Velocity**: Time-on-market trends per area
+- **Absorption Rates**: Inventory turnover analysis
+
+### 3.3 Automated Valuation Models (AVMs)
+- **AI-Powered Valuations**: Machine learning market value estimates
+- **Bank-Grade Accuracy**: Models used by financial institutions
+- **Confidence Scores**: Statistical reliability indicators
+- **Bulk Valuation**: Portfolio-wide automated valuations
+- **Valuation Updates**: Regular refresh based on new sales data
+
+### 3.4 Deeds Office Integration
+- **Real-Time Deeds Data**: Live ownership and transfer information
+- **Loom Integration**: Pull current deeds office records
+- **Transfer History**: Complete property transaction timeline
+- **Ownership Verification**: Current registered owner details
+- **Bond Information**: Mortgage registration details
+- **Title Deed Retrieval**: Digital access to scanned title deeds
+
+### 3.5 Comprehensive Property Reports
+
+#### Residential Property Reports
+- Legal description and cadastral information
+- Ownership history and current owner
+- Property size and ERF dimensions
+- 20 most recent sales in the area
+- Zoning and permitted uses
+- Municipal rates and taxes
+- Automated valuation estimate
+
+#### Suburb & Town Reports
+- Geographic boundaries and maps
+- Property count (Freehold vs. Sectional Title)
+- Sales activity and transaction volumes
+- Demographics (age, income, household size)
+- Nearby amenities (schools, hospitals, police stations, shopping)
+- Crime statistics
+- Infrastructure quality
+
+#### Estate & Sectional Scheme Reports
+- Unit counts and property types
+- Recent sales within complex
+- Owner demographics
+- Levy amounts and special levies
+- Body corporate details
+- Scheme rules and regulations
+
+#### Commercial Property Reports
+- **Nodal Reports**: Area benchmarking with capitalization rates, gross rentals, vacancy data
+- **Market Studies**: Feasibility studies and portfolio valuations
+- **Commercial Transfer Reports**: Searchable transfers by suburb, ERF sizes, property types
+- Investment yield analysis
+- Tenant profiles and lease terms
+
+### 3.6 Risk Assessment
+- **Crime Exposure**: Area crime statistics and risk ratings
+- **Weather Risk**: Hail, lightning, flood exposure analysis
+- **Seismic Activity**: Earthquake risk assessment
+- **Insurance Implications**: Risk-based insurance guidance
+
+### 3.7 Market Indices
+- **House Price Index**: National and regional property inflation trends
+- **Rental Index**: Rental price movements by area
+- **Market Velocity**: Sales speed trends
+- **Supply/Demand Ratios**: Inventory vs. absorption analysis
+
+---
+
+## 4. CRM & CONTACT MANAGEMENT
+
+### 4.1 Lead Acquisition & Capture
+- **Multi-Source Lead Capture**:
+  - Portal inquiry integration (Property24, Private Property, etc.)
+  - Website contact forms
+  - Walk-in registrations
+  - Bulk Excel imports
+  - Manual entry
+  - Social media leads
+  - Third-party lead providers
+
+### 4.2 Contact Database
+- **Unlimited Contacts**: No restrictions on database size
+- **Contact Types**: Buyers, sellers, tenants, landlords, investors, developers
+- **Detailed Profiles**:
+  - Personal information
+  - Contact preferences
+  - Communication history
+  - Document attachments
+  - FICA status
+  - Credit history
+  - Property wish lists
+
+### 4.3 Property Matching Engine
+- **Automated Matching**: Instantly pair clients with properties based on wish-list criteria
+- **Match Criteria**:
+  - Location (suburb, town, region)
+  - Price range
+  - Property type
+  - Bedrooms/bathrooms
+  - Size requirements
+  - Special features
+  - Lease/purchase preference
+- **Alert System**: Notify clients of new matching properties
+- **Match Scoring**: Relevance ranking for property suggestions
+
+### 4.4 Client Segmentation
+- **Custom Tags**: Unlimited tagging for flexible categorization
+- **Smart Lists**: Dynamic segments based on criteria
+- **Lifecycle Stages**: Lead, prospect, active client, past client
+- **Source Tracking**: Lead origin and attribution
+- **Activity Scoring**: Engagement-based client prioritization
+
+### 4.5 Personalized Client Portals
+- **Branded Landing Pages**: Agency-branded client access portals
+- **Property Matching View**: Clients see their matched properties
+- **Wish List Management**: Clients can update their own requirements
+- **Saved Searches**: Persistent search criteria
+- **Favorite Properties**: Client-selected shortlist
+- **Document Access**: Secure viewing of shared documents
+
+### 4.6 Owner/Seller Management
+- **Owner's Feedback Pages**: Personalized progress tracking for homeowners
+- **Sale/Rental Status**: Real-time deal pipeline visibility
+- **Marketing Reports**: Showing activity, inquiries, viewings
+- **Document Upload**: Owners can upload compliance certificates
+- **Feedback Collection**: Viewer feedback relay to owners
+
+### 4.7 POPIA Compliance (South African Data Protection)
+- **Consent Management**: Opt-in/opt-out preference tracking
+- **Automated Unsubscribe**: One-click unsubscribe links in communications
+- **Communication Preferences**: Channel-specific permissions (email, SMS, WhatsApp)
+- **Data Access Requests**: Tools for subject access requests
+- **Audit Trail**: Complete record of consent and data processing
+- **Data Retention**: Configurable retention policies
+
+---
+
+## 5. COMMUNICATION & MARKETING
+
+### 5.1 Multi-Channel Communication Platform
+- **WhatsApp Integration**: Direct messaging from platform
+- **SMS Gateway**: Bulk and individual SMS sending
+- **Email System**: Professional email campaigns
+- **Communication History**: All messages linked to contact records
+- **Delivery Tracking**: Read receipts and delivery confirmation
+- **Response Management**: Centralized inbox for all channels
+
+### 5.2 Message Templates & Scripts
+- **115+ Pre-Written Templates**:
+  - 48 Email scripts
+  - 44 WhatsApp scripts
+  - 22 SMS scripts
+- **Template Categories**:
+  - First consultations
+  - Property viewings
+  - Objection handling
+  - Follow-ups
+  - Contract negotiations
+  - Payment reminders
+  - Marketing announcements
+- **Custom Templates**: Create and save your own
+- **Personalization Tokens**: Auto-insert client/property details
+
+### 5.3 Bulk Communication
+- **Targeted Campaigns**: Send to segmented contact lists
+- **Personalized Bulk Sends**: Mass messages with individual personalization
+- **Scheduling**: Schedule messages for optimal delivery times
+- **A/B Testing**: Test message variations
+- **Opt-Out Management**: Automatic unsubscribe handling
+- **Campaign Analytics**: Open rates, click-through rates, conversions
+
+### 5.4 Automated Communication
+- **Payment Communications**: Automatic statements and payment confirmations
+- **Arrears Notifications**: Escalating reminder sequences
+- **New Listing Alerts**: Auto-notify matched clients
+- **Viewing Confirmations**: Automatic appointment confirmations
+- **Milestone Notifications**: Deal progress updates
+- **Birthday/Anniversary**: Relationship nurturing messages
+
+### 5.5 Marketing Materials Generation
+- **Click-and-Share Designs**: Instant marketing collateral creation
+- **Automated Templates**:
+  - Property brochures
+  - Sales flyers
+  - Social media posts (Facebook, Instagram, LinkedIn)
+  - Email newsletters
+  - Window cards
+  - Magazine ads
+- **Brand Consistency**: All materials use agency branding
+- **Photo Injection**: Automatic insertion of property images
+- **Data Population**: Property details auto-filled
+
+### 5.6 Digital Marketing Tools
+- **Digital Business Cards**: Mobile-friendly agent profiles
+- **View Tracking**: Monitor card views and engagement
+- **Social Sharing**: One-click share to social platforms
+- **QR Codes**: Generate QR codes for property marketing
+- **Landing Page Analytics**: Track page visits and conversions
+
+### 5.7 Website Management
+- **Branded Websites**: Custom domain agency websites
+- **Automatic Sync**: Listings auto-update on website
+- **Integrated Search**: Property search functionality
+- **Lead Capture**: Built-in contact forms
+- **Mobile Responsive**: Optimized for all devices
+- **SEO Optimization**: Search engine friendly structure
+
+### 5.8 Email Marketing Integration
+- **Mailchimp Integration**: Sync contacts and campaigns
+- **Newsletter Management**: Regular market updates
+- **Drip Campaigns**: Automated nurture sequences
+- **Subscriber Management**: List segmentation and hygiene
+
+---
+
+## 6. DEAL TRACKING & TRANSACTION MANAGEMENT
+
+### 6.1 Visual Deal Pipeline
+- **Kanban-Style Dashboard**: Drag-and-drop deal stages
+- **Customizable Stages**:
+  - Lead/Inquiry
+  - Viewing scheduled
+  - Offer submitted
+  - Offer accepted
+  - Under contract
+  - Bond application
+  - Transfer process
+  - Completed/Closed
+- **Progress Indicators**: Visual status for each deal
+- **Deal Value Tracking**: Projected revenue per stage
+- **Forecasting**: Pipeline value projections
+
+### 6.2 Milestone Management
+- **Automated Reminders**: Critical task notifications
+- **Deadline Tracking**:
+  - Bond application deadlines
+  - Deposit due dates
+  - Transfer deadlines
+  - Lease commencement
+  - Inspection dates
+  - Document submission deadlines
+- **Checklist Templates**: Standard deal checklists
+- **Task Assignment**: Delegate tasks to team members
+
+### 6.3 Document Management
+- **Secure Document Drive**: Cloud-based storage
+- **Document Categories**:
+  - FICA documents (ID, proof of residence, bank statements)
+  - Mandates (sole, multi, open)
+  - Offers to Purchase (OTP)
+  - Sale agreements
+  - Lease agreements
+  - Compliance certificates (electrical, plumbing, beetle, gas)
+  - Bond approval letters
+  - Transfer documents
+  - Title deeds
+- **Client/Deal Linking**: Documents tied to specific transactions
+- **Version Control**: Track document revisions
+- **Access Permissions**: Role-based document access
+- **Digital Signatures**: Electronic signature capability
+- **Audit Trail**: Complete document history
+
+### 6.4 Electronic Signatures & Digital Workflows
+- **E-Signature Integration**: Legally binding digital signatures
+- **Document Routing**: Automated signature request workflows
+- **Lease Applications**: Digital lease application processing
+- **FICA Documentation**: Paperless compliance verification
+- **Contract Execution**: Fully digital contract signing
+- **Audit Compliance**: Tamper-proof audit trail
+
+### 6.5 Commission Management
+- **Commission Calculations**: Automated calculation based on deal value
+- **Split Configurations**: Complex split scenarios (agent, agency, referral, franchise)
+- **Royalty Tracking**: Franchise and network fees
+- **Referral Fees**: External referral commission management
+- **Commission Statements**: Detailed agent statements
+- **Payment Integration**: Link to automated payment system
+
+### 6.6 Client Progress Tracking
+- **Seller Progress Pages**: Homeowners track sale status
+- **Buyer Progress Pages**: Purchasers monitor transaction milestones
+- **Document Upload Portal**: Clients upload required documents
+- **Status Updates**: Real-time transaction progress
+- **Communication Hub**: Centralized client-agent messaging
+
+---
+
+## 7. PROSPECTING & LEAD GENERATION
+
+### 7.1 Lead Generation Tools
+- **12 Prospecting Tools** including:
+  - Location-based searches
+  - Owner age filtering
+  - Years of ownership analysis
+  - Property type targeting
+  - Value range filtering
+  - Suburb hot-spotting
+  - Expired listing identification
+  - FSBO (For Sale By Owner) detection
+  - Pre-foreclosure alerts
+  - Estate/probate properties
+  - Absentee owners
+  - High equity properties
+
+### 7.2 Property & Owner Search Capabilities
+- **9 Search Methods**:
+  - Property address
+  - Owner name
+  - ID number
+  - ERF number
+  - GPS coordinates
+  - Suburb/town
+  - Company name (CIPC integration)
+  - Phone number
+  - Email address
+
+### 7.3 Interactive Mapping (GIS)
+- **Geographic Search**: Click on map to find properties
+- **ERF Boundaries**: Visual property boundary display
+- **Layer Overlays**: Schools, amenities, demographics
+- **Heat Maps**: Price, sales activity, rental yields
+- **Route Planning**: Viewing schedule optimization
+- **Mobile Geolocation**: Pull up property data on-site using GPS
+
+### 7.4 Social Media Lead Tools
+- **Lead Capture Pages**: Dedicated landing pages for social campaigns
+- **Facebook/Instagram Integration**: Automated lead import
+- **Lead Source Tracking**: Attribution by social platform
+- **Engagement Analytics**: Social campaign performance
+
+---
+
+## 8. COMPLIANCE & RISK MANAGEMENT
+
+### 8.1 KYC (Know Your Customer) & FICA
+- **Real-Time ID Verification**: Instant identity validation
+- **Credit Checks**: Integration with credit bureaus
+- **Sanction Screening**: AML/CFT compliance checks
+- **Affordability Assessment**: Income and expense verification
+- **Document Checklist**: Standardized FICA requirements
+- **Compliance Status Dashboard**: Client verification status overview
+
+### 8.2 Credit Bureau Integration
+- **Individual Credit Reports**: Personal credit history
+- **Business Credit Reports**: Company credit profiles
+- **Credit Scores**: Risk assessment scores
+- **Payment Behavior**: Historical payment patterns
+- **Judgments & Defaults**: Legal credit impairments
+
+### 8.3 CIPC (Companies and Intellectual Property Commission)
+- **Company Registration Details**: Full company information
+- **Director Information**: Current and historical directors
+- **Auditor Details**: Registered auditor information
+- **Registration Changes**: History of company changes
+- **Company Status**: Active, deregistered, liquidation status
+- **Business Credit**: Company credit reports
+
+### 8.4 Regulatory Compliance
+- **PPRA Registration**: Property Practitioner Regulatory Authority compliance
+- **FFC Act Compliance**: Fidelity Fund Certificate tracking
+- **Estate Agency Affairs Board**: Historical compliance (pre-PPRA)
+- **Trust Account Regulations**: Adherence to trust accounting laws
+- **Data Protection**: POPIA compliance tools
+- **Anti-Money Laundering**: AML screening and reporting
+
+---
+
+## 9. MAINTENANCE & OPERATIONS
+
+### 9.1 Maintenance Ticketing System
+- **Ticket Creation**: Tenants, landlords, agents can create tickets
+- **Ticket Categories**:
+  - Plumbing
+  - Electrical
+  - Structural
+  - Appliances
+  - Security
+  - Garden/exterior
+  - Emergency repairs
+- **Priority Levels**: Urgent, high, medium, low
+- **Photo Attachments**: Visual documentation of issues
+
+### 9.2 Contractor Management
+- **Contractor Database**: Approved service provider registry
+- **Skills Categorization**: Contractors by specialty
+- **Rating System**: Performance and quality ratings
+- **Availability Tracking**: Contractor schedules
+- **Quote Management**: Multiple quote comparison
+- **Job Assignment**: Automatic or manual contractor allocation
+
+### 9.3 Work Order Tracking
+- **Job Status**: Logged, assigned, in progress, completed
+- **Time Tracking**: Job duration monitoring
+- **Cost Tracking**: Estimate vs. actual costs
+- **Approval Workflows**: Landlord approval for costs above threshold
+- **Completion Verification**: Photo evidence and sign-off
+- **Invoice Integration**: Link invoices to work orders
+
+### 9.4 Preventative Maintenance
+- **Scheduled Inspections**: Routine property inspections
+- **Maintenance Calendars**: Regular service schedules (pool, HVAC, etc.)
+- **Compliance Certificates**: Track certificate expiry and renewals
+- **Asset Registers**: Property equipment and appliance tracking
+
+---
+
+## 10. REPORTING & ANALYTICS
+
+### 10.1 Real Estate Reports (30+ Types)
+
+#### Contact & Lead Reports
+- Contact growth over time
+- Lead source analysis
+- Conversion funnel metrics
+- Client acquisition cost
+- Agent performance (leads to deals)
+
+#### Listing Reports
+- Listing inventory by status
+- Days on market analysis
+- Price reductions tracking
+- Listing views and engagement
+- Portal performance comparison
+- Photography effectiveness
+
+#### Communication Reports
+- Email open and click rates
+- SMS delivery and response rates
+- WhatsApp engagement metrics
+- Communication volume by channel
+- Template performance
+- Response time analysis
+
+#### Deal & Sales Reports
+- Sales pipeline overview
+- Deal velocity (time to close)
+- Commission earned (by agent, property type, period)
+- Win/loss analysis
+- Average sale price trends
+- Conversion rates by source
+
+#### User Activity Reports
+- Agent activity logs
+- Login frequency
+- Feature usage statistics
+- Productivity metrics
+- Time tracking
+
+#### Financial Reports
+- Commission statements
+- Trust account reconciliation
+- Payment collection rates
+- Arrears aging reports
+- Revenue forecasting
+- Expense tracking
+
+#### Market Reports
+- Comparative market analysis
+- Suburb statistics
+- Sales volume trends
+- Price appreciation rates
+- Rental yield analysis
+- Market share reports
+
+### 10.2 Interactive Dashboards
+- **Real-Time Graphs**: Visual data representation
+- **Customizable Widgets**: Drag-and-drop dashboard building
+- **Role-Based Dashboards**: Different views for agents, principals, admin
+- **KPI Tracking**: Key performance indicators at a glance
+- **Drill-Down Capability**: Click through to detailed data
+- **Export Functionality**: PDF and Excel export
+
+### 10.3 Data Hygiene & Management
+- **Data Cleaning Services**: Standardize and update customer records
+- **Duplicate Detection**: Identify and merge duplicate contacts
+- **High-Volume Geocoding**: Bulk address validation and GPS coordinate assignment
+- **Data Enrichment**: Append missing information
+- **Database Health Scores**: Quality metrics for your data
+
+---
+
+## 11. MOBILE & ACCESSIBILITY
+
+### 11.1 Mobile Applications
+- **Native Apps**: Dedicated Android and iOS applications
+- **Full Database Access**: Complete CRM on mobile
+- **Push Notifications**: Real-time alerts for:
+  - New leads
+  - Messages/inquiries
+  - Viewing appointments
+  - Deal milestones
+  - Payment notifications
+  - System alerts
+
+### 11.2 Mobile-Specific Features
+- **Digital Business Card**: Mobile-optimized agent profile
+- **Augmented Reality Search**: Point camera at property to pull up data
+- **GPS Property Lookup**: Find property info while on-site
+- **Mobile Photo Upload**: Capture and upload property photos directly
+- **Voice Notes**: Record and attach audio to contacts/properties
+- **Offline Mode**: Access critical data without connectivity
+
+### 11.3 Mobile Site (Mobi)
+- **Responsive Web App**: Browser-based mobile access
+- **Live Geolocation**: Auto-detect current location
+- **Property Vicinity Search**: Find nearby listings
+- **Quick Actions**: One-tap calling, messaging, directions
+
+### 11.4 Tenant Portal (Mobile-Optimized)
+- **Branded Tenant Access**: Agency-branded portal
+- **Payment Options**: Pay rent via mobile
+- **Maintenance Requests**: Submit tickets with photos
+- **Lease Documents**: Access lease agreement and statements
+- **Communication**: Direct messaging with property manager
+- **Account Balance**: Real-time balance and payment history
+
+---
+
+## 12. INTEGRATIONS & API
+
+### 12.1 Property Portal Integrations
+- Property24
+- Private Property
+- Gumtree
+- ImmoAfrica
+- JamesEdition
+- Custom XML feeds for other portals
+
+### 12.2 Data & Research Integrations
+- **Loom**: Deeds office data and property reports
+- **Lightstone**: Property data and valuations
+- **CMA Info**: Market analysis and valuations
+- **Deeds Office**: Direct deeds data access
+
+### 12.3 Communication Integrations
+- **WhatsApp Business API**: Official WhatsApp messaging
+- **SMS Gateways**: Multiple SMS provider support
+- **Mailchimp**: Email marketing platform
+- **Email Servers**: SMTP and IMAP integration
+
+### 12.4 Financial Integrations
+- **Banking APIs**: Transaction feeds and reconciliation
+- **Payment Gateways**: Online payment processing
+- **Accounting Software**: Export to Pastel, Xero, QuickBooks
+- **Credit Bureaus**: TransUnion, Experian, XDS
+
+### 12.5 Productivity Integrations
+- **Google Workspace**: Calendar, Contacts, Drive
+- **Microsoft 365**: Outlook, OneDrive, Teams
+- **Zoom/MS Teams**: Virtual viewing integration
+- **Slack**: Team communication
+
+### 12.6 AI & Automation
+- **OpenAI Integration**: AI-generated property descriptions
+- **Chatbot**: Automated website inquiry responses
+- **Flow Automation**: Zapier-style workflow automation
+
+### 12.7 Public API
+- **RESTful API**: Programmatic access to platform
+- **Webhooks**: Real-time event notifications
+- **OAuth Authentication**: Secure third-party access
+- **API Documentation**: Comprehensive developer guides
+- **Rate Limiting**: Fair usage policies
+- **Sandbox Environment**: Testing environment
+
+---
+
+## 13. CALENDAR & SCHEDULING
+
+### 13.1 Real Estate Calendar
+- **Viewing Appointments**: Schedule and manage property showings
+- **Mandate Expiry Tracking**: Never miss a renewal
+- **Deal Milestones**: Contract deadlines and key dates
+- **Meetings**: Client consultations and team meetings
+- **Inspections**: Routine and compliance inspections
+- **Marketing Events**: Open houses and property launches
+
+### 13.2 Calendar Features
+- **Color Coding**: Visual categorization by appointment type
+- **Recurring Events**: Set up repeating appointments
+- **Conflict Detection**: Prevent double-booking
+- **Availability Sharing**: Share available slots with clients
+- **Reminders**: Email and SMS appointment reminders
+- **Team Calendars**: View colleague schedules
+- **Sync**: Sync with Google/Outlook calendars
+
+### 13.3 Actions for the Day
+- **Daily To-Do List**: Prioritized daily tasks
+- **Mobile App Delivery**: Tasks pushed to mobile
+- **Email Digest**: Morning email with daily priorities
+- **High-Value Activity Focus**: AI-suggested priority actions
+- **Task Completion Tracking**: Check off completed items
+
+---
+
+## 14. TRAINING & SUPPORT
+
+### 14.1 Onboarding
+- **Dedicated Onboarding Team**: South Africa-based specialists
+- **Platform Setup**: Guided initial configuration
+- **Data Migration**: Import existing data
+- **Team Training**: Group training sessions
+- **Best Practices**: Industry-specific guidance
+
+### 14.2 Ongoing Support
+- **Local Support Team**: South African support staff
+- **Multi-Channel Support**:
+  - Phone
+  - Email
+  - Live chat
+  - WhatsApp
+- **Response Time SLAs**: Guaranteed response times
+- **Ticket System**: Track support requests
+
+### 14.3 Training Resources
+- **Free Training**: Regular platform training workshops
+- **Video Tutorials**: On-demand learning library
+- **Knowledge Base**: Searchable help articles
+- **Webinars**: Regular feature update sessions
+- **Certification Program**: Power user certification
+
+### 14.4 User Community
+- **User Forums**: Peer-to-peer support
+- **Facebook Groups**: Community discussion
+- **Feature Requests**: User-driven development
+- **Beta Program**: Early access to new features
+
+---
+
+## 15. PLATFORM & INFRASTRUCTURE
+
+### 15.1 Cloud Architecture
+- **Cloud-Based**: 100% cloud-hosted solution
+- **Dynamic Scaling**: Automatic resource scaling
+- **Global CDN**: Fast content delivery
+- **99.9% Uptime SLA**: Guaranteed availability
+- **Disaster Recovery**: Automated backups and recovery
+
+### 15.2 Security
+- **Data Encryption**: End-to-end encryption (in transit and at rest)
+- **Multi-Factor Authentication**: Optional 2FA for all users
+- **Role-Based Access Control**: Granular permission management
+- **IP Whitelisting**: Restrict access by IP address
+- **Security Audits**: Regular penetration testing
+- **Compliance**: ISO 27001, POPIA adherence
+
+### 15.3 Performance
+- **Fast, Responsive Interface**: Optimized user experience
+- **Tested Infrastructure**: Battle-tested technology stack
+- **Load Balancing**: Distributed request handling
+- **Database Optimization**: Query performance tuning
+- **Caching**: Intelligent data caching
+
+### 15.4 Business Continuity
+- **Redundant Systems**: No single point of failure
+- **Automated Backups**: Hourly incremental backups
+- **Geographic Redundancy**: Multi-region data centers
+- **Failover Mechanisms**: Automatic failover
+- **Recovery Time Objective (RTO)**: < 1 hour
+
+---
+
+## 16. ADMINISTRATION & USER MANAGEMENT
+
+### 16.1 User Roles & Permissions
+- **Principal/Owner**: Full system access
+- **Office Manager**: Administrative functions
+- **Agent**: Standard sales/rental agent access
+- **Receptionist**: Limited CRM and scheduling access
+- **Accountant**: Financial reports and trust account access
+- **Marketing**: Listing and marketing tool access
+- **Custom Roles**: Define your own permission sets
+
+### 16.2 Multi-Office Management
+- **Office Hierarchy**: Parent company with multiple branches
+- **Office-Specific Data**: Segregated data per office
+- **Centralized Reporting**: Roll-up reports across offices
+- **Franchise Management**: Royalty and fee management
+- **White-Label Options**: Branding per office
+
+### 16.3 Agent Management
+- **Agent Profiles**: Comprehensive agent information
+- **Commission Structures**: Individualized commission plans
+- **Performance Tracking**: Agent KPIs and rankings
+- **Leaderboards**: Gamification and competition
+- **Activity Monitoring**: Audit trail of agent actions
+
+---
+
+## 17. SUBSCRIPTION & PRICING FEATURES
+
+### 17.1 Flexible Pricing Models
+- **Pay-Per-Search**: No subscription, pay only for searches used (Lexis model)
+- **Monthly Subscription**: Tiered plans by features and user count
+- **Annual Plans**: Discounted annual billing
+- **Per-Agent Pricing**: Scale pricing with team size
+- **Enterprise Plans**: Custom pricing for large agencies
+
+### 17.2 Billing & Invoicing
+- **Automated Billing**: Recurring subscription charges
+- **Usage Tracking**: Monitor feature usage and credits
+- **Invoice History**: Complete billing history
+- **Multiple Payment Methods**: Credit card, EFT, debit order
+- **Upgrade/Downgrade**: Flexible plan changes
+
+---
+
+## 18. ADDITIONAL SPECIALIZED FEATURES
+
+### 18.1 Commercial Real Estate Tools
+- Nodal analysis and benchmarking
+- Capitalization rate calculations
+- Gross rental analysis
+- Vacancy tracking
+- Portfolio valuations
+- Feasibility studies
+- Investment yield calculators
+- Lease management (commercial terms)
+
+### 18.2 Rental Property Management
+- Tenant screening and applications
+- Lease agreement generation
+- Rent collection and tracking
+- Deposit management
+- Lease renewal workflows
+- Tenant communication portal
+- Arrears escalation
+- Eviction management
+
+### 18.3 Developer & Project Marketing
+- Multi-unit project management
+- Phase release management
+- Unit reservation system
+- Deposit tracking
+- Construction milestone tracking
+- Investor reporting
+- Off-plan sales management
+
+---
+
+## FEATURE CATEGORIZATION SUMMARY
+
+| **Category** | **Feature Count** | **Key Modules** |
+|---|---|---|
+| **Financial Management** | 25+ | Trust accounting, payments, commissions, arrears |
+| **Property Management** | 40+ | Listings, syndication, specifications, presentations |
+| **Valuation & Market Data** | 35+ | CMA, AVMs, deeds data, market reports, risk assessment |
+| **CRM & Contacts** | 30+ | Lead management, matching, segmentation, portals |
+| **Communication** | 25+ | Multi-channel, templates, automation, marketing |
+| **Deal Tracking** | 20+ | Pipeline, milestones, documents, e-signatures |
+| **Prospecting** | 15+ | Lead generation, search tools, GIS mapping |
+| **Compliance** | 18+ | FICA, KYC, POPIA, CIPC, credit checks |
+| **Maintenance** | 12+ | Ticketing, contractors, work orders |
+| **Reporting** | 30+ | Sales, financial, marketing, activity reports |
+| **Mobile & Access** | 15+ | Apps, mobile site, tenant portal, AR search |
+| **Integrations** | 20+ | Portals, data providers, communication, APIs |
+| **Calendar** | 10+ | Scheduling, viewings, reminders, task management |
+| **Platform** | 15+ | Cloud, security, performance, business continuity |
+| **Administration** | 12+ | User management, roles, multi-office |
+
+---
+
+**TOTAL FEATURE SET: 300+ discrete features across 18 major categories**
