@@ -1,0 +1,372 @@
+{
+  "id": "prop-price-19-aaaa-bbbb-cccc-ddddeeeeffff",
+  "name": "Property Price Recommendation (Groq Free)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "price-recommendation",
+        "responseMode": "responseNode"
+      },
+      "name": "Webhook: Price Analysis Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "price-recommendation"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "value": "comparable_sales",
+          "mode": "list"
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "suburb",
+              "value": "={{ $json.body.suburb }}",
+              "condition": "eq"
+            },
+            {
+              "column": "property_type",
+              "value": "={{ $json.body.property_type }}",
+              "condition": "eq"
+            },
+            {
+              "column": "sale_date",
+              "value": "={{ $today.minus({ months: 6 }).format('YYYY-MM-DD') }}",
+              "condition": "gte"
+            }
+          ]
+        },
+        "limit": 5,
+        "sort": {
+          "sorting": [
+            {
+              "column": "sale_date",
+              "direction": "desc"
+            }
+          ]
+        }
+      },
+      "name": "Query Comparable Sales",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "value": "market_conditions",
+          "mode": "list"
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "suburb",
+              "value": "={{ $json.body.suburb }}",
+              "condition": "eq"
+            }
+          ]
+        }
+      },
+      "name": "Query Market Conditions",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build comprehensive property data and prompt
+const body = $json.body || {};
+const comparables = $('Query Comparable Sales').item.json.data || [];
+const marketData = $('Query Market Conditions').item.json?.data?.[0] || {};
+
+// Format comparables for the prompt
+const formatComparable = (comp, index) => {
+  if (!comp) return `Comparable ${index}: No data available`;
+  const features = Array.isArray(comp.features) ? comp.features.join(', ') : (comp.features || 'None');
+  return `Comparable ${index}:
+  - Address: ${comp.address || 'N/A'}
+  - Sale Price: R${comp.sale_price?.toLocaleString() || 'N/A'}
+  - Sale Date: ${comp.sale_date || 'N/A'}
+  - Bedrooms: ${comp.bedrooms || 'N/A'}
+  - Bathrooms: ${comp.bathrooms || 'N/A'}
+  - Floor Size: ${comp.floor_size || 'N/A'} sqm
+  - Stand Size: ${comp.stand_size || 'N/A'} sqm
+  - Condition: ${comp.condition || 'N/A'}
+  - Features: ${features}`;
+};
+
+const comparablesText = comparables.length > 0 
+  ? comparables.slice(0, 5).map((c, i) => formatComparable(c, i + 1)).join('\n\n')
+  : 'No comparable sales found in the last 6 months.';
+
+// Calculate market averages
+const avgPricePerSqm = comparables.length > 0 && comparables[0].floor_size
+  ? Math.round(comparables.reduce((sum, c) => sum + (c.sale_price / (c.floor_size || 1)), 0) / comparables.length)
+  : 0;
+
+const avgSalePrice = comparables.length > 0
+  ? Math.round(comparables.reduce((sum, c) => sum + c.sale_price, 0) / comparables.length)
+  : 0;
+
+const features = Array.isArray(body.features) ? body.features.join(', ') : (body.features || 'None specified');
+
+const prompt = `Recommend listing price for this property:
+
+SUBJECT PROPERTY:
+Address: ${body.address || 'Unknown'}
+Suburb: ${body.suburb || 'Unknown'}
+City: ${body.city || 'South Africa'}
+Type: ${body.property_type || 'House'}
+Bedrooms: ${body.bedrooms || '0'}
+Bathrooms: ${body.bathrooms || '0'}
+Garages: ${body.garages || '0'}
+Floor Size: ${body.floor_size || '0'} sqm
+Stand Size: ${body.stand_size || '0'} sqm
+Condition: ${body.condition || 'Good'}
+Features: ${features}
+
+COMPARABLE SALES (last 6 months):
+${comparablesText}
+
+MARKET CONDITIONS:
+Average days on market: ${marketData.avg_days_on_market || '45'}
+Market trend: ${marketData.market_trend || 'stable'}
+Inventory levels: ${marketData.inventory_levels || 'normal'}
+Average price per sqm in area: R${avgPricePerSqm || 'market rate'}
+Average sale price in area: R${avgSalePrice?.toLocaleString() || 'N/A'}
+
+Return JSON:
+{
+  "recommended_price_range": {
+    "minimum": 0,
+    "target": 0,
+    "maximum": 0
+  },
+  "price_per_sqm": {
+    "subject_estimate": 0,
+    "comparable_average": ${avgPricePerSqm},
+    "market_average": ${avgPricePerSqm}
+  },
+  "pricing_strategy": "aggressive|competitive|conservative",
+  "days_on_market_estimate": 0,
+  "market_positioning": "top_10|above_average|average|below_average",
+  "key_value_factors": ["factors adding value"],
+  "value_concerns": ["factors reducing value"],
+  "comparables_analysis": {
+    "most_similar": "address",
+    "adjustments_needed": ["list adjustments"]
+  },
+  "recommendation_summary": "brief summary for agent",
+  "confidence": 0.0-1.0
+}`;
+
+return [{
+  json: {
+    property_data: body,
+    comparables: comparables,
+    market_data: marketData,
+    avg_price_per_sqm: avgPricePerSqm,
+    avg_sale_price: avgSalePrice,
+    prompt: prompt
+  }
+}];"
+      },
+      "name": "Prepare Property Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": {
+          "model": "llama-3.1-70b-versatile",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are an expert real estate pricing analyst specializing in the South African property market. You provide data-driven price recommendations based on comparable sales, market conditions, and property characteristics. Always return valid JSON with complete pricing analysis."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.prompt }}"
+            }
+          ],
+          "temperature": 0.3,
+          "max_tokens": 1500
+        }
+      },
+      "name": "Groq AI Price Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq AI response
+const groqResponse = $json;
+const content = groqResponse.choices?.[0]?.message?.content || '{}';
+const propertyData = $('Prepare Property Data').item.json.property_data;
+const comparables = $('Prepare Property Data').item.json.comparables;
+
+// Extract JSON from response
+let parsed;
+try {
+  // Try to find JSON in markdown code blocks or raw
+  const jsonMatch = content.match(/```json\\s*([\\s\\S]*?)```/) || content.match(/\\{[\\s\\S]*\\}/);
+  const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content;
+  parsed = JSON.parse(jsonStr);
+} catch (e) {
+  // Fallback if JSON parsing fails
+  console.log('JSON parse error:', e.message);
+  parsed = {
+    recommended_price_range: {
+      minimum: propertyData.estimated_value ? propertyData.estimated_value * 0.9 : 0,
+      target: propertyData.estimated_value || 0,
+      maximum: propertyData.estimated_value ? propertyData.estimated_value * 1.1 : 0
+    },
+    price_per_sqm: {
+      subject_estimate: 0,
+      comparable_average: 0,
+      market_average: 0
+    },
+    pricing_strategy: 'competitive',
+    days_on_market_estimate: 45,
+    market_positioning: 'average',
+    key_value_factors: ['Location', 'Size'],
+    value_concerns: ['Parse error - manual review needed'],
+    comparables_analysis: {
+      most_similar: 'unknown',
+      adjustments_needed: ['Unable to analyze due to parse error']
+    },
+    recommendation_summary: 'AI analysis returned invalid format. Manual price review recommended.',
+    confidence: 0.3
+  };
+}
+
+// Ensure all required fields exist with defaults
+const result = {
+  property_id: propertyData.id || 'temp-' + Date.now(),
+  property_address: propertyData.address || 'Unknown',
+  suburb: propertyData.suburb || 'Unknown',
+  recommended_min: parsed.recommended_price_range?.minimum || parsed.recommended_price_range?.min || 0,
+  recommended_target: parsed.recommended_price_range?.target || parsed.recommended_price_range?.target_price || 0,
+  recommended_max: parsed.recommended_price_range?.maximum || parsed.recommended_price_range?.max || 0,
+  price_per_sqm_estimate: parsed.price_per_sqm?.subject_estimate || 0,
+  pricing_strategy: parsed.pricing_strategy || 'competitive',
+  days_on_market_estimate: parsed.days_on_market_estimate || 45,
+  market_positioning: parsed.market_positioning || 'average',
+  key_value_factors: parsed.key_value_factors || [],
+  value_concerns: parsed.value_concerns || [],
+  comparables_used: comparables.slice(0, 5).map(c => ({
+    address: c.address,
+    sale_price: c.sale_price,
+    sale_date: c.sale_date,
+    floor_size: c.floor_size,
+    bedrooms: c.bedrooms,
+    bathrooms: c.bathrooms
+  })),
+  recommendation_summary: parsed.recommendation_summary || 'Price recommendation generated',
+  confidence: parsed.confidence || 0.5,
+  comparables_analysis: parsed.comparables_analysis || {
+    most_similar: 'unknown',
+    adjustments_needed: []
+  },
+  generated_at: new Date().toISOString(),
+  raw_response: content.substring(0, 2000) // Store truncated response for debugging
+};
+
+return [{
+  json: result
+}];"
+      },
+      "name": "Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "price_recommendations",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "property_id": "={{ $json.property_id }}",
+            "property_address": "={{ $json.property_address }}",
+            "recommended_min": "={{ $json.recommended_min }}",
+            "recommended_target": "={{ $json.recommended_target }}",
+            "recommended_max": "={{ $json.recommended_max }}",
+            "price_per_sqm_estimate": "={{ $json.price_per_sqm_estimate }}",
+            "pricing_strategy": "={{ $json.pricing_strategy }}",
+            "days_on_market_estimate": "={{ $json.days_on_market_estimate }}",
+            "market_positioning": "={{ $json.market_positioning }}",
+            "key_value_factors": "={{ JSON.stringify($json.key_value_factors) }}",
+            "value_concerns": "={{ JSON.stringify($json.value_concerns) }}",
+            "comparables_used": "={{ JSON.stringify($json.comparables_used) }}",
+            "recommendation_summary": "={{ $json.recommendation_summary }}",
+            "confidence": "={{ $json.confidence }}",
+            "generated_at": "={{ $json.generated_at }}"
+          }
+        }
+      },
+      "name": "Save Recommendation to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1250, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"property_id\": \"{{ $('Parse AI Response').item.json.property_id }}\",\n  \"recommendation\": {\n    \"price_range\": {\n      \"minimum\": {{ $('Parse AI Response').item.json.recommended_min }},\n      \"target\": {{ $('Parse AI Response').item.json.recommended_target }},\n      \"maximum\": {{ $('Parse AI Response').item.json.recommended_max }}\n    },\n    \"price_per_sqm_estimate\": {{ $('Parse AI Response').item.json.price_per_sqm_estimate }},\n    \"pricing_strategy\": \"{{ $('Parse AI Response').item.json.pricing_strategy }}\",\n    \"days_on_market_estimate\": {{ $('Parse AI Response').item.json.days_on_market_estimate }},\n    \"market_positioning\": \"{{ $('Parse AI Response').item.json.market_positioning }}\",\n    \"confidence\": {{ $('Parse AI Response').item.json.confidence }}\n  },\n  \"analysis\": {\n    \"key_value_factors\": {{ JSON.stringify($('Parse AI Response').item.json.key_value_factors) }},\n    \"value_concerns\": {{ JSON.stringify($('Parse AI Response').item.json.value_concerns) }},\n    \"recommendation_summary\": \"{{ $('Parse AI Response').item.json.recommendation_summary }}\"\n  },\n  \"comparables_count\": {{ $('Parse AI Response').item.json.comparables_used.length }},\n  \"generated_at\": \"{{ $('Parse AI Response').item.json.generated_at }}\"\n}"
+      },
+      "name": "Respond with Price Analysis",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1450, 400]
+    }
+  ],
+  "connections": {
+    "Webhook: Price Analysis Request": {
+      "main": [
+        [{"node": "Query Comparable Sales", "type": "main", "index": 0}],
+        [{"node": "Query Market Conditions", "type": "main", "index": 0}]
+      ]
+    },
+    "Query Comparable Sales": {
+      "main": [[{"node": "Prepare Property Data", "type": "main", "index": 0}]]
+    },
+    "Query Market Conditions": {
+      "main": [[{"node": "Prepare Property Data", "type": "main", "index": 0}]]
+    },
+    "Prepare Property Data": {
+      "main": [[{"node": "Groq AI Price Analysis", "type": "main", "index": 0}]]
+    },
+    "Groq AI Price Analysis": {
+      "main": [[{"node": "Parse AI Response", "type": "main", "index": 0}]]
+    },
+    "Parse AI Response": {
+      "main": [[{"node": "Save Recommendation to Supabase", "type": "main", "index": 0}]]
+    },
+    "Save Recommendation to Supabase": {
+      "main": [[{"node": "Respond with Price Analysis", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["price-recommendation", "groq", "supabase", "ai-analysis"]
+}

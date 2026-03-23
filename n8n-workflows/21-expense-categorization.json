@@ -1,0 +1,969 @@
+{
+  "name": "Expense Categorization",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "expense-categorize",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Expense Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 200],
+      "webhookId": "expense-categorize"
+    },
+    {
+      "parameters": {
+        "event": "message",
+        "filters": {
+          "replies": {
+            "includeReplies": true
+          }
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+      "name": "Email Receipt Trigger",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "credentials": {
+        "imap": {
+          "id": "expense-email-credentials",
+          "name": "Expense Email IMAP"
+        }
+      },
+      "notes": "Monitor receipts@propagent.co.za for forwarded receipts"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Determine trigger source and extract expense data\nconst webhookData = $input.first().json.body || {};
+const emailData = $input.first().json;
+
+// Check if coming from webhook or email\nconst isEmail = emailData.textHtml !== undefined || emailData.textPlain !== undefined;
+
+let expenseData = {};
+
+if (isEmail) {
+  // Parse email content\n  const emailText = emailData.textHtml || emailData.textPlain || '';
+  const emailSubject = emailData.subject || '';
+  const fromAddress = emailData.from?.value?.[0]?.address || '';
+  
+  // Look for attachments\n  const attachments = emailData.attachments || [];
+  const receiptAttachment = attachments.find(a => 
+    a.contentType?.includes('pdf') || 
+    a.contentType?.includes('image')
+  );
+  
+  // Try to extract amount from subject or body\n  const amountMatch = emailSubject.match(/R[\s]*([\d,]+\.?\d*)/) || 
+                      emailText.match(/R[\s]*([\d,]+\.?\d*)/);
+  const amount = amountMatch ? parseFloat(amountMatch[1].replace(/,/g, '')) : null;
+  
+  // Extract date patterns\n  const dateMatch = emailText.match(/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/);
+  
+  expenseData = {
+    source: 'email',
+    description: emailSubject,
+    vendor_name: emailData.from?.value?.[0]?.name || fromAddress,
+    amount: amount,
+    date: dateMatch ? dateMatch[1] : new Date().toISOString().split('T')[0],
+    ocr_text: emailText.substring(0, 5000),
+    property_address: null,
+    receipt_url: receiptAttachment?.attachmentId || null,
+    email_from: fromAddress,
+    email_subject: emailSubject,
+    has_attachment: !!receiptAttachment
+  };
+} else {
+  // Webhook data\n  expenseData = {
+    source: 'webhook',
+    description: webhookData.description || '',
+    vendor_name: webhookData.vendor_name || '',
+    amount: webhookData.amount ? parseFloat(webhookData.amount) : null,
+    date: webhookData.date || new Date().toISOString().split('T')[0],
+    ocr_text: webhookData.ocr_text || webhookData.notes || '',
+    property_address: webhookData.property_address || null,
+    receipt_url: webhookData.receipt_url || null,
+    submitted_by: webhookData.submitted_by || null
+  };
+}
+
+// Validate required data\nif (!expenseData.description && !expenseData.ocr_text) {
+  return [{
+    json: {
+      error: true,
+      message: 'No expense description or receipt text provided',
+      source: expenseData.source
+    }
+  }];
+}
+
+return [{
+  json: expenseData
+}];"
+      },
+      "id": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+      "name": "Extract Receipt Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 350]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "tableId": "properties",
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "d4e5f6a7-b8c9-0123-defa-456789012345",
+      "name": "Get Properties",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [650, 350],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get expense data and properties\nconst expenseData = $input.all()[0].json;
+const properties = $input.all()[1]?.json?.data || [];
+
+// Check for errors from previous node\nif (expenseData.error) {
+  return [expenseData];
+}
+
+// Format property list for AI context\nconst propertyList = properties.map(p => ({
+  id: p.id,
+  address: p.address,
+  name: p.name || p.address
+}));
+
+// Build property list string for prompt\nconst propertyListStr = propertyList.length > 0 
+  ? propertyList.map(p => `- ${p.name} (ID: ${p.id})`).join('\n')
+  : 'No properties available';
+
+// Normalize amount\nconst amount = expenseData.amount || 0;
+
+// Build the Groq prompt\nconst prompt = `Categorize this expense:
+
+EXPENSE DATA:
+Description: ${expenseData.description || 'N/A'}
+Vendor: ${expenseData.vendor_name || 'N/A'}
+Amount: R${amount.toFixed(2)}
+Date: ${expenseData.date}
+Receipt Text: ${expenseData.ocr_text?.substring(0, 2000) || 'N/A'}
+Property Address (if known): ${expenseData.property_address || 'Not specified'}
+
+Available Properties:
+${propertyListStr}
+
+Expense Categories:
+- maintenance_repairs
+- utilities_electricity
+- utilities_water
+- rates_taxes
+- marketing_advertising
+- insurance
+- legal_professional
+- cleaning_gardening
+- security
+- commission
+- office_expenses
+- other
+
+Analyze and return JSON:
+{
+  "expense_category": "category_key",
+  "category_confidence": 0.0,
+  "vendor_name": "normalized vendor name",
+  "vendor_type": "contractor|utility|service_provider|retail|other",
+  "amount": 0,
+  "vat_amount": 0,
+  "vat_inclusive": true|false,
+  "property_allocation": {
+    "suggested_property_id": "uuid or null",
+    "confidence": 0.0,
+    "reasoning": "why this property"
+  },
+  "is_duplicate": true|false,
+  "duplicate_of": "expense_id if duplicate",
+  "flag_status": "normal|unusual|high_value|review_required",
+  "flags": ["unusual amount", "new vendor", etc],
+  "cost_center": "property_management|leasing|sales|general",
+  "accounting_code": "suggested GL code",
+  "extracted_data": {
+    "invoice_number": "...",
+    "payment_terms": "...",
+    "due_date": "..."
+  },
+  "summary": "brief description for accounting"
+}`;
+
+return [{
+  json: {
+    ...expenseData,
+    properties: propertyList,
+    prompt: prompt,
+    amount_cents: Math.round(amount * 100)
+  }
+}];"
+      },
+      "id": "e5f6a7b8-c9d0-1234-efab-567890123456",
+      "name": "Build Groq Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 350]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "llama-3.3-70b-versatile"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"system\", \"content\": \"You are an expert accounting and expense categorization AI for South African real estate. Analyze expenses accurately, calculate 15% VAT where applicable, detect duplicates, and flag unusual expenses. Always return valid JSON.\"}, {\"role\": \"user\", \"content\": \"{{ $json.prompt }}\"}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.3"
+            },
+            {
+              "name": "max_tokens",
+              "value": "2000"
+            },
+            {
+              "name": "response_format",
+              "value": "={\"type\": \"json_object\"}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f6a7b8c9-d0e1-2345-fabc-678901234567",
+      "name": "Groq AI Categorization",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 350],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "groq-api-key",
+          "name": "Groq API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq AI categorization response\ntry {
+  const aiResponse = $input.first().json;
+  const promptData = $('Build Groq Prompt').item.json;
+  
+  const choice = aiResponse.choices && aiResponse.choices[0];
+  if (!choice) {
+    throw new Error('No choices in AI response');
+  }
+  
+  const content = choice.message?.content || choice.text;
+  let categorization;
+  
+  try {
+    categorization = JSON.parse(content);
+  } catch (parseError) {
+    // Try to extract JSON from markdown code blocks
+    const jsonMatch = content.match(/```(?:json)?\\s*([\\s\\S]*?)```/);
+    if (jsonMatch) {
+      categorization = JSON.parse(jsonMatch[1].trim());
+    } else {
+      throw new Error('Could not parse AI response as JSON');
+    }
+  }
+  
+  // Validate and normalize the categorization
+  const normalizedCategory = categorization.expense_category || 'other';
+  const validCategories = [
+    'maintenance_repairs', 'utilities_electricity', 'utilities_water', 
+    'rates_taxes', 'marketing_advertising', 'insurance', 'legal_professional',
+    'cleaning_gardening', 'security', 'commission', 'office_expenses', 'other'
+  ];
+  
+  const finalCategory = validCategories.includes(normalizedCategory) 
+    ? normalizedCategory 
+    : 'other';
+  
+  // Calculate VAT if not provided\n  let vatAmount = categorization.vat_amount || 0;
+  let vatInclusive = categorization.vat_inclusive !== false;
+  
+  // If VAT is 0 but amount is significant, calculate 15% VAT\n  if (vatAmount === 0 && promptData.amount_cents > 0) {
+    // Check if likely VAT inclusive based on vendor type
+    const vendorType = categorization.vendor_type || '';
+    const vatApplicableTypes = ['contractor', 'service_provider', 'retail'];
+    
+    if (vatApplicableTypes.includes(vendorType)) {
+      const amount = promptData.amount_cents;
+      // Assume VAT inclusive, extract VAT\n      vatAmount = Math.round(amount * 15 / 115);
+      vatInclusive = true;
+    }
+  }
+  
+  return [{
+    json: {
+      success: true,
+      source: promptData.source,
+      original_data: {
+        description: promptData.description,
+        vendor_name: promptData.vendor_name,
+        amount_cents: promptData.amount_cents,
+        date: promptData.date,
+        receipt_url: promptData.receipt_url,
+        submitted_by: promptData.submitted_by
+      },
+      categorization: {
+        expense_category: finalCategory,
+        category_confidence: categorization.category_confidence || 0.5,
+        vendor_name: categorization.vendor_name || promptData.vendor_name,
+        vendor_type: categorization.vendor_type || 'other',
+        amount: categorization.amount || promptData.amount_cents / 100,
+        vat_amount: vatAmount,
+        vat_inclusive: vatInclusive,
+        property_allocation: categorization.property_allocation || {
+          suggested_property_id: null,
+          confidence: 0,
+          reasoning: 'No property match found'
+        },
+        is_duplicate: categorization.is_duplicate || false,
+        duplicate_of: categorization.duplicate_of || null,
+        flag_status: categorization.flag_status || 'normal',
+        flags: categorization.flags || [],
+        cost_center: categorization.cost_center || 'property_management',
+        accounting_code: categorization.accounting_code || '',
+        extracted_data: categorization.extracted_data || {},
+        summary: categorization.summary || promptData.description
+      },
+      ai_model: aiResponse.model,
+      tokens_used: aiResponse.usage?.total_tokens || 0
+    }
+  }];
+} catch (error) {
+  return [{
+    json: {
+      success: false,
+      error: error.message,
+      raw_response: $input.first().json
+    }
+  }];
+}"
+      },
+      "id": "g7b8c9d0-e1f2-3456-abcd-789012345678",
+      "name": "Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 350]
+      },
+    {
+      "parameters": {
+        "operation": "select",
+        "tableId": "categorized_expenses",
+        "filters": {
+          "conditions": [
+            {
+              "column": "vendor_name",
+              "condition": "ilike",
+              "value": "={{ $json.categorization.vendor_name }}"
+            },
+            {
+              "column": "amount",
+              "condition": "eq",
+              "value": "={{ $json.original_data.amount_cents }}"
+            },
+            {
+              "column": "created_at",
+              "condition": "gte",
+              "value": "={{ $now.minus({ days: 30 }).toISO() }}"
+            }
+          ],
+          "combinator": "and"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "h8c9d0e1-f2a3-4567-bcde-890123456789",
+      "name": "Check for Duplicates",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1450, 250],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check duplicate query results and prepare final data\nconst parsedData = $input.all()[0].json;
+const duplicateCheck = $input.all()[1]?.json?.data || [];
+
+if (!parsedData.success) {
+  return [{
+    json: {
+      error: true,
+      message: parsedData.error,
+      stage: 'ai_parsing'
+    }
+  }];
+}
+
+const categorization = parsedData.categorization;
+
+// Check if duplicates found\nconst isDuplicate = duplicateCheck.length > 0 || categorization.is_duplicate;
+const duplicateOf = duplicateCheck.length > 0 ? duplicateCheck[0].id : categorization.duplicate_of;
+
+// Update flags based on duplicate check\nconst flags = [...(categorization.flags || [])];
+if (isDuplicate && !flags.includes('possible duplicate')) {
+  flags.push('possible duplicate');
+}
+
+// Determine final flag status\nlet flagStatus = categorization.flag_status;
+if (isDuplicate) {
+  flagStatus = 'review_required';
+} else if (parsedData.original_data.amount_cents > 1000000) { // > R10,000
+  flagStatus = 'high_value';
+  if (!flags.includes('high value expense')) {
+    flags.push('high value expense');
+  }
+}
+
+return [{
+  json: {
+    ...parsedData,
+    categorization: {
+      ...categorization,
+      is_duplicate: isDuplicate,
+      duplicate_of: duplicateOf,
+      flag_status: flagStatus,
+      flags: flags
+    },
+    duplicate_check: {
+      checked: true,
+      matches_found: duplicateCheck.length,
+      matches: duplicateCheck.map(d => ({ id: d.id, created_at: d.created_at }))
+    }
+  }
+}];"
+      },
+      "id": "i9d0e1f2-a3b4-5678-cdef-901234567890",
+      "name": "Process Duplicate Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 350]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "tableId": "categorized_expenses",
+        "columns": {
+          "mapping": [
+            {
+              "column": "expense_category",
+              "value": "={{ $json.categorization.expense_category }}"
+            },
+            {
+              "column": "category_confidence",
+              "value": "={{ $json.categorization.category_confidence }}"
+            },
+            {
+              "column": "vendor_name",
+              "value": "={{ $json.categorization.vendor_name }}"
+            },
+            {
+              "column": "vendor_type",
+              "value": "={{ $json.categorization.vendor_type }}"
+            },
+            {
+              "column": "amount",
+              "value": "={{ $json.original_data.amount_cents }}"
+            },
+            {
+              "column": "vat_amount",
+              "value": "={{ $json.categorization.vat_amount }}"
+            },
+            {
+              "column": "vat_inclusive",
+              "value": "={{ $json.categorization.vat_inclusive }}"
+            },
+            {
+              "column": "property_id",
+              "value": "={{ $json.categorization.property_allocation.suggested_property_id }}"
+            },
+            {
+              "column": "property_allocation_confidence",
+              "value": "={{ $json.categorization.property_allocation.confidence }}"
+            },
+            {
+              "column": "is_duplicate",
+              "value": "={{ $json.categorization.is_duplicate }}"
+            },
+            {
+              "column": "duplicate_of",
+              "value": "={{ $json.categorization.duplicate_of }}"
+            },
+            {
+              "column": "flag_status",
+              "value": "={{ $json.categorization.flag_status }}"
+            },
+            {
+              "column": "flags",
+              "value": "={{ JSON.stringify($json.categorization.flags) }}"
+            },
+            {
+              "column": "cost_center",
+              "value": "={{ $json.categorization.cost_center }}"
+            },
+            {
+              "column": "accounting_code",
+              "value": "={{ $json.categorization.accounting_code }}"
+            },
+            {
+              "column": "extracted_data",
+              "value": "={{ JSON.stringify($json.categorization.extracted_data) }}"
+            },
+            {
+              "column": "summary",
+              "value": "={{ $json.categorization.summary }}"
+            },
+            {
+              "column": "receipt_url",
+              "value": "={{ $json.original_data.receipt_url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "j0e1f2a3-b4c5-6789-defa-012345678901",
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1850, 350],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-flagged",
+              "leftValue": "={{ $json.categorization.flag_status }}",
+              "rightValue": "normal",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "k1f2a3b4-c5d6-7890-efab-123456789012",
+      "name": "Check if Flagged",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2050, 350]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare notification for finance team\nconst data = $input.first().json;
+const category = data.categorization;
+
+const amount = (data.original_data.amount_cents / 100).toFixed(2);
+const flagEmoji = {
+  'unusual': '⚠️',
+  'high_value': '💰',
+  'review_required': '🚩',
+  'normal': '✅'
+}[category.flag_status] || '⚠️';
+
+return [{
+  json: {
+    notification_type: 'expense_flagged',
+    flag_status: category.flag_status,
+    flags: category.flags,
+    expense: {
+      category: category.expense_category,
+      vendor: category.vendor_name,
+      amount: `R${amount}`,
+      summary: category.summary,
+      property_id: category.property_allocation.suggested_property_id,
+      is_duplicate: category.is_duplicate
+    },
+    message: `${flagEmoji} EXPENSE FLAGGED: ${category.flag_status.toUpperCase()}`,
+    details: `Vendor: ${category.vendor_name}\\nAmount: R${amount}\\nCategory: ${category.expense_category}\\nFlags: ${category.flags.join(', ')}`,
+    review_url: `https://propagent.co.za/admin/expenses/${data.saved_id || 'review'}`
+  }
+}];"
+      },
+      "id": "l2a3b4c5-d6e7-8901-fabc-234567890123",
+      "name": "Prepare Finance Notification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2250, 250]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}"
+      },
+      "id": "m3b4c5d6-e7f8-9012-abcd-345678901234",
+      "name": "Return Categorization Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2250, 450]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "n4c5d6e7-f8a9-0123-bcde-456789012345",
+      "name": "Notify Finance Team",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2450, 250],
+      "notes": "Connect to Slack, Email, or SMS node to notify finance team of flagged expenses.\\n\\nRecommended integrations:\\n- Slack: Post to #finance-alerts channel\\n- Email: Send to finance@propagent.co.za\\n- SMS: Critical high-value expenses (>R50k)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.ACCOUNTING_API_URL || 'https://api.xero.com/api.xro/2.0/Invoices'}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "Type",
+              "value": "ACCPAY"
+            },
+            {
+              "name": "Contact",
+              "value": "={\"Name\": \"{{ $json.categorization.vendor_name }}\"}"
+            },
+            {
+              "name": "LineItems",
+              "value": "=[{\"Description\": \"{{ $json.categorization.summary }}\", \"Quantity\": 1, \"UnitAmount\": {{ $json.original_data.amount_cents / 100 }}, \"AccountCode\": \"{{ $json.categorization.accounting_code || '600' }}\"}]"
+            },
+            {
+              "name": "Status",
+              "value": "DRAFT"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "o5d6e7f8-a9b0-1234-cdef-567890123456",
+      "name": "Export to Xero (Optional)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [2050, 100],
+      "notes": "Optional: Export categorized expense to Xero/QuickBooks.\\nRequires OAuth2 credentials configured.\\n\\nEnable by connecting from 'Process Duplicate Check' node."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Handle errors from any previous node\nconst input = $input.first().json;
+
+if (input.error) {
+  return [{
+    json: {
+      status: 'error',
+      error_type: input.error === true ? 'validation_error' : 'processing_error',
+      message: input.message || input.error || 'Unknown error occurred',
+      stage: input.stage || 'unknown'
+    }
+  }];
+}
+
+// Pass through successful data\nreturn $input.all();"
+      },
+      "id": "p6e7f8a9-b0c1-2345-defa-678901234567",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 550]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options__statusCode": 400
+      },
+      "id": "q7f8a9b0-c1d2-3456-efab-789012345678",
+      "name": "Return Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1050, 550]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare final response\nconst data = $input.first().json;
+
+if (data.error) {
+  return [{
+    json: {
+      status: 'error',
+      message: data.message || data.error,
+      categorization: null
+    }
+  }];
+}
+
+const cat = data.categorization;
+const amount = (data.original_data.amount_cents / 100).toFixed(2);
+
+return [{
+  json: {
+    status: 'success',
+    message: 'Expense categorized successfully',
+    expense: {
+      id: data.saved_id,
+      category: cat.expense_category,
+      category_display: cat.expense_category.replace(/_/g, ' ').replace(/\\b\\w/g, l => l.toUpperCase()),
+      vendor: cat.vendor_name,
+      amount: `R${amount}`,
+      vat_amount: `R${(cat.vat_amount / 100).toFixed(2)}`,
+      property_allocation: cat.property_allocation,
+      flag_status: cat.flag_status,
+      flags: cat.flags,
+      is_duplicate: cat.is_duplicate,
+      summary: cat.summary,
+      cost_center: cat.cost_center,
+      accounting_code: cat.accounting_code
+    },
+    ai_analysis: {
+      confidence: cat.category_confidence,
+      model: data.ai_model,
+      tokens_used: data.tokens_used
+    },
+    next_steps: cat.flag_status === 'normal' 
+      ? ['Expense ready for accounting export']
+      : ['Finance team notified for review', 'Awaiting approval before export']
+  }
+}];"
+      },
+      "id": "r8a9b0c1-d2e3-4567-fabc-890123456789",
+      "name": "Format Final Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2050, 450]
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "error-handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "PropAgent",
+      "id": "tag-propagent",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "AI",
+      "id": "tag-ai",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Accounting",
+      "id": "tag-accounting",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Expenses",
+      "id": "tag-expenses",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "connections": {
+    "Expense Webhook": {
+      "main": [
+        [{
+          "node": "Extract Receipt Data",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Email Receipt Trigger": {
+      "main": [
+        [{
+          "node": "Extract Receipt Data",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Extract Receipt Data": {
+      "main": [
+        [{
+          "node": "Error Handler",
+          "type": "main",
+          "index": 0
+        },
+        {
+          "node": "Get Properties",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    },
+    "Get Properties": {
+      "main": [
+        [{
+          "node": "Build Groq Prompt",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Build Groq Prompt": {
+      "main": [
+        [{
+          "node": "Groq AI Categorization",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Groq AI Categorization": {
+      "main": [
+        [{
+          "node": "Parse AI Response",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Parse AI Response": {
+      "main": [
+        [{
+          "node": "Check for Duplicates",
+          "type": "main",
+          "index": 0
+        },
+        {
+          "node": "Process Duplicate Check",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    },
+    "Check for Duplicates": {
+      "main": [
+        [{
+          "node": "Process Duplicate Check",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Process Duplicate Check": {
+      "main": [
+        [{
+          "node": "Save to Supabase",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Save to Supabase": {
+      "main": [
+        [{
+          "node": "Check if Flagged",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Check if Flagged": {
+      "main": [
+        [{
+          "node": "Prepare Finance Notification",
+          "type": "main",
+          "index": 0
+        },
+        {
+          "node": "Format Final Response",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    },
+    "Prepare Finance Notification": {
+      "main": [
+        [{
+          "node": "Notify Finance Team",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Format Final Response": {
+      "main": [
+        [{
+          "node": "Return Categorization Result",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Notify Finance Team": {
+      "main": [
+        [{
+          "node": "Return Categorization Result",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [{
+          "node": "Return Error",
+          "type": "main",
+          "index": 0
+        }]
+      ]
+    }
+  }
+}

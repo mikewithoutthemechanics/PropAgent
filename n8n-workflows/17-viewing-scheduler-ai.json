@@ -1,0 +1,507 @@
+{
+  "name": "Viewing Scheduler AI",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "viewing-scheduler",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        0
+      ],
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "webhookId": "viewing-scheduler"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Groq AI prompt\nconst input = $input.first().json.body || $input.first().json;\n\nconst prompt = `Parse this viewing request:\n\nClient Message: ${input.message || ''}\nClient Name: ${input.name || ''}\nClient Phone: ${input.phone || ''}\nClient Email: ${input.email || ''}\n\nExtract and return JSON:\n{\n  \"intent\": \"schedule|reschedule|cancel|inquiry\",\n  \"property_reference\": \"address or ID mentioned\",\n  \"property_confidence\": 0.0-1.0,\n  \"preferred_dates\": [\n    {\n      \"date\": \"YYYY-MM-DD or relative (today, tomorrow, this weekend)\",\n      \"time_preference\": \"morning|afternoon|evening|specific time\",\n      \"flexibility\": \"strict|flexible\"\n    }\n  ],\n  \"urgency\": \"high|medium|low\",\n  \"party_size\": 0,\n  \"special_requirements\": [\"wheelchair access\", \"after hours\", etc],\n  \"client_type\": \"serious_buyer|curious|investor|first_time\",\n  \"suggested_response\": \"confirmation message draft\"\n}`;\n\nreturn {\n  json: {\n    prompt: prompt,\n    client_data: input\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -600,
+        0
+      ],
+      "id": "prepare-prompt",
+      "name": "Prepare Groq Prompt"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": {
+          "model": "llama-3.1-8b-instant",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are an AI assistant for a South African real estate platform. Parse property viewing requests and extract structured information. Be precise about dates, times, and property references. Consider local context (Cape Town, Johannesburg, Durban areas). Return valid JSON only."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.prompt }}"
+            }
+          ],
+          "temperature": 0.2,
+          "max_tokens": 1024,
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -400,
+        0
+      ],
+      "id": "groq-parse",
+      "name": "Groq AI Parse",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "groq-api-key",
+          "name": "Groq API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq response and extract AI parsed data\nconst groqResponse = $input.first().json;\nconst clientData = $('Prepare Groq Prompt').first().json.client_data;\n\nlet parsedData;\ntry {\n  // Groq returns content in choices[0].message.content\n  const content = groqResponse.choices?.[0]?.message?.content || groqResponse.content;\n  parsedData = typeof content === 'string' ? JSON.parse(content) : content;\n} catch (e) {\n  return {\n    json: {\n      error: 'Failed to parse AI response',\n      raw_response: groqResponse,\n      client_data: clientData\n    }\n  };\n}\n\n// Resolve relative dates to actual dates\nfunction resolveDate(dateStr) {\n  const today = new Date();\n  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];\n  \n  const dateStrLower = dateStr.toLowerCase().trim();\n  \n  // Handle 'today'\n  if (dateStrLower === 'today') {\n    return today.toISOString().split('T')[0];\n  }\n  \n  // Handle 'tomorrow'\n  if (dateStrLower === 'tomorrow') {\n    const tomorrow = new Date(today);\n    tomorrow.setDate(today.getDate() + 1);\n    return tomorrow.toISOString().split('T')[0];\n  }\n  \n  // Handle 'this weekend' (Saturday)\n  if (dateStrLower === 'this weekend') {\n    const saturday = new Date(today);\n    saturday.setDate(today.getDate() + (6 - today.getDay()));\n    return saturday.toISOString().split('T')[0];\n  }\n  \n  // Handle 'next week' (next Monday)\n  if (dateStrLower === 'next week') {\n    const nextMonday = new Date(today);\n    nextMonday.setDate(today.getDate() + ((8 - today.getDay()) % 7 || 7));\n    return nextMonday.toISOString().split('T')[0];\n  }\n  \n  // Handle day names (e.g., 'next tuesday')\n  for (const day of dayNames) {\n    if (dateStrLower.includes(day)) {\n      const targetDayIndex = dayNames.indexOf(day);\n      const currentDayIndex = today.getDay();\n      let daysToAdd = targetDayIndex - currentDayIndex;\n      \n      if (dateStrLower.includes('next') || daysToAdd <= 0) {\n        daysToAdd += 7;\n      }\n      \n      const targetDate = new Date(today);\n      targetDate.setDate(today.getDate() + daysToAdd);\n      return targetDate.toISOString().split('T')[0];\n    }\n  }\n  \n  // Assume it's already in YYYY-MM-DD format\n  return dateStr;\n}\n\n// Process preferred dates\nconst resolvedDates = (parsedData.preferred_dates || []).map(d => ({\n  ...d,\n  resolved_date: resolveDate(d.date)\n}));\n\n// Generate suggested time slots based on preferences\nfunction generateTimeSlots(timePreference) {\n  const slots = [];\n  switch (timePreference) {\n    case 'morning':\n      slots.push('09:00', '10:30', '11:30');\n      break;\n    case 'afternoon':\n      slots.push('13:00', '14:30', '16:00');\n      break;\n    case 'evening':\n      slots.push('17:00', '17:30', '18:00');\n      break;\n    default:\n      // Mixed/default\n      slots.push('10:00', '14:00', '16:00');\n  }\n  return slots;\n}\n\nconst enrichedData = {\n  ...parsedData,\n  preferred_dates: resolvedDates.map(d => ({\n    ...d,\n    suggested_slots: generateTimeSlots(d.time_preference)\n  })),\n  client_data: clientData,\n  parsed_at: new Date().toISOString()\n};\n\nreturn {\n  json: enrichedData\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        0
+      ],
+      "id": "parse-ai-response",
+      "name": "Parse AI Response"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": "public",
+        "table": "agent_availability",
+        "filters": {
+          "conditions": [
+            {
+              "column": "date",
+              "operator": "eq",
+              "value": "={{ $json.preferred_dates?.[0]?.resolved_date }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -100
+      ],
+      "id": "query-availability",
+      "name": "Query Agent Availability",
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Match preferred slots with agent availability\nconst parsedData = $input.first().json;\nconst availabilityData = $('Query Agent Availability').all();\n\n// Default agent availability if no record found\nconst defaultSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];\n\n// Get available slots from database or use defaults\nlet availableSlots = defaultSlots;\nlet agentId = null;\nlet bookedSlots = [];\n\nif (availabilityData.length > 0 && availabilityData[0].json) {\n  const agentRecord = availabilityData[0].json;\n  availableSlots = agentRecord.available_slots || defaultSlots;\n  bookedSlots = agentRecord.booked_slots || [];\n  agentId = agentRecord.agent_id;\n}\n\n// Filter out booked slots\nconst freeSlots = availableSlots.filter(slot => !bookedSlots.includes(slot));\n\n// Get preferred time preference\nconst timePreference = parsedData.preferred_dates?.[0]?.time_preference || 'any';\nconst urgency = parsedData.urgency || 'medium';\n\n// Match slots based on preference\nlet matchedSlots = [];\n\nif (timePreference === 'morning') {\n  matchedSlots = freeSlots.filter(t => {\n    const hour = parseInt(t.split(':')[0]);\n    return hour >= 8 && hour < 12;\n  });\n} else if (timePreference === 'afternoon') {\n  matchedSlots = freeSlots.filter(t => {\n    const hour = parseInt(t.split(':')[0]);\n    return hour >= 12 && hour < 17;\n  });\n} else if (timePreference === 'evening') {\n  matchedSlots = freeSlots.filter(t => {\n    const hour = parseInt(t.split(':')[0]);\n    return hour >= 17;\n  });\n} else {\n  matchedSlots = freeSlots;\n}\n\n// Take top 3 slots\nconst suggestedSlots = matchedSlots.slice(0, 3).map(slot => ({\n  time: slot,\n  date: parsedData.preferred_dates?.[0]?.resolved_date,\n  datetime: `${parsedData.preferred_dates?.[0]?.resolved_date}T${slot}:00`,\n  confidence: 0.9\n}));\n\n// If no slots match preference, suggest alternatives\nif (suggestedSlots.length === 0 && freeSlots.length > 0) {\n  suggestedSlots.push(\n    ...freeSlots.slice(0, 3).map(slot => ({\n      time: slot,\n      date: parsedData.preferred_dates?.[0]?.resolved_date,\n      datetime: `${parsedData.preferred_dates?.[0]?.resolved_date}T${slot}:00`,\n      confidence: 0.6,\n      note: 'Alternative time outside preference'\n    }))\n  );\n}\n\nreturn {\n  json: {\n    parsed_data: parsedData,\n    agent_id: agentId,\n    suggested_slots: suggestedSlots,\n    total_available: freeSlots.length,\n    slots_found: suggestedSlots.length > 0,\n    urgency: urgency\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        -100
+      ],
+      "id": "match-slots",
+      "name": "Match Slots"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "slots-available",
+              "leftValue": "={{ $json.slots_found }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "equals",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        400,
+        -100
+      ],
+      "id": "slots-check",
+      "name": "Slots Available?"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "viewing_requests",
+        "data": {
+          "client_name": "={{ $('Parse AI Response').item.json.client_data.name }}",
+          "client_phone": "={{ $('Parse AI Response').item.json.client_data.phone }}",
+          "client_email": "={{ $('Parse AI Response').item.json.client_data.email }}",
+          "property_id": "={{ $('Parse AI Response').item.json.property_id }}",
+          "property_address": "={{ $('Parse AI Response').item.json.property_reference }}",
+          "parsed_preferences": "={{ JSON.stringify($('Parse AI Response').item.json.preferred_dates) }}",
+          "urgency": "={{ $('Parse AI Response').item.json.urgency }}",
+          "suggested_slots": "={{ JSON.stringify($('Match Slots').item.json.suggested_slots) }}",
+          "agent_id": "={{ $json.agent_id }}",
+          "status": "pending_confirmation"
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -200
+      ],
+      "id": "save-request",
+      "name": "Save Viewing Request",
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate confirmation message\nconst data = $('Match Slots').item.json;\nconst parsed = data.parsed_data;\n\nconst slots = data.suggested_slots.map((slot, index) => {\n  const time = slot.time;\n  const date = new Date(slot.date).toLocaleDateString('en-ZA', {\n    weekday: 'long',\n    day: 'numeric',\n    month: 'long'\n  });\n  return `${index + 1}. ${date} at ${time}`;\n}).join('\\n');\n\nconst propertyRef = parsed.property_reference || 'your requested property';\nconst clientName = parsed.client_data?.name || 'there';\n\nlet message = `Hi ${clientName},\\n\\n`;\nmessage += `Great! I've found ${data.suggested_slots.length} available time slots for viewing ${propertyRef}:`;\nmessage += `\\n\\n${slots}\\n\\n`;\nmessage += `Please reply with the number (1, 2, or 3) of your preferred time, or let me know if none work for you.\\n\\n`;\nmessage += `Your reference: #${Math.random().toString(36).substr(2, 6).toUpperCase()}`;\n\nreturn {\n  json: {\n    message: message,\n    to: parsed.client_data?.phone || parsed.client_data?.email,\n    request_id: data.request_id,\n    slots: data.suggested_slots\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -200
+      ],
+      "id": "prepare-confirmation",
+      "name": "Prepare Confirmation"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Alternative dates message\nconst data = $('Match Slots').item.json;\nconst parsed = data.parsed_data;\nconst clientName = parsed.client_data?.name || 'there';\n\nlet message = `Hi ${clientName},\\n\\n`;\nmessage += `I couldn't find availability for your preferred time. `;\n\nif (data.total_available > 0) {\n  message += `However, I have ${data.total_available} other slots available on that day.`;\n} else {\n  message += `Would you like me to check the next available day?`;\n}\n\nmessage += `\\n\\nPlease let me know some alternative times that might work for you.`;\n\nreturn {\n  json: {\n    message: message,\n    to: parsed.client_data?.phone || parsed.client_data?.email,\n    alternative_requested: true\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        100
+      ],
+      "id": "request-alternatives",
+      "name": "Request Alternatives"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WHATSAPP_API_URL || 'https://api.twilio.com/2010-04-01/Accounts/ACxxx/Messages.json' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "body": {
+          "To": "whatsapp:+{{ $json.to.replace(/\\D/g, '') }}",
+          "From": "={{ $env.WHATSAPP_FROM_NUMBER }}",
+          "Body": "={{ $json.message }}"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        -200
+      ],
+      "id": "send-whatsapp",
+      "name": "Send WhatsApp/Twilio",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "twilio-credentials",
+          "name": "Twilio Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        -200
+      ],
+      "id": "webhook-response",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.EMAIL_API_URL || 'https://api.sendgrid.com/v3/mail/send' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": {
+          "personalizations": [
+            {
+              "to": [
+                {
+                  "email": "={{ $json.to }}"
+                }
+              ]
+            }
+          ],
+          "from": {
+            "email": "viewings@propagent.co.za"
+          },
+          "subject": "Viewing Request - Alternative Times Needed",
+          "content": [
+            {
+              "type": "text/plain",
+              "value": "={{ $json.message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        100
+      ],
+      "id": "send-email-alt",
+      "name": "Send Email (Alt)",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "sendgrid-api-key",
+          "name": "SendGrid API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        100
+      ],
+      "id": "webhook-response-alt",
+      "name": "Respond (Alt Needed)"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1000,
+        0
+      ],
+      "id": "merge-outputs",
+      "name": "Merge Outputs"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "AI",
+      "id": "tag-ai",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Scheduler",
+      "id": "tag-scheduler",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Viewing",
+      "id": "tag-viewing",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Groq Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Groq Prompt": {
+      "main": [
+        [
+          {
+            "node": "Groq AI Parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq AI Parse": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "Query Agent Availability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Agent Availability": {
+      "main": [
+        [
+          {
+            "node": "Match Slots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Match Slots": {
+      "main": [
+        [
+          {
+            "node": "Slots Available?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slots Available?": {
+      "main": [
+        [
+          {
+            "node": "Save Viewing Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Request Alternatives",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Viewing Request": {
+      "main": [
+        [
+          {
+            "node": "Prepare Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp/Twilio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp/Twilio": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request Alternatives": {
+      "main": [
+        [
+          {
+            "node": "Send Email (Alt)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email (Alt)": {
+      "main": [
+        [
+          {
+            "node": "Respond (Alt Needed)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

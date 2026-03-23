@@ -1,0 +1,335 @@
+{
+  "name": "18 - Tenant Screening",
+  "nodes": [
+    {
+      "id": "webhook-trigger",
+      "name": "Webhook - Application Submitted",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "webhookId": "tenant-screening",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tenant-screening",
+        "responseMode": "responseNode",
+        "options": {
+          "responseData": "all"
+        }
+      }
+    },
+    {
+      "id": "prepare-data",
+      "name": "Code - Prepare Application Data",
+      "type": "n8n-nodes-base.code",
+      "position": [450, 300],
+      "parameters": {
+        "jsCode": "// Extract and validate application data from webhook payload\nconst body = $input.first().json.body;\n\n// Validate required fields\nif (!body.name || !body.monthly_income) {\n  throw new Error('Missing required fields: name and monthly_income are required');\n}\n\n// Calculate monthly rent from property data\nconst monthlyRent = body.property_rent || body.rent_amount || 0;\n\n// Format rental history\nconst rentalHistory = body.rental_history || [];\nconst formattedHistory = Array.isArray(rentalHistory) \n  ? rentalHistory.map(r => `${r.address || 'Unknown'} (${r.duration || 'N/A'})`).join('; ')\n  : rentalHistory;\n\n// Prepare the prompt for Groq AI\nconst promptText = `Screen this tenant application:\n\nAPPLICATION DATA:\nApplicant Name: ${body.name}\nMonthly Income: R${body.monthly_income}\nEmployment Status: ${body.employment_status || 'Not provided'}\nEmployer: ${body.employer || 'Not provided'}\nEmployment Duration: ${body.employment_duration || 'Not provided'}\nPrevious Rentals: ${formattedHistory || 'None'}\nReason for Moving: ${body.reason_for_moving || 'Not provided'}\nNumber of Occupants: ${body.occupants || 1}\nPets: ${body.pets || 'None'}\nDocuments Provided: ${Array.isArray(body.documents) ? body.documents.join(', ') : body.documents || 'None'}\n\nCalculate risk and return JSON:\n{\n  \"completeness_score\": 0-100,\n  \"risk_level\": \"low|medium|high\",\n  \"risk_score\": 0-100,\n  \"affordability_ratio\": 0.0-1.0,\n  \"affordability_status\": \"excellent|good|fair|poor\",\n  \"red_flags\": [\n    {\n      \"flag\": \"description\",\n      \"severity\": \"low|medium|high\",\n      \"recommendation\": \"action to take\"\n    }\n  ],\n  \"positive_indicators\": [\"stable employment\", etc],\n  \"recommended_verifications\": [\n    \"employment verification\",\n    \"previous landlord reference\",\n    etc\n  ],\n  \"document_issues\": [\"missing payslip\", etc],\n  \"summary\": \"brief assessment for agent\",\n  \"recommendation\": \"approve_with_conditions|further_review|reject\",\n  \"confidence\": 0.0-1.0\n}`;\n\nreturn [{\n  json: {\n    application_id: body.application_id || null,\n    applicant_name: body.name,\n    monthly_income: body.monthly_income,\n    monthly_rent: monthlyRent,\n    employment_status: body.employment_status,\n    employer: body.employer,\n    employment_duration: body.employment_duration,\n    rental_history: formattedHistory,\n    reason_for_moving: body.reason_for_moving,\n    occupants: body.occupants || 1,\n    pets: body.pets || 'None',\n    documents: body.documents || [],\n    property_id: body.property_id || null,\n    agent_email: body.agent_email || null,\n    prompt: promptText,\n    raw_payload: body\n  }\n}];"
+      }
+    },
+    {
+      "id": "groq-request",
+      "name": "HTTP Request - Groq AI Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [650, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": {
+          "model": "llama-3.1-8b-instant",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are an expert tenant screening analyst for South African real estate. Analyze applications objectively and return ONLY valid JSON. Be thorough but fair. Consider local context (employment stability, rental market conditions, typical documentation)."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.prompt }}"
+            }
+          ],
+          "temperature": 0.3,
+          "max_tokens": 1500,
+          "response_format": { "type": "json_object" }
+        },
+        "options": {
+          "retry": {
+            "maxRetries": 3,
+            "retryOn": [408, 429, 500, 502, 503, 504]
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Groq API Key",
+          "properties": {
+            "name": "Authorization",
+            "value": "Bearer YOUR_GROQ_API_KEY"
+          }
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "id": "parse-response",
+      "name": "Code - Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "position": [850, 300],
+      "parameters": {
+        "jsCode": "// Get the AI response and previous node data\nconst groqResponse = $input.first().json;\nconst prevData = $input.all()[0].json;\n\n// Extract the JSON content from Groq response\nlet screeningResult;\ntry {\n  const messageContent = groqResponse.choices?.[0]?.message?.content;\n  if (messageContent) {\n    screeningResult = JSON.parse(messageContent);\n  } else {\n    throw new Error('Empty response from Groq AI');\n  }\n} catch (error) {\n  // Fallback if parsing fails\n  screeningResult = {\n    completeness_score: 50,\n    risk_level: 'high',\n    risk_score: 75,\n    affordability_ratio: 0.5,\n    affordability_status: 'unknown',\n    red_flags: [{ flag: 'AI parsing error', severity: 'high', recommendation: 'Manual review required' }],\n    positive_indicators: [],\n    recommended_verifications: ['manual review'],\n    document_issues: ['screening failed'],\n    summary: 'Error parsing AI response - manual review required',\n    recommendation: 'further_review',\n    confidence: 0.1\n  };\n}\n\n// Validate and normalize the response\nconst result = {\n  application_id: prevData.application_id,\n  applicant_name: prevData.applicant_name,\n  completeness_score: Math.min(100, Math.max(0, screeningResult.completeness_score || 0)),\n  risk_level: ['low', 'medium', 'high'].includes(screeningResult.risk_level) ? screeningResult.risk_level : 'high',\n  risk_score: Math.min(100, Math.max(0, screeningResult.risk_score || 50)),\n  affordability_ratio: Math.min(1, Math.max(0, screeningResult.affordability_ratio || 0.5)),\n  affordability_status: screeningResult.affordability_status || 'unknown',\n  red_flags: Array.isArray(screeningResult.red_flags) ? screeningResult.red_flags : [],\n  positive_indicators: Array.isArray(screeningResult.positive_indicators) ? screeningResult.positive_indicators : [],\n  recommended_verifications: Array.isArray(screeningResult.recommended_verifications) ? screeningResult.recommended_verifications : [],\n  document_issues: Array.isArray(screeningResult.document_issues) ? screeningResult.document_issues : [],\n  summary: screeningResult.summary || 'No summary provided',\n  recommendation: ['approve_with_conditions', 'further_review', 'reject'].includes(screeningResult.recommendation) ? screeningResult.recommendation : 'further_review',\n  confidence: Math.min(1, Math.max(0, screeningResult.confidence || 0.5)),\n  monthly_income: prevData.monthly_income,\n  monthly_rent: prevData.monthly_rent,\n  agent_email: prevData.agent_email\n};\n\n// Flag if high risk for conditional routing\nresult.is_high_risk = result.risk_level === 'high' || result.risk_score >= 70;\nresult.requires_urgent_review = result.risk_level === 'high' || result.red_flags.some(f => f.severity === 'high');\n\nreturn [{ json: result }];"
+      }
+    },
+    {
+      "id": "save-to-supabase",
+      "name": "Supabase - Save Screening Results",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1050, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "schema": "public",
+        "query": "INSERT INTO tenant_screening_results (\n  application_id,\n  applicant_name,\n  completeness_score,\n  risk_level,\n  risk_score,\n  affordability_ratio,\n  affordability_status,\n  red_flags,\n  positive_indicators,\n  recommended_verifications,\n  document_issues,\n  summary,\n  recommendation,\n  confidence\n) VALUES (\n  {{ $json.application_id ? \"'\" + $json.application_id + \"'\" : 'NULL' }},\n  '{{ $json.applicant_name }}',\n  {{ $json.completeness_score }},\n  '{{ $json.risk_level }}',\n  {{ $json.risk_score }},\n  {{ $json.affordability_ratio }},\n  '{{ $json.affordability_status }}',\n  '{{ JSON.stringify($json.red_flags) }}'::jsonb,\n  '{{ JSON.stringify($json.positive_indicators) }}'::jsonb,\n  '{{ JSON.stringify($json.recommended_verifications) }}'::jsonb,\n  '{{ JSON.stringify($json.document_issues) }}'::jsonb,\n  '{{ $json.summary.replace(/'/g, \"''\") }}',\n  '{{ $json.recommendation }}',\n  {{ $json.confidence }}\n) RETURNING id;"
+      },
+      "credentials": {
+        "postgres": {
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "id": "check-risk-level",
+      "name": "IF - High Risk Check",
+      "type": "n8n-nodes-base.if",
+      "position": [1250, 300],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.risk_level }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "notify-agent-urgent",
+      "name": "HTTP Request - Notify Agent (Urgent)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1450, 200],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.agent_email ? 'https://api.sendgrid.com/v3/mail/send' : 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": {
+          "personalizations": [
+            {
+              "to": [{"email": "={{ $json.agent_email || 'agent@propagent.co.za' }}"}]
+            }
+          ],
+          "from": {"email": "screening@propagent.co.za", "name": "PropAgent Screening"},
+          "subject": "🚨 HIGH RISK: Tenant Application Requires Urgent Review - {{ $json.applicant_name }}",
+          "content": [
+            {
+              "type": "text/plain",
+              "value": "URGENT: High Risk Tenant Application\n\nApplicant: {{ $json.applicant_name }}\nRisk Level: {{ $json.risk_level.toUpperCase() }}\nRisk Score: {{ $json.risk_score }}/100\nAffordability: {{ $json.affordability_status }} ({{ ($json.affordability_ratio * 100).toFixed(1) }}%)\n\nRED FLAGS:\n{{ $json.red_flags.map(f => `- ${f.flag} (${f.severity})`).join('\\n') }}\n\nRECOMMENDED ACTIONS:\n{{ $json.recommended_verifications.map(v => `- ${v}`).join('\\n') }}\n\nSummary: {{ $json.summary }}\n\nThis application requires immediate manual review before proceeding.\n\nPropAgent Screening System"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "SendGrid API Key"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "notify-agent-standard",
+      "name": "HTTP Request - Notify Agent (Standard)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1450, 400],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.agent_email ? 'https://api.sendgrid.com/v3/mail/send' : 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": {
+          "personalizations": [
+            {
+              "to": [{"email": "={{ $json.agent_email || 'agent@propagent.co.za' }}"}]
+            }
+          ],
+          "from": {"email": "screening@propagent.co.za", "name": "PropAgent Screening"},
+          "subject": "Tenant Application Screening Complete - {{ $json.applicant_name }}",
+          "content": [
+            {
+              "type": "text/plain",
+              "value": "Tenant Application Screening Complete\n\nApplicant: {{ $json.applicant_name }}\nRisk Level: {{ $json.risk_level.toUpperCase() }}\nRisk Score: {{ $json.risk_score }}/100\nAffordability: {{ $json.affordability_status }} ({{ ($json.affordability_ratio * 100).toFixed(1) }}%)\nCompleteness: {{ $json.completeness_score }}%\n\nPOSITIVE INDICATORS:\n{{ $json.positive_indicators.length > 0 ? $json.positive_indicators.map(i => `- ${i}`).join('\\n') : 'None noted' }}\n\n{{ $json.red_flags.length > 0 ? 'AREAS OF CONCERN:\\n' + $json.red_flags.map(f => `- ${f.flag}`).join('\\n') : '' }}\n\nRECOMMENDED VERIFICATIONS:\n{{ $json.recommended_verifications.map(v => `- ${v}`).join('\\n') }}\n\nSummary: {{ $json.summary }}\n\nRecommendation: {{ $json.recommendation.replace(/_/g, ' ').toUpperCase() }}\n\nPropAgent Screening System"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "SendGrid API Key"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1650, 300],
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  success: true,\n  screening_complete: true,\n  applicant_name: $json.applicant_name,\n  risk_level: $json.risk_level,\n  risk_score: $json.risk_score,\n  completeness_score: $json.completeness_score,\n  affordability_status: $json.affordability_status,\n  affordability_ratio: $json.affordability_ratio,\n  red_flags_count: $json.red_flags.length,\n  positive_indicators: $json.positive_indicators,\n  recommended_verifications: $json.recommended_verifications,\n  summary: $json.summary,\n  recommendation: $json.recommendation,\n  confidence: $json.confidence,\n  requires_urgent_review: $json.requires_urgent_review,\n  message: $json.risk_level === 'high' \n    ? 'High risk application flagged for urgent review' \n    : 'Screening complete - ready for agent review'\n}, null, 2) }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Application Submitted": {
+      "main": [
+        [
+          {
+            "node": "Code - Prepare Application Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Prepare Application Data": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Groq AI Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Groq AI Analysis": {
+      "main": [
+        [
+          {
+            "node": "Code - Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "Supabase - Save Screening Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase - Save Screening Results": {
+      "main": [
+        [
+          {
+            "node": "IF - High Risk Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - High Risk Check": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Notify Agent (Urgent)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request - Notify Agent (Standard)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Notify Agent (Urgent)": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Notify Agent (Standard)": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "PropAgent",
+      "id": "tag-propagator"
+    },
+    {
+      "name": "Tenant Screening",
+      "id": "tag-tenant-screening"
+    },
+    {
+      "name": "AI",
+      "id": "tag-ai"
+    }
+  ],
+  "pinData": {},
+  "config": {
+    "timezone": "Africa/Johannesburg"
+  }
+}
