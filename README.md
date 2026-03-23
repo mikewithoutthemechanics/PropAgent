@@ -41,11 +41,36 @@ AI-powered real estate management platform leveraging n8n automation to reduce d
 | Tenant Inquiry Auto-Responder | `n8n-workflows/01-tenant-inquiry-autoresponder.json` | AI WhatsApp responses (OpenAI) | ✅ Ready |
 | Rent Reminder Sequence | `n8n-workflows/02-rent-reminder-sequence.json` | Automated rent reminders (OpenAI) | ✅ Ready |
 | Property Description Generator | `n8n-workflows/03-property-description-generator.json` | AI listing descriptions (OpenAI) | ✅ Ready |
-| **Tenant Inquiry (Groq Free)** | `n8n-workflows/04-tenant-inquiry-groq.json` | WhatsApp AI (Llama 3.1) | ✅ **FREE** |
-| **Rent Reminder (Groq Free)** | `n8n-workflows/05-rent-reminder-groq.json` | SMS reminders (Mixtral) | ✅ **FREE** |
-| **Property Description (Groq)** | `n8n-workflows/06-property-description-groq.json` | Listing generator (Llama 3.1) | ✅ **FREE** |
+| **Tenant Inquiry (Groq Free)** | `n8n-workflows/04-tenant-inquiry-groq.json` | WhatsApp AI (Llama 3.1) | ✅ **Deployed** |
+| **Rent Reminder (Groq Free)** | `n8n-workflows/05-rent-reminder-groq.json` | SMS reminders (Mixtral) | ✅ **Deployed** |
+| **Property Description (Groq)** | `n8n-workflows/06-property-description-groq.json` | Listing generator (Llama 3.1) | ✅ **Deployed** |
+| Lead Scoring Engine | `n8n-workflows/07-lead-scoring-engine.json` | Score leads 0-100 | ✅ Ready |
+| Email Intent Classifier | `n8n-workflows/08-email-intent-classifier.json` | Classify & route emails | ✅ Ready |
+| Maintenance Ticket Router | `n8n-workflows/09-maintenance-ticket-router.json` | Classify maintenance issues | ✅ Ready |
+| FICA Document OCR | `n8n-workflows/10-fica-document-ocr.json` | Extract document data | ✅ Ready |
+| Property Matching Engine | `n8n-workflows/11-property-matching-engine.json` | Match buyers to properties | ✅ Ready |
+| Lease Agreement Analyzer | `n8n-workflows/12-lease-agreement-analyzer.json` | Analyze lease terms | ✅ Ready |
+| Rent Collection Follow-up | `n8n-workflows/13-rent-collection-followup.json` | Multi-stage collection | ✅ Ready |
+| Property Photo Tagging | `n8n-workflows/14-property-photo-tagging.json` | Auto-tag photos | ✅ Ready |
+| Market Report Generator | `n8n-workflows/15-market-report-generator.json` | Weekly market reports | ✅ Ready |
+| Contractor Quote Comparison | `n8n-workflows/16-contractor-quote-comparison.json` | Compare quotes | ✅ Ready |
+| Viewing Scheduler AI | `n8n-workflows/17-viewing-scheduler-ai.json` | Schedule viewings | ✅ Ready |
+| Tenant Screening | `n8n-workflows/18-tenant-screening.json` | Screen applications | ✅ Ready |
+| Property Price Recommendation | `n8n-workflows/19-property-price-recommendation.json` | Price analysis | ✅ Ready |
+| Social Media Content Generator | `n8n-workflows/20-social-media-content-generator.json` | Generate social posts | ✅ Ready |
+| Expense Categorization | `n8n-workflows/21-expense-categorization.json` | Categorize receipts | ✅ Ready |
 
-**Total Workflows**: 6 ready (3 OpenAI, 3 Free) | 36 planned | 183 remaining
+**Total Workflows**: 21 ready (11% of 189 planned) | 168 remaining
+
+### 🚀 Deployment Status
+
+| Environment | Workflows | Status |
+|-------------|-----------|--------|
+| **n8n Local** | 04, 05, 06 | ✅ **Imported & Ready** |
+| **n8n Local** | 07-21 | ⏳ Needs credential setup |
+| **Production** | - | ⏳ Not deployed |
+
+**Next**: Configure Groq API + Supabase, run end-to-end tests
 
 ### 🆓 Free Stack (Groq + Supabase = $0/month)
 
