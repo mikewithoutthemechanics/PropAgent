@@ -1,0 +1,565 @@
+{
+  "name": "15 - Market Report Generator",
+  "nodes": [
+    {
+      "id": "trigger-schedule",
+      "name": "Weekly Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "expression": "1"
+            },
+            {
+              "field": "hours",
+              "expression": "8"
+            },
+            {
+              "field": "minutes",
+              "expression": "0"
+            },
+            {
+              "field": "dayOfWeek",
+              "expression": "1"
+            }
+          ]
+        }
+      },
+      "notes": "Runs every Monday at 8:00 AM"
+    },
+    {
+      "id": "trigger-webhook",
+      "name": "Manual Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 500],
+      "webhookId": "market-report-manual",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "market-report-manual",
+        "responseMode": "responseNode",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "notes": "Manual trigger for on-demand reports. Accepts JSON body with area, city, period_start, period_end"
+    },
+    {
+      "id": "merge-triggers",
+      "name": "Merge Triggers",
+      "type": "n8n-nodes-base.merge",
+      "position": [450, 400],
+      "parameters": {
+        "mode": "mergeByPosition"
+      }
+    },
+    {
+      "id": "set-default-params",
+      "name": "Set Default Parameters",
+      "type": "n8n-nodes-base.set",
+      "position": [650, 400],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "area",
+              "value": "={{ $json.body?.area ?? 'Sandton' }}"
+            },
+            {
+              "name": "city",
+              "value": "={{ $json.body?.city ?? 'Johannesburg' }}"
+            },
+            {
+              "name": "period_end",
+              "value": "={{ $json.body?.period_end ?? $today.minus({days: 1}).toFormat('yyyy-MM-dd') }}"
+            },
+            {
+              "name": "period_start",
+              "value": "={{ $json.body?.period_start ?? $today.minus({months: 1}).toFormat('yyyy-MM-dd') }}"
+            },
+            {
+              "name": "previous_period_start",
+              "value": "={{ $today.minus({months: 2}).toFormat('yyyy-MM-dd') }}"
+            },
+            {
+              "name": "previous_period_end",
+              "value": "={{ $today.minus({months: 1, days: 1}).toFormat('yyyy-MM-dd') }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "supabase-query-current",
+      "name": "Query Current Period Sales",
+      "type": "n8n-nodes-base.supabase",
+      "position": [850, 300],
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "property_sales",
+        "returnAll": true,
+        "match": {
+          "area": "={{ $json.area }}",
+          "city": "={{ $json.city }}"
+        },
+        "filter": {
+          "conditions": [
+            {
+              "column": "sale_date",
+              "condition": "gte",
+              "value": "={{ $json.period_start }}"
+            },
+            {
+              "column": "sale_date",
+              "condition": "lte",
+              "value": "={{ $json.period_end }}"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase PropAgent"
+        }
+      }
+    },
+    {
+      "id": "supabase-query-previous",
+      "name": "Query Previous Period Sales",
+      "type": "n8n-nodes-base.supabase",
+      "position": [850, 500],
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "property_sales",
+        "returnAll": true,
+        "match": {
+          "area": "={{ $json.area }}",
+          "city": "={{ $json.city }}"
+        },
+        "filter": {
+          "conditions": [
+            {
+              "column": "sale_date",
+              "condition": "gte",
+              "value": "={{ $json.previous_period_start }}"
+            },
+            {
+              "column": "sale_date",
+              "condition": "lte",
+              "value": "={{ $json.previous_period_end }}"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase PropAgent"
+        }
+      }
+    },
+    {
+      "id": "code-calculate-stats",
+      "name": "Calculate Market Statistics",
+      "type": "n8n-nodes-base.code",
+      "position": [1050, 400],
+      "parameters": {
+        "jsCode": "// Calculate statistics for current and previous periods\nconst currentSales = $input.first().json.data || [];\nconst previousSales = $input.all()[1]?.json?.data || [];\n\n// Helper functions\nfunction calculateMedian(arr) {\n  if (arr.length === 0) return 0;\n  const sorted = [...arr].sort((a, b) => a - b);\n  const mid = Math.floor(sorted.length / 2);\n  return sorted.length % 2 !== 0\n    ? sorted[mid]\n    : (sorted[mid - 1] + sorted[mid]) / 2;\n}\n\nfunction calculateAverage(arr) {\n  if (arr.length === 0) return 0;\n  return arr.reduce((a, b) => a + b, 0) / arr.length;\n}\n\n// Current period stats\nconst currentPrices = currentSales.map(s => s.sale_price).filter(p => p);\nconst currentFloorSizes = currentSales.map(s => s.floor_size).filter(s => s);\nconst currentDaysOnMarket = currentSales.map(s => s.days_on_market).filter(d => d !== null && d !== undefined);\n\n// Previous period stats\nconst previousPrices = previousSales.map(s => s.sale_price).filter(p => p);\nconst previousFloorSizes = previousSales.map(s => s.floor_size).filter(s => s);\nconst previousDaysOnMarket = previousSales.map(s => s.days_on_market).filter(d => d !== null && d !== undefined);\n\n// Calculate averages\nconst currentAvgPrice = Math.round(calculateAverage(currentPrices));\nconst currentMedianPrice = Math.round(calculateMedian(currentPrices));\nconst previousAvgPrice = Math.round(calculateAverage(previousPrices));\n\n// Calculate price per sqm\nconst currentPricePerSqm = currentFloorSizes.length > 0\n  ? Math.round(currentPrices.reduce((a, b) => a + b, 0) / currentFloorSizes.reduce((a, b) => a + b, 0))\n  : 0;\n\nconst previousPricePerSqm = previousFloorSizes.length > 0\n  ? Math.round(previousPrices.reduce((a, b) => a + b, 0) / previousFloorSizes.reduce((a, b) => a + b, 0))\n  : 0;\n\n// Calculate changes\nconst priceChangePercent = previousAvgPrice > 0\n  ? Math.round(((currentAvgPrice - previousAvgPrice) / previousAvgPrice) * 100 * 100) / 100\n  : 0;\n\nconst volumeChangePercent = previousSales.length > 0\n  ? Math.round(((currentSales.length - previousSales.length) / previousSales.length) * 100 * 100) / 100\n  : 0;\n\nconst daysOnMarketChange = previousDaysOnMarket.length > 0 && currentDaysOnMarket.length > 0\n  ? Math.round(calculateAverage(currentDaysOnMarket) - calculateAverage(previousDaysOnMarket))\n  : 0;\n\n// Property type breakdown\nconst propertyTypes = {};\ncurrentSales.forEach(s => {\n  const type = s.property_type || 'Unknown';\n  propertyTypes[type] = (propertyTypes[type] || 0) + 1;\n});\n\n// Most active suburbs\nconst suburbCounts = {};\ncurrentSales.forEach(s => {\n  const suburb = s.area || 'Unknown';\n  suburbCounts[suburb] = (suburbCounts[suburb] || 0) + 1;\n});\n\nconst mostActiveSuburbs = Object.entries(suburbCounts)\n  .sort((a, b) => b[1] - a[1])\n  .slice(0, 5)\n  .map(([name, count]) => name);\n\n// Average days on market\nconst avgDaysOnMarket = currentDaysOnMarket.length > 0\n  ? Math.round(calculateAverage(currentDaysOnMarket))\n  : 0;\n\nconst stats = {\n  area: $input.first().json.area,\n  city: $input.first().json.city,\n  period_start: $input.first().json.period_start,\n  period_end: $input.first().json.period_end,\n  current_period: {\n    total_sales: currentSales.length,\n    average_price: currentAvgPrice,\n    median_price: currentMedianPrice,\n    price_per_sqm: currentPricePerSqm,\n    avg_days_on_market: avgDaysOnMarket,\n    property_types: propertyTypes,\n    most_active_suburbs: mostActiveSuburbs\n  },\n  previous_period: {\n    total_sales: previousSales.length,\n    average_price: previousAvgPrice,\n    price_per_sqm: previousPricePerSqm\n  },\n  comparisons: {\n    price_change_percent: priceChangePercent,\n    volume_change_percent: volumeChangePercent,\n    days_on_market_change: daysOnMarketChange\n  },\n  month: new Date($input.first().json.period_start).toLocaleString('en-ZA', { month: 'long' }),\n  year: new Date($input.first().json.period_start).getFullYear()\n};\n\nreturn [stats];",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "http-groq-generate",
+      "name": "Groq AI - Generate Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1250, 400],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "llama-3.1-70b-versatile"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\n              \"role\": \"system\",\n              \"content\": \"You are a professional real estate market analyst specializing in the South African property market. Generate comprehensive, data-driven market reports with actionable insights.\"\n            }, {\n              \"role\": \"user\",\n              \"content\": `Generate a real estate market report for {{$json.area}}, {{$json.city}}:\\n\\nDATA SUMMARY:\\nPeriod: {{$json.period_start}} to {{$json.period_end}}\\nTotal Sales: {{$json.current_period.total_sales}}\\nAverage Price: R{{$json.current_period.average_price.toLocaleString()}}\\nMedian Price: R{{$json.current_period.median_price.toLocaleString()}}\\nPrice per sqm: R{{$json.current_period.price_per_sqm.toLocaleString()}}\\nSales Volume Change: {{$json.comparisons.volume_change_percent}}%\\nAverage Days on Market: {{$json.current_period.avg_days_on_market}} days\\nMost Active Suburbs: {{$json.current_period.most_active_suburbs.join(', ')}}\\nProperty Types Sold: {{JSON.stringify($json.current_period.property_types)}}\\n\\nCompared to Previous Period:\\n- Price Change: {{$json.comparisons.price_change_percent}}%\\n- Volume Change: {{$json.comparisons.volume_change_percent}}%\\n- Days on Market Change: {{$json.comparisons.days_on_market_change}} days\\n\\nGenerate a comprehensive market report in JSON format with these fields:\\n- report_title: Title with area, month and year\\n- executive_summary: 2-3 paragraph overview of the market\\n- key_findings: Array of 5-7 bullet points\\n- price_analysis: Detailed price trend analysis paragraph\\n- volume_analysis: Sales volume insights paragraph\\n- hotspots: Array of top 3-5 performing suburbs with reasoning\\n- buyer_insights: What buyers are looking for\\n- outlook: Market predictions for next quarter\\n- recommendations_for_sellers: Advice for sellers\\n- recommendations_for_buyers: Advice for buyers\\n- full_report_markdown: Complete formatted markdown report\\n\\nReturn valid JSON only, no markdown formatting around the JSON.`\n            }]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.7"
+            },
+            {
+              "name": "max_tokens",
+              "value": "4000"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$credentials.groqApiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": false
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "groq-api-credentials",
+          "name": "Groq API"
+        }
+      }
+    },
+    {
+      "id": "code-parse-groq-response",
+      "name": "Parse Groq Response",
+      "type": "n8n-nodes-base.code",
+      "position": [1450, 400],
+      "parameters": {
+        "jsCode": "const groqResponse = $input.first().json;\nconst stats = $input.first().json;\n\n// Extract the AI-generated content from Groq response\nlet aiContent;\ntry {\n  aiContent = JSON.parse(groqResponse.choices?.[0]?.message?.content || '{}');\n} catch (e) {\n  // Try to extract JSON from markdown code block\n  const content = groqResponse.choices?.[0]?.message?.content || '';\n  const jsonMatch = content.match(/```json\\s*([\\s\\S]*?)```/) || content.match(/{[\\s\\S]*}/);\n  if (jsonMatch) {\n    try {\n      aiContent = JSON.parse(jsonMatch[1] || jsonMatch[0]);\n    } catch (e2) {\n      aiContent = {\n        report_title: `Market Report - ${stats.area} - ${stats.month} ${stats.year}`,\n        executive_summary: 'Error parsing AI response. Please review raw data.',\n        key_findings: ['Data available in raw statistics'],\n        full_report_markdown: content\n      };\n    }\n  } else {\n    aiContent = {\n      report_title: `Market Report - ${stats.area} - ${stats.month} ${stats.year}`,\n      executive_summary: content.substring(0, 500),\n      key_findings: ['See full report'],\n      full_report_markdown: content\n    };\n  }\n}\n\n// Combine stats with AI content\nconst report = {\n  id: Math.random().toString(36).substring(2, 15),\n  area: stats.area,\n  city: stats.city,\n  period_start: stats.period_start,\n  period_end: stats.period_end,\n  report_title: aiContent.report_title || `Market Report - ${stats.area} - ${stats.month} ${stats.year}`,\n  executive_summary: aiContent.executive_summary || '',\n  key_findings: Array.isArray(aiContent.key_findings) ? aiContent.key_findings : [],\n  price_analysis: aiContent.price_analysis || '',\n  volume_analysis: aiContent.volume_analysis || '',\n  hotspots: Array.isArray(aiContent.hotspots) ? aiContent.hotspots : [],\n  buyer_insights: aiContent.buyer_insights || '',\n  outlook: aiContent.outlook || '',\n  recommendations_sellers: aiContent.recommendations_for_sellers || '',\n  recommendations_buyers: aiContent.recommendations_for_buyers || '',\n  full_report: aiContent.full_report_markdown || '',\n  statistics: {\n    total_sales: stats.current_period.total_sales,\n    average_price: stats.current_period.average_price,\n    median_price: stats.current_period.median_price,\n    price_per_sqm: stats.current_period.price_per_sqm,\n    avg_days_on_market: stats.current_period.avg_days_on_market,\n    price_change_percent: stats.comparisons.price_change_percent,\n    volume_change_percent: stats.comparisons.volume_change_percent\n  },\n  generated_at: new Date().toISOString()\n};\n\nreturn [report];",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "supabase-save-report",
+      "name": "Save Report to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "position": [1650, 300],
+      "parameters": {
+        "operation": "insert",
+        "tableId": "market_reports",
+        "fields": [
+          {
+            "fieldName": "area",
+            "fieldValue": "={{ $json.area }}"
+          },
+          {
+            "fieldName": "city",
+            "fieldValue": "={{ $json.city }}"
+          },
+          {
+            "fieldName": "period_start",
+            "fieldValue": "={{ $json.period_start }}"
+          },
+          {
+            "fieldName": "period_end",
+            "fieldValue": "={{ $json.period_end }}"
+          },
+          {
+            "fieldName": "report_title",
+            "fieldValue": "={{ $json.report_title }}"
+          },
+          {
+            "fieldName": "executive_summary",
+            "fieldValue": "={{ $json.executive_summary }}"
+          },
+          {
+            "fieldName": "key_findings",
+            "fieldValue": "={{ JSON.stringify($json.key_findings) }}"
+          },
+          {
+            "fieldName": "price_analysis",
+            "fieldValue": "={{ $json.price_analysis }}"
+          },
+          {
+            "fieldName": "volume_analysis",
+            "fieldValue": "={{ $json.volume_analysis }}"
+          },
+          {
+            "fieldName": "hotspots",
+            "fieldValue": "={{ JSON.stringify($json.hotspots) }}"
+          },
+          {
+            "fieldName": "buyer_insights",
+            "fieldValue": "={{ $json.buyer_insights }}"
+          },
+          {
+            "fieldName": "outlook",
+            "fieldValue": "={{ $json.outlook }}"
+          },
+          {
+            "fieldName": "recommendations_sellers",
+            "fieldValue": "={{ $json.recommendations_sellers }}"
+          },
+          {
+            "fieldName": "recommendations_buyers",
+            "fieldValue": "={{ $json.recommendations_buyers }}"
+          },
+          {
+            "fieldName": "full_report",
+            "fieldValue": "={{ $json.full_report }}"
+          }
+        ]
+      },
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase PropAgent"
+        }
+      }
+    },
+    {
+      "id": "sendgrid-email",
+      "name": "Email Report to Agents",
+      "type": "n8n-nodes-base.sendGrid",
+      "position": [1650, 500],
+      "parameters": {
+        "resource": "mail",
+        "operation": "send",
+        "fromEmail": "reports@propagent.co.za",
+        "toEmail": "={{ $credentials.agentEmailList }}",
+        "subject": "🎯 {{ $json.report_title }}",
+        "contentType": "text/html",
+        "message": "=<![CDATA[\n<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px 8px 0 0; }\n    .content { padding: 30px; background: #f9f9f9; }\n    .stat-box { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }\n    .stat-value { font-size: 28px; font-weight: bold; color: #667eea; }\n    .stat-label { color: #666; font-size: 14px; }\n    .change-positive { color: #22c55e; }\n    .change-negative { color: #ef4444; }\n    .section { margin: 25px 0; }\n    .section h3 { color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px; }\n    .bullet-list { padding-left: 20px; }\n    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }\n    .cta-button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin-top: 20px; }\n  </style>\n</head>\n<body>\n  <div class=\"header\">\n    <h1>{{ $json.report_title }}</h1>\n    <p>{{ $json.period_start }} to {{ $json.period_end }}</p>\n  </div>\n  \n  <div class=\"content\">\n    <div style=\"display: flex; gap: 15px; flex-wrap: wrap;\">\n      <div class=\"stat-box\" style=\"flex: 1; min-width: 150px;\">\n        <div class=\"stat-value\">R{{ $json.statistics.average_price.toLocaleString() }}</div>\n        <div class=\"stat-label\">Average Price</div>\n        <div class=\"{{ $json.statistics.price_change_percent >= 0 ? 'change-positive' : 'change-negative' }}\">\n          {{ $json.statistics.price_change_percent >= 0 ? '↑' : '↓' }} {{ Math.abs($json.statistics.price_change_percent) }}% vs last month\n        </div>\n      </div>\n      <div class=\"stat-box\" style=\"flex: 1; min-width: 150px;\">\n        <div class=\"stat-value\">{{ $json.statistics.total_sales }}</div>\n        <div class=\"stat-label\">Sales Volume</div>\n        <div class=\"{{ $json.statistics.volume_change_percent >= 0 ? 'change-positive' : 'change-negative' }}\">\n          {{ $json.statistics.volume_change_percent >= 0 ? '↑' : '↓' }} {{ Math.abs($json.statistics.volume_change_percent) }}% vs last month\n        </div>\n      </div>\n      <div class=\"stat-box\" style=\"flex: 1; min-width: 150px;\">\n        <div class=\"stat-value\">{{ $json.statistics.avg_days_on_market }}</div>\n        <div class=\"stat-label\">Avg Days on Market</div>\n      </div>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Executive Summary</h3>\n      <p>{{ $json.executive_summary }}</p>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Key Findings</h3>\n      <ul class=\"bullet-list\">\n        {{ $json.key_findings.map(f => `<li>${f}</li>`).join('') }}\n      </ul>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Hotspots</h3>\n      <ul class=\"bullet-list\">\n        {{ $json.hotspots.map(h => `<li>${h}</li>`).join('') }}\n      </ul>\n    </div>\n    \n    <div class=\"section\">\n      <h3>Market Outlook</h3>\n      <p>{{ $json.outlook }}</p>\n    </div>\n    \n    <div style=\"text-align: center; margin-top: 30px;\">\n      <a href=\"https://propagent.co.za/reports/{{ $json.id }}\" class=\"cta-button\">View Full Report</a>\n    </div>\n  </div>\n  \n  <div class=\"footer\">\n    <p>Generated by PropAgent AI on {{ new Date().toLocaleDateString('en-ZA') }}</p>\n    <p>To unsubscribe from market reports, <a href=\"https://propagent.co.za/unsubscribe\">click here</a></p>\n  </div>\n</body>\n</html>\n]]>"
+      },
+      "credentials": {
+        "sendGridApi": {
+          "id": "sendgrid-credentials",
+          "name": "SendGrid"
+        }
+      }
+    },
+    {
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1850, 400],
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Market report generated successfully\",\n  \"report_id\": \"{{ $('Supabase: Save Report').item.json.id }}\",\n  \"report_title\": \"{{ $json.report_title }}\",\n  \"area\": \"{{ $json.area }}\",\n  \"city\": \"{{ $json.city }}\",\n  \"period\": \"{{ $json.period_start }} to {{ $json.period_end }}\",\n  \"generated_at\": \"{{ $json.generated_at }}\",\n  \"stats\": {\n    \"total_sales\": {{ $json.statistics.total_sales }},\n    \"average_price\": {{ $json.statistics.average_price }},\n    \"median_price\": {{ $json.statistics.median_price }},\n    \"price_change_percent\": {{ $json.statistics.price_change_percent }}\n  }\n}"
+      }
+    },
+    {
+      "id": "if-no-data",
+      "name": "Check Data Exists",
+      "type": "n8n-nodes-base.if",
+      "position": [1050, 200],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.current_period?.total_sales }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "no-data-response",
+      "name": "No Data Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1250, 150],
+      "parameters": {
+        "options": {
+          "responseCode": 400
+        },
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": false,\n  \"error\": \"No sales data found for the specified area and period\",\n  \"area\": \"{{ $json.area }}\",\n  \"city\": \"{{ $json.city }}\",\n  \"period\": \"{{ $json.period_start }} to {{ $json.period_end }}\"\n}"
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "tag-reports",
+      "name": "Reports"
+    },
+    {
+      "id": "tag-ai",
+      "name": "AI"
+    },
+    {
+      "id": "tag-weekly",
+      "name": "Weekly"
+    }
+  ],
+  "connections": {
+    "Weekly Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Merge Triggers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Merge Triggers",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Triggers": {
+      "main": [
+        [
+          {
+            "node": "Set Default Parameters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Default Parameters": {
+      "main": [
+        [
+          {
+            "node": "Query Current Period Sales",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Previous Period Sales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Current Period Sales": {
+      "main": [
+        [
+          {
+            "node": "Calculate Market Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Previous Period Sales": {
+      "main": [
+        [
+          {
+            "node": "Calculate Market Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Market Statistics": {
+      "main": [
+        [
+          {
+            "node": "Check Data Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Data Exists": {
+      "main": [
+        [
+          {
+            "node": "Groq AI - Generate Report",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Data Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq AI - Generate Report": {
+      "main": [
+        [
+          {
+            "node": "Parse Groq Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Groq Response": {
+      "main": [
+        [
+          {
+            "node": "Save Report to Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Report to Agents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Report to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Report to Agents": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

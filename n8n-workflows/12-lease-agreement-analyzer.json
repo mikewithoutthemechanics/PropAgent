@@ -1,0 +1,335 @@
+{
+  "name": "Lease Agreement Analyzer",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lease-analyzer",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook - Lease Uploaded",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "lease-analyzer"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract lease text from webhook payload\nconst input = $input.first().json.body;\n\nlet leaseText = '';\nlet leaseId = input.lease_id || null;\nlet propertyId = input.property_id || null;\nlet fileName = input.file_name || 'lease_agreement.txt';\n\nif (input.lease_text) {\n  // Direct text input\n  leaseText = input.lease_text;\n} else if (input.pdf_content) {\n  // Base64 encoded PDF content\n  // In production, use a PDF extraction service\n  leaseText = Buffer.from(input.pdf_content, 'base64').toString('utf-8');\n} else {\n  // Fallback - assume body contains the text directly\n  leaseText = JSON.stringify(input);\n}\n\n// Validate minimum content\nif (!leaseText || leaseText.length < 50) {\n  throw new Error('Insufficient lease agreement text provided. Minimum 50 characters required.');\n}\n\nreturn {\n  json: {\n    lease_id: leaseId,\n    property_id: propertyId,\n    file_name: fileName,\n    lease_text: leaseText,\n    text_length: leaseText.length,\n    processed_at: new Date().toISOString()\n  }\n};"
+      },
+      "id": "2",
+      "name": "Code - Extract Lease Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a legal document analyzer specializing in South African real estate lease agreements. Extract all key terms accurately and return ONLY valid JSON.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Analyze this lease agreement and extract key terms:\\\n\\\nLEASE TEXT:\\\n\" + $json.lease_text + \"\\\n\\\nExtract and return JSON:\\\n{\\\n  \\\"parties\\\": {\\\n    \\\"landlord\\\": \\\"name\\\",\\\n    \\\"tenant\\\": \\\"name\\\",\\\n    \\\"agent\\\": \\\"name\\\"\\\n  },\\\n  \\\"property\\\": {\\\n    \\\"address\\\": \\\"full address\\\",\\\n    \\\"type\\\": \\\"house/apartment/etc\\\"\\\n  },\\\n  \\\"financial\\\": {\\\n    \\\"monthly_rent\\\": 0,\\\n    \\\"deposit\\\": 0,\\\n    \\\"escalation_percent\\\": 0,\\\n    \\\"payment_date\\\": \\\"day of month\\\"\\\n  },\\\n  \\\"duration\\\": {\\\n    \\\"start_date\\\": \\\"YYYY-MM-DD\\\",\\\n    \\\"end_date\\\": \\\"YYYY-MM-DD\\\",\\\n    \\\"renewal_terms\\\": \\\"description\\\"\\\n  },\\\n  \\\"clauses\\\": {\\\n    \\\"pets_allowed\\\": true|false,\\\n    \\\"maintenance_responsibility\\\": \\\"landlord|tenant|split\\\",\\\n    \\\"subletting_allowed\\\": true|false,\\\n    \\\"early_termination\\\": \\\"terms\\\"\\\n  },\\\n  \\\"risk_assessment\\\": {\\\n    \\\"level\\\": \\\"low|medium|high\\\",\\\n    \\\"concerns\\\": [\\\"list any issues\\\"],\\\n    \\\"missing_clauses\\\": [\\\"standard clauses not present\\\"]\\\n  },\\\n  \\\"compliance\\\": {\\\n    \\\"fica_referenced\\\": true|false,\\\n    \\\"popia_referenced\\\": true|false,\\\n    \\\"consumer_protection_act\\\": true|false\\\n  }\\\n}\"\n    }\n  ],\n  \"temperature\": 0.1,\n  \"max_tokens\": 2048,\n  \"response_format\": {\n    \"type\": \"json_object\"\n  }\n}",
+        "options": {}
+      },
+      "id": "3",
+      "name": "HTTP Request - Groq AI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "groq-api-key",
+          "name": "Groq API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq AI response and structure for database\nconst groqResponse = $input.first().json;\nconst originalData = $('Code - Extract Lease Text').first().json;\n\ntry {\n  // Extract the AI analysis from Groq response\n  const analysisContent = groqResponse.choices?.[0]?.message?.content;\n  \n  if (!analysisContent) {\n    throw new Error('No analysis content received from Groq AI');\n  }\n  \n  // Parse the JSON response\n  let analysis;\n  try {\n    analysis = JSON.parse(analysisContent);\n  } catch (e) {\n    // Try to extract JSON from markdown code block if present\n    const jsonMatch = analysisContent.match(/```json\\s*([\\s\\S]*?)```/) || \n                      analysisContent.match(/```\\s*([\\s\\S]*?)```/) ||\n                      analysisContent.match(/({[\\s\\S]*})/);\n    if (jsonMatch) {\n      analysis = JSON.parse(jsonMatch[1]);\n    } else {\n      throw new Error('Could not parse AI response as JSON');\n    }\n  }\n  \n  // Validate required fields\n  const validatedAnalysis = {\n    parties: analysis.parties || { landlord: '', tenant: '', agent: '' },\n    property: analysis.property || { address: '', type: '' },\n    financial: analysis.financial || { monthly_rent: 0, deposit: 0, escalation_percent: 0, payment_date: '' },\n    duration: analysis.duration || { start_date: '', end_date: '', renewal_terms: '' },\n    clauses: analysis.clauses || { pets_allowed: false, maintenance_responsibility: '', subletting_allowed: false, early_termination: '' },\n    risk_assessment: analysis.risk_assessment || { level: 'low', concerns: [], missing_clauses: [] },\n    compliance: analysis.compliance || { fica_referenced: false, popia_referenced: false, consumer_protection_act: false }\n  };\n  \n  return {\n    json: {\n      lease_id: originalData.lease_id,\n      property_id: originalData.property_id,\n      file_name: originalData.file_name,\n      analysis: validatedAnalysis,\n      raw_response: analysisContent,\n      risk_level: validatedAnalysis.risk_assessment.level,\n      analyzed_at: new Date().toISOString()\n    }\n  };\n  \n} catch (error) {\n  return {\n    json: {\n      error: true,\n      message: error.message,\n      lease_id: originalData.lease_id,\n      raw_response: JSON.stringify(groqResponse)\n    }\n  };\n}"
+      },
+      "id": "4",
+      "name": "Code - Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "tableId": "lease_analysis",
+        "data": "={\n  \"lease_id\": $json.lease_id,\n  \"property_id\": $json.property_id,\n  \"parties\": JSON.stringify($json.analysis.parties),\n  \"property\": JSON.stringify($json.analysis.property),\n  \"financial\": JSON.stringify($json.analysis.financial),\n  \"duration\": JSON.stringify($json.analysis.duration),\n  \"clauses\": JSON.stringify($json.analysis.clauses),\n  \"risk_assessment\": JSON.stringify($json.analysis.risk_assessment),\n  \"compliance\": JSON.stringify($json.analysis.compliance),\n  \"analyzed_at\": $json.analyzed_at\n}"
+      },
+      "id": "5",
+      "name": "Supabase - Save Analysis",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "=",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "leftValue": "={{ $json.risk_level }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "6",
+      "name": "IF - High Risk Alert",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare summary response\nconst data = $input.first().json;\nconst analysis = data.analysis;\n\n// Build executive summary\nlet summary = `## Lease Agreement Analysis\\n\\n`;\nsummary += `**Property:** ${analysis.property?.address || 'Not specified'}\\n`;\nsummary += `**Risk Level:** ${analysis.risk_assessment?.level?.toUpperCase() || 'UNKNOWN'}\\n\\n`;\n\n// Parties\nsummary += `### Parties\\n`;\nsummary += `- Landlord: ${analysis.parties?.landlord || 'Not specified'}\\n`;\nsummary += `- Tenant: ${analysis.parties?.tenant || 'Not specified'}\\n`;\nsummary += `- Agent: ${analysis.parties?.agent || 'Not specified'}\\n\\n`;\n\n// Financial\nsummary += `### Financial Terms\\n`;\nsummary += `- Monthly Rent: R${analysis.financial?.monthly_rent?.toLocaleString() || '0'}\\n`;\nsummary += `- Deposit: R${analysis.financial?.deposit?.toLocaleString() || '0'}\\n`;\nsummary += `- Escalation: ${analysis.financial?.escalation_percent || 0}%\\n`;\nsummary += `- Payment Due: ${analysis.financial?.payment_date || 'Not specified'}\\n\\n`;\n\n// Duration\nsummary += `### Lease Duration\\n`;\nsummary += `- Start: ${analysis.duration?.start_date || 'Not specified'}\\n`;\nsummary += `- End: ${analysis.duration?.end_date || 'Not specified'}\\n`;\nsummary += `- Renewal: ${analysis.duration?.renewal_terms || 'Not specified'}\\n\\n`;\n\n// Key Clauses\nsummary += `### Key Clauses\\n`;\nsummary += `- Pets Allowed: ${analysis.clauses?.pets_allowed ? 'Yes' : 'No'}\\n`;\nsummary += `- Maintenance: ${analysis.clauses?.maintenance_responsibility || 'Not specified'}\\n`;\nsummary += `- Subletting: ${analysis.clauses?.subletting_allowed ? 'Allowed' : 'Not Allowed'}\\n\\n`;\n\n// Risk Assessment\nif (analysis.risk_assessment?.concerns?.length > 0) {\n  summary += `### ⚠️ Risk Concerns\\n`;\n  analysis.risk_assessment.concerns.forEach(concern => {\n    summary += `- ${concern}\\n`;\n  });\n  summary += `\\n`;\n}\n\n// Missing Clauses\nif (analysis.risk_assessment?.missing_clauses?.length > 0) {\n  summary += `### ⚠️ Missing Standard Clauses\\n`;\n  analysis.risk_assessment.missing_clauses.forEach(clause => {\n    summary += `- ${clause}\\n`;\n  });\n  summary += `\\n`;\n}\n\n// Compliance\nsummary += `### Compliance Check\\n`;\nsummary += `- FICA Referenced: ${analysis.compliance?.fica_referenced ? '✓' : '✗'}\\n`;\nsummary += `- POPIA Referenced: ${analysis.compliance?.popia_referenced ? '✓' : '✗'}\\n`;\nsummary += `- Consumer Protection Act: ${analysis.compliance?.consumer_protection_act ? '✓' : '✗'}\\n\\n`;\n\nsummary += `---\\n*Analyzed at: ${data.analyzed_at}*`;\n\nreturn {\n  json: {\n    success: true,\n    lease_id: data.lease_id,\n    property_id: data.property_id,\n    risk_level: data.risk_level,\n    summary: summary,\n    analysis: analysis,\n    recommendations: analysis.risk_assessment?.concerns || []\n  }\n};"
+      },
+      "id": "7",
+      "name": "Code - Generate Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "statusCode": "=200",
+        "options": {}
+      },
+      "id": "8",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// High risk alert notification\nconst data = $('Code - Parse AI Response').first().json;\nconst analysis = data.analysis;\n\nconst alert = {\n  alert_type: 'HIGH_RISK_LEASE',\n  lease_id: data.lease_id,\n  property_id: data.property_id,\n  risk_level: 'HIGH',\n  concerns: analysis.risk_assessment?.concerns || [],\n  missing_clauses: analysis.risk_assessment?.missing_clauses || [],\n  alert_message: `High risk lease agreement detected for ${analysis.property?.address || 'unknown property'}`,\n  requires_review: true,\n  created_at: new Date().toISOString()\n};\n\nreturn { json: alert };"
+      },
+      "id": "9",
+      "name": "Code - Prepare Alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "tableId": "alerts",
+        "data": "={\n  \"alert_type\": \"HIGH_RISK_LEASE\",\n  \"lease_id\": $json.lease_id,\n  \"property_id\": $json.property_id,\n  \"severity\": \"high\",\n  \"message\": $json.alert_message,\n  \"details\": JSON.stringify({\n    concerns: $json.concerns,\n    missing_clauses: $json.missing_clauses\n  }),\n  \"status\": \"pending\",\n  \"created_at\": $json.created_at\n}"
+      },
+      "id": "10",
+      "name": "Supabase - Log Alert",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        500
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "tableId": "notifications",
+        "data": "={\n  \"type\": \"lease_analysis_complete\",\n  \"lease_id\": $json.lease_id,\n  \"title\": \"Lease Analysis Complete\",\n  \"message\": \"Lease agreement has been analyzed. Risk level: \" + $json.risk_level,\n  \"data\": JSON.stringify({\n    risk_level: $json.risk_level,\n    summary: $json.summary\n  }),\n  \"created_at\": new Date().toISOString()\n}"
+      },
+      "id": "11",
+      "name": "Supabase - Notification",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        100
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase Credentials"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - Lease Uploaded": {
+      "main": [
+        [
+          {
+            "node": "Code - Extract Lease Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Extract Lease Text": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Groq AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Groq AI": {
+      "main": [
+        [
+          {
+            "node": "Code - Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "Supabase - Save Analysis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase - Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase - Save Analysis": {
+      "main": [
+        [
+          {
+            "node": "IF - High Risk Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - High Risk Alert": {
+      "main": [
+        [
+          {
+            "node": "Code - Generate Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Prepare Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Generate Summary": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Prepare Alert": {
+      "main": [
+        [
+          {
+            "node": "Supabase - Log Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "Error Handler",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "PropAgent",
+      "id": "propagent-tag"
+    },
+    {
+      "name": "AI",
+      "id": "ai-tag"
+    },
+    {
+      "name": "Lease",
+      "id": "lease-tag"
+    }
+  ]
+}

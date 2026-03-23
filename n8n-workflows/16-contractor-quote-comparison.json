@@ -1,0 +1,460 @@
+{
+  "name": "Contractor Quote Comparison",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "quote-comparison",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "c1c4e8f1-2a3b-4c5d-6e7f-8a9b0c1d2e3f",
+      "name": "Quote Comparison Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "quote-comparison"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "tableId": "contractor_quotes",
+        "filters": {
+          "conditions": [
+            {
+              "column": "job_id",
+              "condition": "eq",
+              "value": "={{ $json.body.job_id }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "d2e5f9g2-3b4c-5d6e-7f8g-9a0b1c2d3e4f",
+      "name": "Get Quotes for Job",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get webhook data and quotes from Supabase\nconst webhookData = $input.first().json.body || {};\nconst quotes = $input.all()[0].json.data || [];\n\n// Ensure we have at least 2 quotes to compare\nif (quotes.length < 2) {\n  return [{\n    json: {\n      error: true,\n      message: 'Need at least 2 quotes for comparison',\n      quote_count: quotes.length,\n      job_id: webhookData.job_id\n    }\n  }];\n}\n\n// Build job details\nconst jobDetails = {\n  description: webhookData.job_description || 'Property maintenance work',\n  property_address: webhookData.property_address || 'Property address not provided',\n  deadline: webhookData.deadline || 'Not specified'\n};\n\n// Format quotes for AI analysis\nconst formattedQuotes = quotes.map((quote, index) => {\n  const quoteNum = index + 1;\n  return {\n    number: quoteNum,\n    id: quote.id,\n    contractor_name: quote.contractor_name || `Contractor ${quoteNum}`,\n    contractor_phone: quote.contractor_phone || '',\n    contractor_email: quote.contractor_email || '',\n    amount: quote.quote_amount || 0,\n    text: quote.quote_text || 'No detailed quote provided',\n    received_at: quote.received_at\n  };\n});\n\n// Build Groq prompt\nconst buildPrompt = (job, quotesList) => {\n  let prompt = `Compare these contractor quotes for the same job:\n\nJOB DETAILS:\nDescription: ${job.description}\nProperty: ${job.property_address}\nRequired Completion: ${job.deadline}\n\n`\n  \n  quotesList.forEach((q, i) => {\n    prompt += `QUOTE ${i + 1}:\nContractor: ${q.contractor_name}\nTotal: R${q.amount.toLocaleString()}\nQuote Text: ${q.text}\n\n`;\n  });\n  \n  prompt += `Analyze and return JSON with:\n- comparison_summary (lowest_price, highest_price, price_range)\n- line_item_comparison (array of compared items with prices)\n- scope_analysis (inclusions/exclusions per quote)\n- risk_assessment (per contractor with risk_level, concerns, positives)\n- recommendation (recommended_contractor, reasoning, confidence, negotiation_suggestions)\n- missing_information (array of what to ask)\n- total_value_score (1-10 rating per quote)\n\nReturn ONLY valid JSON, no markdown formatting.`;\n  \n  return prompt;\n};\n\nconst prompt = buildPrompt(jobDetails, formattedQuotes);\n\nreturn [{\n  json: {\n    job_id: webhookData.job_id,\n    property_id: webhookData.property_id,\n    job_details: jobDetails,\n    quotes: formattedQuotes,\n    quote_count: quotes.length,\n    prompt: prompt\n  }\n}];"
+      },
+      "id": "e3f6g0h3-4c5d-6e7f-8g9h-0a1b2c3d4e5f",
+      "name": "Prepare Comparison Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "llama-3.3-70b-versatile"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"system\", \"content\": \"You are an expert construction and property maintenance cost analyst. Compare contractor quotes objectively, identifying hidden costs, scope gaps, and value factors. Always return valid JSON.\"}, {\"role\": \"user\", \"content\": \"{{ $json.prompt }}\"}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.3"
+            },
+            {
+              "name": "max_tokens",
+              "value": "4000"
+            },
+            {
+              "name": "response_format",
+              "value": "={\"type\": \"json_object\"}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f4g7h1i4-5d6e-7f8g-9h0i-1a2b3c4d5e6f",
+      "name": "Groq AI Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        850,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "groq-api-key",
+          "name": "Groq API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq AI response\ntry {\n  const aiResponse = $input.first().json;\n  const choice = aiResponse.choices && aiResponse.choices[0];\n  \n  if (!choice) {\n    throw new Error('No choices in AI response');\n  }\n  \n  const content = choice.message?.content || choice.text;\n  let parsedAnalysis;\n  \n  try {\n    parsedAnalysis = JSON.parse(content);\n  } catch (parseError) {\n    // Try to extract JSON from markdown code blocks\n    const jsonMatch = content.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\n    if (jsonMatch) {\n      parsedAnalysis = JSON.parse(jsonMatch[1].trim());\n    } else {\n      throw new Error('Could not parse AI response as JSON');\n    }\n  }\n  \n  // Validate required fields\n  const requiredFields = ['comparison_summary', 'recommendation', 'risk_assessment'];\n  const missingFields = requiredFields.filter(f => !parsedAnalysis[f]);\n  \n  if (missingFields.length > 0) {\n    console.warn('Missing fields in AI response:', missingFields);\n  }\n  \n  return [{\n    json: {\n      success: true,\n      comparison_summary: parsedAnalysis.comparison_summary || {},\n      line_item_comparison: parsedAnalysis.line_item_comparison || [],\n      scope_analysis: parsedAnalysis.scope_analysis || {},\n      risk_assessment: parsedAnalysis.risk_assessment || [],\n      recommendation: parsedAnalysis.recommendation || {},\n      missing_information: parsedAnalysis.missing_information || [],\n      total_value_score: parsedAnalysis.total_value_score || {},\n      ai_model: aiResponse.model,\n      tokens_used: aiResponse.usage?.total_tokens || 0\n    }\n  }];\n} catch (error) {\n  return [{\n    json: {\n      success: false,\n      error: error.message,\n      raw_response: $input.first().json\n    }\n  }];\n}"
+      },
+      "id": "g5h8i2j5-6e7f-8g9h-0i1j-2a3b4c5d6e7f",
+      "name": "Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "tableId": "contractor_quote_comparisons",
+        "columns": {
+          "mapping": [
+            {
+              "column": "job_id",
+              "value": "={{ $json.job_id }}"
+            },
+            {
+              "column": "property_id",
+              "value": "={{ $json.property_id }}"
+            },
+            {
+              "column": "job_description",
+              "value": "={{ $json.job_description }}"
+            },
+            {
+              "column": "quotes",
+              "value": "={{ JSON.stringify($json.quotes) }}"
+            },
+            {
+              "column": "comparison_summary",
+              "value": "={{ JSON.stringify($json.comparison_summary) }}"
+            },
+            {
+              "column": "line_item_comparison",
+              "value": "={{ JSON.stringify($json.line_item_comparison) }}"
+            },
+            {
+              "column": "scope_analysis",
+              "value": "={{ JSON.stringify($json.scope_analysis) }}"
+            },
+            {
+              "column": "risk_assessment",
+              "value": "={{ JSON.stringify($json.risk_assessment) }}"
+            },
+            {
+              "column": "recommendation",
+              "value": "={{ JSON.stringify($json.recommendation) }}"
+            },
+            {
+              "column": "missing_information",
+              "value": "={{ JSON.stringify($json.missing_information) }}"
+            },
+            {
+              "column": "total_value_score",
+              "value": "={{ JSON.stringify($json.total_value_score) }}"
+            },
+            {
+              "column": "status",
+              "value": "pending_review"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "h6i9j3k6-7f8g-9h0i-1j2k-3a4b5c6d7e8f",
+      "name": "Save Comparison to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        300
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-high-confidence",
+              "leftValue": "={{ $json.recommendation.confidence }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "i7j0k4l7-8g9h-0i1j-2k3l-4a5b6c7d8e9f",
+      "name": "Check High Confidence",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "statusCode": 200
+        }
+      },
+      "id": "j8k1l5m8-9h0i-1j2k-3l4m-5a6b7c8d9e0f",
+      "name": "Return Comparison Results",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare data for saving\nconst webhookData = $('Quote Comparison Webhook').first().json.body;\nconst prepData = $('Prepare Comparison Data').first().json;\nconst parsedData = $input.first().json;\n\nif (!parsedData.success) {\n  return [{\n    json: {\n      error: 'AI parsing failed',\n      details: parsedData.error\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    job_id: webhookData.job_id,\n    property_id: webhookData.property_id,\n    job_description: prepData.job_details.description,\n    quotes: prepData.quotes,\n    comparison_summary: parsedData.comparison_summary,\n    line_item_comparison: parsedData.line_item_comparison,\n    scope_analysis: parsedData.scope_analysis,\n    risk_assessment: parsedData.risk_assessment,\n    recommendation: parsedData.recommendation,\n    missing_information: parsedData.missing_information,\n    total_value_score: parsedData.total_value_score\n  }\n}];"
+      },
+      "id": "k9l2m6n9-0i1j-2k3l-4m5n-6a7b8c9d0e1f",
+      "name": "Format for Save",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "l0m3n7o0-1j2k-3l4m-5n6o-7a8b9c0d1e2f",
+      "name": "Notify Property Manager",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        100
+      ],
+      "notes": "Connect to Slack, Email, or SMS node to notify property manager of high-confidence recommendation.\n\nRecommended message:\n- Best value contractor identified\n- Risk assessment summary\n- Link to full comparison report"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare final response\nconst parsedData = $input.first().json;\n\nif (!parsedData.success) {\n  return [{\n    json: {\n      status: 'error',\n      message: parsedData.error,\n      recommendation: null\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    status: 'success',\n    message: 'Quote comparison completed',\n    comparison: {\n      summary: parsedData.comparison_summary,\n      line_items: parsedData.line_item_comparison,\n      scope: parsedData.scope_analysis,\n      risks: parsedData.risk_assessment,\n      recommendation: parsedData.recommendation,\n      missing_info: parsedData.missing_information,\n      value_scores: parsedData.total_value_score\n    },\n    next_steps: [\n      'Review comparison report in PropAgent dashboard',\n      'Contact recommended contractor to discuss details',\n      'Request missing information from all contractors',\n      'Negotiate based on comparison insights'\n    ]\n  }\n}];"
+      },
+      "id": "m1n4o8p1-2k3l-4m5n-6o7p-8a9b0c1d2e3f",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Handle errors and edge cases\nconst input = $input.first().json;\n\n// Check if error from previous nodes\nif (input.error) {\n  return [{\n    json: {\n      status: 'error',\n      error_type: input.error === true ? 'validation_error' : 'processing_error',\n      message: input.message || input.error || 'Unknown error occurred',\n      quote_count: input.quote_count || 0,\n      job_id: input.job_id || 'unknown'\n    }\n  }];\n}\n\n// Check if insufficient quotes\nif (input.quote_count < 2) {\n  return [{\n    json: {\n      status: 'insufficient_quotes',\n      message: `Only ${input.quote_count} quote(s) received. Need at least 2 for comparison.`,\n      quote_count: input.quote_count,\n      job_id: input.job_id\n    }\n  }];\n}\n\n// Pass through successful data\nreturn $input.all();"
+      },
+      "id": "n2o5p9q2-3l4m-5n6o-7p8q-9a0b1c2d3e4f",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        850,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "statusCode": 400
+        }
+      },
+      "id": "o3p6q0r3-4m5n-6o7p-8q9r-0a1b2c3d4e5f",
+      "name": "Return Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        500
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "error-handler",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "PropAgent",
+      "id": "tag-propagent",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "AI",
+      "id": "tag-ai",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Maintenance",
+      "id": "tag-maintenance",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "connections": {
+    "Quote Comparison Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Quotes for Job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Quotes for Job": {
+      "main": [
+        [
+          {
+            "node": "Prepare Comparison Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Comparison Data": {
+      "main": [
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Groq AI Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq AI Analysis": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "Check High Confidence",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format for Save",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check High Confidence": {
+      "main": [
+        [
+          {
+            "node": "Notify Property Manager",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format for Save": {
+      "main": [
+        [
+          {
+            "node": "Save Comparison to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Return Comparison Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Return Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

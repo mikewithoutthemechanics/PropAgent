@@ -1,0 +1,317 @@
+{
+  "name": "Property Photo Tagging",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "14-property-photo-tagging",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook: Photos Uploaded",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "14-property-photo-tagging"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare photo URLs for batch processing\nconst inputData = $input.first().json;\n\n// Extract data from webhook\nconst propertyId = inputData.property_id;\nconst propertyType = inputData.property_type || 'house';\nconst photos = inputData.photos || [];\n\nif (!propertyId || photos.length === 0) {\n  throw new Error('Missing required fields: property_id and photos array');\n}\n\n// Map each photo to include property context\nconst preparedPhotos = photos.map((photo, index) => ({\n  json: {\n    property_id: propertyId,\n    property_type: propertyType,\n    photo_url: photo.url,\n    photo_index: index,\n    filename: photo.filename || `photo_${index}.jpg`\n  }\n}));\n\nreturn preparedPhotos;"
+      },
+      "id": "prepare-photos",
+      "name": "Code: Prepare Photo URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": {
+          "model": "llama-3.2-11b-vision-preview",
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "={{ $json.prompt }}"
+                },
+                {
+                  "type": "image_url",
+                  "image_url": {
+                    "url": "={{ $json.photo_url }}"
+                  }
+                }
+              ]
+            }
+          ],
+          "temperature": 0.2,
+          "max_tokens": 1024,
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "options": {}
+      },
+      "id": "groq-vision",
+      "name": "HTTP: Groq AI Vision Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        700,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "groq-api-key",
+          "name": "Groq API Key"
+        }
+      },
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Groq prompt for each photo\nconst photo = $input.first().json;\n\nconst promptTemplate = `Analyze this South African property photo and extract detailed information.\n\nPhoto URL: ${photo.photo_url}\nProperty Type: ${photo.property_type}\n\nAnalyze carefully and return ONLY valid JSON with this exact structure:\n{\n  \"room_type\": \"kitchen|bedroom|bathroom|lounge|dining|exterior|garden|garage|other\",\n  \"features_visible\": [\n    \"pool\",\n    \"garage\", \n    \"garden\",\n    \"sea_view\",\n    \"mountain_view\",\n    \"modern_kitchen\",\n    \"built_in_cupboards\",\n    \"fireplace\",\n    \"air_conditioning\",\n    \"balcony\",\n    \"patio\",\n    \"security_gate\",\n    \"alarm\",\n    \"solar_panels\",\n    \"borehole\"\n  ],\n  \"condition\": \"excellent|good|fair|needs_renovation\",\n  \"style\": \"modern|traditional|minimalist|luxury|rustic\",\n  \"photo_quality\": {\n    \"is_blurry\": true|false,\n    \"is_dark\": true|false,\n    \"is_well_framed\": true|false,\n    \"quality_score\": 1-10\n  },\n  \"is_primary_photo_candidate\": true|false,\n  \"confidence\": 0.0-1.0\n}\n\nImportant notes:\n- For room_type, be specific (e.g., 'kitchen' not just 'room')\n- features_visible should only include features actually visible\n- Consider South African property features like boreholes, solar panels, security\n- photo_quality.quality_score: 8-10 = professional, 5-7 = acceptable, 1-4 = poor\n- is_primary_photo_candidate: true if this would make a good main/listing photo\n- confidence: your confidence in this assessment (0.0-1.0)`;\n\nreturn {\n  json: {\n    ...photo,\n    prompt: promptTemplate\n  }\n};"
+      },
+      "id": "prepare-prompt",
+      "name": "Code: Prepare Groq Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        550,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq AI response\nconst input = $input.first().json;\nconst photo = input.photo_data;\nconst groqResponse = input.groq_response;\n\ntry {\n  // Extract the AI content from Groq response\n  const aiContent = groqResponse.choices?.[0]?.message?.content;\n  if (!aiContent) {\n    throw new Error('No content in Groq response');\n  }\n\n  // Parse the JSON response\n  const analysis = JSON.parse(aiContent);\n\n  // Build the tag record\n  const tagRecord = {\n    property_id: photo.property_id,\n    photo_url: photo.photo_url,\n    photo_index: photo.photo_index,\n    room_type: analysis.room_type || 'other',\n    features_visible: analysis.features_visible || [],\n    condition: analysis.condition || 'unknown',\n    style: analysis.style || 'unknown',\n    photo_quality: {\n      is_blurry: analysis.photo_quality?.is_blurry || false,\n      is_dark: analysis.photo_quality?.is_dark || false,\n      is_well_framed: analysis.photo_quality?.is_well_framed || false,\n      quality_score: analysis.photo_quality?.quality_score || 5\n    },\n    is_primary_candidate: analysis.is_primary_photo_candidate || false,\n    confidence: analysis.confidence || 0.5,\n    tagged_at: new Date().toISOString()\n  };\n\n  return {\n    json: tagRecord\n  };\n} catch (error) {\n  // Return error record for failed analysis\n  return {\n    json: {\n      property_id: photo.property_id,\n      photo_url: photo.photo_url,\n      photo_index: photo.photo_index,\n      room_type: 'error',\n      features_visible: [],\n      condition: 'unknown',\n      style: 'unknown',\n      photo_quality: {\n        is_blurry: false,\n        is_dark: false,\n        is_well_framed: false,\n        quality_score: 0\n      },\n      is_primary_candidate: false,\n      confidence: 0,\n      error: error.message,\n      tagged_at: new Date().toISOString()\n    }\n  };\n}"
+      },
+      "id": "parse-response",
+      "name": "Code: Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "property_photo_tags",
+        "fields": [
+          {
+            "fieldId": "property_id",
+            "fieldValue": "={{ $json.property_id }}"
+          },
+          {
+            "fieldId": "photo_url",
+            "fieldValue": "={{ $json.photo_url }}"
+          },
+          {
+            "fieldId": "room_type",
+            "fieldValue": "={{ $json.room_type }}"
+          },
+          {
+            "fieldId": "features_visible",
+            "fieldValue": "={{ JSON.stringify($json.features_visible) }}"
+          },
+          {
+            "fieldId": "condition",
+            "fieldValue": "={{ $json.condition }}"
+          },
+          {
+            "fieldId": "style",
+            "fieldValue": "={{ $json.style }}"
+          },
+          {
+            "fieldId": "photo_quality",
+            "fieldValue": "={{ JSON.stringify($json.photo_quality) }}"
+          },
+          {
+            "fieldId": "is_primary_candidate",
+            "fieldValue": "={{ $json.is_primary_candidate }}"
+          },
+          {
+            "fieldId": "confidence",
+            "fieldValue": "={{ $json.confidence }}"
+          }
+        ]
+      },
+      "id": "supabase-insert",
+      "name": "Supabase: Save Photo Tags",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate all photo tags and generate recommendations\nconst allTags = $input.all()[0].json;\n\n// Collect tags from all items\nconst tags = $input.all().map(item => item.json);\n\n// Determine property_id (should be same for all)\nconst propertyId = tags[0]?.property_id;\n\n// Find primary photo candidates (sorted by quality score and confidence)\nconst primaryCandidates = tags\n  .filter(t => t.is_primary_candidate && t.photo_quality?.quality_score >= 7)\n  .sort((a, b) => {\n    const scoreA = (a.photo_quality?.quality_score || 0) * (a.confidence || 0);\n    const scoreB = (b.photo_quality?.quality_score || 0) * (b.confidence || 0);\n    return scoreB - scoreA;\n  });\n\nconst recommendedPrimary = primaryCandidates[0] || null;\n\n// Check for missing essential photo types\nconst essentialRoomTypes = ['kitchen', 'bedroom', 'bathroom', 'lounge', 'exterior'];\nconst foundRoomTypes = new Set(tags.map(t => t.room_type).filter(Boolean));\nconst missingPhotos = essentialRoomTypes.filter(type => !foundRoomTypes.has(type));\n\n// Count photos by room type\nconst roomTypeCounts = {};\ntags.forEach(t => {\n  const rt = t.room_type || 'unknown';\n  roomTypeCounts[rt] = (roomTypeCounts[rt] || 0) + 1;\n});\n\n// Collect all detected features\nconst allFeatures = new Set();\ntags.forEach(t => {\n  if (Array.isArray(t.features_visible)) {\n    t.features_visible.forEach(f => allFeatures.add(f));\n  }\n});\n\n// Identify quality issues\nconst qualityIssues = tags.filter(t => \n  t.photo_quality?.is_blurry || \n  t.photo_quality?.is_dark || \n  (t.photo_quality?.quality_score || 10) < 5\n);\n\n// Determine overall property style (most common)\nconst styleCounts = {};\ntags.forEach(t => {\n  if (t.style && t.style !== 'unknown') {\n    styleCounts[t.style] = (styleCounts[t.style] || 0) + 1;\n  }\n});\nconst dominantStyle = Object.entries(styleCounts)\n  .sort((a, b) => b[1] - a[1])[0]?.[0] || 'unknown';\n\n// Overall condition (most common non-unknown)\nconst conditionCounts = {};\ntags.forEach(t => {\n  if (t.condition && t.condition !== 'unknown') {\n    conditionCounts[t.condition] = (conditionCounts[t.condition] || 0) + 1;\n  }\n});\nconst overallCondition = Object.entries(conditionCounts)\n  .sort((a, b) => b[1] - a[1])[0]?.[0] || 'unknown';\n\n// Calculate average confidence\nconst avgConfidence = tags.reduce((sum, t) => sum + (t.confidence || 0), 0) / tags.length;\n\nreturn {\n  json: {\n    property_id: propertyId,\n    total_photos: tags.length,\n    tags: tags,\n    recommendations: {\n      primary_photo: recommendedPrimary ? {\n        photo_url: recommendedPrimary.photo_url,\n        room_type: recommendedPrimary.room_type,\n        quality_score: recommendedPrimary.photo_quality?.quality_score,\n        reason: `Best quality (${recommendedPrimary.photo_quality?.quality_score}/10) with high confidence (${(recommendedPrimary.confidence * 100).toFixed(0)}%)`\n      } : null,\n      missing_photos: missingPhotos,\n      missing_photos_warnings: missingPhotos.length > 0 ? \n        missingPhotos.map(type => `Missing ${type} photo - consider adding for better listing performance`) : [],\n      quality_issues: qualityIssues.map(t => ({\n        photo_url: t.photo_url,\n        issues: [\n          ...(t.photo_quality?.is_blurry ? ['blurry'] : []),\n          ...(t.photo_quality?.is_dark ? ['dark'] : []),\n          ...(t.photo_quality?.quality_score < 5 ? ['low_quality'] : [])\n        ]\n      }))\n    },\n    analysis_summary: {\n      room_type_counts: roomTypeCounts,\n      detected_features: Array.from(allFeatures),\n      dominant_style: dominantStyle,\n      overall_condition: overallCondition,\n      average_confidence: parseFloat(avgConfidence.toFixed(2)),\n      photos_with_quality_issues: qualityIssues.length\n    },\n    generated_at: new Date().toISOString()\n  }\n};"
+      },
+      "id": "aggregate-tags",
+      "name": "Code: Aggregate & Recommend",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare data for Groq request\nconst photo = $input.first().json;\n\nreturn {\n  json: {\n    photo_data: photo,\n    groq_response: $input.first().json\n  }\n};"
+      },
+      "id": "prepare-parse",
+      "name": "Code: Prepare for Parse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "AI",
+      "id": "tag-ai"
+    },
+    {
+      "name": "Supabase",
+      "id": "tag-supabase"
+    },
+    {
+      "name": "Property",
+      "id": "tag-property"
+    }
+  ],
+  "connections": {
+    "Webhook: Photos Uploaded": {
+      "main": [
+        [
+          {
+            "node": "Code: Prepare Photo URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Prepare Photo URLs": {
+      "main": [
+        [
+          {
+            "node": "Code: Prepare Groq Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Prepare Groq Prompt": {
+      "main": [
+        [
+          {
+            "node": "HTTP: Groq AI Vision Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP: Groq AI Vision Analysis": {
+      "main": [
+        [
+          {
+            "node": "Code: Prepare for Parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Prepare for Parse": {
+      "main": [
+        [
+          {
+            "node": "Code: Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Save Photo Tags",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Save Photo Tags": {
+      "main": [
+        [
+          {
+            "node": "Code: Aggregate & Recommend",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Aggregate & Recommend": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
