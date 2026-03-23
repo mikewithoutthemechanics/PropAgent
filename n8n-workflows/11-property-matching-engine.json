@@ -1,0 +1,459 @@
+{
+  "id": "prop-match-11-aaaa-bbbb-cccc-ddddeeeeffff",
+  "name": "Property Matching Engine (Groq Free)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "expression": "9"
+            }
+          ]
+        }
+      },
+      "name": "Daily 9AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "manual-match",
+        "responseMode": "responseNode"
+      },
+      "name": "Manual Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 400],
+      "webhookId": "manual-match"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "value": "buyers",
+          "mode": "list"
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "status",
+              "value": "active",
+              "condition": "eq"
+            },
+            {
+              "column": "last_active",
+              "value": "={{ $today.minus({ days: 30 }).format('YYYY-MM-DD') }}",
+              "condition": "gte"
+            }
+          ]
+        }
+      },
+      "name": "Query Active Buyers",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "value": "properties",
+          "mode": "list"
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "status",
+              "value": "available",
+              "condition": "eq"
+            }
+          ]
+        }
+      },
+      "name": "Query Available Properties",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [450, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get buyers and properties from previous nodes
+const buyers = $('Query Active Buyers').all()[0]?.json?.data || [];
+const properties = $('Query Available Properties').all()[0]?.json?.data || [];
+
+if (buyers.length === 0 || properties.length === 0) {
+  return [{ json: { message: 'No buyers or properties to match', buyers_count: buyers.length, properties_count: properties.length } }];
+}
+
+// Create match pairs for each buyer-property combination
+// We'll process in batches to avoid overwhelming Groq
+const matchPairs = [];
+
+for (const buyer of buyers) {
+  for (const property of properties) {
+    matchPairs.push({
+      buyer_id: buyer.id,
+      buyer_name: `${buyer.first_name} ${buyer.last_name}`,
+      buyer_email: buyer.email,
+      buyer_phone: buyer.phone,
+      budget_min: buyer.budget_min,
+      budget_max: buyer.budget_max,
+      preferred_locations: buyer.preferred_locations || [],
+      buyer_property_type: buyer.property_type,
+      min_bedrooms: buyer.min_bedrooms,
+      features_wanted: buyer.features_wanted || [],
+      property_id: property.id,
+      property_address: property.address,
+      property_price: property.price,
+      property_type: property.property_type,
+      property_bedrooms: property.bedrooms,
+      property_bathrooms: property.bathrooms,
+      property_features: property.features || [],
+      property_description: property.description || ''
+    });
+  }
+}
+
+// Return match pairs for processing
+return matchPairs.map(pair => ({ json: pair }));"
+      },
+      "name": "Prepare Match Pairs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 5,
+        "options": {}
+      },
+      "name": "Batch Process Matches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": {
+          "model": "llama-3.1-70b-versatile",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a property matching AI for PropAgent, a South African real estate platform. Analyze buyer requirements against property listings and calculate match scores.\n\nMatch Factors:\n- Budget alignment (+- 20% flexibility)\n- Location preferences match\n- Property type compatibility\n- Bedroom/bathroom requirements\n- Feature overlap (pool, garage, security, etc.)\n\nReturn valid JSON only with this exact structure:\n{\n  \"match_score\": 0-100,\n  \"match_grade\": \"excellent|good|fair|poor\",\n  \"reasoning\": \"brief 1-2 sentence explanation\",\n  \"key_matches\": [\"what matches well\"],\n  \"concerns\": [\"any mismatches or concerns\"],\n  \"suggested_message\": \"personalized message to buyer (max 300 chars)\"\n}"
+            },
+            {
+              "role": "user",
+              "content": "={{
+`Match this buyer to this property:
+
+BUYER:
+Name: ${$json.buyer_name}
+Budget: R${$json.budget_min} - R${$json.budget_max}
+Locations: ${Array.isArray($json.preferred_locations) ? $json.preferred_locations.join(', ') : $json.preferred_locations}
+Property Type: ${$json.buyer_property_type}
+Bedrooms: ${$json.min_bedrooms}+
+Features Wanted: ${Array.isArray($json.features_wanted) ? $json.features_wanted.join(', ') : $json.features_wanted}
+
+PROPERTY:
+Address: ${$json.property_address}
+Price: R${$json.property_price}
+Type: ${$json.property_type}
+Bedrooms: ${$json.property_bedrooms}
+Bathrooms: ${$json.property_bathrooms}
+Features: ${Array.isArray($json.property_features) ? $json.property_features.join(', ') : $json.property_features}
+Description: ${$json.property_description?.substring(0, 200) || 'N/A'}
+
+Calculate match score 0-100 and return JSON as instructed.`
+}}"
+            }
+          ],
+          "temperature": 0.4,
+          "max_tokens": 500
+        }
+      },
+      "name": "Groq AI Match Scoring",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq AI response and merge with buyer/property data
+const groqResponse = $json;
+const content = groqResponse.choices?.[0]?.message?.content || '{}';
+
+let matchResult;
+try {
+  // Try to extract JSON from the response
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
+  matchResult = JSON.parse(jsonMatch ? jsonMatch[0] : content);
+} catch (e) {
+  // Fallback if parsing fails
+  matchResult = {
+    match_score: 50,
+    match_grade: 'fair',
+    reasoning: 'Unable to parse AI response',
+    key_matches: [],
+    concerns: ['Parsing error'],
+    suggested_message: 'We found a property that might interest you. Please contact us for details.'
+  };
+}
+
+const batchData = $('Batch Process Matches').item.json;
+
+return {
+  json: {
+    buyer_id: batchData.buyer_id,
+    buyer_name: batchData.buyer_name,
+    buyer_email: batchData.buyer_email,
+    buyer_phone: batchData.buyer_phone,
+    property_id: batchData.property_id,
+    property_address: batchData.property_address,
+    property_price: batchData.property_price,
+    match_score: matchResult.match_score || 0,
+    match_grade: matchResult.match_grade || 'unknown',
+    reasoning: matchResult.reasoning || '',
+    key_matches: matchResult.key_matches || [],
+    concerns: matchResult.concerns || [],
+    suggested_message: matchResult.suggested_message || 'Check out this property that matches your criteria!'
+  }
+};"
+      },
+      "name": "Parse Match Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "property_matches",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "buyer_id": "={{ $json.buyer_id }}",
+            "property_id": "={{ $json.property_id }}",
+            "match_score": "={{ $json.match_score }}",
+            "match_grade": "={{ $json.match_grade }}",
+            "reasoning": "={{ $json.reasoning }}",
+            "suggested_message": "={{ $json.suggested_message }}",
+            "created_at": "={{ $now }}"
+          }
+        }
+      },
+      "name": "Save Match to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1450, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.match_score }}",
+              "rightValue": "70",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "name": "Score > 70?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1450, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.sendgrid.com/v3/mail/send",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": {
+          "personalizations": [
+            {
+              "to": [
+                {
+                  "email": "={{ $json.buyer_email }}"
+                }
+              ]
+            }
+          ],
+          "from": {
+            "email": "matches@propagent.co.za",
+            "name": "PropAgent Matches"
+          },
+          "subject": "={{ 'We Found You a ' + $json.match_grade.toUpperCase() + ' Property Match!' }}",
+          "content": [
+            {
+              "type": "text/plain",
+              "value": "={{
+`Hi ${$json.buyer_name},
+
+Great news! We found a property that matches your requirements.
+
+🏠 Property: ${$json.property_address}
+💰 Price: R${$json.property_price?.toLocaleString()}
+⭐ Match Score: ${$json.match_score}/100 (${$json.match_grade.toUpperCase()})
+
+Why it matches:
+${($json.key_matches || []).map(m => '✓ ' + m).join('\\n')}
+
+${$json.suggested_message}
+
+Reply to this email or call us to arrange a viewing.
+
+Best regards,
+PropAgent Team`
+}}"
+            }
+          ]
+        }
+      },
+      "name": "Send Email Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1650, 350]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/{{$credentials.twilioApi.accountSid}}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{ $json.buyer_phone }}"
+            },
+            {
+              "name": "From",
+              "value": "={{ $credentials.twilioApi.phoneNumber }}"
+            },
+            {
+              "name": "Body",
+              "value": "={{
+`PropAgent: ${$json.match_grade.toUpperCase()} match found! ${$json.property_address} - R${$json.property_price?.toLocaleString()}. Score: ${$json.match_score}/100. ${$json.suggested_message.substring(0, 100)}`
+}}"
+            }
+          ]
+        }
+      },
+      "name": "Send SMS Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1650, 450]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "table": {
+          "value": "property_matches",
+          "mode": "list"
+        },
+        "where": {
+          "conditions": [
+            {
+              "column": "buyer_id",
+              "value": "={{ $json.buyer_id }}"
+            },
+            {
+              "column": "property_id",
+              "value": "={{ $json.property_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "notified_at": "={{ $now }}"
+          }
+        }
+      },
+      "name": "Mark Notified",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1850, 400]
+    }
+  ],
+  "connections": {
+    "Daily 9AM Trigger": {
+      "main": [
+        [{"node": "Query Active Buyers", "type": "main", "index": 0}],
+        [{"node": "Query Available Properties", "type": "main", "index": 0}]
+      ]
+    },
+    "Manual Webhook Trigger": {
+      "main": [
+        [{"node": "Query Active Buyers", "type": "main", "index": 0}],
+        [{"node": "Query Available Properties", "type": "main", "index": 0}]
+      ]
+    },
+    "Query Active Buyers": {
+      "main": [[{"node": "Prepare Match Pairs", "type": "main", "index": 0}]]
+    },
+    "Query Available Properties": {
+      "main": [[{"node": "Prepare Match Pairs", "type": "main", "index": 0}]]
+    },
+    "Prepare Match Pairs": {
+      "main": [[{"node": "Batch Process Matches", "type": "main", "index": 0}]]
+    },
+    "Batch Process Matches": {
+      "main": [[{"node": "Groq AI Match Scoring", "type": "main", "index": 0}]]
+    },
+    "Groq AI Match Scoring": {
+      "main": [[{"node": "Parse Match Results", "type": "main", "index": 0}]]
+    },
+    "Parse Match Results": {
+      "main": [
+        [{"node": "Save Match to Supabase", "type": "main", "index": 0}],
+        [{"node": "Score > 70?", "type": "main", "index": 0}]
+      ]
+    },
+    "Score > 70?": {
+      "main": [
+        [{"node": "Send Email Notification", "type": "main", "index": 0}],
+        []
+      ]
+    },
+    "Send Email Notification": {
+      "main": [[{"node": "Send SMS Notification", "type": "main", "index": 0}]]
+    },
+    "Send SMS Notification": {
+      "main": [[{"node": "Mark Notified", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["property-matching", "groq", "supabase", "daily"]
+}

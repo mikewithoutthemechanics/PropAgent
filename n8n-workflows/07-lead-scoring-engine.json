@@ -1,0 +1,177 @@
+{
+  "id": "g7h8i9j0-k1l2-3456-mnop-qr7890123456",
+  "name": "Lead Scoring Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-lead",
+        "responseMode": "responseNode"
+      },
+      "name": "New Lead Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "new-lead"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": {
+          "model": "llama-3.1-70b-versatile",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a real estate lead scoring expert for PropAgent, a South African property platform. Analyze leads and score them 0-100 based on: inquiry details (property type, budget, timeline), communication quality (grammar, detail level), source quality (website, referral, portal), and response patterns. Return only valid JSON."
+            },
+            {
+              "role": "user",
+              "content": "=Analyze this real estate lead and score 0-100:\nName: {{ $json.body.name }}\nEmail: {{ $json.body.email }}\nPhone: {{ $json.body.phone }}\nInquiry: {{ $json.body.message }}\nProperty Interest: {{ $json.body.property_type }}\nBudget: {{ $json.body.budget }}\nTimeline: {{ $json.body.timeline }}\nSource: {{ $json.body.source }}\n\nReturn JSON:\n{\n  \"lead_score\": 0-100,\n  \"priority\": \"hot|warm|cold\",\n  \"reasoning\": \"brief explanation\",\n  \"recommended_action\": \"immediate|within_24h|within_week\"\n}"
+            }
+          ],
+          "temperature": 0.3,
+          "max_tokens": 500
+        },
+        "options": {}
+      },
+      "name": "Groq AI Score Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq response for lead scoring\nconst groqResponse = $json;\nconst content = groqResponse.choices?.[0]?.message?.content || '{}';\n\n// Extract JSON from response\nlet parsed;\ntry {\n  // Try to find JSON in the response\n  const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n  parsed = JSON.parse(jsonMatch ? jsonMatch[0] : content);\n} catch (e) {\n  // Fallback parsing if AI response is malformed\n  const scoreMatch = content.match(/lead_score['\"\\s:]+(\\d+)/i);\n  const priorityMatch = content.match(/priority['\"\\s:]+['\"]?(hot|warm|cold)/i);\n  parsed = {\n    lead_score: scoreMatch ? parseInt(scoreMatch[1]) : 50,\n    priority: priorityMatch ? priorityMatch[1].toLowerCase() : 'warm',\n    reasoning: 'Parsed from AI response - ' + content.substring(0, 100),\n    recommended_action: 'within_24h'\n  };\n}\n\n// Validate score range\nlet score = parsed.lead_score || 50;\nif (score < 0) score = 0;\nif (score > 100) score = 100;\n\n// Map priority to standard values\nlet priority = (parsed.priority || 'warm').toLowerCase();\nif (!['hot', 'warm', 'cold'].includes(priority)) {\n  priority = score >= 70 ? 'hot' : score >= 40 ? 'warm' : 'cold';\n}\n\n// Map action to standard values  \nlet action = (parsed.recommended_action || 'within_24h').toLowerCase();\nif (!['immediate', 'within_24h', 'within_week'].includes(action)) {\n  action = score >= 80 ? 'immediate' : score >= 50 ? 'within_24h' : 'within_week';\n}\n\nconst webhookData = $('New Lead Webhook').item.json.body || {};\n\nreturn {\n  json: {\n    lead_id: webhookData.lead_id || webhookData.id || $now,\n    name: webhookData.name,\n    email: webhookData.email,\n    phone: webhookData.phone,\n    property_type: webhookData.property_type,\n    budget: webhookData.budget,\n    timeline: webhookData.timeline,\n    source: webhookData.source,\n    message: webhookData.message,\n    lead_score: score,\n    priority: priority,\n    reasoning: parsed.reasoning || 'Lead scored by AI',\n    recommended_action: action,\n    scored_at: $now\n  }\n};"
+      },
+      "name": "Parse Score Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "lead_scores",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $json.lead_id }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "priority": "={{ $json.priority }}",
+            "reasoning": "={{ $json.reasoning }}",
+            "recommended_action": "={{ $json.recommended_action }}",
+            "scored_at": "={{ $now }}"
+          }
+        }
+      },
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.lead_score }}",
+              "rightValue": "70",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "name": "High Priority?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $credentials.twilioApi.webhookUrl || 'https://api.twilio.com/2010-04-01/Accounts/' + $credentials.twilioApi.accountSid + '/Messages.json' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{ $credentials.twilioApi.agentNumber }}"
+            },
+            {
+              "name": "From",
+              "value": "={{ $credentials.twilioApi.whatsappNumber }}"
+            },
+            {
+              "name": "Body",
+              "value": "=🔥 HOT LEAD ALERT - Score: {{ $json.lead_score }}/100\n\nName: {{ $json.name }}\nPriority: {{ $json.priority.toUpperCase() }}\nAction: {{ $json.recommended_action }}\n\nContact: {{ $json.phone }} / {{ $json.email }}\nBudget: {{ $json.budget }}\nTimeline: {{ $json.timeline }}\n\nReason: {{ $json.reasoning.substring(0, 100) }}"
+            }
+          ]
+        }
+      },
+      "name": "Notify Agent WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "options": {},
+        "responseBody": "={{ JSON.stringify({\n  \"success\": true,\n  \"lead_score\": $json.lead_score,\n  \"priority\": $json.priority,\n  \"recommended_action\": $json.recommended_action,\n  \"message\": $json.lead_score >= 70 ? \"High priority lead - agent notified\" : \"Lead scored and logged\"\n}) }}"
+      },
+      "name": "Return Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1250, 400]
+    }
+  ],
+  "connections": {
+    "New Lead Webhook": {
+      "main": [[{"node": "Groq AI Score Lead", "type": "main", "index": 0}]]
+    },
+    "Groq AI Score Lead": {
+      "main": [[{"node": "Parse Score Response", "type": "main", "index": 0}]]
+    },
+    "Parse Score Response": {
+      "main": [[{"node": "Save to Supabase", "type": "main", "index": 0}]]
+    },
+    "Save to Supabase": {
+      "main": [[{"node": "High Priority?", "type": "main", "index": 0}]]
+    },
+    "High Priority?": {
+      "main": [
+        [{"node": "Notify Agent WhatsApp", "type": "main", "index": 0}],
+        [{"node": "Return Response", "type": "main", "index": 0}]
+      ]
+    },
+    "Notify Agent WhatsApp": {
+      "main": [[{"node": "Return Response", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["propagent", "lead-scoring", "groq", "supabase"]
+}

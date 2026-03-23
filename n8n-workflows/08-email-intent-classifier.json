@@ -1,0 +1,200 @@
+{
+  "id": "a8b9c0d1-e2f3-4455-a6b7-c8d9e0f1a2b3",
+  "name": "Email Intent Classifier",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "email-received",
+        "responseMode": "responseNode"
+      },
+      "name": "Email Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "email-received"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": {
+          "model": "llama-3.1-70b-versatile",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are an intelligent email classifier for PropAgent, a South African real estate platform. Analyze emails and classify them into specific intent categories.\n\nCategories:\n- VIEWING_REQUEST: Request to schedule or reschedule a property viewing\n- PRICE_INQUIRY: Questions about price, offers, or negotiations\n- GENERAL_INFO: General questions about properties or services\n- COMPLAINT: Issues, complaints, or problems (marked as high urgency)\n- DOCUMENT_REQUEST: Requests for lease agreements, contracts, or documents\n- SPAM: Junk mail, unsolicited marketing, or irrelevant content\n\nExtract key information like property IDs, dates/times, names, and budget if mentioned.\n\nReturn ONLY a valid JSON object with no markdown formatting:"
+            },
+            {
+              "role": "user",
+              "content": "={{\n  'Classify this real estate email:\nFrom: ' + ($json.body.from || 'Unknown') + '\nSubject: ' + ($json.body.subject || 'No Subject') + '\nBody: ' + ($json.body.body || $json.body.text || 'Empty') + '\n\nReturn JSON:\n{\n  \"intent\": \"VIEWING_REQUEST|PRICE_INQUIRY|GENERAL_INFO|COMPLAINT|DOCUMENT_REQUEST|SPAM\",\n  \"confidence\": 0.0-1.0,\n  \"extracted_info\": {\n    \"property_id\": \"if mentioned\",\n    \"dates\": [\"if any\"],\n    \"names\": [\"if any\"],\n    \"budget\": \"if mentioned\"\n  },\n  \"urgency\": \"high|medium|low\",\n  \"suggested_response\": \"brief draft response\"\n}'\n}}"
+            }
+          ],
+          "temperature": 0.3,
+          "max_tokens": 500
+        },
+        "options": {}
+      },
+      "name": "Groq AI Classify Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq response\nconst groqResponse = $json;\nconst content = groqResponse.choices?.[0]?.message?.content || '{}';\n\n// Extract JSON from response\nlet parsed;\ntry {\n  // Clean up common JSON formatting issues\n  let cleanContent = content\n    .replace(/```json\\s*/gi, '')\n    .replace(/```\\s*/g, '')\n    .trim();\n  \n  // Try to find JSON in the response\n  const jsonMatch = cleanContent.match(/\\{[\\s\\S]*\\}/);\n  parsed = JSON.parse(jsonMatch ? jsonMatch[0] : cleanContent);\n} catch (e) {\n  // Fallback if JSON parsing fails\n  parsed = {\n    intent: 'GENERAL_INFO',\n    confidence: 0.5,\n    extracted_info: {},\n    urgency: 'medium',\n    suggested_response: 'Thank you for your email. We will get back to you shortly.'\n  };\n}\n\n// Get webhook data for context\nconst webhookData = $('Email Webhook').item.json.body || {};\n\n// Generate routing destination based on intent\nconst routingMap = {\n  'VIEWING_REQUEST': 'viewings@propagent.co.za',\n  'PRICE_INQUIRY': 'sales@propagent.co.za',\n  'GENERAL_INFO': 'info@propagent.co.za',\n  'COMPLAINT': 'urgent@propagent.co.za',\n  'DOCUMENT_REQUEST': 'admin@propagent.co.za',\n  'SPAM': null\n};\n\nreturn {\n  json: {\n    email_id: webhookData.email_id || $execution.id || 'unknown',\n    from_email: webhookData.from || 'unknown@example.com',\n    subject: webhookData.subject || 'No Subject',\n    email_body: webhookData.body || webhookData.text || '',\n    intent: parsed.intent || 'GENERAL_INFO',\n    confidence: parsed.confidence || 0.5,\n    extracted_info: parsed.extracted_info || {},\n    urgency: parsed.urgency || 'medium',\n    suggested_response: parsed.suggested_response || 'Thank you for your email.',\n    route_to: routingMap[parsed.intent] || 'info@propagent.co.za',\n    auto_respond: (parsed.confidence || 0) > 0.8 && parsed.intent !== 'COMPLAINT' && parsed.intent !== 'SPAM',\n    classified_at: $now\n  }\n};"
+      },
+      "name": "Parse Groq Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "email_classifications",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email_id": "={{ $json.email_id }}",
+            "from_email": "={{ $json.from_email }}",
+            "subject": "={{ $json.subject }}",
+            "intent": "={{ $json.intent }}",
+            "confidence": "={{ $json.confidence }}",
+            "extracted_info": "={{ JSON.stringify($json.extracted_info) }}",
+            "urgency": "={{ $json.urgency }}",
+            "suggested_response": "={{ $json.suggested_response }}",
+            "route_to": "={{ $json.route_to }}",
+            "auto_responded": "={{ $json.auto_respond }}",
+            "classified_at": "={{ $json.classified_at }}"
+          }
+        }
+      },
+      "name": "Log to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.confidence }}",
+              "rightValue": "0.8",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "condition-2",
+              "leftValue": "={{ $json.intent }}",
+              "rightValue": "COMPLAINT",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "condition-3",
+              "leftValue": "={{ $json.intent }}",
+              "rightValue": "SPAM",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "name": "Auto-Response Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.sendgrid.com/v3/mail/send",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": "={{ {\n  \"personalizations\": [\n    {\n      \"to\": [{\"email\": $json.from_email}]\n    }\n  ],\n  \"from\": {\"email\": \"noreply@propagent.co.za\", \"name\": \"PropAgent\"},\n  \"subject\": \"Re: \" + $json.subject,\n  \"content\": [\n    {\n      \"type\": \"text/plain\",\n      \"value\": $json.suggested_response + \"\\n\\nThis is an automated response. For urgent matters, please contact us at 087-123-4567.\"\n    }\n  ]\n} }}"
+      },
+      "name": "Send Auto-Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 250]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.zapier.com/hooks/catch/[YOUR_ZAPIER_WEBHOOK_PATH]",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": "={{ {\n  \"notification_type\": \"email_routing\",\n  \"email_id\": $json.email_id,\n  \"from_email\": $json.from_email,\n  \"subject\": $json.subject,\n  \"intent\": $json.intent,\n  \"urgency\": $json.urgency,\n  \"route_to\": $json.route_to,\n  \"extracted_info\": $json.extracted_info,\n  \"suggested_response\": $json.suggested_response,\n  \"confidence\": $json.confidence,\n  \"requires_manual_review\": true,\n  \"message\": \"Email classified as '\" + $json.intent + \"' with confidence \" + ($json.confidence * 100).toFixed(1) + \"%. Route to: \" + $json.route_to\n} }}"
+      },
+      "name": "Route to Department",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 350]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.zapier.com/hooks/catch/[YOUR_ZAPIER_WEBHOOK_PATH]",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": "={{ {\n  \"notification_type\": \"urgent_complaint\",\n  \"email_id\": $json.email_id,\n  \"from_email\": $json.from_email,\n  \"subject\": $json.subject,\n  \"intent\": $json.intent,\n  \"urgency\": \"HIGH\",\n  \"route_to\": \"urgent@propagent.co.za\",\n  \"suggested_response\": $json.suggested_response,\n  \"alert\": \"URGENT: Complaint received requiring immediate attention!\"\n} }}"
+      },
+      "name": "Alert Complaint Team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 150]
+    }
+  ],
+  "connections": {
+    "Email Webhook": {
+      "main": [[{"node": "Groq AI Classify Email", "type": "main", "index": 0}]]
+    },
+    "Groq AI Classify Email": {
+      "main": [[{"node": "Parse Groq Response", "type": "main", "index": 0}]]
+    },
+    "Parse Groq Response": {
+      "main": [[{"node": "Auto-Response Check", "type": "main", "index": 0}]]
+    },
+    "Auto-Response Check": {
+      "main": [
+        [{"node": "Send Auto-Response", "type": "main", "index": 0}],
+        [{"node": "Route to Department", "type": "main", "index": 0}]
+      ]
+    },
+    "Send Auto-Response": {
+      "main": [[{"node": "Log to Supabase", "type": "main", "index": 0}]]
+    },
+    "Route to Department": {
+      "main": [[{"node": "Log to Supabase", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["email", "ai", "classification", "groq", "supabase"]
+}

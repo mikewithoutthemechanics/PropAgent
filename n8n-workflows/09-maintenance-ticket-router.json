@@ -1,0 +1,263 @@
+{
+  "id": "mtr-09-a1b2-c3d4-e5f6-7890-abcd-ef12",
+  "name": "Maintenance Ticket Router (Groq Free)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "maintenance-request",
+        "responseMode": "responseNode"
+      },
+      "name": "Maintenance Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "maintenance-request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": {
+          "model": "llama-3.1-70b-versatile",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a maintenance routing assistant for PropAgent, a South African real estate platform.\n\nClassify maintenance requests into categories:\n- PLUMBING: leaks, blocked drains, geyser issues, burst pipes, water pressure\n- ELECTRICAL: power outages, faulty wiring, lights, appliances, tripping\n- HVAC: heating, cooling, air conditioning, ventilation\n- GENERAL: painting, doors, windows, general repairs, fixtures\n- SECURITY: locks, alarms, gates, access control, CCTV\n- EMERGENCY: burst pipe, power outage, security breach, flooding, gas leak\n\nAssess severity:\n- emergency: Immediate danger, flooding, gas leak, total power loss, security breach\n- urgent: Needs same-day attention, active leak affecting living space\n- routine: Can be scheduled within normal business hours\n\nReturn ONLY valid JSON in this exact format:\n{\n  \"issue_type\": \"PLUMBING|ELECTRICAL|HVAC|GENERAL|SECURITY|EMERGENCY\",\n  \"severity\": \"emergency|urgent|routine\",\n  \"confidence\": 0.0-1.0,\n  \"estimated_cost_range\": \"low|medium|high\",\n  \"keywords\": [\"keyword1\", \"keyword2\"],\n  \"questions_for_tenant\": [\"question1\", \"question2\"],\n  \"contractor_category\": \"plumber|electrician|handyman|security|hvac|general\",\n  \"auto_assign\": true|false\n}"
+            },
+            {
+              "role": "user",
+              "content": "Analyze this maintenance request:\nTenant: {{ $json.body.tenant_name }}\nProperty: {{ $json.body.property_address }}\nIssue Description: {{ $json.body.description }}\nPhotos: {{ $json.body.photos || 'None attached' }}"
+            }
+          ],
+          "temperature": 0.3,
+          "max_tokens": 400
+        },
+        "options": {}
+      },
+      "name": "Groq AI Classify Issue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq response\nconst groqResponse = $json;\nconst content = groqResponse.choices?.[0]?.message?.content || '{}';\n\n// Extract JSON from response\nlet parsed;\ntry {\n  // Try to find JSON in the response\n  const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n  parsed = JSON.parse(jsonMatch ? jsonMatch[0] : content);\n} catch (e) {\n  // Fallback parsing\n  parsed = {\n    issue_type: 'GENERAL',\n    severity: 'routine',\n    confidence: 0.5,\n    estimated_cost_range: 'medium',\n    keywords: ['uncategorized'],\n    questions_for_tenant: ['Can you provide more details?'],\n    contractor_category: 'general',\n    auto_assign: false\n  };\n}\n\nconst webhook = $('Maintenance Webhook').item.json;\nconst body = webhook.body || {};\n\nreturn {\n  json: {\n    // Original request data\n    tenant_id: body.tenant_id,\n    tenant_name: body.tenant_name,\n    tenant_phone: body.tenant_phone,\n    tenant_email: body.tenant_email,\n    property_id: body.property_id,\n    property_address: body.property_address,\n    unit_number: body.unit_number,\n    issue_description: body.description,\n    photos: body.photos || [],\n    submitted_at: body.submitted_at || $now,\n    \n    // AI classification results\n    issue_type: parsed.issue_type || 'GENERAL',\n    severity: parsed.severity || 'routine',\n    confidence: parsed.confidence || 0.5,\n    estimated_cost_range: parsed.estimated_cost_range || 'medium',\n    keywords: parsed.keywords || [],\n    questions_for_tenant: parsed.questions_for_tenant || [],\n    contractor_category: parsed.contractor_category || 'general',\n    auto_assign: parsed.auto_assign || false,\n    \n    // Routing decisions\n    requires_immediate_attention: (parsed.severity === 'emergency') || (parsed.issue_type === 'EMERGENCY'),\n    status: parsed.severity === 'emergency' ? 'assigned' : 'open'\n  }\n};"
+      },
+      "name": "Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "maintenance_tickets",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "tenant_id": "={{ $json.tenant_id }}",
+            "tenant_name": "={{ $json.tenant_name }}",
+            "tenant_phone": "={{ $json.tenant_phone }}",
+            "tenant_email": "={{ $json.tenant_email }}",
+            "property_id": "={{ $json.property_id }}",
+            "property_address": "={{ $json.property_address }}",
+            "unit_number": "={{ $json.unit_number }}",
+            "issue_description": "={{ $json.issue_description }}",
+            "issue_type": "={{ $json.issue_type }}",
+            "severity": "={{ $json.severity }}",
+            "contractor_category": "={{ $json.contractor_category }}",
+            "confidence": "={{ $json.confidence }}",
+            "estimated_cost_range": "={{ $json.estimated_cost_range }}",
+            "keywords": "={{ JSON.stringify($json.keywords) }}",
+            "questions_for_tenant": "={{ JSON.stringify($json.questions_for_tenant) }}",
+            "auto_assign": "={{ $json.auto_assign }}",
+            "status": "={{ $json.status }}",
+            "created_at": "={{ $now }}"
+          }
+        }
+      },
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-emergency",
+              "leftValue": "={{ $json.severity }}",
+              "rightValue": "emergency",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        }
+      },
+      "name": "Is Emergency?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $credentials.twilioApi?.webhookUrl || 'https://api.twilio.com/2010-04-01/Accounts/' + $credentials.twilioApi?.accountSid + '/Messages.json' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{ $credentials.twilioApi?.propertyManagerNumber }}"
+            },
+            {
+              "name": "From",
+              "value": "={{ $credentials.twilioApi?.whatsappNumber }}"
+            },
+            {
+              "name": "Body",
+              "value": "🚨 EMERGENCY MAINTENANCE TICKET\n\n📍 Property: {{ $json.property_address }}\n👤 Tenant: {{ $json.tenant_name }}\n📱 Phone: {{ $json.tenant_phone }}\n\n🔧 Issue: {{ $json.issue_type }}\n⚠️ Severity: {{ $json.severity }}\n\n📝 Description: {{ $json.issue_description }}\n\n🎯 Suggested Contractor: {{ $json.contractor_category }}\n📊 Confidence: {{ $json.confidence * 100 }}%\n💰 Est. Cost: {{ $json.estimated_cost_range }}\n\n✅ AUTO-ASSIGNED - Immediate action required!"
+            }
+          ]
+        }
+      },
+      "name": "Alert Property Manager",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $credentials.twilioApi?.webhookUrl || 'https://api.twilio.com/2010-04-01/Accounts/' + $credentials.twilioApi?.accountSid + '/Messages.json' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{ $json.tenant_phone }}"
+            },
+            {
+              "name": "From",
+              "value": "={{ $credentials.twilioApi?.whatsappNumber }}"
+            },
+            {
+              "name": "Body",
+              "value": "Hi {{ $json.tenant_name }},\n\nYour maintenance request has been received and logged.\n\n🔧 Issue Type: {{ $json.issue_type }}\n📋 Ticket Status: {{ $json.status }}\n🎯 Assigned Category: {{ $json.contractor_category }}\n\n{{ $json.questions_for_tenant?.length > 0 ? \"❓ We need more info:\n\" + $json.questions_for_tenant.map((q, i) => (i + 1) + \". \" + q).join(\"\\n\") : \"A contractor will contact you within 24 hours.\" }}\n\nTicket Ref: #{{ $json.tenant_id?.substring(0, 8) }}\n\n- PropAgent Maintenance Team"
+            }
+          ]
+        }
+      },
+      "name": "Confirm to Tenant",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $credentials.twilioApi?.webhookUrl || 'https://api.twilio.com/2010-04-01/Accounts/' + $credentials.twilioApi?.accountSid + '/Messages.json' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{ $json.tenant_phone }}"
+            },
+            {
+              "name": "From",
+              "value": "={{ $credentials.twilioApi?.whatsappNumber }}"
+            },
+            {
+              "name": "Body",
+              "value": "🚨 URGENT: {{ $json.tenant_name }},\n\nYour maintenance issue has been flagged as EMERGENCY.\n\n🔧 Issue: {{ $json.issue_type }}\n📍 Address: {{ $json.property_address }}\n\nA {{ $json.contractor_category }} has been notified and will contact you within 30 minutes.\n\nPlease ensure access is available.\n\nEmergency Hotline: 010-XXX-XXXX\nTicket: #{{ $json.tenant_id?.substring(0, 8) }}"
+            }
+          ]
+        }
+      },
+      "name": "Emergency Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1450, 100]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  \"success\": true,\n  \"ticket_id\": $json[0]?.id || \"pending\",\n  \"issue_type\": $json.issue_type,\n  \"severity\": $json.severity,\n  \"status\": $json.status,\n  \"contractor_category\": $json.contractor_category,\n  \"auto_assigned\": $json.auto_assign,\n  \"message\": $json.severity === 'emergency' ? 'Emergency ticket created. A contractor will contact you within 30 minutes.' : 'Maintenance request logged. You will be contacted within 24 hours.',\n  \"questions\": $json.questions_for_tenant,\n  \"timestamp\": $now\n}) }}"
+      },
+      "name": "Response to Tenant",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1650, 300]
+    }
+  ],
+  "connections": {
+    "Maintenance Webhook": {
+      "main": [[{"node": "Groq AI Classify Issue", "type": "main", "index": 0}]]
+    },
+    "Groq AI Classify Issue": {
+      "main": [[{"node": "Parse AI Response", "type": "main", "index": 0}]]
+    },
+    "Parse AI Response": {
+      "main": [[{"node": "Save to Supabase", "type": "main", "index": 0}]]
+    },
+    "Save to Supabase": {
+      "main": [[{"node": "Is Emergency?", "type": "main", "index": 0}]]
+    },
+    "Is Emergency?": {
+      "main": [
+        [{"node": "Alert Property Manager", "type": "main", "index": 0}],
+        [{"node": "Confirm to Tenant", "type": "main", "index": 0}]
+      ]
+    },
+    "Alert Property Manager": {
+      "main": [[{"node": "Emergency Notification", "type": "main", "index": 0}]]
+    },
+    "Emergency Notification": {
+      "main": [[{"node": "Response to Tenant", "type": "main", "index": 0}]]
+    },
+    "Confirm to Tenant": {
+      "main": [[{"node": "Response to Tenant", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    "maintenance",
+    "routing",
+    "ai",
+    "groq",
+    "supabase"
+  ]
+}

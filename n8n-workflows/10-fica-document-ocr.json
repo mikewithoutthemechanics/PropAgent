@@ -1,0 +1,200 @@
+{
+  "id": "f3e4d5c6-b7a8-9012-fghi-456789012345",
+  "name": "FICA Document OCR Processor",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fica-document-process",
+        "responseMode": "responseNode"
+      },
+      "name": "Document Upload Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "fica-document-process"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare document data for OCR processing\nconst body = $json.body || {};\n\n// Determine document type and build appropriate prompt\nconst docType = body.document_type || 'unknown';\nconst clientId = body.client_id;\nconst documentUrl = body.document_url;\nconst ocrText = body.ocr_text || '';\nconst base64Image = body.base64_image || '';\n\nlet extractionPrompt = '';\nlet systemPrompt = '';\n\nif (docType === 'id' || docType === 'passport') {\n  systemPrompt = `You are a FICA document OCR expert for South African real estate compliance. Extract and validate ID document information with high accuracy.`;\n  extractionPrompt = `Extract information from this South African ID document or Passport.\n\nDocument Type: ${docType}\n${ocrText ? `OCR Text Extracted: ${ocrText}` : ''}\n${base64Image ? 'Image: [Base64 image data provided]' : ''}\n\nFor ID Document or Passport, extract:\n- full_name (exactly as shown)\n- id_number (13-digit RSA ID or passport number)\n- date_of_birth (YYYY-MM-DD format)\n- nationality (e.g., South African, Zimbabwean, etc.)\n- expiry_date (if shown, YYYY-MM-DD format)\n- document_number (if passport)\n\nValidate:\n- Check if image/text is clear and readable\n- Check if document appears expired\n- Check if all required fields are present\n- Flag any issues (blurry, cut off, glare, missing info)\n\nReturn JSON:\n{\n  \"document_type\": \"id|passport\",\n  \"extracted_data\": {\n    \"full_name\": \"...\",\n    \"id_number\": \"...\",\n    \"date_of_birth\": \"YYYY-MM-DD\",\n    \"nationality\": \"...\",\n    \"expiry_date\": \"YYYY-MM-DD|null\"\n  },\n  \"validation\": {\n    \"is_clear\": true|false,\n    \"is_expired\": true|false,\n    \"is_complete\": true|false,\n    \"issues\": [\"list any problems\"]\n  },\n  \"confidence\": 0.0-1.0\n}`;\n} else if (docType === 'utility_bill' || docType === 'bank_statement') {\n  systemPrompt = `You are a FICA document OCR expert for South African real estate compliance. Extract and validate proof of address documents.`;\n  extractionPrompt = `Extract information from this Proof of Address document (Utility Bill or Bank Statement).\n\nDocument Type: ${docType}\n${ocrText ? `OCR Text Extracted: ${ocrText}` : ''}\n${base64Image ? 'Image: [Base64 image data provided]' : ''}\n\nFor Proof of Address, extract:\n- address_lines (full address as array of lines)\n- utility_type (electricity|water|rates|bank_statement|telkom|other)\n- bill_date (YYYY-MM-DD format)\n- issuer (e.g., City of Johannesburg, Eskom, FNB, Standard Bank)\n- account_number (if visible)\n- statement_period (for bank statements: \"MMM YYYY\" or date range)\n\nValidate:\n- Check if image/text is clear and readable\n- Check if document is not older than 3 months\n- Check if all required fields are present\n- Flag any issues (blurry, cut off, glare, missing info, outdated)\n\nReturn JSON:\n{\n  \"document_type\": \"utility_bill|bank_statement\",\n  \"extracted_data\": {\n    \"address_lines\": [\"line1\", \"line2\", \"line3\"],\n    \"utility_type\": \"electricity|water|bank_statement|...\",\n    \"bill_date\": \"YYYY-MM-DD\",\n    \"issuer\": \"...\",\n    \"account_number\": \"...\"\n  },\n  \"validation\": {\n    \"is_clear\": true|false,\n    \"is_expired\": true|false,\n    \"is_complete\": true|false,\n    \"is_recent\": true|false,\n    \"issues\": [\"list any problems\"]\n  },\n  \"confidence\": 0.0-1.0\n}`;\n} else {\n  systemPrompt = `You are a FICA document OCR expert.`;\n  extractionPrompt = `Analyze this document and determine its type. Extract any identifiable information.\n\nDocument Type: ${docType}\n${ocrText ? `OCR Text: ${ocrText}` : ''}\n${base64Image ? 'Image: [Base64 image data provided]' : ''}\n\nReturn JSON:\n{\n  \"document_type\": \"unknown|id|passport|utility_bill|bank_statement|other\",\n  \"extracted_data\": {},\n  \"validation\": {\n    \"is_clear\": true|false,\n    \"is_expired\": false,\n    \"is_complete\": false,\n    \"issues\": [\"unknown document type\"]\n  },\n  \"confidence\": 0.0\n}`;\n}\n\nreturn [{\n  json: {\n    client_id: clientId,\n    document_type: docType,\n    document_url: documentUrl,\n    system_prompt: systemPrompt,\n    extraction_prompt: extractionPrompt,\n    has_image: !!base64Image,\n    has_ocr_text: !!ocrText\n  }\n}];"
+      },
+      "name": "Build Extraction Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "application/json",
+        "body": {
+          "model": "llama-3.2-11b-vision-preview",
+          "messages": [
+            {
+              "role": "system",
+              "content": "={{ $json.system_prompt }}"
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.extraction_prompt }}"
+            }
+          ],
+          "temperature": 0.3,
+          "max_tokens": 1000,
+          "response_format": {
+            "type": "json_object"
+          }
+        }
+      },
+      "name": "Groq OCR Extraction",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Groq OCR response\nconst groqResponse = $json;\nconst promptData = $('Build Extraction Prompt').item.json;\n\n// Extract content from Groq response\nconst content = groqResponse.choices?.[0]?.message?.content || '{}';\n\n// Parse JSON response\nlet extractionResult;\ntry {\n  // Handle both direct JSON and markdown-wrapped JSON\n  const jsonMatch = content.match(/```json\\s*([\\s\\S]*?)```/) || content.match(/\\{[\\s\\S]*\\}/);\n  const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content;\n  extractionResult = JSON.parse(jsonStr);\n} catch (e) {\n  // Fallback if JSON parsing fails\n  extractionResult = {\n    document_type: promptData.document_type,\n    extracted_data: {},\n    validation: {\n      is_clear: false,\n      is_expired: false,\n      is_complete: false,\n      issues: ['Failed to parse AI response: ' + e.message]\n    },\n    confidence: 0\n  };\n}\n\n// Calculate derived fields\nconst validation = extractionResult.validation || {};\nconst issues = validation.issues || [];\n\n// Determine overall status\nlet status = 'pending_review';\nif (validation.is_complete && validation.is_clear && !validation.is_expired && issues.length === 0) {\n  status = 'verified';\n} else if (issues.some(i => i.toLowerCase().includes('expired'))) {\n  status = 'rejected';\n} else if (issues.some(i => i.toLowerCase().includes('blurry') || i.toLowerCase().includes('unclear'))) {\n  status = 'requires_resubmission';\n}\n\n// Build final output\nconst output = {\n  client_id: promptData.client_id,\n  document_type: extractionResult.document_type || promptData.document_type,\n  extracted_data: extractionResult.extracted_data || {},\n  validation: {\n    is_clear: validation.is_clear ?? false,\n    is_expired: validation.is_expired ?? false,\n    is_complete: validation.is_complete ?? false,\n    is_recent: validation.is_recent ?? null,\n    issues: issues\n  },\n  confidence: extractionResult.confidence || 0,\n  document_url: promptData.document_url,\n  status: status,\n  processed_at: new Date().toISOString()\n};\n\nreturn [{\n  json: output\n}];"
+      },
+      "name": "Parse Extraction Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.confidence }}",
+              "rightValue": "0.6",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "name": "Confidence Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "fica_document_extractions",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "client_id": "={{ $json.client_id }}",
+            "document_type": "={{ $json.document_type }}",
+            "extracted_data": "={{ JSON.stringify($json.extracted_data) }}",
+            "validation": "={{ JSON.stringify($json.validation) }}",
+            "confidence": "={{ $json.confidence }}",
+            "document_url": "={{ $json.document_url }}",
+            "status": "={{ $json.status }}",
+            "processed_at": "={{ $json.processed_at }}"
+          }
+        }
+      },
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": {
+          "value": "fica_document_extractions",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "client_id": "={{ $json.client_id }}",
+            "document_type": "={{ $json.document_type }}",
+            "extracted_data": "={{ JSON.stringify($json.extracted_data) }}",
+            "validation": "={{ JSON.stringify($json.validation) }}",
+            "confidence": "={{ $json.confidence }}",
+            "document_url": "={{ $json.document_url }}",
+            "status": "manual_review",
+            "processed_at": "={{ $json.processed_at }}"
+          }
+        }
+      },
+      "name": "Save Low Confidence",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1250, 400]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1450, 200],
+      "respondWith": "json",
+      "responseBody": "={{ $json }}"
+    },
+    {
+      "parameters": {
+        "options": {},
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "name": "Low Confidence Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1450, 400]
+    }
+  ],
+  "connections": {
+    "Document Upload Webhook": {
+      "main": [[{"node": "Build Extraction Prompt", "type": "main", "index": 0}]]
+    },
+    "Build Extraction Prompt": {
+      "main": [[{"node": "Groq OCR Extraction", "type": "main", "index": 0}]]
+    },
+    "Groq OCR Extraction": {
+      "main": [[{"node": "Parse Extraction Result", "type": "main", "index": 0}]]
+    },
+    "Parse Extraction Result": {
+      "main": [[{"node": "Confidence Check", "type": "main", "index": 0}]]
+    },
+    "Confidence Check": {
+      "main": [
+        [{"node": "Save to Supabase", "type": "main", "index": 0}],
+        [{"node": "Save Low Confidence", "type": "main", "index": 0}]
+      ]
+    },
+    "Save to Supabase": {
+      "main": [[{"node": "Success Response", "type": "main", "index": 0}]]
+    },
+    "Save Low Confidence": {
+      "main": [[{"node": "Low Confidence Response", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": []
+}

@@ -23,9 +23,9 @@
 | Deal Tracking | 20 | 10 | 10 | 50% |
 | Document Processing | 15 | 12 | 3 | 80% |
 | Marketing | 25 | 22 | 3 | 88% |
-| Maintenance | 12 | 8 | 4 | 67% |
+| Maintenance | 12 | 9 | 3 | 75% |
 | Reporting | 30 | 20 | 10 | 67% |
-| **TOTAL** | **372** | **189** | **114** | **62%** |
+| **TOTAL** | **372** | **190** | **113** | **62%** |
 
 ---
 
@@ -59,7 +59,8 @@
 | Property Description Generator | `03-property-description-generator.json` | $10 | ✅ Ready |
 | Listing Syndication | `07-listing-syndication.json` | $0 | ⏳ Planned |
 | Duplicate Detection | `08-duplicate-detection.json` | $5 | ⏳ Planned |
-| Photo Processing | `09-photo-processing.json` | $15 | ⏳ Planned |
+| Maintenance Ticket Router | `09-maintenance-ticket-router.json` | $0 | ✅ Ready |
+| Photo Processing | `10-photo-processing.json` | $15 | ⏳ Planned |
 | Property Matching | `10-property-matching.json` | $20 | ⏳ Planned |
 
 ### CRM & Lead Management Workflows
