@@ -1,0 +1,396 @@
+'use client';
+
+import { useState, useMemo, useEffect } from 'react';
+import { Users, Shield, ShieldCheck, AlertTriangle, Search, Star, TrendingUp, Crown, Sparkles } from 'lucide-react';
+import { AgentProfile, sampleAgents } from '@/lib/agents';
+import { cn } from '@/lib/utils';
+
+function AnimatedGradientHeader() {
+  return (
+    <>
+      <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-amber-500/20 animate-pulse-slow" />
+      <div className="absolute top-0 -left-4 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl animate-float-delayed" />
+    </>
+  );
+}
+
+function GlassCard({ children, hoverEffect = false }: { children: React.ReactNode; hoverEffect?: boolean }) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <div 
+      className={cn(
+        "relative overflow-hidden rounded-xl bg-slate-800/40 backdrop-blur-xl border border-slate-700/50",
+        hoverEffect && isHovered && "transform -translate-y-1 shadow-2xl shadow-amber-500/20 border-amber-500/30 scale-[1.02]",
+        hoverEffect && "transition-all duration-300"
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-700/30 to-transparent pointer-events-none" />
+      {hoverEffect && isHovered && (
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
+      )}
+      <div className="relative z-10">{children}</div>
+    </div>
+  );
+}
+
+function StatCard({ icon: Icon, value, label, color, delay }: { icon: React.ElementType; value: string | number; label: string; color: 'amber' | 'green' | 'blue' | 'purple'; delay?: number }) {
+  const [visible, setVisible] = useState(false);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), delay || 0);
+    return () => clearTimeout(timer);
+  }, [delay]);
+  
+  const colorClasses = {
+    amber: { bg: 'bg-amber-500/20', text: 'text-amber-400', border: 'border-amber-500/30', shadow: 'shadow-amber-500/20' },
+    green: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30', shadow: 'shadow-emerald-500/20' },
+    blue: { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30', shadow: 'shadow-blue-500/20' },
+    purple: { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30', shadow: 'shadow-purple-500/20' },
+  };
+  
+  const colors = colorClasses[color];
+  
+  return (
+    <GlassCard 
+      className={cn(
+        "p-4 transition-all duration-700",
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      )}
+    >
+      <div className="flex items-center gap-3">
+        <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-sm", colors.bg)}>
+          <Icon className={cn("w-5 h-5", colors.text)} />
+        </div>
+        <div>
+          <p className="text-2xl font-bold text-white">{value}</p>
+          <p className="text-xs text-slate-400">{label}</p>
+        </div>
+      </div>
+    </GlassCard>
+  );
+}
+
+function FFCBadge({ verified }: { verified: boolean }) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  if (verified) {
+    return (
+      <div 
+        className={cn(
+          "relative px-3 py-1.5 rounded-full text-xs font-medium border gap-1 transition-all duration-300",
+          "bg-emerald-500/20 text-emerald-400 border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.3)]",
+          isHovered && "shadow-[0_0_30px_rgba(16,185,129,0.5)] scale-105"
+        )}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <span className="absolute inset-0 rounded-full bg-emerald-400/10 animate-pulse" />
+        <span className="relative flex items-center gap-1">
+          <ShieldCheck className="w-3 h-3" />
+          Verified
+        </span>
+      </div>
+    );
+  }
+  
+  return (
+    <div 
+      className={cn(
+        "relative px-3 py-1.5 rounded-full text-xs font-medium border gap-1 transition-all duration-300",
+        "bg-amber-500/20 text-amber-400 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.3)]",
+        isHovered && "shadow-[0_0_30px_rgba(245,158,11,0.5)] scale-105"
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <span className="relative flex items-center gap-1">
+        <AlertTriangle className="w-3 h-3" />
+        Pending
+      </span>
+    </div>
+  );
+}
+
+function AgentRow({ agent, index }: { agent: AgentProfile; index: number }) {
+  const [visible, setVisible] = useState(false);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), index * 50);
+    return () => clearTimeout(timer);
+  }, [index]);
+  
+  return (
+    <tr 
+      className={cn(
+        "group transition-all duration-500 border-b border-slate-700/30 hover:bg-slate-700/30 cursor-pointer",
+        visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+      )}
+      style={{ transitionDelay: `${index * 50}ms` }}
+    >
+      <td className="px-4 py-4">
+        <div className="flex items-center gap-3">
+          <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/30 to-yellow-600/30 flex items-center justify-center text-white font-medium shadow-lg group-hover:shadow-amber-500/30 transition-all duration-300 group-hover:scale-110">
+            <span className="relative z-10">{agent.firstName[0]}{agent.lastName[0]}</span>
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </div>
+          <div>
+            <p className="font-medium text-white group-hover:text-amber-400 transition-colors">
+              {agent.firstName} {agent.lastName}
+            </p>
+            <p className="text-sm text-slate-400">{agent.agencyName}</p>
+          </div>
+        </div>
+      </td>
+      <td className="px-4 py-4">
+        <FFCBadge verified={agent.ffcVerified} />
+      </td>
+      <td className="px-4 py-4">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <Star 
+                key={i} 
+                className={cn(
+                  "w-4 h-4 transition-all duration-300",
+                  i < Math.floor(agent.avgRating || 0) 
+                    ? "text-amber-400 fill-amber-400" 
+                    : "text-slate-600"
+                )} 
+              />
+            ))}
+          </div>
+          <span className="font-medium text-white">{agent.avgRating?.toFixed(1) || '-'}</span>
+          <span className="text-slate-400">({agent.reviewCount})</span>
+        </div>
+      </td>
+      <td className="px-4 py-4">
+        <div className={cn(
+          "px-3 py-1 rounded-full text-xs font-medium border",
+          agent.subscriptionTier === 'enterprise' 
+            ? "bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-400 border-amber-500/30"
+            : agent.subscriptionTier === 'professional'
+              ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
+              : "bg-slate-600/30 text-slate-300 border-slate-600/30"
+        )}>
+          {agent.subscriptionTier}
+        </div>
+      </td>
+      <td className="px-4 py-4">
+        <div className="flex items-center gap-1">
+          <span className="font-bold text-emerald-400">{agent.closedDeals}</span>
+          <span className="text-slate-500">/ {agent.totalMatches}</span>
+        </div>
+        <div className="mt-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full transition-all duration-1000"
+            style={{ width: `${(agent.closedDeals / agent.totalMatches) * 100}%` }}
+          />
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+function FilterButton({ active, onClick, label, count }: { active: boolean; onClick: () => void; label: string; count: number }) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={cn(
+        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
+        active 
+          ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 shadow-lg shadow-amber-500/25"
+          : "bg-slate-800/40 backdrop-blur border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-amber-500/30 hover:text-amber-400",
+        isHovered && !active && "transform -translate-y-0.5"
+      )}
+    >
+      {label} ({count})
+    </button>
+  );
+}
+
+export default function AgentManagementPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterFFC, setFilterFFC] = useState<'all' | 'verified' | 'pending'>('all');
+  
+  const filteredAgents = useMemo(() => {
+    let result = [...sampleAgents];
+    
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(a => 
+        a.firstName.toLowerCase().includes(term) ||
+        a.lastName.toLowerCase().includes(term) ||
+        a.email.toLowerCase().includes(term) ||
+        a.agencyName?.toLowerCase().includes(term) ||
+        a.ffcNumber.toLowerCase().includes(term)
+      );
+    }
+    
+    if (filterFFC === 'verified') {
+      result = result.filter(a => a.ffcVerified);
+    } else if (filterFFC === 'pending') {
+      result = result.filter(a => !a.ffcVerified);
+    }
+    
+    return result;
+  }, [searchTerm, filterFFC]);
+  
+  const stats = useMemo(() => {
+    const verified = sampleAgents.filter(a => a.ffcVerified);
+    const pending = sampleAgents.filter(a => !a.ffcVerified);
+    const avgNps = verified.reduce((sum, a) => sum + (a.npsScore || 0), 0) / verified.length;
+    const totalDeals = verified.reduce((sum, a) => sum + a.closedDeals, 0);
+    
+    return {
+      total: sampleAgents.length,
+      verified: verified.length,
+      pending: pending.length,
+      avgNps: Math.round(avgNps),
+      totalDeals,
+    };
+  }, []);
+
+  return (
+    <div className="space-y-8">
+      <style>{`
+        .animate-float-delayed { animation: float-delayed 10s ease-in-out infinite; }
+        .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
+        .animate-glow { animation: glow 2s ease-in-out infinite; }
+        
+        @keyframes float-delayed {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-25px) rotate(-5deg); }
+        }
+        
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 0.8; }
+        }
+        
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+          50% { box-shadow: 0 0 40px rgba(245, 158, 11, 0.5); }
+        }
+      `}</style>
+      
+      {/* Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-6 sm:p-8">
+        <AnimatedGradientHeader />
+        
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
+              <span className="text-amber-400 text-sm font-medium">Agent Management</span>
+            </div>
+            <h1 className="text-3xl font-bold text-white font-serif">Agent Management</h1>
+            <p className="text-slate-400 mt-2">
+              FFC-verified estate agents • {stats.total} total agents
+            </p>
+          </div>
+          <div className={cn(
+            "relative px-4 py-2 rounded-full border backdrop-blur-sm transition-all duration-300",
+            "bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.2)]"
+          )}>
+            <div className="absolute inset-0 rounded-full bg-amber-400/10 animate-pulse" />
+            <span className="relative flex items-center gap-2 text-amber-400 font-medium">
+              <Crown className="w-4 h-4" />
+              Principal Access Only
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={Users} value={stats.total} label="Total Agents" color="blue" delay={100} />
+        <StatCard icon={ShieldCheck} value={stats.verified} label="FFC Verified" color="green" delay={200} />
+        <StatCard icon={AlertTriangle} value={stats.pending} label="Pending Verification" color="amber" delay={300} />
+        <StatCard icon={TrendingUp} value={stats.avgNps} label="Avg NPS Score" color="purple" delay={400} />
+      </div>
+
+      {/* Search & Filter */}
+      <GlassCard className="p-4">
+        <div className="flex flex-col lg:flex-row gap-4">
+          <div className="flex-1">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400/70 group-hover:text-amber-400 transition-colors" />
+              <input
+                type="text"
+                placeholder="Search by name, email, FFC number..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/50 transition-all duration-300"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            <FilterButton active={filterFFC === 'all'} onClick={() => setFilterFFC('all')} label="All" count={stats.total} />
+            <FilterButton active={filterFFC === 'verified'} onClick={() => setFilterFFC('verified')} label="Verified" count={stats.verified} />
+            <FilterButton active={filterFFC === 'pending'} onClick={() => setFilterFFC('pending')} label="Pending" count={stats.pending} />
+          </div>
+        </div>
+      </GlassCard>
+
+      {/* Agent List */}
+      <GlassCard className="overflow-hidden" hoverEffect>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-slate-800/50 border-b border-slate-700/50">
+              <tr>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Agent</th>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">FFC Status</th>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Performance</th>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Tier</th>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Deals</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700/30">
+              {filteredAgents.map((agent, index) => (
+                <AgentRow key={agent.id} agent={agent} index={index} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+        {filteredAgents.length === 0 && (
+          <div className="py-16 text-center">
+            <div className="relative w-20 h-20 mx-auto mb-4">
+              <div className="absolute inset-0 bg-slate-700/50 rounded-full animate-pulse" />
+              <div className="relative w-full h-full flex items-center justify-center">
+                <Users className="w-10 h-10 text-slate-500" />
+              </div>
+            </div>
+            <p className="text-slate-400 text-lg">No agents found</p>
+            <p className="text-slate-500 text-sm mt-1">Try adjusting your search or filters</p>
+          </div>
+        )}
+      </GlassCard>
+
+      {/* Info Banner */}
+      <GlassCard className="p-5">
+        <div className="flex items-start gap-4">
+          <div className="p-3 bg-amber-500/20 rounded-xl backdrop-blur-sm">
+            <Shield className="w-6 h-6 text-amber-400" />
+          </div>
+          <div>
+            <p className="font-semibold text-white text-lg">FFC Verification Required</p>
+            <p className="text-slate-400 mt-2 leading-relaxed">
+              All agents must submit valid Fidelity Fund Certificate (FFC) documentation for verification.
+              Only verified agents can access matching features. Rankings are visible only to agency principals.
+            </p>
+          </div>
+        </div>
+      </GlassCard>
+    </div>
+  );
+}

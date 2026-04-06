@@ -34,8 +34,8 @@ Create these credentials in n8n:
 |------------|---------|
 | OpenAI API | AI text generation |
 | PostgreSQL | Database connection |
-| SendGrid | Email sending |
-| Twilio | SMS sending |
+| Resend | Email sending |
+| BulkGate | SMS sending |
 | WhatsApp Business API | WhatsApp messages |
 
 ---
@@ -80,8 +80,8 @@ Create these credentials in n8n:
 **Setup**:
 1. Import workflow
 2. Configure PostgreSQL connection
-3. Add SendGrid credentials
-4. Add Twilio credentials
+3. Add Resend credentials
+4. Add BulkGate credentials
 5. Set schedule (default: daily 9 AM)
 
 ---
@@ -147,7 +147,7 @@ For features that:
 - Send notifications
 
 ```
-Schedule → PostgreSQL → OpenAI → SendGrid/SMS
+Schedule → PostgreSQL → OpenAI → Resend/BulkGate
 ```
 
 ### Pattern 3: Trigger → Transform → Multiple Outputs

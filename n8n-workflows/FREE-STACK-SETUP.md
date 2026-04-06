@@ -9,7 +9,8 @@
 |---------|-----------|--------------|
 | **Groq AI** | 1,000,000 tokens/day | Llama 3.1 70B, Mixtral 8x7B, Gemma 2 |
 | **Supabase** | 500MB + 2GB bandwidth | PostgreSQL, Auth, Realtime, Storage |
-| **Twilio** | Trial credits | WhatsApp & SMS (test mode) |
+| **Resend** | 3,000 emails/month | Transactional emails |
+| **BulkGate** | 100 SMS/month | WhatsApp & SMS (test mode) |
 
 **Total Monthly Cost: $0**
 
@@ -112,24 +113,38 @@ INSERT INTO tenants (first_name, last_name, phone, rent_amount, rent_due_date) V
 
 ---
 
-### 3. Twilio Account (Optional - for WhatsApp/SMS)
+### 3. Resend Account (Optional - for Emails)
 
-1. Go to https://twilio.com
-2. Sign up (free trial)
-3. Get $15.50 trial credit
-4. Navigate to **Console** → **Account Info**
-5. Copy:
-   - Account SID (starts with `AC...`)
-   - Auth Token
-6. Go to **Phone Numbers** → Get a number
-7. For WhatsApp: Go to **Messaging** → **Try it out** → **Send a WhatsApp message**
-8. Join the sandbox by sending the code to the WhatsApp number
+1. Go to https://resend.com
+2. Sign up with email/GitHub
+3. Navigate to **API Keys**
+4. Create new key: `propagent-prod`
+5. Copy the key (starts with `re_`)
+6. Verify your sender identity (from Address tab)
 
-**Note:** Trial accounts can only message verified numbers.
+**Free Tier:**
+- 3,000 emails/month
+- Perfect for transactional emails and testing
 
 ---
 
-### 4. n8n Credentials Setup
+### 4. BulkGate Account (Optional - for WhatsApp/SMS)
+
+1. Go to https://bulkgate.com
+2. Sign up (free account)
+3. Navigate to **Settings** → **Application**
+4. Copy:
+   - Application ID
+   - Application token
+5. For WhatsApp: Go to **SMS** → **Send SMS** or use WhatsApp API
+
+**Free Tier:**
+- 100 SMS/month (Basic) or 500 SMS/month (Pro)
+- Perfect for testing and small production use
+
+---
+
+### 5. n8n Credentials Setup
 
 #### Groq Credential
 1. In n8n, go to **Settings** → **Credentials**
@@ -146,13 +161,20 @@ INSERT INTO tenants (first_name, last_name, phone, rent_amount, rent_due_date) V
 4. Service Role Secret: (from Project Settings → API → service_role key)
 5. Save
 
-#### Twilio Credential (Optional)
+#### Resend Credential (Optional - for Emails)
+1. Click **New** → **HTTP Header Auth**
+2. Name: `Resend API`
+3. Header Name: `Authorization`
+4. Header Value: `Bearer YOUR_RESEND_API_KEY`
+5. Save
+
+#### BulkGate Credential (Optional - for WhatsApp/SMS)
 1. Click **New** → **HTTP Query Auth**
-2. Name: `Twilio API`
+2. Name: `BulkGate API`
 3. Query Auth: 
-   - Name: `AccountSid`
-   - Value: `YOUR_TWILIO_ACCOUNT_SID`
-4. Add password field for Auth Token (in workflow, use `$credentials.twilioApi.password`)
+   - Name: `ApplicationId`
+   - Value: `YOUR_BULKGATE_APPLICATION_ID`
+4. Add password field for Application Token (in workflow, use `$credentials.bulkGateApi.password`)
 
 ---
 
@@ -202,11 +224,11 @@ curl -X POST http://localhost:5678/webhook/generate-description \
 
 Expected: JSON with headline + 3 description variants
 
-### Test 2: Tenant Inquiry (if Twilio configured)
+### Test 2: Tenant Inquiry (if BulkGate configured)
 
-Send WhatsApp to your Twilio sandbox number:
+Send WhatsApp or SMS to your BulkGate number:
 ```
-"Hi, I'm interested in viewing the property in Sandton. When can I see it?"
+Hi, I'm interested in viewing the property in Sandton. When can I see it?
 ```
 
 Expected: AI classifies as VIEWING + responds with available times
@@ -215,7 +237,7 @@ Expected: AI classifies as VIEWING + responds with available times
 
 1. Manually run the "Rent Reminder Sequence" workflow
 2. Check Supabase tables for logged reminders
-3. (If Twilio configured) Check for SMS sent
+3. (If BulkGate configured) Check for SMS sent
 
 ---
 
@@ -228,7 +250,8 @@ Expected: AI classifies as VIEWING + responds with available times
 | Groq Tokens | 1,000,000/day | ~10,000/day | ✅ 1% used |
 | Supabase DB | 500MB | ~50MB | ✅ 10% used |
 | Supabase Bandwidth | 2GB | ~500MB | ✅ 25% used |
-| Twilio Trial | $15.50 | Testing only | ✅ Free |
+| Resend Emails | 3,000/month | ~500/month | ✅ 15% used |
+| BulkGate SMS | 100/month | ~50/month | ✅ 50% used |
 
 **Actual monthly cost: $0**
 
@@ -238,7 +261,8 @@ Expected: AI classifies as VIEWING + responds with available times
 |----------|------------|------|
 | >1M tokens/day | Groq Pay-as-you-go | ~$0.50/million |
 | >500MB data | Supabase Pro | $25/month |
-| Production Twilio | Twilio Pay-as-you-go | ~$0.01/SMS |
+| >3,000 emails/month | Resend Pro | $0.01/email |
+| >100 SMS/month | BulkGate Pro | ~$0.04/SMS |
 
 ---
 
@@ -264,11 +288,25 @@ Expected: AI classifies as VIEWING + responds with available times
 - **Cause:** Using anon key instead of service_role
 - **Fix:** Use service_role key for n8n
 
-### Twilio Errors
+### Resend Errors
+
+**Error:** `401 Unauthorized` or `403 Forbidden`
+- **Cause:** Invalid API key or unverified sender
+- **Fix:** Check API key format: `Bearer re_...` and verify sender identity in Resend dashboard
+
+**Error:** `422 Unprocessable Entity`
+- **Cause:** Missing or invalid "from" address
+- **Fix:** Verify your sender identity in Resend (Address tab)
+
+### BulkGate Errors
+
+**Error:** `401 Unauthorized`
+- **Cause:** Invalid Application ID or token
+- **Fix:** Check credentials in BulkGate dashboard under Settings → Application
 
 **Error:** `From number not valid`
-- **Cause:** Trial account restrictions
-- **Fix:** Verify recipient number in Twilio console first
+- **Cause:** Not verified sender number
+- **Fix:** Verify sender number in BulkGate console first
 
 ---
 
@@ -284,11 +322,12 @@ GROQ_API_KEY=gsk_your_key_here
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_KEY=eyJ...
 
-# Twilio (optional)
-TWILIO_ACCOUNT_SID=AC...
-TWILIO_AUTH_TOKEN=your_token
-TWILIO_PHONE_NUMBER=+1234567890
-TWILIO_WHATSAPP_NUMBER=+14155238886
+# Resend (optional)
+RESEND_API_KEY=re_your_key_here
+
+# BulkGate (optional)
+BULKGATE_APPLICATION_ID=your_app_id
+BULKGATE_APPLICATION_TOKEN=your_token
 ```
 
 ---
@@ -307,7 +346,8 @@ TWILIO_WHATSAPP_NUMBER=+14155238886
 
 - Groq Docs: https://console.groq.com/docs
 - Supabase Docs: https://supabase.com/docs
-- Twilio WhatsApp: https://www.twilio.com/docs/whatsapp
+- Resend Docs: https://resend.com/docs
+- BulkGate Docs: https://bulkgate.com/docs
 - n8n Docs: https://docs.n8n.io/
 
 ---
@@ -316,4 +356,4 @@ TWILIO_WHATSAPP_NUMBER=+14155238886
 **Monthly Cost:** $0  
 **Ready for:** Development, testing, small production use
 
-*Last Updated: 2026-03-23*
+*Last Updated: 2026-03-24*

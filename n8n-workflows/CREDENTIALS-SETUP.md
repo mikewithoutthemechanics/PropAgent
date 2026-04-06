@@ -9,8 +9,8 @@
 |------------|---------|------------|
 | **Groq API** | AI text generation | https://console.groq.com |
 | **Supabase** | Database | https://supabase.com |
-| **Twilio** | SMS/WhatsApp | https://twilio.com |
-| **SendGrid** | Email | https://sendgrid.com |
+| **BulkGate** | SMS/WhatsApp | https://bulkgate.com |
+| **Resend** | Email | https://resend.com |
 
 ---
 
@@ -68,51 +68,52 @@ Run the SQL from each workflow's `.sql` file in Supabase SQL Editor.
 
 ---
 
-## 3. Twilio Setup (Trial - Free credits)
+## 3. BulkGate Setup (Pay-as-you-go - starting $0.01/sms)
 
 ### Step 1: Sign Up
-1. Go to https://twilio.com
-2. Sign up (free trial)
-3. Get $15.50 trial credit
+1. Go to https://bulkgate.com
+2. Sign up for free account
+3. Verify email
 
 ### Step 2: Get Credentials
-1. Console → **Account Info**
-2. Copy:
-   - **Account SID** (starts with `AC...`)
-   - **Auth Token**
-3. Phone Numbers → Get a trial number
+1. Login to the BulkGate portal
+2. Go to **Application** → **Your applications**
+3. Copy:
+   - **Application ID**
+   - **API Key** (click "Show" to reveal)
 
 ### Step 3: Configure in n8n
 1. Settings → Credentials → New
 2. Select **HTTP Query Auth**
 3. Configure:
-   - **Name**: `Twilio API`
+   - **Name**: `BulkGate API`
    - **Query Auth**: 
-     - Name: `AccountSid`
-     - Value: `YOUR_ACCOUNT_SID`
-   - **Password**: Your Auth Token
+     - Name: `application_id`
+     - Value: `YOUR_APP_ID`
+   - **Password**: Your API Key
 4. Click **Save**
 
 ---
 
-## 4. SendGrid Setup (Free - 100 emails/day)
+## 4. Resend Setup (Free - 100 emails/day)
 
 ### Step 1: Sign Up
-1. Go to https://sendgrid.com
-2. Sign up for free plan
-3. Complete email verification
+1. Go to https://resend.com
+2. Sign up for free account
+3. Verify email
 
 ### Step 2: Get API Key
-1. Settings → **API Keys**
-2. Create API Key → **Full Access**
-3. Copy the key
+1. Go to **API Keys** (left sidebar)
+2. Click **Create API Key**
+3. Name: `n8n`
+4. Copy the key (starts with `re_`)
 
 ### Step 3: Configure in n8n
 1. Settings → Credentials → New
-2. Select **SendGrid**
+2. Select **Resend**
 3. Configure:
-   - **Name**: `SendGrid`
-   - **API Key**: Your SendGrid API key
+   - **Name**: `Resend`
+   - **API Key**: Your Resend API key
 4. Click **Save**
 
 ---
@@ -123,8 +124,8 @@ After setting up credentials:
 
 - [ ] Groq credential shows "Connection tested successfully"
 - [ ] Supabase credential shows "Connection tested successfully"
-- [ ] Twilio credential shows "Connection tested successfully"
-- [ ] SendGrid credential shows "Connection tested successfully"
+- [ ] BulkGate credential shows "Connection tested successfully"
+- [ ] Resend credential shows "Connection tested successfully"
 
 ---
 
@@ -162,8 +163,8 @@ If you want to test workflows WITHOUT setting up credentials:
 
 ## 📊 Current Workflows Status
 
-| Workflow | Groq | Supabase | Twilio | SendGrid |
-|----------|------|----------|--------|----------|
+| Workflow | Groq | Supabase | BulkGate | Resend |
+|----------|------|----------|----------|--------|
 | 04-Tenant Inquiry | ✅ | ✅ | ✅ | ❌ |
 | 05-Rent Reminder | ✅ | ✅ | ✅ | ✅ |
 | 06-Property Description | ✅ | ✅ | ❌ | ❌ |
@@ -174,4 +175,4 @@ If you want to test workflows WITHOUT setting up credentials:
 
 ---
 
-*Last Updated: 2026-03-23*
+*Last Updated: 2026-03-24*

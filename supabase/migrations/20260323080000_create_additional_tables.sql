@@ -1,6 +1,7 @@
 -- Migration: Additional tables for new workflows
 -- Created: 2026-03-23
 -- Workflows: 08, 09, 13, 20
+-- Updated: 2026-03-24 - Added listing_syndication table for PropAgent Listing Syndication
 
 -- ============================================
 -- EMAIL CLASSIFICATIONS (Workflow 08)
@@ -171,3 +172,39 @@ CREATE POLICY email_classifications_service_all ON email_classifications FOR ALL
 CREATE POLICY maintenance_tickets_service_all ON maintenance_tickets FOR ALL TO service_role USING (true);
 CREATE POLICY rent_collection_log_service_all ON rent_collection_log FOR ALL TO service_role USING (true);
 CREATE POLICY social_media_content_service_all ON social_media_content FOR ALL TO service_role USING (true);
+
+-- ============================================
+-- LISTING SYNDICATION (Listing Syndication Workflow)
+-- ============================================
+CREATE TABLE IF NOT EXISTS listing_syndication (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  
+  -- Property and Portal
+  property_id UUID NOT NULL,
+  portal_name TEXT NOT NULL CHECK (portal_name IN ('property24', 'private_property', 'gumtree')),
+  
+  -- Status tracking
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'syndicated', 'failed', 'pending_retry')),
+  syndicated_at TIMESTAMP WITH TIME ZONE,
+  external_id TEXT,
+  error_message TEXT,
+  
+  -- Retry logic
+  retry_count INTEGER DEFAULT 0,
+  max_retries INTEGER DEFAULT 3,
+  last_retry_at TIMESTAMP WITH TIME ZONE,
+  
+  -- Metadata
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+COMMENT ON TABLE listing_syndication IS 'Tracks property listing syndication status to external portals';
+
+CREATE INDEX idx_listing_syndication_property ON listing_syndication(property_id);
+CREATE INDEX idx_listing_syndication_portal ON listing_syndication(portal_name);
+CREATE INDEX idx_listing_syndication_status ON listing_syndication(status);
+CREATE INDEX idx_listing_syndication_created ON listing_syndication(created_at);
+
+ALTER TABLE listing_syndication ENABLE ROW LEVEL SECURITY;
+CREATE POLICY listing_syndication_service_all ON listing_syndication FOR ALL TO service_role USING (true);
