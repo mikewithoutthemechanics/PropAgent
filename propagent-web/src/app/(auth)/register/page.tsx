@@ -58,66 +58,68 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 p-4">
-      {/* Minimal decorative background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-50 to-white -z-10" />
+    <div className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-slate-900/10 to-transparent" />
       
-      <div className="w-full max-w-sm">
-        {/* Logo - Simple, Professional */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      
+      <div className="w-full max-w-sm relative z-10">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center">
-              <Building2 className="w-4 h-4 text-white" />
+          <Link href="/" className="inline-flex items-center gap-3 group">
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:shadow-amber-500/40 transition-all">
+              <Building2 className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-semibold text-gray-900">PropAgent</span>
+            <span className="text-2xl font-serif font-semibold text-white">PropAgent</span>
           </Link>
         </div>
 
-        {/* Card */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
           <div className="p-8">
             <div className="mb-6">
-              <h1 className="text-xl font-semibold text-gray-900">Create account</h1>
-              <p className="text-sm text-gray-500 mt-1">Join PropAgent and start managing properties</p>
+              <h1 className="text-2xl font-semibold text-white">Create account</h1>
+              <p className="text-sm text-slate-400 mt-1">Join PropAgent and start managing properties</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-md text-sm">
                   {error}
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
                     First name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                     <input
                       type="text"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
                       placeholder="John"
                       required
                     />
                   </div>
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
                     Last name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                     <input
                       type="text"
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
                       placeholder="Doe"
                       required
                     />
@@ -126,17 +128,17 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
                     placeholder="you@company.com"
                     required
                   />
@@ -144,64 +146,45 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input
                     type="password"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                    placeholder="Min. 8 characters"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
+                    placeholder="Min 8 characters"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   Confirm password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input
                     type="password"
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                    placeholder="Confirm your password"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
+                    placeholder="Confirm password"
                     required
                   />
                 </div>
               </div>
 
-              <div className="flex items-start gap-2">
-                <input
-                  type="checkbox"
-                  id="terms"
-                  className="mt-1 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  required
-                />
-                <label htmlFor="terms" className="text-sm text-gray-600">
-                  I agree to the{" "}
-                  <Link href="/terms" className="text-blue-600 hover:text-blue-700">
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="/privacy" className="text-blue-600 hover:text-blue-700">
-                    Privacy Policy
-                  </Link>
-                </label>
-              </div>
-
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-medium rounded-md transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
@@ -220,10 +203,10 @@ export default function RegisterPage() {
               </button>
             </form>
 
-            <div className="mt-6 pt-6 border-t border-gray-200 text-center">
-              <p className="text-sm text-gray-600">
+            <div className="mt-6 pt-6 border-t border-white/10 text-center">
+              <p className="text-sm text-slate-400">
                 Already have an account?{" "}
-                <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+                <Link href="/login" className="text-amber-400 hover:text-amber-300 font-medium">
                   Sign in
                 </Link>
               </p>
@@ -232,7 +215,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="mt-6 text-center">
-          <Link href="/" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+          <Link href="/" className="text-sm text-slate-500 hover:text-amber-400 transition-colors">
             ← Back to home
           </Link>
         </div>
