@@ -28,7 +28,7 @@ function StatCard({ title, value, change, changeLabel, icon, color, href }: Stat
     navy: 'bg-navy-500 text-white',
     gold: 'bg-gold-500 text-navy-700',
     blue: 'bg-blue-500 text-white',
-    green: 'bg-emerald-500 text-white',
+    green: 'bg-gold-500 text-white',
   };
 
   const bgStyle = colorStyles[color];
@@ -43,7 +43,7 @@ function StatCard({ title, value, change, changeLabel, icon, color, href }: Stat
         {change !== undefined && (
           <div className={cn(
             "flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full",
-            change >= 0 ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"
+            change >= 0 ? "bg-gold-50 text-gold-700" : "bg-red-50 text-red-700"
           )}>
             {change >= 0 ? (
               <ArrowUpRight className="w-3 h-3" />
@@ -166,7 +166,7 @@ function StatMiniCard({ label, value, subtext, icon, color = 'navy' }: {
     navy: 'bg-navy-50 text-navy-600',
     gold: 'bg-gold-50 text-gold-700',
     blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-emerald-50 text-emerald-600',
+    green: 'bg-gold-50 text-gold-600',
   };
 
   return (
@@ -208,7 +208,7 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-50 border border-slate-200">
-            <div className="w-2 h-2 rounded-full bg-emerald-500" />
+            <div className="w-2 h-2 rounded-full bg-gold-500" />
             <span className="text-sm text-slate-600">
               {new Date().toLocaleDateString('en-ZA', { 
                 weekday: 'long', 
@@ -298,7 +298,7 @@ export default function DashboardPage() {
           <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-slate-900">Monthly Revenue</h3>
-              <span className="text-xs text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full font-medium flex items-center gap-1">
+              <span className="text-xs text-gold-600 bg-gold-50 px-3 py-1 rounded-full font-medium flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
                 +8.5%
               </span>
@@ -350,9 +350,9 @@ export default function DashboardPage() {
                 </div>
                 <div className="w-2 h-2 rounded-full bg-blue-500" />
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-50 border border-emerald-100">
-                <div className="p-2 bg-emerald-100 rounded-lg">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-gold-50 border border-gold-100">
+                <div className="p-2 bg-gold-100 rounded-lg">
+                  <CheckCircle2 className="w-4 h-4 text-gold-600" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-slate-700">Leases</p>

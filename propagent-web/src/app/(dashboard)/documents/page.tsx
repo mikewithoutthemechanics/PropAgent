@@ -48,7 +48,7 @@ import { cn } from '@/lib/utils';
 function AnimatedBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-navy-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
     </div>
   );
@@ -69,7 +69,7 @@ function FloatingParticles() {
       {particles.map((p) => (
         <div
           key={p.id}
-          className="absolute rounded-full bg-gradient-to-r from-indigo-400 to-yellow-400"
+          className="absolute rounded-full bg-gradient-to-r from-navy-400 to-yellow-400"
           style={{
             width: p.size,
             height: p.size,
@@ -236,10 +236,10 @@ export default function DocumentsPage() {
     };
     
     const badgeClass = {
-      active: "glass glass-card bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+      active: "glass glass-card bg-gold-500/20 text-gold-300 border-gold-500/30",
       expiring_soon: "glass glass-card bg-orange-500/20 text-orange-300 border-orange-500/30",
       expired: "glass glass-card bg-red-500/20 text-red-300 border-red-500/30",
-      pending: "glass glass-card bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
+      pending: "glass glass-card bg-navy-500/20 text-gold-300 border-navy-500/30",
       archived: "glass glass-card bg-slate-500/20 text-slate-300 border-slate-500/30",
     };
 
@@ -263,10 +263,10 @@ export default function DocumentsPage() {
 
   const statCards = [
     { icon: <FileText className="w-5 h-5 text-blue-400" />, value: stats.total, label: 'Total Docs', color: 'blue' },
-    { icon: <File className="w-5 h-5 text-indigo-400" />, value: stats.leases, label: 'Leases', color: 'amber' },
+    { icon: <File className="w-5 h-5 text-navy-400" />, value: stats.leases, label: 'Leases', color: 'amber' },
     { icon: <AlertTriangle className="w-5 h-5 text-orange-400" />, value: stats.expiringSoon, label: 'Expiring Soon', color: 'orange' },
     { icon: <AlertTriangle className="w-5 h-5 text-red-400" />, value: stats.expired, label: 'Expired', color: 'red' },
-    { icon: <Shield className="w-5 h-5 text-emerald-400" />, value: stats.idDocuments, label: 'ID Documents', color: 'emerald' },
+    { icon: <Shield className="w-5 h-5 text-gold-400" />, value: stats.idDocuments, label: 'ID Documents', color: 'emerald' },
   ];
 
   return (
@@ -297,7 +297,7 @@ export default function DocumentsPage() {
           <div 
             key={stat.label} 
             className={cn(
-              "glass-card hover-3d-card rounded-xl p-4 border border-indigo-500/20",
+              "glass-card hover-3d-card rounded-xl p-4 border border-navy-500/20",
               isVisible && "animate-on-scroll"
             )}
             style={{ animationDelay: `${idx * 100}ms` }}
@@ -316,17 +316,17 @@ export default function DocumentsPage() {
       </div>
 
       {/* Filters Row */}
-      <div className={cn("glass-card rounded-xl p-4 border border-indigo-500/20", isVisible && "animate-on-scroll visible delay-200")}>
+      <div className={cn("glass-card rounded-xl p-4 border border-navy-500/20", isVisible && "animate-on-scroll visible delay-200")}>
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-navy-400" />
               <input
                 type="text"
                 placeholder="Search documents..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-indigo-500/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white placeholder-slate-400"
+                className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-navy-500/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 text-white placeholder-slate-400"
               />
             </div>
           </div>
@@ -339,8 +339,8 @@ export default function DocumentsPage() {
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300",
                   selectedCategory === cat.value
-                    ? "bg-gradient-to-r from-indigo-500 to-yellow-500 text-white shadow-lg glow-gold"
-                    : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-indigo-500/20"
+                    ? "bg-gradient-to-r from-navy-500 to-yellow-500 text-white shadow-lg glow-gold"
+                    : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-navy-500/20"
                 )}
               >
                 {cat.label} ({cat.count})
@@ -364,32 +364,32 @@ export default function DocumentsPage() {
       {/* Document List */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* List */}
-        <div className={cn("glass-card rounded-xl overflow-hidden border border-indigo-500/20 lg:col-span-2", isVisible && "animate-on-scroll visible delay-300")}>
+        <div className={cn("glass-card rounded-xl overflow-hidden border border-navy-500/20 lg:col-span-2", isVisible && "animate-on-scroll visible delay-300")}>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-800/50 border-b border-indigo-500/20">
+              <thead className="bg-slate-800/50 border-b border-navy-500/20">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Document</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Property</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Category</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Expiry</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Document</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Property</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Category</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Expiry</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-indigo-500/10">
+              <tbody className="divide-y divide-navy-500/10">
                 {filteredDocs.map(doc => (
                   <tr 
                     key={doc.id} 
                     className={cn(
                       "hover:bg-slate-800/30 cursor-pointer transition-colors",
-                      selectedDoc === doc.id && "bg-indigo-500/10"
+                      selectedDoc === doc.id && "bg-navy-500/10"
                     )}
                     onClick={() => setSelectedDoc(doc.id)}
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded glass flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-indigo-400" />
+                          <FileText className="w-4 h-4 text-navy-400" />
                         </div>
                         <div>
                           <p className="font-medium text-white text-sm">{doc.title}</p>
@@ -406,7 +406,7 @@ export default function DocumentsPage() {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded glass">
+                      <span className="text-xs font-medium text-navy-400 bg-navy-500/10 px-2 py-1 rounded glass">
                         {getCategoryLabel(doc.category)}
                       </span>
                     </td>
@@ -444,13 +444,13 @@ export default function DocumentsPage() {
         </div>
 
         {/* Detail Panel */}
-        <div className={cn("glass-card rounded-xl p-4 border border-indigo-500/20", isVisible && "animate-on-scroll visible delay-400")}>
+        <div className={cn("glass-card rounded-xl p-4 border border-navy-500/20", isVisible && "animate-on-scroll visible delay-400")}>
           {selectedDocData ? (
             <div className="space-y-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg glass flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-indigo-400" />
+                    <FileText className="w-6 h-6 text-navy-400" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-white">{selectedDocData.title}</h3>
@@ -466,16 +466,16 @@ export default function DocumentsPage() {
                 {getStatusBadge(getDocumentStatus(selectedDocData))}
               </div>
 
-              <div className="space-y-3 border-t border-indigo-500/20 pt-4">
+              <div className="space-y-3 border-t border-navy-500/20 pt-4">
                 <div className="flex items-center gap-2 text-sm">
-                  <Building className="w-4 h-4 text-indigo-400" />
+                  <Building className="w-4 h-4 text-navy-400" />
                   <span className="text-slate-400">Property:</span>
                   <span className="font-medium text-white">{selectedDocData.propertyAddress}</span>
                 </div>
                 
                 {selectedDocData.tenantName && (
                   <div className="flex items-center gap-2 text-sm">
-                    <User className="w-4 h-4 text-indigo-400" />
+                    <User className="w-4 h-4 text-navy-400" />
                     <span className="text-slate-400">Tenant:</span>
                     <span className="font-medium text-white">{selectedDocData.tenantName}</span>
                   </div>
@@ -483,7 +483,7 @@ export default function DocumentsPage() {
 
                 {selectedDocData.startDate && (
                   <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="w-4 h-4 text-indigo-400" />
+                    <Calendar className="w-4 h-4 text-navy-400" />
                     <span className="text-slate-400">Lease Period:</span>
                     <span className="font-medium text-white">
                       {new Date(selectedDocData.startDate).toLocaleDateString('en-ZA')} - {new Date(selectedDocData.endDate!).toLocaleDateString('en-ZA')}
@@ -493,14 +493,14 @@ export default function DocumentsPage() {
 
                 {selectedDocData.monthlyRent && (
                   <div className="flex items-center gap-2 text-sm">
-                    <DollarSign className="w-4 h-4 text-indigo-400" />
+                    <DollarSign className="w-4 h-4 text-navy-400" />
                     <span className="text-slate-400">Monthly Rent:</span>
                     <span className="font-medium text-white">R{selectedDocData.monthlyRent.toLocaleString()}</span>
                   </div>
                 )}
 
                 <div className="flex items-center gap-2 text-sm">
-                  <Clock className="w-4 h-4 text-indigo-400" />
+                  <Clock className="w-4 h-4 text-navy-400" />
                   <span className="text-slate-400">Uploaded:</span>
                   <span className="font-medium text-white">
                     {new Date(selectedDocData.uploadedAt).toLocaleDateString('en-ZA')}
@@ -509,7 +509,7 @@ export default function DocumentsPage() {
 
                 {selectedDocData.lastReviewedAt && (
                   <div className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-indigo-400" />
+                    <CheckCircle className="w-4 h-4 text-navy-400" />
                     <span className="text-slate-400">Last Reviewed:</span>
                     <span className="font-medium text-white">
                       {new Date(selectedDocData.lastReviewedAt).toLocaleDateString('en-ZA')}
@@ -519,8 +519,8 @@ export default function DocumentsPage() {
               </div>
 
               {selectedDocData.versions.length > 1 && (
-                <div className="border-t border-indigo-500/20 pt-4">
-                  <h4 className="text-sm font-medium text-indigo-400 mb-2">Version History</h4>
+                <div className="border-t border-navy-500/20 pt-4">
+                  <h4 className="text-sm font-medium text-navy-400 mb-2">Version History</h4>
                   <div className="space-y-2">
                     {selectedDocData.versions.map((v, i) => (
                       <div key={v.version} className="flex items-center justify-between text-xs">
@@ -532,23 +532,23 @@ export default function DocumentsPage() {
                 </div>
               )}
 
-              <div className="flex gap-2 border-t border-indigo-500/20 pt-4">
+              <div className="flex gap-2 border-t border-navy-500/20 pt-4">
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="flex-1 gap-1 glass hover:bg-indigo-500/20"
+                  className="flex-1 gap-1 glass hover:bg-navy-500/20"
                   onClick={() => handleViewDocument(selectedDocData)}
                 >
-                  <Eye className="w-4 h-4 text-indigo-400" />
+                  <Eye className="w-4 h-4 text-navy-400" />
                   View
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="flex-1 gap-1 glass hover:bg-indigo-500/20"
+                  className="flex-1 gap-1 glass hover:bg-navy-500/20"
                   onClick={() => handleDownloadDocument(selectedDocData)}
                 >
-                  <Download className="w-4 h-4 text-indigo-400" />
+                  <Download className="w-4 h-4 text-navy-400" />
                   Download
                 </Button>
                 <Button 
@@ -574,9 +574,9 @@ export default function DocumentsPage() {
       </div>
 
       {/* Info Banner */}
-      <div className={cn("glass p-4 rounded-xl border border-indigo-500/20", isVisible && "animate-on-scroll visible delay-500")}>
+      <div className={cn("glass p-4 rounded-xl border border-navy-500/20", isVisible && "animate-on-scroll visible delay-500")}>
         <div className="flex items-start gap-3">
-          <Shield className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
+          <Shield className="w-5 h-5 text-navy-400 flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-medium text-white">Secure Document Storage</p>
             <p className="text-sm text-slate-400 mt-1">
@@ -609,7 +609,7 @@ export default function DocumentsPage() {
                   value={newDocument.title}
                   onChange={(e) => setNewDocument({...newDocument, title: e.target.value})}
                   placeholder="e.g., Lease Agreement - Unit 4B"
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 />
               </div>
 
@@ -618,7 +618,7 @@ export default function DocumentsPage() {
                 <select
                   value={newDocument.category}
                   onChange={(e) => setNewDocument({...newDocument, category: e.target.value as DocumentCategory})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="lease">Lease Agreement</option>
                   <option value="id">ID Document</option>
@@ -635,7 +635,7 @@ export default function DocumentsPage() {
                 <select
                   value={newDocument.propertyId}
                   onChange={(e) => setNewDocument({...newDocument, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="">Select a property</option>
                   {mockProperties.map((property) => (
@@ -652,7 +652,7 @@ export default function DocumentsPage() {
                   type="date"
                   value={newDocument.expiryDate}
                   onChange={(e) => setNewDocument({...newDocument, expiryDate: e.target.value})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 />
               </div>
 
@@ -663,7 +663,7 @@ export default function DocumentsPage() {
                   onChange={(e) => setNewDocument({...newDocument, notes: e.target.value})}
                   placeholder="Additional notes..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50 resize-none"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50 resize-none"
                 />
               </div>
 
@@ -705,7 +705,7 @@ export default function DocumentsPage() {
             <div className="flex items-center justify-between p-6 border-b border-gray-700">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg glass flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-indigo-400" />
+                  <FileText className="w-5 h-5 text-navy-400" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white font-serif">{viewingDoc.title}</h2>

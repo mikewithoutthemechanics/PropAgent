@@ -45,7 +45,7 @@ import { cn } from '@/lib/utils';
 function AnimatedBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-navy-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
     </div>
   );
@@ -66,7 +66,7 @@ function FloatingParticles() {
       {particles.map((p) => (
         <div
           key={p.id}
-          className="absolute rounded-full bg-gradient-to-r from-indigo-400 to-yellow-400"
+          className="absolute rounded-full bg-gradient-to-r from-navy-400 to-gold-400"
           style={{
             width: p.size,
             height: p.size,
@@ -344,8 +344,8 @@ export default function NotificationsPage() {
 
   const statCards = [
     { icon: <Bell className="w-5 h-5 text-blue-400" />, value: notifications.length, label: 'Total', color: 'blue' },
-    { icon: <AlertTriangle className="w-5 h-5 text-indigo-400" />, value: unreadCount, label: 'Unread', color: 'amber' },
-    { icon: <Mail className="w-5 h-5 text-emerald-400" />, value: notifications.filter(n => n.channel === 'email').length, label: 'Email', color: 'emerald' },
+    { icon: <AlertTriangle className="w-5 h-5 text-navy-400" />, value: unreadCount, label: 'Unread', color: 'amber' },
+    { icon: <Mail className="w-5 h-5 text-gold-400" />, value: notifications.filter(n => n.channel === 'email').length, label: 'Email', color: 'emerald' },
     { icon: <MessageSquare className="w-5 h-5 text-purple-400" />, value: notifications.filter(n => n.channel === 'sms').length, label: 'SMS', color: 'purple' },
   ];
 
@@ -367,16 +367,16 @@ export default function NotificationsPage() {
             </div>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
-                <Button variant="outline" size="sm" onClick={handleMarkAllAsRead} className="glass hover:bg-indigo-500/20">
-                  <CheckCheck className="w-4 h-4 mr-2 text-indigo-400" />
-                  <span className="text-indigo-400">Mark all read</span>
+                <Button variant="outline" size="sm" onClick={handleMarkAllAsRead} className="glass hover:bg-gold-500/20">
+                  <CheckCheck className="w-4 h-4 mr-2 text-navy-400" />
+                  <span className="text-navy-400">Mark all read</span>
                 </Button>
               )}
               <Button 
                 variant={showSettings ? 'primary' : 'outline'} 
                 size="sm" 
                 onClick={() => setShowSettings(!showSettings)}
-                className={showSettings ? "glow-gold" : "glass hover:bg-indigo-500/20"}
+                className={showSettings ? "glow-gold" : "glass hover:bg-gold-500/20"}
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
@@ -387,10 +387,10 @@ export default function NotificationsPage() {
       </div>
 
       {showSettings ? (
-        <div className={cn("glass-card rounded-xl border border-indigo-500/20", isVisible && "animate-on-scroll visible")}>
-          <div className="flex items-center gap-3 mb-6 p-4 border-b border-indigo-500/20">
+        <div className={cn("glass-card rounded-xl border border-navy-500/20", isVisible && "animate-on-scroll visible")}>
+          <div className="flex items-center gap-3 mb-6 p-4 border-b border-navy-500/20">
             <div className="w-10 h-10 rounded-lg glass flex items-center justify-center">
-              <Settings className="w-5 h-5 text-indigo-400" />
+              <Settings className="w-5 h-5 text-navy-400" />
             </div>
             <div>
               <h2 className="font-semibold text-white">Notification Preferences</h2>
@@ -400,16 +400,16 @@ export default function NotificationsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
             <div className="space-y-4">
-              <h3 className="font-medium text-indigo-400">Notification Channels</h3>
+              <h3 className="font-medium text-navy-400">Notification Channels</h3>
               <div className="space-y-3">
                 {[
                   { key: 'emailEnabled' as const, label: 'Email Notifications', icon: Mail, desc: 'Receive notifications via email' },
                   { key: 'smsEnabled' as const, label: 'SMS Notifications', icon: MessageSquare, desc: 'Receive notifications via text message' },
                   { key: 'inAppEnabled' as const, label: 'In-App Notifications', icon: Bell, desc: 'Show notifications in the app' },
                 ].map(({ key, label, icon: Icon, desc }) => (
-                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-indigo-500/20 hover:bg-slate-800/50 cursor-pointer glass">
+                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-navy-500/20 hover:bg-slate-800/50 cursor-pointer glass">
                     <div className="flex items-center gap-3">
-                      <Icon className="w-5 h-5 text-indigo-400" />
+                      <Icon className="w-5 h-5 text-navy-400" />
                       <div>
                         <p className="font-medium text-white">{label}</p>
                         <p className="text-xs text-slate-400">{desc}</p>
@@ -419,7 +419,7 @@ export default function NotificationsPage() {
                       type="checkbox"
                       checked={preferences[key]}
                       onChange={(e) => handlePreferenceChange(key, e.target.checked)}
-                      className="w-4 h-4 text-indigo-500 rounded border-indigo-500/30 focus:ring-indigo-500"
+                      className="w-4 h-4 text-gold-500 rounded border-gold-500/30 focus:ring-gold-500"
                     />
                   </label>
                 ))}
@@ -427,7 +427,7 @@ export default function NotificationsPage() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-medium text-indigo-400">Notification Types</h3>
+              <h3 className="font-medium text-navy-400">Notification Types</h3>
               <div className="space-y-3">
                 {[
                   { key: 'leaseReminders' as const, label: 'Lease Reminders', desc: 'Expiry and renewal reminders' },
@@ -436,7 +436,7 @@ export default function NotificationsPage() {
                   { key: 'viewingInvites' as const, label: 'Viewing Invites', desc: 'Property viewing notifications' },
                   { key: 'marketingEmails' as const, label: 'Marketing Emails', desc: 'Tips and product updates' },
                 ].map(({ key, label, desc }) => (
-                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-indigo-500/20 hover:bg-slate-800/50 cursor-pointer glass">
+                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-navy-500/20 hover:bg-slate-800/50 cursor-pointer glass">
                     <div>
                       <p className="font-medium text-white">{label}</p>
                       <p className="text-xs text-slate-400">{desc}</p>
@@ -445,7 +445,7 @@ export default function NotificationsPage() {
                       type="checkbox"
                       checked={preferences[key]}
                       onChange={(e) => handlePreferenceChange(key, e.target.checked)}
-                      className="w-4 h-4 text-indigo-500 rounded border-indigo-500/30 focus:ring-indigo-500"
+                      className="w-4 h-4 text-gold-500 rounded border-gold-500/30 focus:ring-gold-500"
                     />
                   </label>
                 ))}
@@ -453,10 +453,10 @@ export default function NotificationsPage() {
             </div>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-indigo-500/20 p-4">
+          <div className="mt-6 pt-6 border-t border-navy-500/20 p-4">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="font-medium text-indigo-400">Quiet Hours</h3>
+                <h3 className="font-medium text-navy-400">Quiet Hours</h3>
                 <p className="text-sm text-slate-400">Pause non-urgent notifications during specific hours</p>
               </div>
               <label className="flex items-center gap-2 cursor-pointer">
@@ -465,7 +465,7 @@ export default function NotificationsPage() {
                   type="checkbox"
                   checked={preferences.quietHoursEnabled}
                   onChange={(e) => handlePreferenceChange('quietHoursEnabled', e.target.checked)}
-                  className="w-4 h-4 text-indigo-500 rounded border-indigo-500/30 focus:ring-indigo-500"
+                  className="w-4 h-4 text-gold-500 rounded border-gold-500/30 focus:ring-gold-500"
                 />
               </label>
             </div>
@@ -477,7 +477,7 @@ export default function NotificationsPage() {
                     type="time"
                     value={preferences.quietHoursStart || '22:00'}
                     onChange={(e) => handlePreferenceChange('quietHoursStart', e.target.value)}
-                    className="px-3 py-2 bg-slate-800/50 border border-indigo-500/30 rounded-lg text-sm text-white"
+                    className="px-3 py-2 bg-slate-800/50 border border-gold-500/30 rounded-lg text-sm text-white"
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -486,16 +486,16 @@ export default function NotificationsPage() {
                     type="time"
                     value={preferences.quietHoursEnd || '07:00'}
                     onChange={(e) => handlePreferenceChange('quietHoursEnd', e.target.value)}
-                    className="px-3 py-2 bg-slate-800/50 border border-indigo-500/30 rounded-lg text-sm text-white"
+                    className="px-3 py-2 bg-slate-800/50 border border-gold-500/30 rounded-lg text-sm text-white"
                   />
                 </div>
               </div>
             )}
           </div>
 
-          <div className="mt-6 p-4 glass rounded-lg border border-indigo-500/20">
+          <div className="mt-6 p-4 glass rounded-lg border border-navy-500/20">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-navy-400 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-white">POPIA Compliance</p>
                 <p className="text-sm text-slate-400 mt-1">
@@ -508,16 +508,16 @@ export default function NotificationsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className={cn("glass-card rounded-xl overflow-hidden border border-indigo-500/20 lg:col-span-2", isVisible && "animate-on-scroll visible")}>
-            <div className="p-4 border-b border-indigo-500/20 space-y-4">
+          <div className={cn("glass-card rounded-xl overflow-hidden border border-navy-500/20 lg:col-span-2", isVisible && "animate-on-scroll visible")}>
+            <div className="p-4 border-b border-navy-500/20 space-y-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-navy-400" />
                 <input
                   type="text"
                   placeholder="Search notifications..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-indigo-500/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white placeholder-slate-400"
+                  className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-gold-500/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 text-white placeholder-slate-400"
                 />
               </div>
               <div className="flex gap-2 overflow-x-auto pb-2">
@@ -528,8 +528,8 @@ export default function NotificationsPage() {
                     className={cn(
                       "px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-300",
                       filter === f 
-                        ? "bg-gradient-to-r from-indigo-500 to-yellow-500 text-white shadow-lg glow-gold" 
-                        : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-indigo-500/20"
+                        ? "bg-gradient-to-r from-gold-500 to-yellow-500 text-white shadow-lg glow-gold" 
+                        : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-navy-500/20"
                     )}
                   >
                     {f === 'all' ? 'All' : f === 'unread' ? 'Unread' : NOTIFICATION_TYPE_LABELS[f as NotificationType]}
@@ -538,7 +538,7 @@ export default function NotificationsPage() {
               </div>
             </div>
 
-            <div className="divide-y divide-indigo-500/10">
+            <div className="divide-y divide-gold-500/10">
               {filteredNotifications.length === 0 ? (
                 <div className="py-12 text-center">
                   <Bell className="w-12 h-12 text-slate-600 mx-auto mb-3" />
@@ -552,7 +552,7 @@ export default function NotificationsPage() {
                       key={notification.id}
                       className={cn(
                         "p-4 hover:bg-slate-800/30 cursor-pointer transition-colors",
-                        !notification.read && "bg-indigo-500/5"
+                        !notification.read && "bg-gold-500/5"
                       )}
                       onClick={() => {
                         setSelectedNotification(notification);
@@ -564,11 +564,11 @@ export default function NotificationsPage() {
                       <div className="flex items-start gap-3">
                         <div className={cn(
                           "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 glass",
-                          !notification.read ? "bg-indigo-500/20" : "bg-slate-800/50"
+                          !notification.read ? "bg-gold-500/20" : "bg-slate-800/50"
                         )}>
                           <IconComponent className={cn(
                             "w-5 h-5",
-                            !notification.read ? "text-indigo-400" : "text-slate-400"
+                            !notification.read ? "text-navy-400" : "text-slate-400"
                           )} />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -580,7 +580,7 @@ export default function NotificationsPage() {
                               {notification.title}
                             </p>
                             {!notification.read && (
-                              <span className="w-2 h-2 bg-indigo-500 rounded-full" />
+                              <span className="w-2 h-2 bg-gold-500 rounded-full" />
                             )}
                           </div>
                           <p className="text-sm text-slate-400 line-clamp-2">{notification.message}</p>
@@ -601,12 +601,12 @@ export default function NotificationsPage() {
             </div>
           </div>
 
-          <div className={cn("glass-card rounded-xl p-4 border border-indigo-500/20", isVisible && "animate-on-scroll visible delay-200")}>
+          <div className={cn("glass-card rounded-xl p-4 border border-navy-500/20", isVisible && "animate-on-scroll visible delay-200")}>
             {selectedNotification ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl text-indigo-400">{getNotificationIcon(selectedNotification.type)}</span>
+                    <span className="text-2xl text-navy-400">{getNotificationIcon(selectedNotification.type)}</span>
                     <Badge className="glass glass-card bg-slate-500/20 text-slate-300 border-slate-500/30">
                       {NOTIFICATION_TYPE_LABELS[selectedNotification.type]}
                     </Badge>
@@ -639,7 +639,7 @@ export default function NotificationsPage() {
 
                 {selectedNotification.metadata && (
                   <div className="space-y-2">
-                    <p className="text-xs font-medium text-indigo-400 uppercase">Additional Details</p>
+                    <p className="text-xs font-medium text-navy-400 uppercase">Additional Details</p>
                     <div className="space-y-1">
                       {Object.entries(selectedNotification.metadata).map(([key, value]) => (
                         <div key={key} className="flex justify-between text-sm">
@@ -672,7 +672,7 @@ export default function NotificationsPage() {
           <div 
             key={stat.label} 
             className={cn(
-              "glass-card hover-3d-card rounded-xl p-4 border border-indigo-500/20",
+              "glass-card hover-3d-card rounded-xl p-4 border border-navy-500/20",
               isVisible && "animate-on-scroll"
             )}
             style={{ animationDelay: `${idx * 100}ms` }}

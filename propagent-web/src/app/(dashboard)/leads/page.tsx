@@ -9,9 +9,9 @@ import { cn } from '@/lib/utils';
 function AnimatedBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-navy-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-indigo-500/5 to-transparent rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-navy-500/5 to-transparent rounded-full" />
     </div>
   );
 }
@@ -31,7 +31,7 @@ function FloatingParticles() {
       {particles.map((p) => (
         <div
           key={p.id}
-          className="absolute rounded-full bg-gradient-to-r from-indigo-400 to-yellow-400"
+          className="absolute rounded-full bg-gradient-to-r from-navy-400 to-yellow-400"
           style={{
             width: p.size,
             height: p.size,
@@ -133,9 +133,9 @@ export default function LeadsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'new': return <Badge className="glass glass-card bg-indigo-500/20 text-indigo-300 border-indigo-500/30">New</Badge>;
+      case 'new': return <Badge className="glass glass-card bg-navy-500/20 text-navy-300 border-navy-500/30">New</Badge>;
       case 'contacted': return <Badge className="glass glass-card bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Contacted</Badge>;
-      case 'qualified': return <Badge className="glass glass-card bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Qualified</Badge>;
+      case 'qualified': return <Badge className="glass glass-card bg-gold-500/20 text-gold-300 border-gold-500/30">Qualified</Badge>;
       case 'converted': return <Badge className="glass glass-card bg-blue-500/20 text-blue-300 border-blue-500/30">Converted</Badge>;
       case 'lost': return <Badge className="glass glass-card bg-slate-500/20 text-slate-300 border-slate-500/30">Lost</Badge>;
       default: return <Badge className="glass glass-card">{status}</Badge>;
@@ -190,7 +190,7 @@ export default function LeadsPage() {
           <div 
             key={source} 
             className={cn(
-              "glass-card hover-3d-card rounded-xl p-4 border border-indigo-500/20",
+              "glass-card hover-3d-card rounded-xl p-4 border border-navy-500/20",
               isVisible && "animate-on-scroll"
             )}
             style={{ animationDelay: `${idx * 100}ms` }}
@@ -209,17 +209,17 @@ export default function LeadsPage() {
       </div>
 
       {/* Filters */}
-      <div className={cn("glass-card rounded-xl p-4 border border-indigo-500/20", isVisible && "animate-on-scroll visible delay-200")}>
+      <div className={cn("glass-card rounded-xl p-4 border border-navy-500/20", isVisible && "animate-on-scroll visible delay-200")}>
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-navy-400" />
               <input
                 type="text"
                 placeholder="Search leads..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-indigo-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white placeholder-slate-400"
+                className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-navy-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 text-white placeholder-slate-400"
               />
             </div>
           </div>
@@ -227,7 +227,7 @@ export default function LeadsPage() {
             <select
               value={filterSource}
               onChange={(e) => setFilterSource(e.target.value)}
-              className="px-3 py-2 bg-slate-800/50 border border-indigo-500/30 rounded-lg text-sm text-white"
+              className="px-3 py-2 bg-slate-800/50 border border-navy-500/30 rounded-lg text-sm text-white"
             >
               <option value="all">All Sources</option>
               <option value="property24">Property24</option>
@@ -238,7 +238,7 @@ export default function LeadsPage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-2 bg-slate-800/50 border border-indigo-500/30 rounded-lg text-sm text-white"
+              className="px-3 py-2 bg-slate-800/50 border border-navy-500/30 rounded-lg text-sm text-white"
             >
               <option value="all">All Status</option>
               <option value="new">New</option>
@@ -252,20 +252,20 @@ export default function LeadsPage() {
       </div>
 
       {/* Leads List */}
-      <div className={cn("glass-card rounded-xl overflow-hidden border border-indigo-500/20", isVisible && "animate-on-scroll visible delay-300")}>
+      <div className={cn("glass-card rounded-xl overflow-hidden border border-navy-500/20", isVisible && "animate-on-scroll visible delay-300")}>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-800/50 border-b border-indigo-500/20">
+            <thead className="bg-slate-800/50 border-b border-navy-500/20">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Lead</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Source</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Type</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Requirements</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-400 uppercase">Captured</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Lead</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Source</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Type</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Requirements</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Captured</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-indigo-500/10">
+            <tbody className="divide-y divide-navy-500/10">
               {filteredLeads.map((lead) => {
                 const sourceConfig = leadSourceConfig[lead.source];
                 return (
@@ -285,12 +285,12 @@ export default function LeadsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-indigo-400">{sourceConfig.icon}</span>
+                        <span className="text-navy-400">{sourceConfig.icon}</span>
                         <span className="text-sm text-slate-300">{sourceConfig.label}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <Badge className={lead.type === 'tenant' ? "glass glass-card bg-blue-500/20 text-blue-300 border-blue-500/30" : lead.type === 'landlord' ? "glass glass-card bg-emerald-500/20 text-emerald-300 border-emerald-500/30" : "glass glass-card bg-indigo-500/20 text-indigo-300 border-indigo-500/30"}>
+                      <Badge className={lead.type === 'tenant' ? "glass glass-card bg-blue-500/20 text-blue-300 border-blue-500/30" : lead.type === 'landlord' ? "glass glass-card bg-gold-500/20 text-gold-300 border-gold-500/30" : "glass glass-card bg-navy-500/20 text-navy-300 border-navy-500/30"}>
                         {lead.type}
                       </Badge>
                     </td>
@@ -333,9 +333,9 @@ export default function LeadsPage() {
       </div>
 
       {/* Integration Info */}
-      <div className={cn("glass p-4 rounded-xl border border-indigo-500/20", isVisible && "animate-on-scroll visible delay-400")}>
+      <div className={cn("glass p-4 rounded-xl border border-navy-500/20", isVisible && "animate-on-scroll visible delay-400")}>
         <div className="flex items-start gap-3">
-          <Target className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
+          <Target className="w-5 h-5 text-navy-400 flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-medium text-white">Lead Sources</p>
             <p className="text-sm text-slate-400 mt-1">
@@ -368,7 +368,7 @@ export default function LeadsPage() {
                   type="text" 
                   value={newLead.name}
                   onChange={(e) => setNewLead({...newLead, name: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   placeholder="John Doe"
                 />
               </div>
@@ -380,7 +380,7 @@ export default function LeadsPage() {
                     type="email" 
                     value={newLead.email}
                     onChange={(e) => setNewLead({...newLead, email: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     placeholder="email@example.com"
                   />
                 </div>
@@ -390,7 +390,7 @@ export default function LeadsPage() {
                     type="tel" 
                     value={newLead.phone}
                     onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     placeholder="+27831234567"
                   />
                 </div>
@@ -402,7 +402,7 @@ export default function LeadsPage() {
                   <select 
                     value={newLead.type}
                     onChange={(e) => setNewLead({...newLead, type: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                   >
                     <option value="tenant">Tenant</option>
                     <option value="landlord">Landlord</option>
@@ -413,7 +413,7 @@ export default function LeadsPage() {
                   <select 
                     value={newLead.source}
                     onChange={(e) => setNewLead({...newLead, source: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                   >
                     <option value="website">Website</option>
                     <option value="property24">Property24</option>
@@ -431,7 +431,7 @@ export default function LeadsPage() {
                     <select 
                       value={newLead.bedrooms}
                       onChange={(e) => setNewLead({...newLead, bedrooms: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                     >
                       <option value="">Any</option>
                       <option value="1">1 Bedroom</option>
@@ -447,7 +447,7 @@ export default function LeadsPage() {
                         type="number" 
                         value={newLead.budgetMin}
                         onChange={(e) => setNewLead({...newLead, budgetMin: e.target.value})}
-                        className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                         placeholder="10000"
                       />
                     </div>
@@ -457,7 +457,7 @@ export default function LeadsPage() {
                         type="number" 
                         value={newLead.budgetMax}
                         onChange={(e) => setNewLead({...newLead, budgetMax: e.target.value})}
-                        className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                         placeholder="20000"
                       />
                     </div>
@@ -468,7 +468,7 @@ export default function LeadsPage() {
                       type="text" 
                       value={newLead.preferredSuburb}
                       onChange={(e) => setNewLead({...newLead, preferredSuburb: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                       placeholder="Sandton"
                     />
                   </div>
@@ -483,7 +483,7 @@ export default function LeadsPage() {
                       type="text" 
                       value={newLead.propertyAddress}
                       onChange={(e) => setNewLead({...newLead, propertyAddress: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                       placeholder="123 Main Street, Suburb"
                     />
                   </div>
@@ -493,7 +493,7 @@ export default function LeadsPage() {
                       type="number" 
                       value={newLead.askingRent}
                       onChange={(e) => setNewLead({...newLead, askingRent: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                       placeholder="15000"
                     />
                   </div>
@@ -506,7 +506,7 @@ export default function LeadsPage() {
                   rows={3}
                   value={newLead.notes}
                   onChange={(e) => setNewLead({...newLead, notes: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   placeholder="Additional notes..."
                 />
               </div>
@@ -521,7 +521,7 @@ export default function LeadsPage() {
               </button>
               <button 
                 onClick={handleAddLead}
-                className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-indigo-500/25 transition-all cursor-pointer"
+                className="px-6 py-2.5 bg-gradient-to-r from-navy-500 to-navy-600 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-navy-500/25 transition-all cursor-pointer"
               >
                 <Plus className="w-4 h-4 inline mr-1.5" />
                 Add Lead

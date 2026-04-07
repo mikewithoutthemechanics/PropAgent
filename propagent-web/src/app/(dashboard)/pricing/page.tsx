@@ -120,7 +120,7 @@ function AddPlanModal({
   };
 
   const inputClasses =
-    "w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-colors";
+    "w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/20 transition-colors";
 
   const labelClasses = "block text-sm font-medium text-gray-300 mb-1.5";
 
@@ -235,7 +235,7 @@ function AddPlanModal({
               type="checkbox"
               checked={formData.popular}
               onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
-              className="w-4 h-4 rounded border-gray-700 bg-gray-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-gray-900"
+              className="w-4 h-4 rounded border-gray-700 bg-gray-800 text-gold-500 focus:ring-gold-500 focus:ring-offset-gray-900"
             />
             <label htmlFor="popular" className="text-sm text-gray-300">
               Mark as Most Popular
@@ -252,7 +252,7 @@ function AddPlanModal({
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-gray-900 font-medium rounded-lg transition-colors"
+              className="flex-1 px-4 py-2.5 bg-gold-500 hover:bg-gold-600 text-gray-900 font-medium rounded-lg transition-colors"
             >
               Add Plan
             </button>
@@ -278,7 +278,7 @@ export default function PricingPage() {
           <div />
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-gray-900 font-medium rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500 hover:bg-gold-600 text-gray-900 font-medium rounded-lg transition-colors"
           >
             <Plus className="w-4 h-4" />
             Add Plan
@@ -295,12 +295,12 @@ export default function PricingPage() {
           <div
             key={plan.name}
             className={`relative bg-white rounded-xl border ${
-              plan.popular ? 'border-indigo-500 shadow-lg shadow-indigo-500/20' : 'border-gray-200'
+              plan.popular ? 'border-gold-500 shadow-lg shadow-gold-500/20' : 'border-gray-200'
             }`}
           >
             {plan.popular && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="bg-indigo-500 text-gray-900 text-sm font-medium px-3 py-1 rounded-full">
+                <span className="bg-gold-500 text-gray-900 text-sm font-medium px-3 py-1 rounded-full">
                   Most Popular
                 </span>
               </div>
@@ -319,7 +319,7 @@ export default function PricingPage() {
                 href="/register"
                 className={`mt-6 block w-full py-3 px-4 rounded-lg font-medium text-center transition-colors cursor-pointer ${
                   plan.popular
-                    ? 'bg-indigo-500 hover:bg-indigo-600 text-gray-900'
+                    ? 'bg-gold-500 hover:bg-gold-600 text-gray-900'
                     : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
                 }`}
               >

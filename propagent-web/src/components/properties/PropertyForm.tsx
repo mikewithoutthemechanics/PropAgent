@@ -221,7 +221,7 @@ export function PropertyForm({
               className={cn(
                 "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
                 activeSection === section.id
-                  ? "bg-amber-500 text-white"
+                  ? "bg-gold-500 text-white"
                   : "text-stone-600 hover:bg-stone-100"
               )}
             >
@@ -248,7 +248,7 @@ export function PropertyForm({
           <button
             type="button"
             onClick={handleManualSaveDraft}
-            className="flex items-center gap-1.5 text-amber-600 hover:text-amber-700 font-medium"
+            className="flex items-center gap-1.5 text-gold-600 hover:text-gold-700 font-medium"
           >
             <Save className="w-4 h-4" />
             Save Draft Now
@@ -272,7 +272,7 @@ export function PropertyForm({
                 placeholder="e.g., Modern 4-Bedroom Family Home in Sandton"
                 value={formData.title}
                 onChange={(e) => updateFormData('title', e.target.value)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
               />
               <p className="mt-1 text-xs text-stone-500">
                 A compelling title helps your listing stand out
@@ -289,7 +289,7 @@ export function PropertyForm({
                 placeholder="Describe your property in detail..."
                 value={formData.description}
                 onChange={(e) => updateFormData('description', e.target.value)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 resize-none"
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 resize-none"
               />
               <p className="mt-1 text-xs text-stone-500">
                 {formData.description.length} characters. Include key selling points and nearby amenities.
@@ -305,7 +305,7 @@ export function PropertyForm({
                   required
                   value={formData.listingType}
                   onChange={(e) => updateFormData('listingType', e.target.value as ListingType)}
-                  className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 >
                   {listingTypes.map(type => (
                     <option key={type.value} value={type.value}>{type.label}</option>
@@ -321,7 +321,7 @@ export function PropertyForm({
                   required
                   value={formData.type}
                   onChange={(e) => updateFormData('type', e.target.value as PropertyType)}
-                  className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 >
                   {propertyTypes.map(type => (
                     <option key={type.value} value={type.value}>{type.label}</option>
@@ -349,7 +349,7 @@ export function PropertyForm({
                 placeholder="e.g., 15 Oak Lane"
                 value={formData.location.streetAddress}
                 onChange={(e) => updateLocation('streetAddress', e.target.value)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
               />
             </div>
 
@@ -362,7 +362,7 @@ export function PropertyForm({
                 placeholder="e.g., The Oaks Estate"
                 value={formData.location.complexName || ''}
                 onChange={(e) => updateLocation('complexName', e.target.value || undefined)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
               />
             </div>
 
@@ -375,7 +375,7 @@ export function PropertyForm({
                 placeholder="e.g., Unit 412"
                 value={formData.location.unitNumber || ''}
                 onChange={(e) => updateLocation('unitNumber', e.target.value || undefined)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
               />
             </div>
 
@@ -389,7 +389,7 @@ export function PropertyForm({
                 placeholder="e.g., Sandton"
                 value={formData.location.suburb}
                 onChange={(e) => updateLocation('suburb', e.target.value)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
               />
             </div>
 
@@ -403,7 +403,7 @@ export function PropertyForm({
                 placeholder="e.g., Johannesburg"
                 value={formData.location.city}
                 onChange={(e) => updateLocation('city', e.target.value)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
               />
             </div>
 
@@ -415,7 +415,7 @@ export function PropertyForm({
                 required
                 value={formData.location.province}
                 onChange={(e) => updateLocation('province', e.target.value as Province)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
               >
                 {saProvinces.map(province => (
                   <option key={province.value} value={province.value}>{province.label}</option>
@@ -433,7 +433,7 @@ export function PropertyForm({
                 placeholder="e.g., 2196"
                 value={formData.location.postalCode}
                 onChange={(e) => updateLocation('postalCode', e.target.value)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
               />
             </div>
           </div>
@@ -459,10 +459,10 @@ export function PropertyForm({
                   placeholder="e.g., 2500000"
                   value={formData.pricing.price || ''}
                   onChange={(e) => updatePricing('price', Number(e.target.value))}
-                  className="w-full pl-8 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full pl-8 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 />
               </div>
-              <p className="mt-1 text-sm text-amber-600">
+              <p className="mt-1 text-sm text-gold-600">
                 {formatCurrency(formData.pricing.price)}
               </p>
             </div>
@@ -473,7 +473,7 @@ export function PropertyForm({
                   type="checkbox"
                   checked={formData.pricing.negotiable}
                   onChange={(e) => updatePricing('negotiable', e.target.checked)}
-                  className="w-4 h-4 rounded border-stone-300 text-amber-500 focus:ring-amber-500"
+                  className="w-4 h-4 rounded border-stone-300 text-gold-500 focus:ring-gold-500"
                 />
                 <span className="text-sm text-stone-700">Price is negotiable</span>
               </label>
@@ -493,7 +493,7 @@ export function PropertyForm({
                       placeholder="e.g., 3500"
                       value={formData.pricing.levies || ''}
                       onChange={(e) => updatePricing('levies', e.target.value ? Number(e.target.value) : undefined)}
-                      className="w-full pl-8 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                      className="w-full pl-8 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                     />
                   </div>
                 </div>
@@ -510,7 +510,7 @@ export function PropertyForm({
                       placeholder="e.g., 2500"
                       value={formData.pricing.ratesAndTaxes || ''}
                       onChange={(e) => updatePricing('ratesAndTaxes', e.target.value ? Number(e.target.value) : undefined)}
-                      className="w-full pl-8 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                      className="w-full pl-8 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                     />
                   </div>
                 </div>
@@ -531,7 +531,7 @@ export function PropertyForm({
                       placeholder="e.g., 25000"
                       value={formData.pricing.depositRequired || ''}
                       onChange={(e) => updatePricing('depositRequired', e.target.value ? Number(e.target.value) : undefined)}
-                      className="w-full pl-8 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                      className="w-full pl-8 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                     />
                   </div>
                 </div>
@@ -543,7 +543,7 @@ export function PropertyForm({
                   <select
                     value={formData.pricing.depositMonths || ''}
                     onChange={(e) => updatePricing('depositMonths', e.target.value ? Number(e.target.value) : undefined)}
-                    className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                   >
                     <option value="">Select...</option>
                     <option value="1">1 Month</option>
@@ -575,7 +575,7 @@ export function PropertyForm({
                   min="0"
                   value={formData.specs.bedrooms}
                   onChange={(e) => updateSpecs('bedrooms', Number(e.target.value))}
-                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 />
               </div>
             </div>
@@ -593,7 +593,7 @@ export function PropertyForm({
                   step="0.5"
                   value={formData.specs.bathrooms}
                   onChange={(e) => updateSpecs('bathrooms', Number(e.target.value))}
-                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 />
               </div>
             </div>
@@ -609,7 +609,7 @@ export function PropertyForm({
                   min="0"
                   value={formData.specs.garages}
                   onChange={(e) => updateSpecs('garages', Number(e.target.value))}
-                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 />
               </div>
             </div>
@@ -625,7 +625,7 @@ export function PropertyForm({
                   min="0"
                   value={formData.specs.carports || ''}
                   onChange={(e) => updateSpecs('carports', e.target.value ? Number(e.target.value) : undefined)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 />
               </div>
             </div>
@@ -642,7 +642,7 @@ export function PropertyForm({
                   placeholder="e.g., 250"
                   value={formData.specs.floorSize || ''}
                   onChange={(e) => updateSpecs('floorSize', e.target.value ? Number(e.target.value) : undefined)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 />
               </div>
             </div>
@@ -659,7 +659,7 @@ export function PropertyForm({
                   placeholder="e.g., 500"
                   value={formData.specs.erfSize || ''}
                   onChange={(e) => updateSpecs('erfSize', e.target.value ? Number(e.target.value) : undefined)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 />
               </div>
             </div>
@@ -677,7 +677,7 @@ export function PropertyForm({
                   placeholder="e.g., 2019"
                   value={formData.specs.yearBuilt || ''}
                   onChange={(e) => updateSpecs('yearBuilt', e.target.value ? Number(e.target.value) : undefined)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
                 />
               </div>
             </div>
@@ -698,20 +698,20 @@ export function PropertyForm({
                 className={cn(
                   "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all",
                   formData.features[feature.key as keyof PropertyFeatures]
-                    ? "border-amber-500 bg-amber-50"
-                    : "border-stone-200 hover:border-amber-300 hover:bg-stone-50"
+                    ? "border-gold-500 bg-gold-50"
+                    : "border-stone-200 hover:border-gold-400 hover:bg-stone-50"
                 )}
               >
                 <input
                   type="checkbox"
                   checked={formData.features[feature.key as keyof PropertyFeatures]}
                   onChange={(e) => updateFeature(feature.key as keyof PropertyFeatures, e.target.checked)}
-                  className="w-4 h-4 rounded border-stone-300 text-amber-500 focus:ring-amber-500"
+                  className="w-4 h-4 rounded border-stone-300 text-gold-500 focus:ring-gold-500"
                 />
                 <span className={cn(
                   "text-sm",
                   formData.features[feature.key as keyof PropertyFeatures]
-                    ? "text-amber-700 font-medium"
+                    ? "text-gold-700 font-medium"
                     : "text-stone-600"
                 )}>
                   {feature.label}
@@ -729,10 +729,10 @@ export function PropertyForm({
           <p className="text-sm text-stone-500">Upload high-quality images. The first image will be used as the primary photo.</p>
           
           {/* Image Upload */}
-          <div className="border-2 border-dashed border-stone-300 rounded-xl p-8 text-center hover:border-amber-400 transition-colors">
+          <div className="border-2 border-dashed border-stone-300 rounded-xl p-8 text-center hover:border-gold-400 transition-colors">
             <div className="flex flex-col items-center gap-3">
-              <div className="p-4 bg-amber-50 rounded-full">
-                <Upload className="w-8 h-8 text-amber-500" />
+              <div className="p-4 bg-gold-50 rounded-full">
+                <Upload className="w-8 h-8 text-gold-500" />
               </div>
               <div>
                 <p className="text-sm font-medium text-stone-700">
@@ -766,7 +766,7 @@ export function PropertyForm({
                   key={image.id}
                   className={cn(
                     "relative aspect-square rounded-lg overflow-hidden border-2",
-                    image.isPrimary ? "border-amber-500" : "border-stone-200"
+                    image.isPrimary ? "border-gold-500" : "border-stone-200"
                   )}
                 >
                   <img
@@ -777,7 +777,7 @@ export function PropertyForm({
                   
                   {/* Primary Badge */}
                   {image.isPrimary && (
-                    <div className="absolute top-2 left-2 px-2 py-1 bg-amber-500 text-white text-xs font-medium rounded-full">
+                    <div className="absolute top-2 left-2 px-2 py-1 bg-gold-500 text-white text-xs font-medium rounded-full">
                       Primary
                     </div>
                   )}
@@ -788,7 +788,7 @@ export function PropertyForm({
                       <button
                         type="button"
                         onClick={() => setPrimaryImage(image.id)}
-                        className="p-2 bg-white rounded-full text-stone-700 hover:bg-amber-50"
+                        className="p-2 bg-white rounded-full text-stone-700 hover:bg-gold-50"
                         title="Set as primary"
                       >
                         <ImageIcon className="w-4 h-4" />
@@ -824,7 +824,7 @@ export function PropertyForm({
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="bg-amber-500 hover:bg-amber-600"
+          className="bg-gold-500 hover:bg-gold-600"
         >
           {isSubmitting ? (
             <>

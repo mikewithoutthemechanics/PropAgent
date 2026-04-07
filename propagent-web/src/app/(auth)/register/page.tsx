@@ -60,15 +60,15 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-slate-900/10 to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-navy-900/20 via-slate-900/10 to-transparent" />
       
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gold-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       
       <div className="w-full max-w-sm relative z-10">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:shadow-amber-500/40 transition-all">
+            <div className="w-10 h-10 bg-gradient-to-br from-gold-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg shadow-gold-500/20 group-hover:shadow-gold-500/40 transition-all">
               <Building2 className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-serif font-semibold text-white">PropAgent</span>
@@ -101,7 +101,7 @@ export default function RegisterPage() {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
+                      className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/50 transition-colors"
                       placeholder="John"
                       required
                     />
@@ -119,7 +119,7 @@ export default function RegisterPage() {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
+                      className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/50 transition-colors"
                       placeholder="Doe"
                       required
                     />
@@ -138,8 +138,8 @@ export default function RegisterPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
-                    placeholder="you@company.com"
+                      className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/50 transition-colors"
+                      placeholder="you@company.com"
                     required
                   />
                 </div>
@@ -156,8 +156,8 @@ export default function RegisterPage() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
-                    placeholder="Min 8 characters"
+                      className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/50 transition-colors"
+                      placeholder="Min 8 characters"
                     required
                   />
                 </div>
@@ -174,8 +174,8 @@ export default function RegisterPage() {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-colors"
-                    placeholder="Confirm password"
+                      className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-slate-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/50 transition-colors"
+                      placeholder="Confirm password"
                     required
                   />
                 </div>
@@ -215,7 +215,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="mt-6 text-center">
-          <Link href="/" className="text-sm text-slate-500 hover:text-amber-400 transition-colors">
+          <Link href="/" className="text-sm text-slate-500 hover:text-gold-400 transition-colors">
             ← Back to home
           </Link>
         </div>

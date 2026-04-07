@@ -100,7 +100,7 @@ export function PropertyFilters({
               value={localFilters.location || ''}
               onChange={(e) => updateFilter('location', e.target.value || undefined)}
               aria-label="Search properties by location"
-              className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+              className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 transition-all"
             />
             {localFilters.location && (
               <button
@@ -121,7 +121,7 @@ export function PropertyFilters({
                 value={localFilters.listingType || ''}
                 onChange={(e) => updateFilter('listingType', (e.target.value as ListingType) || undefined)}
                 aria-label="Filter by listing type"
-                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[120px]"
+                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 cursor-pointer min-w-[120px]"
               >
                 <option value="" className="bg-gray-900">All Listings</option>
                 {listingTypes.map(type => (
@@ -140,7 +140,7 @@ export function PropertyFilters({
                   updateFilter('propertyTypes', value ? [value] : undefined);
                 }}
                 aria-label="Filter by property type"
-                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[140px]"
+                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 cursor-pointer min-w-[140px]"
               >
                 <option value="" className="bg-gray-900">All Types</option>
                 {propertyTypes.map(type => (
@@ -156,7 +156,7 @@ export function PropertyFilters({
                 value={localFilters.bedrooms || ''}
                 onChange={(e) => updateFilter('bedrooms', e.target.value ? Number(e.target.value) : undefined)}
                 aria-label="Filter by bedrooms"
-                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[100px]"
+                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 cursor-pointer min-w-[100px]"
               >
                 <option value="" className="bg-gray-900">Beds</option>
                 {bedroomOptions.map(opt => (
@@ -172,7 +172,7 @@ export function PropertyFilters({
                 value={localFilters.sortBy || 'featured'}
                 onChange={(e) => updateFilter('sortBy', (e.target.value as PropertyFiltersType['sortBy']) || 'featured')}
                 aria-label="Sort properties"
-                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[140px]"
+                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 cursor-pointer min-w-[140px]"
               >
                 {sortOptions.map(opt => (
                   <option key={opt.value} value={opt.value} className="bg-gray-900">{opt.label}</option>
@@ -196,7 +196,7 @@ export function PropertyFilters({
               <SlidersHorizontal className="w-4 h-4 mr-1.5" />
               More Filters
               {activeFiltersCount > 0 && (
-                <span className="ml-1.5 px-1.5 py-0.5 text-xs bg-amber-500 text-white rounded-full">
+                <span className="ml-1.5 px-1.5 py-0.5 text-xs bg-gold-500 text-white rounded-full">
                   {activeFiltersCount}
                 </span>
               )}
@@ -223,7 +223,7 @@ export function PropertyFilters({
                     className={cn(
                       "w-full text-left px-3 py-2 rounded-lg text-sm transition-colors cursor-pointer",
                       (filters.minPrice === range.min && filters.maxPrice === (range.max === Infinity ? undefined : range.max))
-                        ? "bg-amber-500/20 text-gold-400 font-medium border border-gold-500/30"
+                        ? "bg-gold-500/20 text-gold-400 font-medium border border-gold-500/30"
                         : "hover:bg-white/10 text-slate-300"
                     )}
                   >
@@ -247,7 +247,7 @@ export function PropertyFilters({
                     className={cn(
                       "px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer",
                       filters.bathrooms === opt.value
-                        ? "bg-amber-500 text-white"
+                        ? "bg-gold-500 text-white"
                         : "bg-white/5 border border-white/10 text-slate-300 hover:border-gold-500/30"
                     )}
                   >

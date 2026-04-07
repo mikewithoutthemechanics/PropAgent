@@ -108,9 +108,9 @@ function OnboardingContent() {
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
                   currentStep > step.id
-                    ? "bg-emerald-500 text-white"
+                    ? "bg-gold-500 text-white"
                     : currentStep === step.id
-                    ? "bg-emerald-500 text-white"
+                    ? "bg-gold-500 text-white"
                     : "bg-slate-200 text-slate-500"
                 }`}
               >
@@ -119,7 +119,7 @@ function OnboardingContent() {
               {index < steps.length - 1 && (
                 <div
                   className={`w-20 h-1 mx-2 ${
-                    currentStep > step.id ? "bg-emerald-500" : "bg-slate-200"
+                    currentStep > step.id ? "bg-gold-500" : "bg-slate-200"
                   }`}
                 />
               )}
@@ -157,7 +157,7 @@ function OnboardingContent() {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 placeholder="John"
               />
             </div>
@@ -170,7 +170,7 @@ function OnboardingContent() {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 placeholder="Doe"
               />
             </div>
@@ -183,7 +183,7 @@ function OnboardingContent() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 placeholder="+27 82 123 4567"
               />
             </div>
@@ -203,7 +203,7 @@ function OnboardingContent() {
                     createAgency: e.target.checked,
                   }))
                 }
-                className="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"
+                className="w-5 h-5 text-gold-500 rounded focus:ring-gold-500"
               />
               <label htmlFor="createAgency" className="ml-2 text-slate-700">
                 Create a new agency
@@ -219,7 +219,7 @@ function OnboardingContent() {
                   name="agencyName"
                   value={formData.agencyName}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                   placeholder="My Property Agency"
                 />
               </div>
@@ -233,7 +233,7 @@ function OnboardingContent() {
                   name="agencyCode"
                   value={formData.agencyCode}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                   placeholder="ABCD1234"
                 />
               </div>
@@ -251,7 +251,7 @@ function OnboardingContent() {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               >
                 <option value="agent">Real Estate Agent</option>
                 <option value="agency_admin">Agency Admin</option>
@@ -268,7 +268,7 @@ function OnboardingContent() {
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 placeholder="Cape Town"
               />
             </div>
@@ -291,7 +291,7 @@ function OnboardingContent() {
                     onClick={() => handleSpecializationToggle(spec)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                       formData.specializations.includes(spec)
-                        ? "bg-emerald-500 text-white"
+                        ? "bg-gold-500 text-white"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
@@ -316,7 +316,7 @@ function OnboardingContent() {
             type="button"
             onClick={handleNext}
             disabled={loading}
-            className="px-6 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50"
+            className="px-6 py-3 bg-gold-500 text-white rounded-lg hover:bg-gold-600 disabled:opacity-50"
           >
             {loading ? "Saving..." : currentStep === 4 ? "Complete" : "Next"}
           </button>

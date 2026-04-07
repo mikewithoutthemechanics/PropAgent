@@ -169,14 +169,14 @@ export default function LandingPage() {
                     <div className="bg-slate-50 rounded-xl p-4">
                       <p className="text-xs text-slate-500 uppercase tracking-wide">Properties</p>
                       <p className="text-2xl font-bold text-navy-500">24</p>
-                      <p className="text-xs text-emerald-600 flex items-center gap-1 mt-1">
+                      <p className="text-xs text-gold-600 flex items-center gap-1 mt-1">
                         <TrendingUp className="w-3 h-3" /> +12%
                       </p>
                     </div>
                     <div className="bg-slate-50 rounded-xl p-4">
                       <p className="text-xs text-slate-500 uppercase tracking-wide">Revenue</p>
                       <p className="text-2xl font-bold text-navy-500">R48,500</p>
-                      <p className="text-xs text-emerald-600 flex items-center gap-1 mt-1">
+                      <p className="text-xs text-gold-600 flex items-center gap-1 mt-1">
                         <TrendingUp className="w-3 h-3" /> +8%
                       </p>
                     </div>
@@ -318,9 +318,9 @@ export default function LandingPage() {
               <p className="text-4xl font-bold text-navy-500 mb-1">Free</p>
               <p className="text-slate-500 mb-6">Perfect for getting started</p>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-emerald-500" />Up to 5 properties</li>
-                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-emerald-500" />10 tenants</li>
-                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-emerald-500" />Basic reports</li>
+                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-gold-500" />Up to 5 properties</li>
+                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-gold-500" />10 tenants</li>
+                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-gold-500" />Basic reports</li>
               </ul>
               <Link href="/register" className="block w-full py-3 text-center border border-navy-500 text-navy-500 font-medium rounded-lg hover:bg-navy-500 hover:text-white transition-colors cursor-pointer">Get Started</Link>
             </div>
@@ -346,10 +346,10 @@ export default function LandingPage() {
               <p className="text-4xl font-bold text-navy-500 mb-1">R599<span className="text-lg font-normal text-slate-500">/mo</span></p>
               <p className="text-slate-500 mb-6">For large property portfolios</p>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-emerald-500" />Everything in Pro</li>
-                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-emerald-500" />Custom integrations</li>
-                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-emerald-500" />Dedicated account manager</li>
-                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-emerald-500" />SLA guarantee</li>
+                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-gold-500" />Everything in Pro</li>
+                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-gold-500" />Custom integrations</li>
+                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-gold-500" />Dedicated account manager</li>
+                <li className="flex items-center gap-2 text-slate-600"><CheckCircle2 className="w-4 h-4 text-gold-500" />SLA guarantee</li>
               </ul>
               <Link href="/contact" className="block w-full py-3 text-center border border-navy-500 text-navy-500 font-medium rounded-lg hover:bg-navy-500 hover:text-white transition-colors cursor-pointer">Contact Sales</Link>
             </div>

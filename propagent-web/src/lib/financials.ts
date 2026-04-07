@@ -632,7 +632,7 @@ export function formatPercent(value: number): string {
 }
 
 export function getCollectionRateColor(rate: number): string {
-  if (rate >= 95) return 'text-emerald-600';
+  if (rate >= 95) return 'text-gold-600';
   if (rate >= 80) return 'text-gold-600';
   return 'text-red-600';
 }
@@ -652,7 +652,7 @@ export function getInvoiceStatusColor(status: InvoiceStatus): string {
   switch (status) {
     case 'draft': return 'bg-slate-100 text-slate-700';
     case 'sent': return 'bg-blue-100 text-blue-700';
-    case 'paid': return 'bg-emerald-100 text-emerald-700';
+    case 'paid': return 'bg-gold-100 text-gold-700';
     case 'overdue': return 'bg-red-100 text-red-700';
     case 'cancelled': return 'bg-slate-100 text-slate-500';
   }

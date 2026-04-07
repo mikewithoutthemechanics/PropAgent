@@ -146,7 +146,7 @@ export default function ChatPage() {
                 key={conv.id}
                 onClick={() => setActiveConversationId(conv.id)}
                 className={`w-full p-4 text-left hover:bg-slate-50 transition-colors duration-200 cursor-pointer ${
-                  activeConversationId === conv.id ? 'bg-amber-50' : ''
+                  activeConversationId === conv.id ? 'bg-gold-50' : ''
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -158,7 +158,7 @@ export default function ChatPage() {
                     <div className="flex items-center justify-between">
                       <p className="font-medium text-slate-900 truncate">{conv.tenantName}</p>
                       {conv.unreadCount > 0 && (
-                        <span className="bg-indigo-500 text-white text-xs font-medium px-1.5 py-0.5 rounded-full">
+                        <span className="bg-navy-500 text-white text-xs font-medium px-1.5 py-0.5 rounded-full">
                           {conv.unreadCount}
                         </span>
                       )}
@@ -200,10 +200,10 @@ export default function ChatPage() {
                     <div className={`max-w-[70%] ${message.senderType === 'ai' ? 'order-2' : ''}`}>
                       {message.senderType === 'ai' && (
                         <div className="flex items-center gap-2 mb-1">
-                          <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center">
-                            <Bot className="w-3 h-3 text-indigo-600" />
+                          <div className="w-6 h-6 bg-gold-100 rounded-full flex items-center justify-center">
+                            <Bot className="w-3 h-3 text-navy-600" />
                           </div>
-                          <span className="text-xs font-medium text-indigo-600">PropAgent AI</span>
+                          <span className="text-xs font-medium text-navy-600">PropAgent AI</span>
                         </div>
                       )}
                       {message.senderType === 'tenant' && (
@@ -214,7 +214,7 @@ export default function ChatPage() {
                       )}
                       <div className={`rounded-2xl px-4 py-3 ${
                         message.senderType === 'agent' || message.senderType === 'landlord'
-                          ? 'bg-indigo-500 text-white rounded-br-md'
+                          ? 'bg-navy-500 text-white rounded-br-md'
                           : message.senderType === 'ai'
                           ? 'bg-slate-100 text-slate-800 rounded-bl-md'
                           : 'bg-slate-100 text-slate-800 rounded-bl-md'
@@ -230,8 +230,8 @@ export default function ChatPage() {
                 
                 {isTyping && (
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center">
-                      <Bot className="w-3 h-3 text-indigo-600" />
+                    <div className="w-6 h-6 bg-gold-100 rounded-full flex items-center justify-center">
+                      <Bot className="w-3 h-3 text-navy-600" />
                     </div>
                     <div className="bg-slate-100 rounded-2xl rounded-bl-md px-4 py-3">
                       <div className="flex gap-1">
@@ -292,7 +292,7 @@ export default function ChatPage() {
                   type="text" 
                   value={newChat.tenantName}
                   onChange={(e) => setNewChat({...newChat, tenantName: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   placeholder="e.g., John Smith"
                 />
               </div>
@@ -302,7 +302,7 @@ export default function ChatPage() {
                 <select 
                   value={newChat.propertyId}
                   onChange={(e) => setNewChat({...newChat, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                 >
                   <option value="">Select a property...</option>
                   {mockProperties.map(prop => (
@@ -317,7 +317,7 @@ export default function ChatPage() {
                   rows={3}
                   value={newChat.initialMessage}
                   onChange={(e) => setNewChat({...newChat, initialMessage: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   placeholder="Type an initial message to send..."
                 />
               </div>
@@ -333,7 +333,7 @@ export default function ChatPage() {
               <button 
                 onClick={handleAddChat}
                 disabled={!newChat.tenantName.trim() || !newChat.propertyId}
-                className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="px-6 py-2.5 bg-gradient-to-r from-navy-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-navy-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <Plus className="w-4 h-4 inline mr-1.5" />
                 Start Chat

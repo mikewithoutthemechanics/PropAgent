@@ -196,7 +196,7 @@ export default function FinancialsPage() {
           <div className="flex items-center gap-3">
             <Button 
               variant="outline" 
-              className="glass-light border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/20 hover:border-indigo-400/50"
+              className="glass-light border-navy-500/30 text-navy-400 hover:bg-navy-500/20 hover:border-navy-400/50"
               onClick={() => handleExportCSV('rentroll')}
             >
               <FileSpreadsheet className="w-4 h-4 mr-2" />
@@ -223,12 +223,12 @@ export default function FinancialsPage() {
             <div>
               <p className="text-sm font-medium text-gray-400">Total Rent Collectible</p>
               <p className="text-2xl font-bold text-gradient-gold mt-1">{formatCurrency(rentRoll.totalRent)}</p>
-              <p className="text-xs text-emerald-400 mt-1 flex items-center gap-1">
+              <p className="text-xs text-gold-400 mt-1 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" /> +{rentRoll.totalProperties} properties
               </p>
             </div>
-            <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center border border-indigo-500/30">
-              <Home className="w-6 h-6 text-indigo-400" />
+            <div className="w-12 h-12 bg-navy-500/20 rounded-xl flex items-center justify-center border border-navy-500/30">
+              <Home className="w-6 h-6 text-navy-400" />
             </div>
           </div>
         </Card>
@@ -238,12 +238,12 @@ export default function FinancialsPage() {
             <div>
               <p className="text-sm font-medium text-gray-400">Collected This Month</p>
               <p className="text-2xl font-bold text-white mt-1">{formatCurrency(rentRoll.totalCollected)}</p>
-              <p className={`text-xs mt-1 flex items-center gap-1 ${rentRoll.collectionRate >= 80 ? 'text-emerald-400' : 'text-indigo-400'}`}>
+              <p className={`text-xs mt-1 flex items-center gap-1 ${rentRoll.collectionRate >= 80 ? 'text-gold-400' : 'text-navy-400'}`}>
                 <TrendingUp className="w-3 h-3" /> {formatPercent(rentRoll.collectionRate)} collection rate
               </p>
             </div>
-            <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center border border-emerald-500/30">
-              <DollarSign className="w-6 h-6 text-emerald-400" />
+            <div className="w-12 h-12 bg-gold-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
+              <DollarSign className="w-6 h-6 text-gold-400" />
             </div>
           </div>
         </Card>
@@ -253,12 +253,12 @@ export default function FinancialsPage() {
             <div>
               <p className="text-sm font-medium text-gray-400">Outstanding</p>
               <p className="text-2xl font-bold text-white mt-1">{formatCurrency(rentRoll.totalOutstanding)}</p>
-              <p className="text-xs text-indigo-400 mt-1 flex items-center gap-1">
+              <p className="text-xs text-navy-400 mt-1 flex items-center gap-1">
                 <TrendingDown className="w-3 h-3" /> Requires attention
               </p>
             </div>
-            <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center border border-indigo-500/30">
-              <CreditCard className="w-6 h-6 text-indigo-400" />
+            <div className="w-12 h-12 bg-navy-500/20 rounded-xl flex items-center justify-center border border-navy-500/30">
+              <CreditCard className="w-6 h-6 text-navy-400" />
             </div>
           </div>
         </Card>
@@ -290,7 +290,7 @@ export default function FinancialsPage() {
                 onClick={() => setActiveTab(tab.id as TabType)}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all duration-300 ${
                   activeTab === tab.id
-                    ? 'border-indigo-500 text-indigo-400'
+                    ? 'border-navy-500 text-navy-400'
                     : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-600'
                 }`}
               >
@@ -316,7 +316,7 @@ export default function FinancialsPage() {
                   placeholder="Search properties..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50 w-64 transition-all"
+                  className="pl-10 pr-4 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50 w-64 transition-all"
                 />
               </div>
             }
@@ -346,16 +346,16 @@ export default function FinancialsPage() {
                       <span className="font-semibold text-white">{formatCurrency(item.monthlyRent)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="text-emerald-400 font-medium">{formatCurrency(item.collected)}</span>
+                      <span className="text-gold-400 font-medium">{formatCurrency(item.collected)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className={`font-medium ${item.outstanding > 0 ? 'text-indigo-400' : 'text-gray-500'}`}>
+                      <span className={`font-medium ${item.outstanding > 0 ? 'text-navy-400' : 'text-gray-500'}`}>
                         {formatCurrency(item.outstanding)}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-                        item.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
+                        item.status === 'paid' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' : 'bg-navy-500/20 text-navy-400 border border-navy-500/30'
                       }`}>
                         {item.status}
                       </span>
@@ -390,7 +390,7 @@ export default function FinancialsPage() {
                 <select
                   value={expenseFilter}
                   onChange={(e) => setExpenseFilter(e.target.value as ExpenseCategory | 'all')}
-                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="all" className="bg-dark-800">All Categories</option>
                   <option value="maintenance" className="bg-dark-800">Maintenance</option>
@@ -433,7 +433,7 @@ export default function FinancialsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-                        expense.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
+                        expense.status === 'paid' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' : 'bg-navy-500/20 text-navy-400 border border-navy-500/30'
                       }`}>
                         {expense.status}
                       </span>
@@ -485,16 +485,16 @@ export default function FinancialsPage() {
                 <tbody className="divide-y divide-gray-800">
                   {invoices.map((invoice) => (
                     <tr key={invoice.id} className="hover:bg-dark-700/50 transition-colors">
-                      <td className="px-6 py-4 text-indigo-400 font-medium">{invoice.invoiceNumber}</td>
+                      <td className="px-6 py-4 text-navy-400 font-medium">{invoice.invoiceNumber}</td>
                       <td className="px-6 py-4 text-white font-medium">{invoice.property}</td>
                       <td className="px-6 py-4 text-gray-400">{invoice.tenant}</td>
                       <td className="px-6 py-4 text-gray-400">{invoice.date}</td>
                       <td className="px-6 py-4 text-right font-semibold text-white">{formatCurrency(invoice.total)}</td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-                          invoice.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                          invoice.status === 'paid' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' :
                           invoice.status === 'sent' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                          'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
+                          'bg-navy-500/20 text-navy-400 border border-navy-500/30'
                         }`}>
                           {invoice.status}
                         </span>
@@ -512,7 +512,7 @@ export default function FinancialsPage() {
                           {invoice.status === 'sent' && (
                             <button 
                               onClick={() => setInvoices(invoices.map(i => i.id === invoice.id ? { ...i, status: 'paid' as const } : i))}
-                              className="text-emerald-400 hover:text-emerald-300 text-sm"
+                              className="text-gold-400 text-gold-300 text-sm"
                             >
                               Mark Paid
                             </button>
@@ -553,7 +553,7 @@ export default function FinancialsPage() {
                 <select
                   value={reportPeriod}
                   onChange={(e) => setReportPeriod(e.target.value as ReportPeriod)}
-                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                 >
                   <option value="monthly" className="bg-dark-800">Monthly</option>
                   <option value="quarterly" className="bg-dark-800">Quarterly</option>
@@ -569,7 +569,7 @@ export default function FinancialsPage() {
           <div className="p-6 space-y-6">
             {/* Revenue Section */}
             <div>
-              <h3 className="text-sm font-semibold text-indigo-400 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-navy-400 mb-4 flex items-center gap-2">
                 <TrendingUp className="w-4 h-4" />
                 Revenue
               </h3>
@@ -586,9 +586,9 @@ export default function FinancialsPage() {
                   <p className="text-xs text-gray-500">Other Income</p>
                   <p className="text-lg font-semibold text-white">{formatCurrency(report.otherIncome)}</p>
                 </div>
-                <div className="bg-emerald-500/10 rounded-lg p-4 border border-emerald-500/30">
-                  <p className="text-xs text-emerald-400">Total Revenue</p>
-                  <p className="text-lg font-semibold text-emerald-400">{formatCurrency(report.totalRevenue)}</p>
+                <div className="bg-gold-500/10 rounded-lg p-4 border border-gold-500/30">
+                  <p className="text-xs text-gold-400">Total Revenue</p>
+                  <p className="text-lg font-semibold text-gold-400">{formatCurrency(report.totalRevenue)}</p>
                 </div>
               </div>
             </div>
@@ -628,7 +628,7 @@ export default function FinancialsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500">Net Income</p>
-                  <p className={`text-3xl font-bold ${report.netIncome >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <p className={`text-3xl font-bold ${report.netIncome >= 0 ? 'text-gold-400' : 'text-red-400'}`}>
                     {formatCurrency(report.netIncome)}
                   </p>
                 </div>
@@ -651,7 +651,7 @@ export default function FinancialsPage() {
             title="Commission Breakdown"
             subtitle="Escrow-based agent commissions from property sales"
             action={
-              <Button variant="outline" className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/20" onClick={() => handleExportCSV('commissions')}>
+              <Button variant="outline" className="border-navy-500/30 text-navy-400 hover:bg-navy-500/20" onClick={() => handleExportCSV('commissions')}>
                 <Download className="w-4 h-4 mr-2" />
                 Export CSV
               </Button>
@@ -684,19 +684,19 @@ export default function FinancialsPage() {
                       <span className="text-xs text-gray-500 ml-1">({item.commissionPercent}%)</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="text-emerald-400 font-medium">{formatCurrency(item.listingAgentShare)}</span>
+                      <span className="text-gold-400 font-medium">{formatCurrency(item.listingAgentShare)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="text-emerald-400 font-medium">{formatCurrency(item.introducingAgentShare)}</span>
+                      <span className="text-gold-400 font-medium">{formatCurrency(item.introducingAgentShare)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span className="text-gray-500">{formatCurrency(item.platformFee)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium capitalize ${
-                        item.escrowStatus === 'released' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                        item.escrowStatus === 'released' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' :
                         item.escrowStatus === 'deposited' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                        item.escrowStatus === 'in_verification' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' :
+                        item.escrowStatus === 'in_verification' ? 'bg-navy-500/20 text-navy-400 border border-navy-500/30' :
                         'bg-gray-500/20 text-gray-400 border border-gray-500/30'
                       }`}>
                         {item.escrowStatus.replace('_', ' ')}
@@ -735,7 +735,7 @@ export default function FinancialsPage() {
                 <select
                   value={newExpense.propertyId}
                   onChange={(e) => setNewExpense({...newExpense, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="">Select a property</option>
                   {mockProperties.map((property) => (
@@ -752,7 +752,7 @@ export default function FinancialsPage() {
                   <select
                     value={newExpense.category}
                     onChange={(e) => setNewExpense({...newExpense, category: e.target.value as ExpenseCategory})}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                   >
                     <option value="maintenance">Maintenance</option>
                     <option value="rates">Rates</option>
@@ -770,7 +770,7 @@ export default function FinancialsPage() {
                     value={newExpense.amount}
                     onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
                     placeholder="0.00"
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                   />
                 </div>
               </div>
@@ -782,7 +782,7 @@ export default function FinancialsPage() {
                   value={newExpense.description}
                   onChange={(e) => setNewExpense({...newExpense, description: e.target.value})}
                   placeholder="Enter expense description"
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 />
               </div>
 
@@ -794,7 +794,7 @@ export default function FinancialsPage() {
                     value={newExpense.vendor}
                     onChange={(e) => setNewExpense({...newExpense, vendor: e.target.value})}
                     placeholder="Vendor name"
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                   />
                 </div>
 
@@ -804,7 +804,7 @@ export default function FinancialsPage() {
                     type="date"
                     value={newExpense.date}
                     onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                   />
                 </div>
               </div>
@@ -814,7 +814,7 @@ export default function FinancialsPage() {
                 <select
                   value={newExpense.status}
                   onChange={(e) => setNewExpense({...newExpense, status: e.target.value as 'pending' | 'paid'})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="pending">Pending</option>
                   <option value="paid">Paid</option>
@@ -862,7 +862,7 @@ export default function FinancialsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-2">Invoice Number</label>
-                  <div className="px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-indigo-400 font-medium">
+                  <div className="px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-navy-400 font-medium">
                     INV-{Date.now().toString().slice(-8)}
                   </div>
                 </div>
@@ -871,7 +871,7 @@ export default function FinancialsPage() {
                   <select
                     value={invoiceStatus}
                     onChange={(e) => setInvoiceStatus(e.target.value as 'draft' | 'sent' | 'paid')}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   >
                     <option value="draft">Draft</option>
                     <option value="sent">Sent</option>
@@ -887,7 +887,7 @@ export default function FinancialsPage() {
                   <select
                     value={selectedProperty}
                     onChange={(e) => setSelectedProperty(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   >
                     <option value="">Select Property</option>
                     {mockProperties.map(prop => (
@@ -900,7 +900,7 @@ export default function FinancialsPage() {
                   <select
                     value={selectedTenant}
                     onChange={(e) => setSelectedTenant(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   >
                     <option value="">Select Tenant</option>
                     {mockTenants.map(tenant => (
@@ -918,7 +918,7 @@ export default function FinancialsPage() {
                     type="date"
                     value={invoiceDate}
                     onChange={(e) => setInvoiceDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   />
                 </div>
                 <div>
@@ -927,7 +927,7 @@ export default function FinancialsPage() {
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   />
                 </div>
               </div>
@@ -947,7 +947,7 @@ export default function FinancialsPage() {
                           setLineItems(newItems);
                         }}
                         placeholder="Description"
-                        className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                        className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                       />
                       <input
                         type="number"
@@ -958,7 +958,7 @@ export default function FinancialsPage() {
                           setLineItems(newItems);
                         }}
                         placeholder="Amount"
-                        className="w-32 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                        className="w-32 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                       />
                       {lineItems.length > 1 && (
                         <button
@@ -973,7 +973,7 @@ export default function FinancialsPage() {
                 </div>
                 <button
                   onClick={() => setLineItems([...lineItems, { description: '', amount: 0, type: 'other' }])}
-                  className="mt-3 text-indigo-400 hover:text-indigo-300 text-sm flex items-center gap-1"
+                  className="mt-3 text-navy-400 hover:text-navy-300 text-sm flex items-center gap-1"
                 >
                   <Plus className="w-4 h-4" />
                   Add Line Item
@@ -987,7 +987,7 @@ export default function FinancialsPage() {
                   type="number"
                   value={taxRate}
                   onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                 />
               </div>
 
@@ -999,7 +999,7 @@ export default function FinancialsPage() {
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add any notes for the tenant..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 resize-none"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 resize-none"
                 />
               </div>
 
@@ -1015,7 +1015,7 @@ export default function FinancialsPage() {
                 </div>
                 <div className="border-t border-gray-600 pt-2 flex justify-between text-lg font-semibold">
                   <span className="text-white">Total</span>
-                  <span className="text-indigo-400">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0) * (1 + taxRate / 100))}</span>
+                  <span className="text-navy-400">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0) * (1 + taxRate / 100))}</span>
                 </div>
               </div>
             </div>

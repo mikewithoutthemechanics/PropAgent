@@ -69,15 +69,15 @@ function GlassmorphismFilterPanel({
       <div className="flex flex-col lg:flex-row gap-4">
         <div className="flex-1">
           <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-rose-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-r from-gold-500/20 to-rose-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-700/50" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold-700/50" />
               <input
                 type="text"
                 placeholder="Search by name, email, or phone..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur border border-amber-200/50 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400/50 transition-all duration-300"
+                className="w-full pl-10 pr-4 py-2.5 bg-white/60 backdrop-blur border border-slate-200/50 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-gold-500/30 focus:border-gold-400/50 transition-all duration-300"
               />
             </div>
           </div>
@@ -85,11 +85,11 @@ function GlassmorphismFilterPanel({
         <div className="relative group">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="relative flex items-center gap-2">
-            <Filter className="w-4 h-4 text-indigo-700/50 ml-3" />
+            <Filter className="w-4 h-4 text-gold-700/50 ml-3" />
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2.5 bg-white/60 backdrop-blur border border-amber-200/50 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400/50 cursor-pointer transition-all duration-300 appearance-none"
+              className="px-4 py-2.5 bg-white/60 backdrop-blur border border-slate-200/50 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-gold-500/30 focus:border-gold-400/50 cursor-pointer transition-all duration-300 appearance-none"
               style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
             >
               <option value="all">All Status</option>
@@ -155,14 +155,14 @@ function TenantCard({ tenant }: { tenant: typeof mockTenants[0] }) {
       <div className="p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="relative">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-rose-500 flex items-center justify-center text-white font-medium shadow-lg">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gold-500 to-rose-500 flex items-center justify-center text-white font-medium shadow-lg">
               {tenant.avatarUrl ? (
                 <img src={tenant.avatarUrl} alt="" className="w-full h-full rounded-xl object-cover" />
               ) : (
                 `${tenant.firstName[0]}${tenant.lastName[0]}`
               )}
             </div>
-            <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white ${tenant.status === 'active' ? 'bg-green-500' : tenant.status === 'pending' ? 'bg-indigo-500' : 'bg-gray-400'}`} />
+            <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white ${tenant.status === 'active' ? 'bg-green-500' : tenant.status === 'pending' ? 'bg-gold-500' : 'bg-gray-400'}`} />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-medium text-slate-900 truncate">{tenant.firstName} {tenant.lastName}</h3>
@@ -173,7 +173,7 @@ function TenantCard({ tenant }: { tenant: typeof mockTenants[0] }) {
         
         {propertyAddress && (
           <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-            <Building className="w-4 h-4 text-indigo-600/70" />
+            <Building className="w-4 h-4 text-gold-600/70" />
             <span className="truncate">{propertyAddress}</span>
           </div>
         )}
@@ -194,11 +194,11 @@ function TenantCard({ tenant }: { tenant: typeof mockTenants[0] }) {
       </div>
       
       <div className="px-4 py-3 bg-slate-50/50 border-t border-slate-100 flex items-center gap-2">
-        <a href={`mailto:${tenant.email}`} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs text-slate-600 hover:text-indigo-700 hover:bg-amber-50 rounded-lg transition-all duration-200">
+        <a href={`mailto:${tenant.email}`} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs text-slate-600 hover:text-gold-700 hover:bg-gold-50 rounded-lg transition-all duration-200">
           <Mail className="w-3.5 h-3.5" />
           <span className="truncate">{tenant.email}</span>
         </a>
-        <a href={`tel:${tenant.phone}`} className="flex items-center justify-center p-1.5 text-slate-500 hover:text-indigo-700 hover:bg-amber-50 rounded-lg transition-all duration-200">
+        <a href={`tel:${tenant.phone}`} className="flex items-center justify-center p-1.5 text-slate-500 hover:text-gold-700 hover:bg-gold-50 rounded-lg transition-all duration-200">
           <Phone className="w-3.5 h-3.5" />
         </a>
       </div>
@@ -217,14 +217,14 @@ function TableRow({ tenant, index }: { tenant: typeof mockTenants[0]; index: num
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-400 to-rose-400 flex items-center justify-center text-white text-sm font-medium shadow-md">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gold-400 to-rose-400 flex items-center justify-center text-white text-sm font-medium shadow-md">
               {tenant.avatarUrl ? (
                 <img src={tenant.avatarUrl} alt="" className="w-full h-full rounded-lg object-cover" />
               ) : (
                 `${tenant.firstName[0]}${tenant.lastName[0]}`
               )}
             </div>
-            <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${tenant.status === 'active' ? 'bg-green-500' : tenant.status === 'pending' ? 'bg-indigo-500' : 'bg-gray-400'}`} />
+            <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${tenant.status === 'active' ? 'bg-green-500' : tenant.status === 'pending' ? 'bg-gold-500' : 'bg-gray-400'}`} />
           </div>
           <div>
             <p className="font-medium text-slate-900">{tenant.firstName} {tenant.lastName}</p>
@@ -235,7 +235,7 @@ function TableRow({ tenant, index }: { tenant: typeof mockTenants[0]; index: num
       <td className="px-6 py-4">
         {propertyAddress ? (
           <div className="flex items-center gap-2 text-sm">
-            <Building className="w-4 h-4 text-indigo-600/70" />
+            <Building className="w-4 h-4 text-gold-600/70" />
             <span className="text-slate-700">{propertyAddress}</span>
           </div>
         ) : (
@@ -245,7 +245,7 @@ function TableRow({ tenant, index }: { tenant: typeof mockTenants[0]; index: num
       <td className="px-6 py-4">
         {tenant.leaseStart && tenant.leaseEnd ? (
           <div className="flex items-center gap-2 text-sm text-slate-600">
-            <Calendar className="w-4 h-4 text-indigo-600/50" />
+            <Calendar className="w-4 h-4 text-gold-600/50" />
             <span>{formatDate(tenant.leaseStart)} - {formatDate(tenant.leaseEnd)}</span>
           </div>
         ) : (
@@ -264,19 +264,19 @@ function TableRow({ tenant, index }: { tenant: typeof mockTenants[0]; index: num
       </td>
       <td className="px-6 py-4">
         <div className="space-y-1.5">
-          <a href={`mailto:${tenant.email}`} className="flex items-center gap-2 text-sm text-slate-600 hover:text-indigo-700 transition-colors">
+          <a href={`mailto:${tenant.email}`} className="flex items-center gap-2 text-sm text-slate-600 hover:text-gold-700 transition-colors">
             <Mail className="w-4 h-4" />
             <span className="truncate max-w-[200px]">{tenant.email}</span>
           </a>
-          <a href={`tel:${tenant.phone}`} className="flex items-center gap-2 text-sm text-slate-600 hover:text-indigo-700 transition-colors">
+          <a href={`tel:${tenant.phone}`} className="flex items-center gap-2 text-sm text-slate-600 hover:text-gold-700 transition-colors">
             <Phone className="w-4 h-4" />
             {tenant.phone}
           </a>
         </div>
       </td>
       <td className="px-6 py-4 text-right">
-        <button className="p-2 hover:bg-slate-100 rounded-lg transition-all duration-200 group-hover:bg-amber-50 group-hover:text-indigo-700">
-          <MoreVertical className="w-4 h-4 text-slate-400 group-hover:text-indigo-700" />
+        <button className="p-2 hover:bg-slate-100 rounded-lg transition-all duration-200 group-hover:bg-gold-50 group-hover:text-gold-700">
+          <MoreVertical className="w-4 h-4 text-slate-400 group-hover:text-gold-700" />
         </button>
       </td>
     </tr>
@@ -301,12 +301,12 @@ function AnimatedEmptyState({ searchQuery, filterStatus }: { searchQuery: string
         <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-rose-100 rounded-full animate-pulse" />
         <div className="relative w-full h-full bg-gradient-to-br from-amber-200 to-rose-200 rounded-full flex items-center justify-center">
           {hasFilters ? (
-            <Search className="w-8 h-8 text-indigo-600" />
+            <Search className="w-8 h-8 text-gold-600" />
           ) : (
-            <User className="w-8 h-8 text-indigo-600" />
+            <User className="w-8 h-8 text-gold-600" />
           )}
         </div>
-        <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-indigo-400 to-rose-400 rounded-full flex items-center justify-center animate-bounce">
+        <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-gold-400 to-rose-400 rounded-full flex items-center justify-center animate-bounce">
           <Sparkles className="w-3 h-3 text-white" />
         </div>
       </div>
@@ -326,8 +326,8 @@ function AnimatedEmptyState({ searchQuery, filterStatus }: { searchQuery: string
 function FloatingActionButton({ onClick }: { onClick: () => void }) {
   return (
     <button onClick={onClick} className="fixed bottom-6 right-6 z-50 group cursor-pointer" aria-label="Add new tenant">
-      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
-      <div className="relative w-14 h-14 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110">
+      <div className="absolute inset-0 bg-gradient-to-r from-gold-500 to-rose-500 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
+      <div className="relative w-14 h-14 bg-gradient-to-r from-gold-500 to-rose-500 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110">
         <Plus className="w-6 h-6 text-white" />
       </div>
     </button>
@@ -337,7 +337,7 @@ function FloatingActionButton({ onClick }: { onClick: () => void }) {
 function ParallaxBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-      <div className="absolute top-20 left-10 w-64 h-64 bg-amber-200/10 rounded-full blur-3xl animate-float" style={{ animationDuration: '8s' }} />
+      <div className="absolute top-20 left-10 w-64 h-64 bg-gold-200/10 rounded-full blur-3xl animate-float" style={{ animationDuration: '8s' }} />
       <div className="absolute top-40 right-20 w-48 h-48 bg-rose-200/10 rounded-full blur-3xl animate-float" style={{ animationDuration: '10s', animationDelay: '2s' }} />
       <div className="absolute bottom-40 left-1/3 w-40 h-40 bg-blue-200/10 rounded-full blur-3xl animate-float" style={{ animationDuration: '12s', animationDelay: '1s' }} />
     </div>
@@ -518,7 +518,7 @@ export default function TenantsPage() {
                       type="text" 
                       value={newTenant.firstName}
                       onChange={(e) => setNewTenant({...newTenant, firstName: e.target.value})}
-                      className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                       placeholder="John"
                     />
                   </div>
@@ -528,7 +528,7 @@ export default function TenantsPage() {
                       type="text" 
                       value={newTenant.lastName}
                       onChange={(e) => setNewTenant({...newTenant, lastName: e.target.value})}
-                      className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                       placeholder="Doe"
                     />
                   </div>
@@ -540,7 +540,7 @@ export default function TenantsPage() {
                     type="email" 
                     value={newTenant.email}
                     onChange={(e) => setNewTenant({...newTenant, email: e.target.value})}
-                    className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                     placeholder="tenant@email.com"
                   />
                 </div>
@@ -551,7 +551,7 @@ export default function TenantsPage() {
                     type="tel" 
                     value={newTenant.phone}
                     onChange={(e) => setNewTenant({...newTenant, phone: e.target.value})}
-                    className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                     placeholder="+27831234567"
                   />
                 </div>
@@ -561,7 +561,7 @@ export default function TenantsPage() {
                   <select 
                     value={newTenant.propertyId}
                     onChange={(e) => setNewTenant({...newTenant, propertyId: e.target.value})}
-                    className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                    className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 cursor-pointer"
                     style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
                   >
                     <option value="" className="bg-gray-900">Select a property...</option>
@@ -578,7 +578,7 @@ export default function TenantsPage() {
                       type="date" 
                       value={newTenant.leaseStart}
                       onChange={(e) => setNewTenant({...newTenant, leaseStart: e.target.value})}
-                      className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 [&::-webkit-calendar-picker-indicator]:invert"
+                      className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 [&::-webkit-calendar-picker-indicator]:invert"
                     />
                   </div>
                   <div>
@@ -587,7 +587,7 @@ export default function TenantsPage() {
                       type="date" 
                       value={newTenant.leaseEnd}
                       onChange={(e) => setNewTenant({...newTenant, leaseEnd: e.target.value})}
-                      className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 [&::-webkit-calendar-picker-indicator]:invert"
+                      className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 [&::-webkit-calendar-picker-indicator]:invert"
                     />
                   </div>
                 </div>
@@ -598,7 +598,7 @@ export default function TenantsPage() {
                     type="number" 
                     value={newTenant.rentAmount}
                     onChange={(e) => setNewTenant({...newTenant, rentAmount: e.target.value})}
-                    className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                     placeholder="15000"
                   />
                 </div>
@@ -613,7 +613,7 @@ export default function TenantsPage() {
                 </button>
                 <button 
                   onClick={handleAddTenant}
-                  className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-indigo-500/25 transition-all cursor-pointer"
+                  className="px-6 py-2.5 bg-gradient-to-r from-gold-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-gold-500/25 transition-all cursor-pointer"
                 >
                   <Plus className="w-4 h-4 inline mr-1.5" />
                   Add Tenant

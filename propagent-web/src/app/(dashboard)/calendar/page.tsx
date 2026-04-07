@@ -58,8 +58,8 @@ function ViewingCard({ viewing }: { viewing: PropertyViewing }) {
     <div className="glass-card hover-3d-card p-4 rounded-xl">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500/20 to-yellow-500/20 flex items-center justify-center flex-shrink-0 border border-indigo-500/30">
-            <Home className="w-5 h-5 text-indigo-400" />
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-navy-500/20 to-gold-500/20 flex items-center justify-center flex-shrink-0 border border-navy-500/30">
+            <Home className="w-5 h-5 text-navy-400" />
           </div>
           <div className="min-w-0">
             <p className="font-medium text-white text-sm">{viewing.clientName}</p>
@@ -132,7 +132,7 @@ function StatusFilter({
       className={cn(
         "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover-3d",
         active 
-          ? "bg-gradient-to-r from-indigo-500 to-yellow-500 text-white shadow-lg glow-gold" 
+          ? "bg-gradient-to-r from-navy-500 to-gold-500 text-white shadow-lg glow-gold" 
           : "glass text-white/80 hover:bg-white/10"
       )}
     >
@@ -253,7 +253,7 @@ export default function CalendarPage() {
       {/* Animated Gradient Header */}
       <div className="gradient-header rounded-xl p-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 left-0 w-32 h-32 bg-indigo-400 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-0 left-0 w-32 h-32 bg-navy-400 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-0 right-0 w-40 h-40 bg-yellow-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
         <div className="relative z-10">
@@ -305,7 +305,7 @@ export default function CalendarPage() {
         </div>
         <div className="glass-card hover-3d-card p-4 rounded-xl">
           <p className="text-xs text-white/60 font-medium">Pending</p>
-          <p className="text-2xl font-semibold text-indigo-400 mt-1">{stats.pending}</p>
+          <p className="text-2xl font-semibold text-navy-400 mt-1">{stats.pending}</p>
         </div>
       </div>
       
@@ -408,13 +408,13 @@ export default function CalendarPage() {
                   onClick={() => handleDateClick(day)}
                   className={cn(
                     "p-3 min-h-[90px] text-left border-b border-r border-white/5 hover:bg-white/10 transition-all hover-3d",
-                    isSelected && "bg-indigo-500/20 border-indigo-500/30",
-                    isToday && !isSelected && "bg-indigo-500/10"
+                    isSelected && "bg-navy-500/20 border-navy-500/30",
+                    isToday && !isSelected && "bg-navy-500/10"
                   )}
                 >
                   <div className={cn(
                     "text-base font-medium",
-                    isSelected ? "text-indigo-400" : "text-white"
+                    isSelected ? "text-navy-400" : "text-white"
                   )}>
                     {day}
                   </div>
@@ -476,8 +476,8 @@ export default function CalendarPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 glass rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500/20 to-yellow-500/20 flex items-center justify-center border border-indigo-500/30">
-                    <CalendarIcon className="w-5 h-5 text-indigo-400" />
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-navy-500/20 to-gold-500/20 flex items-center justify-center border border-navy-500/30">
+                    <CalendarIcon className="w-5 h-5 text-navy-400" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white">Google Calendar</p>
@@ -491,7 +491,7 @@ export default function CalendarPage() {
               
               <div className="flex items-center justify-between text-xs text-white/50">
                 <span>Last synced: {sampleCalendarSyncConfig.lastSyncedAt ? new Date(sampleCalendarSyncConfig.lastSyncedAt).toLocaleString('en-ZA') : 'Never'}</span>
-                <button className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+                <button className="text-navy-400 hover:text-navy-300 flex items-center gap-1">
                   <ExternalLink className="w-3 h-3" />
                   Sync now
                 </button>
@@ -504,15 +504,15 @@ export default function CalendarPage() {
             <h3 className="font-semibold text-white text-lg mb-4">Quick Actions</h3>
             <div className="space-y-2">
               <button className="w-full flex items-center gap-3 p-3 text-sm text-white/80 hover:bg-white/10 rounded-lg transition-all hover-3d text-left">
-                <Settings className="w-4 h-4 text-indigo-400" />
+                <Settings className="w-4 h-4 text-navy-400" />
                 Availability Settings
               </button>
               <button className="w-full flex items-center gap-3 p-3 text-sm text-white/80 hover:bg-white/10 rounded-lg transition-all hover-3d text-left">
-                <Bell className="w-4 h-4 text-indigo-400" />
+                <Bell className="w-4 h-4 text-navy-400" />
                 Reminder Templates
               </button>
               <button className="w-full flex items-center gap-3 p-3 text-sm text-white/80 hover:bg-white/10 rounded-lg transition-all hover-3d text-left">
-                <CalendarIcon className="w-4 h-4 text-indigo-400" />
+                <CalendarIcon className="w-4 h-4 text-navy-400" />
                 Block Time Slots
               </button>
             </div>
@@ -581,7 +581,7 @@ export default function CalendarPage() {
                   Property
                 </label>
                 <select 
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.property}
                   onChange={(e) => setNewViewingForm({...newViewingForm, property: e.target.value})}
                 >
@@ -599,7 +599,7 @@ export default function CalendarPage() {
                 <input 
                   type="text" 
                   placeholder="Enter client name"
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.clientName}
                   onChange={(e) => setNewViewingForm({...newViewingForm, clientName: e.target.value})}
                 />
@@ -612,7 +612,7 @@ export default function CalendarPage() {
                   </label>
                   <input 
                     type="date" 
-                    className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     value={newViewingForm.date}
                     onChange={(e) => setNewViewingForm({...newViewingForm, date: e.target.value})}
                   />
@@ -623,7 +623,7 @@ export default function CalendarPage() {
                   </label>
                   <input 
                     type="time" 
-                    className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     value={newViewingForm.time}
                     onChange={(e) => setNewViewingForm({...newViewingForm, time: e.target.value})}
                   />
@@ -637,7 +637,7 @@ export default function CalendarPage() {
                 <input 
                   type="email" 
                   placeholder="client@email.com"
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.email}
                   onChange={(e) => setNewViewingForm({...newViewingForm, email: e.target.value})}
                 />
@@ -650,7 +650,7 @@ export default function CalendarPage() {
                 <input 
                   type="tel" 
                   placeholder="+27831234567"
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.phone}
                   onChange={(e) => setNewViewingForm({...newViewingForm, phone: e.target.value})}
                 />
@@ -663,7 +663,7 @@ export default function CalendarPage() {
                 <textarea 
                   rows={3}
                   placeholder="Any special instructions..."
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.notes}
                   onChange={(e) => setNewViewingForm({...newViewingForm, notes: e.target.value})}
                 />

@@ -318,7 +318,7 @@ PropAgent Property Valuation System
   };
 
   const getTrendColor = (change: number) => {
-    if (change > 0) return 'text-emerald-400';
+    if (change > 0) return 'text-gold-400';
     if (change < 0) return 'text-red-400';
     return 'text-slate-500';
   };
@@ -349,15 +349,15 @@ PropAgent Property Valuation System
               <Button 
                 variant="outline" 
                 size="sm"
-                className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10"
+                className="border-gold-500/30 text-gold-400 hover:bg-gold-500/10"
                 onClick={() => setShowHistory(!showHistory)}
               >
                 <FileText className="w-4 h-4 mr-1" />
                 History ({valuationHistory.length})
               </Button>
             )}
-            <Badge className="info-banner-premium text-indigo-400 border-indigo-500/30">Lightstone Integration</Badge>
-            <Badge className="info-banner-premium text-indigo-400 border-indigo-500/30">Windeed Integration</Badge>
+            <Badge className="info-banner-premium text-gold-400 border-gold-500/30">Lightstone Integration</Badge>
+            <Badge className="info-banner-premium text-gold-400 border-gold-500/30">Windeed Integration</Badge>
           </div>
         </div>
       </div>
@@ -370,7 +370,7 @@ PropAgent Property Valuation System
             {valuationHistory.map((saved) => (
               <div 
                 key={saved.id}
-                className="flex items-center justify-between p-3 bg-dark-800/50 rounded-lg border border-dark-700 hover:border-indigo-500/30 cursor-pointer"
+                className="flex items-center justify-between p-3 bg-dark-800/50 rounded-lg border border-dark-700 hover:border-gold-500/30 cursor-pointer"
                 onClick={() => handleLoadFromHistory(saved)}
               >
                 <div>
@@ -380,7 +380,7 @@ PropAgent Property Valuation System
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-indigo-400">{formatCurrency(saved.estimatedValue)}</p>
+                  <p className="text-sm font-bold text-gold-400">{formatCurrency(saved.estimatedValue)}</p>
                   <p className="text-xs text-slate-500">{saved.confidenceScore}% confidence</p>
                 </div>
               </div>
@@ -401,7 +401,7 @@ PropAgent Property Valuation System
                   <Button 
                     variant="outline"
                     size="sm"
-                    className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10"
+                    className="border-gold-500/30 text-gold-400 hover:bg-gold-500/10"
                     onClick={handleSaveValuation}
                   >
                     <Save className="w-4 h-4 mr-1" />
@@ -410,7 +410,7 @@ PropAgent Property Valuation System
                   <Button 
                     variant="outline"
                     size="sm"
-                    className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10"
+                    className="border-gold-500/30 text-gold-400 hover:bg-gold-500/10"
                     onClick={handleGenerateReport}
                   >
                     <Printer className="w-4 h-4 mr-1" />
@@ -540,7 +540,7 @@ PropAgent Property Valuation System
                 type="checkbox" 
                 checked={formData.pool}
                 onChange={(e) => handleInputChange('pool', e.target.checked)}
-                className="w-4 h-4 rounded border-dark-500 text-indigo-500 focus:ring-indigo-500 bg-dark-800"
+                className="w-4 h-4 rounded border-dark-500 text-gold-500 focus:ring-gold-500 bg-dark-800"
               />
               <span className="text-sm text-slate-400">Pool</span>
             </label>
@@ -549,7 +549,7 @@ PropAgent Property Valuation System
                 type="checkbox" 
                 checked={formData.garden}
                 onChange={(e) => handleInputChange('garden', e.target.checked)}
-                className="w-4 h-4 rounded border-dark-500 text-indigo-500 focus:ring-indigo-500 bg-dark-800"
+                className="w-4 h-4 rounded border-dark-500 text-gold-500 focus:ring-gold-500 bg-dark-800"
               />
               <span className="text-sm text-slate-400">Garden</span>
             </label>
@@ -573,8 +573,8 @@ PropAgent Property Valuation System
                     {formatCurrency(valuation.valueRange.low)} - {formatCurrency(valuation.valueRange.high)}
                   </p>
                 </div>
-                <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center border border-indigo-500/30">
-                  <Calculator className="w-6 h-6 text-indigo-400" />
+                <div className="w-12 h-12 bg-gold-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
+                  <Calculator className="w-6 h-6 text-gold-400" />
                 </div>
               </div>
             </Card>
@@ -617,8 +617,8 @@ PropAgent Property Valuation System
                     <p className="text-2xl font-bold text-gradient-gold mt-1">{rentalYield.grossYield}%</p>
                     <p className="text-xs text-slate-500 mt-1">Net: {rentalYield.netYield}%</p>
                   </div>
-                  <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center border border-emerald-500/30">
-                    <TrendingUp className="w-6 h-6 text-emerald-400" />
+                  <div className="w-12 h-12 bg-gold-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
+                    <TrendingUp className="w-6 h-6 text-gold-400" />
                   </div>
                 </div>
               </Card>
@@ -627,7 +627,7 @@ PropAgent Property Valuation System
 
           {/* Tabs - Glass Card */}
           <Card className="glass-card">
-            <div className="border-b border-indigo-500/20 -mx-5 px-5 mb-4">
+            <div className="border-b border-gold-500/20 -mx-5 px-5 mb-4">
               <div className="flex gap-1 -mb-px">
                 {[
                   { id: 'avm', label: 'Valuation Details' },
@@ -640,8 +640,8 @@ PropAgent Property Valuation System
                     onClick={() => setActiveTab(tab.id as any)}
                     className={`px-4 py-3 text-sm font-medium border-b-2 transition-all ${
                       activeTab === tab.id
-                        ? 'border-indigo-500 text-gradient-gold'
-                        : 'border-transparent text-slate-400 hover:text-indigo-400'
+                        ? 'border-gold-500 text-gradient-gold'
+                        : 'border-transparent text-slate-400 hover:text-gold-400'
                     }`}
                   >
                     {tab.label}
@@ -663,7 +663,7 @@ PropAgent Property Valuation System
                           <p className="font-medium text-white">{factor.name}</p>
                           <p className="text-sm text-slate-400">{factor.description}</p>
                         </div>
-                        <div className={`text-sm font-medium ${factor.impact >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <div className={`text-sm font-medium ${factor.impact >= 0 ? 'text-gold-400' : 'text-red-400'}`}>
                           {factor.impact > 0 ? '+' : ''}{factor.impact.toFixed(1)}%
                         </div>
                       </div>
@@ -675,19 +675,19 @@ PropAgent Property Valuation System
                 {(() => {
                   const cma = generateCMASubject(formData, valuation);
                   return (
-                    <div className="p-4 bg-dark-800/50 rounded-lg border border-indigo-500/20">
+                    <div className="p-4 bg-dark-800/50 rounded-lg border border-gold-500/20">
                       <h4 className="font-medium text-white mb-2 text-gradient-gold">Comparative Market Analysis</h4>
                       <p className="text-sm text-slate-400 mb-4">{cma.summary}</p>
                       <div className="mb-3">
                         <span className="text-sm font-medium text-slate-300">Market Conditions: </span>
-                        <span className="text-sm text-indigo-400">{cma.marketConditions}</span>
+                        <span className="text-sm text-gold-400">{cma.marketConditions}</span>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-slate-300 mb-2">Recommendations:</p>
                         <ul className="text-sm text-slate-400 space-y-1">
                           {cma.recommendations.map((rec, i) => (
                             <li key={i} className="flex items-start gap-2">
-                              <span className="text-indigo-400 mt-1">•</span>
+                              <span className="text-gold-400 mt-1">•</span>
                               {rec}
                             </li>
                           ))}
@@ -716,8 +716,8 @@ PropAgent Property Valuation System
                       className="w-full flex items-center justify-between p-4 hover:bg-dark-800/50 transition-colors"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-indigo-500/10 rounded-lg flex items-center justify-center border border-indigo-500/30">
-                          <Home className="w-5 h-5 text-indigo-400" />
+                        <div className="w-10 h-10 bg-gold-500/10 rounded-lg flex items-center justify-center border border-gold-500/30">
+                          <Home className="w-5 h-5 text-gold-400" />
                         </div>
                         <div className="text-left">
                           <p className="font-medium text-white">{comp.address}</p>
@@ -732,9 +732,9 @@ PropAgent Property Valuation System
                           <p className="text-sm text-slate-500">{formatCurrency(comp.pricePerSqm)}/sqm</p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-indigo-400">{comp.similarity}% match</span>
+                          <span className="text-sm text-gold-400">{comp.similarity}% match</span>
                           {expandedComparables.has(comp.id) ? (
-                            <ChevronUp className="w-4 h-4 text-indigo-400" />
+                            <ChevronUp className="w-4 h-4 text-gold-400" />
                           ) : (
                             <ChevronDown className="w-4 h-4 text-slate-500" />
                           )}
@@ -756,7 +756,7 @@ PropAgent Property Valuation System
                           </div>
                           <div>
                             <p className="text-xs text-slate-500">Similarity Score</p>
-                            <p className="text-sm font-medium text-indigo-400">{comp.similarity}%</p>
+                            <p className="text-sm font-medium text-gold-400">{comp.similarity}%</p>
                           </div>
                         </div>
                       </div>
@@ -778,7 +778,7 @@ PropAgent Property Valuation System
                     return (
                       <div key={index} className="flex-1 flex flex-col items-center gap-2">
                         <div 
-                          className={`w-full rounded-t ${isCurrent ? 'bg-gradient-to-t from-indigo-500 to-indigo-400' : 'bg-dark-600'}`}
+                          className={`w-full rounded-t ${isCurrent ? 'bg-gradient-to-t from-gold-500 to-gold-400' : 'bg-dark-600'}`}
                           style={{ height: `${height}%`, minHeight: '20px' }}
                         />
                         <span className="text-xs text-slate-500">
@@ -824,7 +824,7 @@ PropAgent Property Valuation System
                   </div>
                   <div className="text-center p-4 bg-dark-800/50 rounded-lg border border-dark-700">
                     <p className="text-xs text-slate-500 mb-1">High/Low</p>
-                    <p className="text-lg font-bold text-indigo-400">
+                    <p className="text-lg font-bold text-gold-400">
                       {Math.max(...valuation.trends.map(t => t.change)).toFixed(1)}% / {Math.min(...valuation.trends.map(t => t.change)).toFixed(1)}%
                     </p>
                   </div>
@@ -841,8 +841,8 @@ PropAgent Property Valuation System
                       <div key={factor.id} className="p-4 border border-dark-700 rounded-lg glass-card hover-3d-card transition-all">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-indigo-500/10 rounded-lg flex items-center justify-center border border-indigo-500/30">
-                              <Icon className="w-5 h-5 text-indigo-400" />
+                            <div className="w-10 h-10 bg-gold-500/10 rounded-lg flex items-center justify-center border border-gold-500/30">
+                              <Icon className="w-5 h-5 text-gold-400" />
                             </div>
                             <div>
                               <p className="font-medium text-white">{factor.name}</p>
@@ -859,13 +859,13 @@ PropAgent Property Valuation System
                           </div>
                           <div className="h-2 bg-dark-700 rounded-full overflow-hidden">
                             <div 
-                              className="h-full bg-gradient-to-r from-indigo-600 to-indigo-400 rounded-full"
+                              className="h-full bg-gradient-to-r from-navy-600 to-gold-400 rounded-full"
                               style={{ width: `${factor.score * 10}%` }}
                             />
                           </div>
                         </div>
                         
-                        <p className={`text-sm font-medium ${factor.impact >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <p className={`text-sm font-medium ${factor.impact >= 0 ? 'text-gold-400' : 'text-red-400'}`}>
                           {factor.impact > 0 ? '+' : ''}{factor.impact.toFixed(1)}% value impact
                         </p>
                       </div>
@@ -878,7 +878,7 @@ PropAgent Property Valuation System
                   <h4 className="font-medium text-white mb-2 text-gradient-gold">Neighborhood Analysis Summary</h4>
                   <p className="text-sm text-slate-400">
                     The {formData.suburb} area in {formData.city} shows a combined neighborhood score of{' '}
-                    <span className="font-medium text-indigo-400">
+                    <span className="font-medium text-gold-400">
                       {(neighborhoodFactors.reduce((sum, f) => sum + f.score, 0) / neighborhoodFactors.length).toFixed(1)}/10
                     </span>
                     . The strongest factors are{' '}
@@ -902,8 +902,8 @@ PropAgent Property Valuation System
       {!valuation && !isCalculating && (
         <Card className="p-12 glass-card hover-3d-card">
           <div className="text-center">
-            <div className="w-16 h-16 bg-indigo-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-indigo-500/30">
-              <Calculator className="w-8 h-8 text-indigo-400" />
+            <div className="w-16 h-16 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-gold-500/30">
+              <Calculator className="w-8 h-8 text-gold-400" />
             </div>
             <h3 className="text-lg font-medium text-white mb-2">No Valuation Yet</h3>
             <p className="text-slate-400 max-w-md mx-auto">

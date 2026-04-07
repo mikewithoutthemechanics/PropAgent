@@ -63,7 +63,7 @@ function AnimatedGradientHeader() {
             Tenant Matching
           </h1>
           <p className="text-dark-200 mt-2 flex items-center gap-2">
-            <Users className="w-4 h-4 text-indigo-400" />
+            <Users className="w-4 h-4 text-gold-400" />
             {sampleCriteria.length} active tenant criteria
             <span className="mx-2 text-dark-400">•</span>
             <span className="text-green-400">POPIA compliant</span>
@@ -86,7 +86,7 @@ function AnimatedGradientHeader() {
       </div>
       
       {/* Bottom decorative line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
     </div>
   );
 }
@@ -125,7 +125,7 @@ function CriteriaCard({
         "w-full p-4 rounded-xl text-left transition-all duration-300",
         isSelected
           ? "matching-selection"
-          : "glass-light hover:bg-dark-600/50 hover:border-indigo-500/30"
+          : "glass-light hover:bg-dark-600/50 hover:border-gold-500/30"
       )}
       style={{ animationDelay: `${index * 100}ms` }}
     >
@@ -135,7 +135,7 @@ function CriteriaCard({
             R{criteria.budget.min.toLocaleString()} - R{criteria.budget.max.toLocaleString()}
           </p>
           <p className="text-dark-300 text-sm mt-1.5 flex items-center gap-1">
-            <MapPin className="w-3.5 h-3.5 text-indigo-400" />
+            <MapPin className="w-3.5 h-3.5 text-gold-400" />
             {criteria.location.suburb || criteria.location.city}, {criteria.location.province}
           </p>
           <div className="flex items-center gap-2 mt-3">
@@ -148,14 +148,14 @@ function CriteriaCard({
                 criteria.urgency === 'immediate' 
                   ? "bg-red-500/20 text-red-400 border-red-500/30" 
                   : criteria.urgency === '30_days'
-                  ? "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
+                  ? "bg-gold-500/20 text-gold-400 border-gold-500/30"
                   : "bg-dark-700/80 text-dark-300 border-dark-500/50"
               )}
             >
               {criteria.urgency.replace('_', ' ')}
             </Badge>
             {criteria.hasPets && (
-              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
+              <Badge className="bg-gold-500/20 text-gold-400 border-gold-500/30 text-xs">
                 Pets OK
               </Badge>
             )}
@@ -164,7 +164,7 @@ function CriteriaCard({
         
         {/* Selection indicator */}
         {isSelected && (
-          <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center animate-pulse-glow">
+          <div className="w-6 h-6 rounded-full bg-gold-500 flex items-center justify-center animate-pulse-glow">
             <Sparkles className="w-3.5 h-3.5 text-dark-900" />
           </div>
         )}
@@ -193,7 +193,7 @@ function MatchCard({
 
   const getScoreGradient = (score: number) => {
     if (score >= 80) return "from-green-400 to-green-500";
-    if (score >= 70) return "from-indigo-400 to-indigo-500";
+    return "from-gold-400 to-gold-500";
     return "from-gray-400 to-gray-500";
   };
 
@@ -205,7 +205,7 @@ function MatchCard({
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <Home className="w-4 h-4 text-indigo-400" />
+            <Home className="w-4 h-4 text-gold-400" />
             <p className="font-medium text-dark-100 group-hover:text-gradient-gold transition-colors">
               {match.propertyTitle}
             </p>
@@ -214,7 +214,7 @@ function MatchCard({
             {match.matchReasons.map((reason, i) => (
               <Badge 
                 key={i} 
-                className="bg-indigo-500/15 text-indigo-300 border-indigo-500/30 text-xs backdrop-blur-sm"
+                className="bg-gold-500/15 text-gold-300 border-gold-500/30 text-xs backdrop-blur-sm"
               >
                 <Sparkles className="w-3 h-3 mr-1" />
                 {reason}
@@ -260,8 +260,8 @@ function FloatingDecorations() {
   return (
     <>
       {/* Corner decorations */}
-      <div className="fixed top-20 right-20 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="fixed bottom-40 left-10 w-48 h-48 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed top-20 right-20 w-64 h-64 bg-gold-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed bottom-40 left-10 w-48 h-48 bg-gold-500/5 rounded-full blur-3xl pointer-events-none" />
       
       {/* Grid pattern overlay */}
       <div 
@@ -331,7 +331,7 @@ function EmptyState({ type }: { type: 'select' | 'no-results' }) {
           <Search className="w-14 h-14 text-dark-400 mx-auto" />
         )}
         {/* Glow effect */}
-        <div className="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full" />
+        <div className="absolute inset-0 bg-gold-500/20 blur-2xl rounded-full" />
       </div>
       <p className="text-dark-300 text-lg">
         {type === 'select' ? 'Select criteria to view matches' : 'No matching properties found'}
@@ -422,8 +422,8 @@ export default function TenantMatchingPage() {
           <ScrollAnimationWrapper className="lg:col-span-1" delay={100}>
             <GlassCard className="p-5">
               <div className="flex items-center gap-3 mb-5 pb-4 border-b border-dark-600/50">
-                <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                  <Target className="w-5 h-5 text-indigo-400" />
+                <div className="w-10 h-10 rounded-lg bg-gold-500/20 flex items-center justify-center">
+                  <Target className="w-5 h-5 text-gold-400" />
                 </div>
                 <h2 className="text-lg font-semibold text-gradient-gold font-serif">
                   Active Criteria
@@ -449,14 +449,14 @@ export default function TenantMatchingPage() {
             <GlassCard className="p-5">
               <div className="flex items-center justify-between mb-5 pb-4 border-b border-dark-600/50">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-indigo-400" />
+                  <div className="w-10 h-10 rounded-lg bg-gold-500/20 flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-gold-400" />
                   </div>
                   <h2 className="text-lg font-semibold text-gradient-gold font-serif">
                     Property Matches
                   </h2>
                   {selectedCriteriaData && (
-                    <Badge className="bg-indigo-500/20 text-indigo-300 border-indigo-500/30">
+                    <Badge className="bg-gold-500/20 text-gold-300 border-gold-500/30">
                       {matches.length} found
                     </Badge>
                   )}
@@ -469,8 +469,8 @@ export default function TenantMatchingPage() {
                       <span className="w-2 h-2 rounded-full bg-green-400" />
                       {matches.filter(m => m.matchScore >= 80).length} excellent
                     </div>
-                    <div className="flex items-center gap-1.5 text-indigo-400">
-                      <span className="w-2 h-2 rounded-full bg-indigo-400" />
+                    <div className="flex items-center gap-1.5 text-gold-400">
+                      <span className="w-2 h-2 rounded-full bg-gold-400" />
                       {matches.filter(m => m.matchScore >= 70 && m.matchScore < 80).length} good
                     </div>
                   </div>
@@ -498,8 +498,8 @@ export default function TenantMatchingPage() {
         <ScrollAnimationWrapper className="mt-6" delay={300}>
           <div className="info-banner-premium rounded-xl p-5">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-indigo-400 font-bold text-lg">i</span>
+              <div className="w-12 h-12 rounded-xl bg-gold-500/20 flex items-center justify-center flex-shrink-0">
+                <span className="text-gold-400 font-bold text-lg">i</span>
               </div>
               <div>
                 <p className="font-semibold text-gradient-gold text-lg">
@@ -558,7 +558,7 @@ export default function TenantMatchingPage() {
                     value={newCriteria.name}
                     onChange={(e) => setNewCriteria({ ...newCriteria, name: e.target.value })}
                     placeholder="e.g., Client A - Umhlanga"
-                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
                   />
                 </div>
                 
@@ -571,7 +571,7 @@ export default function TenantMatchingPage() {
                     id="criteriaType"
                     value={newCriteria.type}
                     onChange={(e) => setNewCriteria({ ...newCriteria, type: e.target.value })}
-                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
                   >
                     <option value="Tenant">Tenant</option>
                     <option value="Landlord">Landlord</option>
@@ -590,7 +590,7 @@ export default function TenantMatchingPage() {
                       value={newCriteria.minRent}
                       onChange={(e) => setNewCriteria({ ...newCriteria, minRent: e.target.value })}
                       placeholder="8000"
-                      className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                      className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
                     />
                   </div>
                   <div>
@@ -603,7 +603,7 @@ export default function TenantMatchingPage() {
                       value={newCriteria.maxRent}
                       onChange={(e) => setNewCriteria({ ...newCriteria, maxRent: e.target.value })}
                       placeholder="15000"
-                      className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                      className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
                     />
                   </div>
                 </div>
@@ -619,7 +619,7 @@ export default function TenantMatchingPage() {
                     value={newCriteria.minCredit}
                     onChange={(e) => setNewCriteria({ ...newCriteria, minCredit: e.target.value })}
                     placeholder="650"
-                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
                   />
                 </div>
                 
@@ -634,7 +634,7 @@ export default function TenantMatchingPage() {
                     value={newCriteria.location}
                     onChange={(e) => setNewCriteria({ ...newCriteria, location: e.target.value })}
                     placeholder="e.g., Umhlanga"
-                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
                   />
                 </div>
               </div>
