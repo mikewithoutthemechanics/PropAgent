@@ -21,6 +21,7 @@ import {
   FileText,
   Calendar,
   Sparkles,
+  Share2,
   Menu,
   X
 } from 'lucide-react';
@@ -30,6 +31,7 @@ import { useAuth } from '@/lib/auth';
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/properties', label: 'Properties', icon: Building2 },
+  { href: '/syndication', label: 'Syndication', icon: Share2 },
   { href: '/rent-ai', label: 'Rent AI', icon: Sparkles },
   { href: '/calendar', label: 'Calendar', icon: Calendar },
   { href: '/valuations', label: 'Valuations', icon: Calculator },
