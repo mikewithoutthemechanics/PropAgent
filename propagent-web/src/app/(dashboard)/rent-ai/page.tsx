@@ -96,7 +96,7 @@ export default function RentAIPage() {
               <Sparkles className="w-6 h-6 text-navy-900" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white font-serif">AI Rent Suggestions</h1>
+              <h1 className="text-2xl font-bold text-slate-900 font-serif">AI Rent Suggestions</h1>
               <p className="text-navy-200 text-sm">Market-based pricing with comparable analysis</p>
             </div>
           </div>
@@ -111,26 +111,26 @@ export default function RentAIPage() {
         <Card className="xl:col-span-1 p-5 bg-navy-900/50 border-navy-700">
           <div className="flex items-center gap-2 mb-5">
             <Building className="w-5 h-5 text-gold-400" />
-            <h2 className="text-lg font-semibold text-white">Property Details</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Property Details</h2>
           </div>
           
           <div className="space-y-4">
             {/* Address */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-slate-500 mb-1.5">
                 Property Address
               </label>
               <Input
                 value={propertyInput.address || ''}
                 onChange={(e) => updateField('address', e.target.value)}
                 placeholder="123 Main Street, Sandton"
-                className="bg-navy-800 border-navy-600 text-white placeholder-slate-500"
+                className="bg-navy-100 border-navy-600 text-slate-900 placeholder-slate-500"
               />
             </div>
 
             {/* Current Rent */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-slate-500 mb-1.5">
                 Current Rent (optional)
               </label>
               <div className="relative">
@@ -140,18 +140,18 @@ export default function RentAIPage() {
                   value={currentRent}
                   onChange={(e) => setCurrentRent(e.target.value)}
                   placeholder="15000"
-                  className="pl-7 bg-navy-800 border-navy-600 text-white placeholder-slate-500"
+                  className="pl-7 bg-navy-100 border-navy-600 text-slate-900 placeholder-slate-500"
                 />
               </div>
             </div>
 
             {/* Property Type */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Property Type</label>
+              <label className="block text-sm font-medium text-slate-500 mb-1.5">Property Type</label>
               <select
                 value={propertyInput.propertyType}
                 onChange={(e) => updateField('propertyType', e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-800 text-white"
+                className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-100 text-slate-900"
               >
                 <option value="house">House</option>
                 <option value="townhouse">Townhouse</option>
@@ -164,11 +164,11 @@ export default function RentAIPage() {
             {/* Bedrooms & Bathrooms */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Bedrooms</label>
+                <label className="block text-sm font-medium text-slate-500 mb-1.5">Bedrooms</label>
                 <select
                   value={propertyInput.bedrooms}
                   onChange={(e) => updateField('bedrooms', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-800 text-white"
+                  className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-100 text-slate-900"
                 >
                   {[1,2,3,4,5,6].map(n => (
                     <option key={n} value={n}>{n}</option>
@@ -176,11 +176,11 @@ export default function RentAIPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Bathrooms</label>
+                <label className="block text-sm font-medium text-slate-500 mb-1.5">Bathrooms</label>
                 <select
                   value={propertyInput.bathrooms}
                   onChange={(e) => updateField('bathrooms', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-800 text-white"
+                  className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-100 text-slate-900"
                 >
                   {[1,2,3,4,5].map(n => (
                     <option key={n} value={n}>{n}</option>
@@ -191,23 +191,23 @@ export default function RentAIPage() {
 
             {/* Sq Meters */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Sq Meters</label>
+              <label className="block text-sm font-medium text-slate-500 mb-1.5">Sq Meters</label>
               <Input
                 type="number"
                 value={propertyInput.sqft || ''}
                 onChange={(e) => updateField('sqft', parseInt(e.target.value) || 0)}
                 placeholder="80"
-                className="bg-navy-800 border-navy-600 text-white placeholder-slate-500"
+                className="bg-navy-100 border-navy-600 text-slate-900 placeholder-slate-500"
               />
             </div>
 
             {/* Parking */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Parking Spaces</label>
+              <label className="block text-sm font-medium text-slate-500 mb-1.5">Parking Spaces</label>
               <select
                 value={propertyInput.parking}
                 onChange={(e) => updateField('parking', parseInt(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-800 text-white"
+                className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-100 text-slate-900"
               >
                 {[0,1,2,3,4].map(n => (
                   <option key={n} value={n}>{n === 0 ? 'None' : n === 1 ? '1 Space' : `${n} Spaces`}</option>
@@ -218,11 +218,11 @@ export default function RentAIPage() {
             {/* Location */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Province</label>
+                <label className="block text-sm font-medium text-slate-500 mb-1.5">Province</label>
                 <select
                   value={propertyInput.location.province}
                   onChange={(e) => updateLocation('province', e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-800 text-white"
+                  className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-100 text-slate-900"
                 >
                   <option value="gauteng">Gauteng</option>
                   <option value="kwazulu_natal">KwaZulu-Natal</option>
@@ -232,11 +232,11 @@ export default function RentAIPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">City</label>
+                <label className="block text-sm font-medium text-slate-500 mb-1.5">City</label>
                 <select
                   value={propertyInput.location.city}
                   onChange={(e) => updateLocation('city', e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-800 text-white"
+                  className="w-full px-3 py-2 rounded-lg border border-navy-600 bg-navy-100 text-slate-900"
                 >
                   <option value="Johannesburg">Johannesburg</option>
                   <option value="Pretoria">Pretoria</option>
@@ -249,7 +249,7 @@ export default function RentAIPage() {
 
             {/* Features */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-3">Features</label>
+              <label className="block text-sm font-medium text-slate-500 mb-3">Features</label>
               <div className="grid grid-cols-2 gap-2">
                 {features.map(({ key, label }) => {
                   const isActive = propertyInput[key as keyof RentAnalysisInput] as boolean;
@@ -262,7 +262,7 @@ export default function RentAIPage() {
                         "flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all",
                         isActive 
                           ? "border-gold-500 bg-gold-500/20 text-gold-400" 
-                          : "border-navy-600 text-slate-400 hover:border-navy-500"
+                          : "border-navy-600 text-slate-500 hover:border-navy-500"
                       )}
                     >
                       {isActive && <Check className="w-4 h-4" />}
@@ -298,16 +298,16 @@ export default function RentAIPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-slate-400 text-sm">Recommended Range</p>
+                    <p className="text-slate-500 text-sm">Recommended Range</p>
                     <p className="text-2xl font-bold text-gold-400">{getRentRangeString(suggestion)}</p>
                   </div>
                 </div>
 
                 {/* Pricing Display */}
                 <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="text-center p-4 rounded-xl bg-navy-800/50 border border-navy-600">
-                    <p className="text-slate-400 text-sm mb-1">Minimum</p>
-                    <p className="text-xl font-bold text-white">{formatRent(suggestion.minRent)}</p>
+                  <div className="text-center p-4 rounded-xl bg-navy-100/50 border border-navy-600">
+                    <p className="text-slate-500 text-sm mb-1">Minimum</p>
+                    <p className="text-xl font-bold text-slate-900">{formatRent(suggestion.minRent)}</p>
                     <p className="text-xs text-slate-500">Quick lease</p>
                   </div>
                   <div className="text-center p-4 rounded-xl bg-gold-500/20 border-2 border-gold-500/50">
@@ -315,16 +315,16 @@ export default function RentAIPage() {
                     <p className="text-3xl font-bold text-gold-400">{formatRent(suggestion.marketRent)}</p>
                     <p className="text-xs text-slate-500">Optimal pricing</p>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-navy-800/50 border border-navy-600">
-                    <p className="text-slate-400 text-sm mb-1">Maximum</p>
-                    <p className="text-xl font-bold text-white">{formatRent(suggestion.maxRent)}</p>
+                  <div className="text-center p-4 rounded-xl bg-navy-100/50 border border-navy-600">
+                    <p className="text-slate-500 text-sm mb-1">Maximum</p>
+                    <p className="text-xl font-bold text-slate-900">{formatRent(suggestion.maxRent)}</p>
                     <p className="text-xs text-slate-500">Premium</p>
                   </div>
                 </div>
 
                 {/* Competitiveness */}
                 {competitiveness && (
-                  <div className="p-4 rounded-xl bg-navy-800/50 border border-navy-600">
+                  <div className="p-4 rounded-xl bg-navy-100/50 border border-navy-600">
                     <div className="flex items-center gap-3">
                       {competitiveness.status === 'underpriced' ? (
                         <TrendingUp className="w-5 h-5 text-green-400" />
@@ -334,8 +334,8 @@ export default function RentAIPage() {
                         <Minus className="w-5 h-5 text-gold-400" />
                       )}
                       <div>
-                        <p className="font-medium text-white">{competitiveness.message}</p>
-                        <p className="text-sm text-slate-400">{competitiveness.suggestion}</p>
+                        <p className="font-medium text-slate-900">{competitiveness.message}</p>
+                        <p className="text-sm text-slate-500">{competitiveness.suggestion}</p>
                       </div>
                     </div>
                   </div>
@@ -344,23 +344,23 @@ export default function RentAIPage() {
 
               {/* Comparable Properties */}
               <Card className="p-6 bg-navy-900/50 border-navy-700">
-                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
                   <Home className="w-5 h-5 text-gold-400" />
                   Comparable Properties
                 </h3>
                 <div className="space-y-3">
                   {suggestion.comparables.map((comp, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-navy-800/30 border border-navy-600/50">
+                    <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-navy-100/30 border border-navy-600/50">
                       <div className="flex items-center gap-3">
-                        <MapPin className="w-4 h-4 text-slate-400" />
+                        <MapPin className="w-4 h-4 text-slate-500" />
                         <div>
-                          <p className="text-sm font-medium text-white">{comp.address}</p>
-                          <p className="text-xs text-slate-400">{comp.bedrooms} bed • {comp.bathrooms} bath • {comp.sqft}sqm</p>
+                          <p className="text-sm font-medium text-slate-900">{comp.address}</p>
+                          <p className="text-xs text-slate-500">{comp.bedrooms} bed • {comp.bathrooms} bath • {comp.sqft}sqm</p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-medium text-gold-400">{formatRent(comp.rent)}/mo</p>
-                        <p className="text-xs text-slate-400">{comp.distance}km away</p>
+                        <p className="text-xs text-slate-500">{comp.distance}km away</p>
                       </div>
                     </div>
                   ))}
@@ -369,18 +369,18 @@ export default function RentAIPage() {
 
               {/* Seasonal Recommendation */}
               <Card className="p-6 bg-navy-900/50 border-navy-700">
-                <h3 className="text-lg font-semibold text-white mb-3">Market Insight</h3>
+                <h3 className="text-lg font-semibold text-slate-900 mb-3">Market Insight</h3>
                 <div className="p-4 rounded-lg bg-gold-500/10 border border-gold-500/30">
-                  <p className="text-white">{seasonalInfo.recommendation}</p>
-                  <p className="text-sm text-slate-400 mt-2">{seasonalInfo.rationale}</p>
+                  <p className="text-slate-900">{seasonalInfo.recommendation}</p>
+                  <p className="text-sm text-slate-500 mt-2">{seasonalInfo.rationale}</p>
                 </div>
               </Card>
             </>
           ) : (
             <Card className="p-12 text-center bg-navy-900/30 border-navy-700">
               <Sparkles className="w-12 h-12 text-gold-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">Enter Property Details</h3>
-              <p className="text-slate-400">Fill in the property details on the left and click "Generate Suggestions" to get AI-powered rent recommendations.</p>
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">Enter Property Details</h3>
+              <p className="text-slate-500">Fill in the property details on the left and click "Generate Suggestions" to get AI-powered rent recommendations.</p>
             </Card>
           )}
         </div>

@@ -327,7 +327,7 @@ export default function NotificationsPage() {
       urgent: "glass glass-card bg-red-500/20 text-red-300 border-red-500/30",
       high: "glass glass-card bg-orange-500/20 text-orange-300 border-orange-500/30",
       medium: "glass glass-card bg-blue-500/20 text-blue-300 border-blue-500/30",
-      low: "glass glass-card bg-slate-500/20 text-slate-300 border-slate-500/30",
+      low: "glass glass-card bg-slate-500/20 text-slate-500 border-slate-500/30",
     };
     
     switch (priority) {
@@ -358,8 +358,8 @@ export default function NotificationsPage() {
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-white text-gradient-gold">Notifications</h1>
-              <p className="text-slate-300 mt-1">
+              <h1 className="text-3xl font-bold text-slate-900 text-gradient-gold">Notifications</h1>
+              <p className="text-slate-500 mt-1">
                 {unreadCount > 0 
                   ? `You have ${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}`
                   : 'All caught up!'}
@@ -393,8 +393,8 @@ export default function NotificationsPage() {
               <Settings className="w-5 h-5 text-navy-400" />
             </div>
             <div>
-              <h2 className="font-semibold text-white">Notification Preferences</h2>
-              <p className="text-sm text-slate-400">Manage how you receive notifications</p>
+              <h2 className="font-semibold text-slate-900">Notification Preferences</h2>
+              <p className="text-sm text-slate-500">Manage how you receive notifications</p>
             </div>
           </div>
 
@@ -407,12 +407,12 @@ export default function NotificationsPage() {
                   { key: 'smsEnabled' as const, label: 'SMS Notifications', icon: MessageSquare, desc: 'Receive notifications via text message' },
                   { key: 'inAppEnabled' as const, label: 'In-App Notifications', icon: Bell, desc: 'Show notifications in the app' },
                 ].map(({ key, label, icon: Icon, desc }) => (
-                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-navy-500/20 hover:bg-slate-800/50 cursor-pointer glass">
+                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-navy-500/20 hover:bg-slate-100/50 cursor-pointer glass">
                     <div className="flex items-center gap-3">
                       <Icon className="w-5 h-5 text-navy-400" />
                       <div>
-                        <p className="font-medium text-white">{label}</p>
-                        <p className="text-xs text-slate-400">{desc}</p>
+                        <p className="font-medium text-slate-900">{label}</p>
+                        <p className="text-xs text-slate-500">{desc}</p>
                       </div>
                     </div>
                     <input
@@ -436,10 +436,10 @@ export default function NotificationsPage() {
                   { key: 'viewingInvites' as const, label: 'Viewing Invites', desc: 'Property viewing notifications' },
                   { key: 'marketingEmails' as const, label: 'Marketing Emails', desc: 'Tips and product updates' },
                 ].map(({ key, label, desc }) => (
-                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-navy-500/20 hover:bg-slate-800/50 cursor-pointer glass">
+                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-navy-500/20 hover:bg-slate-100/50 cursor-pointer glass">
                     <div>
-                      <p className="font-medium text-white">{label}</p>
-                      <p className="text-xs text-slate-400">{desc}</p>
+                      <p className="font-medium text-slate-900">{label}</p>
+                      <p className="text-xs text-slate-500">{desc}</p>
                     </div>
                     <input
                       type="checkbox"
@@ -457,10 +457,10 @@ export default function NotificationsPage() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="font-medium text-navy-400">Quiet Hours</h3>
-                <p className="text-sm text-slate-400">Pause non-urgent notifications during specific hours</p>
+                <p className="text-sm text-slate-500">Pause non-urgent notifications during specific hours</p>
               </div>
               <label className="flex items-center gap-2 cursor-pointer">
-                <span className="text-sm text-slate-400">Enable</span>
+                <span className="text-sm text-slate-500">Enable</span>
                 <input
                   type="checkbox"
                   checked={preferences.quietHoursEnabled}
@@ -472,21 +472,21 @@ export default function NotificationsPage() {
             {preferences.quietHoursEnabled && (
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <label className="text-sm text-slate-400">Start:</label>
+                  <label className="text-sm text-slate-500">Start:</label>
                   <input
                     type="time"
                     value={preferences.quietHoursStart || '22:00'}
                     onChange={(e) => handlePreferenceChange('quietHoursStart', e.target.value)}
-                    className="px-3 py-2 bg-slate-800/50 border border-gold-500/30 rounded-lg text-sm text-white"
+                    className="px-3 py-2 bg-slate-100/50 border border-gold-500/30 rounded-lg text-sm text-slate-900"
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="text-sm text-slate-400">End:</label>
+                  <label className="text-sm text-slate-500">End:</label>
                   <input
                     type="time"
                     value={preferences.quietHoursEnd || '07:00'}
                     onChange={(e) => handlePreferenceChange('quietHoursEnd', e.target.value)}
-                    className="px-3 py-2 bg-slate-800/50 border border-gold-500/30 rounded-lg text-sm text-white"
+                    className="px-3 py-2 bg-slate-100/50 border border-gold-500/30 rounded-lg text-sm text-slate-900"
                   />
                 </div>
               </div>
@@ -497,8 +497,8 @@ export default function NotificationsPage() {
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-navy-400 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium text-white">POPIA Compliance</p>
-                <p className="text-sm text-slate-400 mt-1">
+                <p className="font-medium text-slate-900">POPIA Compliance</p>
+                <p className="text-sm text-slate-500 mt-1">
                   Your notification preferences are stored securely and you can opt-out of any notification type at any time. 
                   We only send notifications you have consented to receive.
                 </p>
@@ -517,7 +517,7 @@ export default function NotificationsPage() {
                   placeholder="Search notifications..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-gold-500/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 text-white placeholder-slate-400"
+                  className="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-gold-500/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 text-slate-900 placeholder-slate-400"
                 />
               </div>
               <div className="flex gap-2 overflow-x-auto pb-2">
@@ -528,8 +528,8 @@ export default function NotificationsPage() {
                     className={cn(
                       "px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-300",
                       filter === f 
-                        ? "bg-gradient-to-r from-gold-500 to-yellow-500 text-white shadow-lg glow-gold" 
-                        : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-navy-500/20"
+                        ? "bg-gradient-to-r from-gold-500 to-yellow-500 text-slate-900 shadow-lg glow-gold" 
+                        : "bg-slate-100/50 text-slate-500 hover:bg-slate-50/50 border border-navy-500/20"
                     )}
                   >
                     {f === 'all' ? 'All' : f === 'unread' ? 'Unread' : NOTIFICATION_TYPE_LABELS[f as NotificationType]}
@@ -542,7 +542,7 @@ export default function NotificationsPage() {
               {filteredNotifications.length === 0 ? (
                 <div className="py-12 text-center">
                   <Bell className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                  <p className="text-slate-400">No notifications found</p>
+                  <p className="text-slate-500">No notifications found</p>
                 </div>
               ) : (
                 filteredNotifications.map((notification) => {
@@ -551,7 +551,7 @@ export default function NotificationsPage() {
                     <div
                       key={notification.id}
                       className={cn(
-                        "p-4 hover:bg-slate-800/30 cursor-pointer transition-colors",
+                        "p-4 hover:bg-slate-100/30 cursor-pointer transition-colors",
                         !notification.read && "bg-gold-500/5"
                       )}
                       onClick={() => {
@@ -564,18 +564,18 @@ export default function NotificationsPage() {
                       <div className="flex items-start gap-3">
                         <div className={cn(
                           "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 glass",
-                          !notification.read ? "bg-gold-500/20" : "bg-slate-800/50"
+                          !notification.read ? "bg-gold-500/20" : "bg-slate-100/50"
                         )}>
                           <IconComponent className={cn(
                             "w-5 h-5",
-                            !notification.read ? "text-navy-400" : "text-slate-400"
+                            !notification.read ? "text-navy-400" : "text-slate-500"
                           )} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <p className={cn(
                               "font-medium text-sm",
-                              !notification.read ? "text-white" : "text-slate-300"
+                              !notification.read ? "text-slate-900" : "text-slate-500"
                             )}>
                               {notification.title}
                             </p>
@@ -583,7 +583,7 @@ export default function NotificationsPage() {
                               <span className="w-2 h-2 bg-gold-500 rounded-full" />
                             )}
                           </div>
-                          <p className="text-sm text-slate-400 line-clamp-2">{notification.message}</p>
+                          <p className="text-sm text-slate-500 line-clamp-2">{notification.message}</p>
                           <div className="flex items-center gap-2 mt-2">
                             <span className="text-xs text-slate-500">
                               {formatNotificationTime(notification.createdAt)}
@@ -607,34 +607,34 @@ export default function NotificationsPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl text-navy-400">{getNotificationIcon(selectedNotification.type)}</span>
-                    <Badge className="glass glass-card bg-slate-500/20 text-slate-300 border-slate-500/30">
+                    <Badge className="glass glass-card bg-slate-500/20 text-slate-500 border-slate-500/30">
                       {NOTIFICATION_TYPE_LABELS[selectedNotification.type]}
                     </Badge>
                   </div>
                   <button
                     onClick={() => handleDelete(selectedNotification.id)}
-                    className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                    className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-white">{selectedNotification.title}</h3>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <h3 className="font-semibold text-slate-900">{selectedNotification.title}</h3>
+                  <p className="text-sm text-slate-500 mt-1">
                     {formatNotificationTime(selectedNotification.createdAt)}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2">
                   {getPriorityBadge(selectedNotification.priority)}
-                  <Badge className="glass glass-card bg-slate-500/20 text-slate-300 border-slate-500/30 gap-1 capitalize">
+                  <Badge className="glass glass-card bg-slate-500/20 text-slate-500 border-slate-500/30 gap-1 capitalize">
                     {selectedNotification.channel === 'in_app' ? 'In-App' : selectedNotification.channel}
                   </Badge>
                 </div>
 
                 <div className="p-4 glass rounded-lg">
-                  <p className="text-sm text-slate-300 whitespace-pre-wrap">{selectedNotification.message}</p>
+                  <p className="text-sm text-slate-500 whitespace-pre-wrap">{selectedNotification.message}</p>
                 </div>
 
                 {selectedNotification.metadata && (
@@ -644,7 +644,7 @@ export default function NotificationsPage() {
                       {Object.entries(selectedNotification.metadata).map(([key, value]) => (
                         <div key={key} className="flex justify-between text-sm">
                           <span className="text-slate-500 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
-                          <span className="text-slate-300 font-medium">{String(value)}</span>
+                          <span className="text-slate-500 font-medium">{String(value)}</span>
                         </div>
                       ))}
                     </div>
@@ -660,7 +660,7 @@ export default function NotificationsPage() {
             ) : (
               <div className="py-12 text-center">
                 <Bell className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                <p className="text-slate-400">Select a notification to view details</p>
+                <p className="text-slate-500">Select a notification to view details</p>
               </div>
             )}
           </div>
@@ -682,8 +682,8 @@ export default function NotificationsPage() {
                 {stat.icon}
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
-                <p className="text-xs text-slate-400">{stat.label}</p>
+                <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+                <p className="text-xs text-slate-500">{stat.label}</p>
               </div>
             </div>
           </div>

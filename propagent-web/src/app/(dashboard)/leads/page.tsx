@@ -137,7 +137,7 @@ export default function LeadsPage() {
       case 'contacted': return <Badge className="glass glass-card bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Contacted</Badge>;
       case 'qualified': return <Badge className="glass glass-card bg-gold-500/20 text-gold-300 border-gold-500/30">Qualified</Badge>;
       case 'converted': return <Badge className="glass glass-card bg-blue-500/20 text-blue-300 border-blue-500/30">Converted</Badge>;
-      case 'lost': return <Badge className="glass glass-card bg-slate-500/20 text-slate-300 border-slate-500/30">Lost</Badge>;
+      case 'lost': return <Badge className="glass glass-card bg-slate-500/20 text-slate-500 border-slate-500/30">Lost</Badge>;
       default: return <Badge className="glass glass-card">{status}</Badge>;
     }
   };
@@ -171,8 +171,8 @@ export default function LeadsPage() {
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-white text-gradient-gold">Lead Generation</h1>
-              <p className="text-slate-300 mt-1">
+              <h1 className="text-3xl font-bold text-slate-900 text-gradient-gold">Lead Generation</h1>
+              <p className="text-slate-500 mt-1">
                 Tenant & landlord leads from Property24, Facebook, Website
               </p>
             </div>
@@ -200,8 +200,8 @@ export default function LeadsPage() {
                 <span style={{ color: config.color }}>{config.icon}</span>
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{stats.bySource[source as keyof typeof stats.bySource]}</p>
-                <p className="text-xs text-slate-400">{config.label}</p>
+                <p className="text-2xl font-bold text-slate-900">{stats.bySource[source as keyof typeof stats.bySource]}</p>
+                <p className="text-xs text-slate-500">{config.label}</p>
               </div>
             </div>
           </div>
@@ -219,7 +219,7 @@ export default function LeadsPage() {
                 placeholder="Search leads..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-navy-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 text-white placeholder-slate-400"
+                className="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-navy-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 text-slate-900 placeholder-slate-400"
               />
             </div>
           </div>
@@ -227,7 +227,7 @@ export default function LeadsPage() {
             <select
               value={filterSource}
               onChange={(e) => setFilterSource(e.target.value)}
-              className="px-3 py-2 bg-slate-800/50 border border-navy-500/30 rounded-lg text-sm text-white"
+              className="px-3 py-2 bg-slate-100/50 border border-navy-500/30 rounded-lg text-sm text-slate-900"
             >
               <option value="all">All Sources</option>
               <option value="property24">Property24</option>
@@ -238,7 +238,7 @@ export default function LeadsPage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-2 bg-slate-800/50 border border-navy-500/30 rounded-lg text-sm text-white"
+              className="px-3 py-2 bg-slate-100/50 border border-navy-500/30 rounded-lg text-sm text-slate-900"
             >
               <option value="all">All Status</option>
               <option value="new">New</option>
@@ -255,7 +255,7 @@ export default function LeadsPage() {
       <div className={cn("glass-card rounded-xl overflow-hidden border border-navy-500/20", isVisible && "animate-on-scroll visible delay-300")}>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-800/50 border-b border-navy-500/20">
+            <thead className="bg-slate-100/50 border-b border-navy-500/20">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Lead</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Source</th>
@@ -269,15 +269,15 @@ export default function LeadsPage() {
               {filteredLeads.map((lead) => {
                 const sourceConfig = leadSourceConfig[lead.source];
                 return (
-                  <tr key={lead.id} className="hover:bg-slate-800/30 transition-colors">
+                  <tr key={lead.id} className="hover:bg-slate-100/30 transition-colors">
                     <td className="px-4 py-3">
                       <div>
-                        <p className="font-medium text-white">{lead.name}</p>
-                        <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <p className="font-medium text-slate-900">{lead.name}</p>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
                           <Mail className="w-3 h-3" />
                           {lead.email}
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
                           <Phone className="w-3 h-3" />
                           {lead.phone}
                         </div>
@@ -286,7 +286,7 @@ export default function LeadsPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <span className="text-navy-400">{sourceConfig.icon}</span>
-                        <span className="text-sm text-slate-300">{sourceConfig.label}</span>
+                        <span className="text-sm text-slate-500">{sourceConfig.label}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
@@ -296,14 +296,14 @@ export default function LeadsPage() {
                     </td>
                     <td className="px-4 py-3">
                       {lead.type === 'tenant' && (
-                        <div className="text-sm text-slate-300">
+                        <div className="text-sm text-slate-500">
                           {lead.bedrooms && <span>{lead.bedrooms} bed • </span>}
                           {lead.budgetMin && <span>R{lead.budgetMin.toLocaleString()} - R{lead.budgetMax?.toLocaleString()}</span>}
                           {lead.preferredSuburb && <span> • {lead.preferredSuburb}</span>}
                         </div>
                       )}
                       {lead.type === 'landlord' && (
-                        <div className="text-sm text-slate-300">
+                        <div className="text-sm text-slate-500">
                           {lead.propertyAddress && <span>{lead.propertyAddress}</span>}
                           {lead.askingRent && <span> • R{lead.askingRent.toLocaleString()}/mo</span>}
                         </div>
@@ -313,7 +313,7 @@ export default function LeadsPage() {
                       {getStatusBadge(lead.status)}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-sm text-slate-400">
+                      <span className="text-sm text-slate-500">
                         {new Date(lead.capturedAt).toLocaleDateString()}
                       </span>
                     </td>
@@ -327,7 +327,7 @@ export default function LeadsPage() {
         {filteredLeads.length === 0 && (
           <div className="py-12 text-center">
             <Users className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-400">No leads found</p>
+            <p className="text-slate-500">No leads found</p>
           </div>
         )}
       </div>
@@ -337,8 +337,8 @@ export default function LeadsPage() {
         <div className="flex items-start gap-3">
           <Target className="w-5 h-5 text-navy-400 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-white">Lead Sources</p>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="font-medium text-slate-900">Lead Sources</p>
+            <p className="text-sm text-slate-500 mt-1">
               Connect Property24, Facebook Lead Ads, and your website to automatically capture tenant and landlord leads.
               Referral tracking included. Integration setup available via n8n automation.
             </p>
@@ -349,48 +349,48 @@ export default function LeadsPage() {
       {/* Add Lead Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-700 max-h-[90vh] overflow-y-auto">
+          <div className="bg-slate-100 rounded-2xl max-w-md w-full p-6 border border-slate-200 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-semibold text-white">Add New Lead</h2>
+              <h2 className="text-xl font-semibold text-slate-900">Add New Lead</h2>
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="p-2 hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+                className="p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
-                <X className="w-5 h-5 text-white/60" />
+                <X className="w-5 h-5 text-slate-900/60" />
               </button>
             </div>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Name</label>
                 <input 
                   type="text" 
                   value={newLead.name}
                   onChange={(e) => setNewLead({...newLead, name: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   placeholder="John Doe"
                 />
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Email</label>
                   <input 
                     type="email" 
                     value={newLead.email}
                     onChange={(e) => setNewLead({...newLead, email: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     placeholder="email@example.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Phone</label>
                   <input 
                     type="tel" 
                     value={newLead.phone}
                     onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     placeholder="+27831234567"
                   />
                 </div>
@@ -398,22 +398,22 @@ export default function LeadsPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Type</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Type</label>
                   <select 
                     value={newLead.type}
                     onChange={(e) => setNewLead({...newLead, type: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                   >
                     <option value="tenant">Tenant</option>
                     <option value="landlord">Landlord</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Source</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Source</label>
                   <select 
                     value={newLead.source}
                     onChange={(e) => setNewLead({...newLead, source: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                   >
                     <option value="website">Website</option>
                     <option value="property24">Property24</option>
@@ -427,11 +427,11 @@ export default function LeadsPage() {
               {newLead.type === 'tenant' && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Bedrooms</label>
+                    <label className="block text-sm font-medium text-slate-500 mb-2">Bedrooms</label>
                     <select 
                       value={newLead.bedrooms}
                       onChange={(e) => setNewLead({...newLead, bedrooms: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                     >
                       <option value="">Any</option>
                       <option value="1">1 Bedroom</option>
@@ -442,33 +442,33 @@ export default function LeadsPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Min Budget (ZAR)</label>
+                      <label className="block text-sm font-medium text-slate-500 mb-2">Min Budget (ZAR)</label>
                       <input 
                         type="number" 
                         value={newLead.budgetMin}
                         onChange={(e) => setNewLead({...newLead, budgetMin: e.target.value})}
-                        className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                        className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                         placeholder="10000"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Max Budget (ZAR)</label>
+                      <label className="block text-sm font-medium text-slate-500 mb-2">Max Budget (ZAR)</label>
                       <input 
                         type="number" 
                         value={newLead.budgetMax}
                         onChange={(e) => setNewLead({...newLead, budgetMax: e.target.value})}
-                        className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                        className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                         placeholder="20000"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Preferred Suburb</label>
+                    <label className="block text-sm font-medium text-slate-500 mb-2">Preferred Suburb</label>
                     <input 
                       type="text" 
                       value={newLead.preferredSuburb}
                       onChange={(e) => setNewLead({...newLead, preferredSuburb: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                       placeholder="Sandton"
                     />
                   </div>
@@ -478,22 +478,22 @@ export default function LeadsPage() {
               {newLead.type === 'landlord' && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Property Address</label>
+                    <label className="block text-sm font-medium text-slate-500 mb-2">Property Address</label>
                     <input 
                       type="text" 
                       value={newLead.propertyAddress}
                       onChange={(e) => setNewLead({...newLead, propertyAddress: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                       placeholder="123 Main Street, Suburb"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Asking Rent (ZAR/month)</label>
+                    <label className="block text-sm font-medium text-slate-500 mb-2">Asking Rent (ZAR/month)</label>
                     <input 
                       type="number" 
                       value={newLead.askingRent}
                       onChange={(e) => setNewLead({...newLead, askingRent: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                       placeholder="15000"
                     />
                   </div>
@@ -501,12 +501,12 @@ export default function LeadsPage() {
               )}
               
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Notes</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Notes</label>
                 <textarea 
                   rows={3}
                   value={newLead.notes}
                   onChange={(e) => setNewLead({...newLead, notes: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   placeholder="Additional notes..."
                 />
               </div>
@@ -515,13 +515,13 @@ export default function LeadsPage() {
             <div className="flex items-center justify-end gap-3 mt-6">
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="px-4 py-2.5 bg-slate-700 rounded-lg text-white text-sm hover:bg-slate-600 transition-all cursor-pointer"
+                className="px-4 py-2.5 bg-slate-50 rounded-lg text-slate-900 text-sm hover:bg-slate-200 transition-all cursor-pointer"
               >
                 Cancel
               </button>
               <button 
                 onClick={handleAddLead}
-                className="px-6 py-2.5 bg-gradient-to-r from-navy-500 to-navy-600 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-navy-500/25 transition-all cursor-pointer"
+                className="px-6 py-2.5 bg-gradient-to-r from-navy-500 to-navy-600 rounded-lg text-slate-900 text-sm font-medium hover:shadow-lg hover:shadow-navy-500/25 transition-all cursor-pointer"
               >
                 <Plus className="w-4 h-4 inline mr-1.5" />
                 Add Lead

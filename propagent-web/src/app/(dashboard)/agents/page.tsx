@@ -21,7 +21,7 @@ function GlassCard({ children, hoverEffect = false }: { children: React.ReactNod
   return (
     <div 
       className={cn(
-        "relative overflow-hidden rounded-xl bg-slate-800/40 backdrop-blur-xl border border-slate-700/50",
+        "relative overflow-hidden rounded-xl bg-slate-100/40 backdrop-blur-xl border border-slate-200/50",
         hoverEffect && isHovered && "transform -translate-y-1 shadow-2xl shadow-navy-500/20 border-navy-500/30 scale-[1.02]",
         hoverEffect && "transition-all duration-300"
       )}
@@ -66,8 +66,8 @@ function StatCard({ icon: Icon, value, label, color, delay }: { icon: React.Elem
           <Icon className={cn("w-5 h-5", colors.text)} />
         </div>
         <div>
-          <p className="text-2xl font-bold text-white">{value}</p>
-          <p className="text-xs text-slate-400">{label}</p>
+          <p className="text-2xl font-bold text-slate-900">{value}</p>
+          <p className="text-xs text-slate-500">{label}</p>
         </div>
       </div>
     </GlassCard>
@@ -126,22 +126,22 @@ function AgentRow({ agent, index }: { agent: AgentProfile; index: number }) {
   return (
     <tr 
       className={cn(
-        "group transition-all duration-500 border-b border-slate-700/30 hover:bg-slate-700/30 cursor-pointer",
+        "group transition-all duration-500 border-b border-slate-200/30 hover:bg-slate-50/30 cursor-pointer",
         visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
       )}
       style={{ transitionDelay: `${index * 50}ms` }}
     >
       <td className="px-4 py-4">
         <div className="flex items-center gap-3">
-          <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-navy-500/30 to-yellow-600/30 flex items-center justify-center text-white font-medium shadow-lg group-hover:shadow-navy-500/30 transition-all duration-300 group-hover:scale-110">
+          <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-navy-500/30 to-yellow-600/30 flex items-center justify-center text-slate-900 font-medium shadow-lg group-hover:shadow-navy-500/30 transition-all duration-300 group-hover:scale-110">
             <span className="relative z-10">{agent.firstName[0]}{agent.lastName[0]}</span>
             <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-navy-400 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
           <div>
-            <p className="font-medium text-white group-hover:text-navy-400 transition-colors">
+            <p className="font-medium text-slate-900 group-hover:text-navy-400 transition-colors">
               {agent.firstName} {agent.lastName}
             </p>
-            <p className="text-sm text-slate-400">{agent.agencyName}</p>
+            <p className="text-sm text-slate-500">{agent.agencyName}</p>
           </div>
         </div>
       </td>
@@ -163,8 +163,8 @@ function AgentRow({ agent, index }: { agent: AgentProfile; index: number }) {
               />
             ))}
           </div>
-          <span className="font-medium text-white">{agent.avgRating?.toFixed(1) || '-'}</span>
-          <span className="text-slate-400">({agent.reviewCount})</span>
+          <span className="font-medium text-slate-900">{agent.avgRating?.toFixed(1) || '-'}</span>
+          <span className="text-slate-500">({agent.reviewCount})</span>
         </div>
       </td>
       <td className="px-4 py-4">
@@ -174,7 +174,7 @@ function AgentRow({ agent, index }: { agent: AgentProfile; index: number }) {
             ? "bg-gradient-to-r from-navy-500/20 to-gold-500/20 text-navy-400 border-navy-500/30"
             : agent.subscriptionTier === 'professional'
               ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
-              : "bg-slate-600/30 text-slate-300 border-slate-600/30"
+              : "bg-slate-200/30 text-slate-500 border-slate-600/30"
         )}>
           {agent.subscriptionTier}
         </div>
@@ -184,7 +184,7 @@ function AgentRow({ agent, index }: { agent: AgentProfile; index: number }) {
           <span className="font-bold text-gold-400">{agent.closedDeals}</span>
           <span className="text-slate-500">/ {agent.totalMatches}</span>
         </div>
-        <div className="mt-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+        <div className="mt-1 h-1.5 bg-slate-50 rounded-full overflow-hidden">
           <div 
             className="h-full bg-gradient-to-r from-gold-500 to-navy-500 rounded-full transition-all duration-1000"
             style={{ width: `${(agent.closedDeals / agent.totalMatches) * 100}%` }}
@@ -207,7 +207,7 @@ function FilterButton({ active, onClick, label, count }: { active: boolean; onCl
         "px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
         active 
           ? "bg-gradient-to-r from-navy-500 to-yellow-500 text-slate-900 shadow-lg shadow-navy-500/25"
-          : "bg-slate-800/40 backdrop-blur border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-navy-500/30 hover:text-navy-400",
+          : "bg-slate-100/40 backdrop-blur border border-slate-200/50 text-slate-500 hover:bg-slate-50/50 hover:border-navy-500/30 hover:text-navy-400",
         isHovered && !active && "transform -translate-y-0.5"
       )}
     >
@@ -328,7 +328,7 @@ export default function AgentManagementPage() {
       `}</style>
       
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-6 sm:p-8">
+      <div className="relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl border border-slate-200/50 p-6 sm:p-8">
         <AnimatedGradientHeader />
         
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -337,8 +337,8 @@ export default function AgentManagementPage() {
               <Sparkles className="w-4 h-4 text-navy-400 animate-pulse" />
               <span className="text-navy-400 text-sm font-medium">Agent Management</span>
             </div>
-            <h1 className="text-3xl font-bold text-white font-serif">Agent Management</h1>
-            <p className="text-slate-400 mt-2">
+            <h1 className="text-3xl font-bold text-slate-900 font-serif">Agent Management</h1>
+            <p className="text-slate-500 mt-2">
               FFC-verified estate agents • {stats.total} total agents
             </p>
           </div>
@@ -375,7 +375,7 @@ export default function AgentManagementPage() {
                 placeholder="Search by name, email, FFC number..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all duration-300"
+                className="w-full pl-12 pr-4 py-3 bg-slate-100/50 backdrop-blur border border-slate-200/50 rounded-xl text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all duration-300"
               />
             </div>
           </div>
@@ -398,13 +398,13 @@ export default function AgentManagementPage() {
       <GlassCard className="overflow-hidden" hoverEffect>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-800/50 border-b border-slate-700/50">
+            <thead className="bg-slate-100/50 border-b border-slate-200/50">
               <tr>
-                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Agent</th>
-                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">FFC Status</th>
-                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Performance</th>
-                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Tier</th>
-                <th className="px-4 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Deals</th>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Agent</th>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">FFC Status</th>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Performance</th>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tier</th>
+                <th className="px-4 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Deals</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-700/30">
@@ -418,12 +418,12 @@ export default function AgentManagementPage() {
         {filteredAgents.length === 0 && (
           <div className="py-16 text-center">
             <div className="relative w-20 h-20 mx-auto mb-4">
-              <div className="absolute inset-0 bg-slate-700/50 rounded-full animate-pulse" />
+              <div className="absolute inset-0 bg-slate-50/50 rounded-full animate-pulse" />
               <div className="relative w-full h-full flex items-center justify-center">
                 <Users className="w-10 h-10 text-slate-500" />
               </div>
             </div>
-            <p className="text-slate-400 text-lg">No agents found</p>
+            <p className="text-slate-500 text-lg">No agents found</p>
             <p className="text-slate-500 text-sm mt-1">Try adjusting your search or filters</p>
           </div>
         )}
@@ -436,8 +436,8 @@ export default function AgentManagementPage() {
             <Shield className="w-6 h-6 text-navy-400" />
           </div>
           <div>
-            <p className="font-semibold text-white text-lg">FFC Verification Required</p>
-            <p className="text-slate-400 mt-2 leading-relaxed">
+            <p className="font-semibold text-slate-900 text-lg">FFC Verification Required</p>
+            <p className="text-slate-500 mt-2 leading-relaxed">
               All agents must submit valid Fidelity Fund Certificate (FFC) documentation for verification.
               Only verified agents can access matching features. Rankings are visible only to agency principals.
             </p>
@@ -448,85 +448,85 @@ export default function AgentManagementPage() {
       {/* Add Agent Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="relative overflow-hidden rounded-2xl bg-slate-800/90 backdrop-blur-xl border border-slate-700/50 max-w-md w-full p-6 shadow-2xl">
+          <div className="relative overflow-hidden rounded-2xl bg-slate-100/90 backdrop-blur-xl border border-slate-200/50 max-w-md w-full p-6 shadow-2xl">
             <div className="absolute inset-0 bg-gradient-to-br from-navy-500/5 to-transparent pointer-events-none" />
             
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-xl font-semibold text-white">Add New Agent</h2>
+                <h2 className="text-xl font-semibold text-slate-900">Add New Agent</h2>
                 <button 
                   onClick={() => setShowAddModal(false)}
-                  className="p-2 hover:bg-slate-700/50 rounded-lg transition-colors cursor-pointer"
+                  className="p-2 hover:bg-slate-50/50 rounded-lg transition-colors cursor-pointer"
                   aria-label="Close modal"
                 >
-                  <X className="w-5 h-5 text-slate-400" />
+                  <X className="w-5 h-5 text-slate-500" />
                 </button>
               </div>
               
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">First Name</label>
+                    <label className="block text-sm font-medium text-slate-500 mb-2">First Name</label>
                     <input 
                       type="text" 
                       value={newAgent.firstName}
                       onChange={(e) => setNewAgent({...newAgent, firstName: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
+                      className="w-full px-4 py-3 bg-slate-50/50 border border-slate-600/50 rounded-lg text-slate-900 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
                       placeholder="John"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Last Name</label>
+                    <label className="block text-sm font-medium text-slate-500 mb-2">Last Name</label>
                     <input 
                       type="text" 
                       value={newAgent.lastName}
                       onChange={(e) => setNewAgent({...newAgent, lastName: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
+                      className="w-full px-4 py-3 bg-slate-50/50 border border-slate-600/50 rounded-lg text-slate-900 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
                       placeholder="Doe"
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Email</label>
                   <input 
                     type="email" 
                     value={newAgent.email}
                     onChange={(e) => setNewAgent({...newAgent, email: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
+                    className="w-full px-4 py-3 bg-slate-50/50 border border-slate-600/50 rounded-lg text-slate-900 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
                     placeholder="agent@agency.co.za"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Phone</label>
                   <input 
                     type="tel" 
                     value={newAgent.phone}
                     onChange={(e) => setNewAgent({...newAgent, phone: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
+                    className="w-full px-4 py-3 bg-slate-50/50 border border-slate-600/50 rounded-lg text-slate-900 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
                     placeholder="+27831234567"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Agency</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Agency</label>
                   <input 
                     type="text" 
                     value={newAgent.agencyName}
                     onChange={(e) => setNewAgent({...newAgent, agencyName: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
+                    className="w-full px-4 py-3 bg-slate-50/50 border border-slate-600/50 rounded-lg text-slate-900 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
                     placeholder="Real Estate Agency"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">FFC Number</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">FFC Number</label>
                   <input 
                     type="text" 
                     value={newAgent.ffcNumber}
                     onChange={(e) => setNewAgent({...newAgent, ffcNumber: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
+                    className="w-full px-4 py-3 bg-slate-50/50 border border-slate-600/50 rounded-lg text-slate-900 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500/50 transition-all"
                     placeholder="FFC-2024-00001"
                   />
                 </div>
@@ -537,9 +537,9 @@ export default function AgentManagementPage() {
                     id="ffcVerified"
                     checked={newAgent.ffcVerified}
                     onChange={(e) => setNewAgent({...newAgent, ffcVerified: e.target.checked})}
-                    className="w-5 h-5 rounded border-slate-600 bg-slate-700/50 text-navy-500 focus:ring-navy-500/30 focus:ring-offset-0 cursor-pointer"
+                    className="w-5 h-5 rounded border-slate-600 bg-slate-50/50 text-navy-500 focus:ring-navy-500/30 focus:ring-offset-0 cursor-pointer"
                   />
-                  <label htmlFor="ffcVerified" className="text-sm text-slate-300">
+                  <label htmlFor="ffcVerified" className="text-sm text-slate-500">
                     FFC Verified
                   </label>
                 </div>
@@ -548,7 +548,7 @@ export default function AgentManagementPage() {
               <div className="flex items-center justify-end gap-3 mt-6">
                 <button 
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2.5 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-300 text-sm hover:bg-slate-700/70 transition-all cursor-pointer"
+                  className="px-4 py-2.5 bg-slate-50/50 border border-slate-600/50 rounded-lg text-slate-500 text-sm hover:bg-slate-50/70 transition-all cursor-pointer"
                 >
                   Cancel
                 </button>

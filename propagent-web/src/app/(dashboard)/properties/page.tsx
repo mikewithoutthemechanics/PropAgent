@@ -22,8 +22,8 @@ const GradientHeader = () => (
         <Sparkles className="w-4 h-4 text-gold-400" />
         <span className="text-gold-400 text-sm font-medium">Property Portfolio</span>
       </div>
-      <h1 className="text-3xl font-bold text-white mb-2">Properties</h1>
-      <p className="text-slate-400">
+      <h1 className="text-3xl font-bold text-slate-900 mb-2">Properties</h1>
+      <p className="text-slate-500">
         {samplePropertyStats.totalListings} total listings • {samplePropertyStats.activeListings} active
       </p>
     </div>
@@ -41,7 +41,7 @@ const GlassFilters = ({ children, totalResults }: { children: React.ReactNode; t
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
-          <span className="text-slate-300 text-sm font-medium">Filters</span>
+          <span className="text-slate-500 text-sm font-medium">Filters</span>
         </div>
         <span className="text-gold-400 text-sm font-semibold">{totalResults} results</span>
       </div>
@@ -81,20 +81,20 @@ const PropertyCardWrapper = ({
 
 const SkeletonCard = ({ variant = 'default' }: { variant?: 'default' | 'compact' }) => (
   <div className={cn(
-    "animate-pulse bg-navy-800/50 rounded-xl border border-white/5",
+    "animate-pulse bg-navy-100/50 rounded-xl border border-white/5",
     variant === 'default' ? "h-[420px]" : "h-28"
   )}>
     {variant === 'default' && (
-      <div className="h-56 bg-navy-700/30 rounded-t-xl" />
+      <div className="h-56 bg-navy-50/30 rounded-t-xl" />
     )}
     <div className="p-4 space-y-3">
-      <div className="h-4 bg-navy-700/30 rounded w-3/4" />
-      <div className="h-3 bg-navy-700/30 rounded w-1/2" />
-      <div className="h-3 bg-navy-700/30 rounded w-full" />
+      <div className="h-4 bg-navy-50/30 rounded w-3/4" />
+      <div className="h-3 bg-navy-50/30 rounded w-1/2" />
+      <div className="h-3 bg-navy-50/30 rounded w-full" />
       <div className="flex gap-4 pt-2">
-        <div className="h-3 bg-navy-700/30 rounded w-12" />
-        <div className="h-3 bg-navy-700/30 rounded w-12" />
-        <div className="h-3 bg-navy-700/30 rounded w-12" />
+        <div className="h-3 bg-navy-50/30 rounded w-12" />
+        <div className="h-3 bg-navy-50/30 rounded w-12" />
+        <div className="h-3 bg-navy-50/30 rounded w-12" />
       </div>
     </div>
   </div>
@@ -116,7 +116,7 @@ const Pagination = ({
 
   return (
     <div className="flex items-center justify-between">
-      <p className="text-sm text-slate-400">
+      <p className="text-sm text-slate-500">
         Showing <span className="text-gold-400 font-medium">{startItem}</span> - <span className="text-gold-400 font-medium">{endItem}</span> of <span className="text-gold-400 font-medium">{totalItems}</span> properties
       </p>
       <div className="flex items-center gap-2">
@@ -125,7 +125,7 @@ const Pagination = ({
           disabled={currentPage === 1}
           className="group p-2 rounded-xl border border-white/10 hover:border-gold-500/50 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
         >
-          <ChevronLeft className="w-4 h-4 text-slate-400 group-hover:text-gold-400 transition-colors" />
+          <ChevronLeft className="w-4 h-4 text-slate-500 group-hover:text-gold-400 transition-colors" />
         </button>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
           <button
@@ -135,7 +135,7 @@ const Pagination = ({
               "w-10 h-10 rounded-xl text-sm font-medium transition-all duration-300",
               currentPage === page
                 ? "bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 shadow-lg shadow-gold-500/25"
-                : "border border-white/10 hover:border-gold-500/30 text-slate-400 hover:text-gold-400"
+                : "border border-white/10 hover:border-gold-500/30 text-slate-500 hover:text-gold-400"
             )}
           >
             {page}
@@ -146,7 +146,7 @@ const Pagination = ({
           disabled={currentPage === totalPages}
           className="group p-2 rounded-xl border border-white/10 hover:border-gold-500/50 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
         >
-          <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-gold-400 transition-colors" />
+          <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-gold-400 transition-colors" />
         </button>
       </div>
     </div>
@@ -290,7 +290,7 @@ export default function PropertiesPage() {
                   "p-2.5 rounded-lg transition-all duration-300",
                   viewMode === 'grid' 
                     ? "bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 shadow-lg shadow-gold-500/25" 
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                    : "text-slate-500 hover:text-slate-900 hover:bg-white/5"
                 )}
                 title="Grid view"
               >
@@ -302,7 +302,7 @@ export default function PropertiesPage() {
                   "p-2.5 rounded-lg transition-all duration-300",
                   viewMode === 'list' 
                     ? "bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 shadow-lg shadow-gold-500/25" 
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                    : "text-slate-500 hover:text-slate-900 hover:bg-white/5"
                 )}
                 title="List view"
               >
@@ -374,10 +374,10 @@ export default function PropertiesPage() {
 
             {filteredProperties.length === 0 && !isLoading && (
               <div className="py-16 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-navy-800/50 flex items-center justify-center border border-white/10">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-navy-100/50 flex items-center justify-center border border-white/10">
                   <Plus className="w-8 h-8 text-slate-500" />
                 </div>
-                <h3 className="text-lg font-medium text-white">No properties found</h3>
+                <h3 className="text-lg font-medium text-slate-900">No properties found</h3>
                 <p className="text-slate-500 mt-1 mb-4">Try adjusting your filters or add a new property.</p>
                 <Button variant="outline" onClick={handleResetFilters} className="border-white/20 hover:border-gold-500/50 text-gold-400 hover:text-gold-300">
                   Clear Filters

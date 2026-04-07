@@ -191,7 +191,7 @@ export default function FinancialsPage() {
         <div className="flex items-center justify-between relative z-10">
           <div>
             <h1 className="text-3xl font-bold text-gradient-gold font-serif">Financials</h1>
-            <p className="text-gray-400 mt-1">Track revenue, expenses, and generate reports</p>
+            <p className="text-slate-500 mt-1">Track revenue, expenses, and generate reports</p>
           </div>
           <div className="flex items-center gap-3">
             <Button 
@@ -221,7 +221,7 @@ export default function FinancialsPage() {
         <Card className={`glass-card p-6 hover-3d-card cursor-pointer transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-400">Total Rent Collectible</p>
+              <p className="text-sm font-medium text-slate-500">Total Rent Collectible</p>
               <p className="text-2xl font-bold text-gradient-gold mt-1">{formatCurrency(rentRoll.totalRent)}</p>
               <p className="text-xs text-gold-400 mt-1 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" /> +{rentRoll.totalProperties} properties
@@ -236,8 +236,8 @@ export default function FinancialsPage() {
         <Card className={`glass-card p-6 hover-3d-card cursor-pointer transition-all duration-500 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-400">Collected This Month</p>
-              <p className="text-2xl font-bold text-white mt-1">{formatCurrency(rentRoll.totalCollected)}</p>
+              <p className="text-sm font-medium text-slate-500">Collected This Month</p>
+              <p className="text-2xl font-bold text-slate-900 mt-1">{formatCurrency(rentRoll.totalCollected)}</p>
               <p className={`text-xs mt-1 flex items-center gap-1 ${rentRoll.collectionRate >= 80 ? 'text-gold-400' : 'text-navy-400'}`}>
                 <TrendingUp className="w-3 h-3" /> {formatPercent(rentRoll.collectionRate)} collection rate
               </p>
@@ -251,8 +251,8 @@ export default function FinancialsPage() {
         <Card className={`glass-card p-6 hover-3d-card cursor-pointer transition-all duration-500 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-400">Outstanding</p>
-              <p className="text-2xl font-bold text-white mt-1">{formatCurrency(rentRoll.totalOutstanding)}</p>
+              <p className="text-sm font-medium text-slate-500">Outstanding</p>
+              <p className="text-2xl font-bold text-slate-900 mt-1">{formatCurrency(rentRoll.totalOutstanding)}</p>
               <p className="text-xs text-navy-400 mt-1 flex items-center gap-1">
                 <TrendingDown className="w-3 h-3" /> Requires attention
               </p>
@@ -266,8 +266,8 @@ export default function FinancialsPage() {
         <Card className={`glass-card p-6 hover-3d-card cursor-pointer transition-all duration-500 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-400">Total Expenses</p>
-              <p className="text-2xl font-bold text-white mt-1">{formatCurrency(expenseSummary.totalExpenses)}</p>
+              <p className="text-sm font-medium text-slate-500">Total Expenses</p>
+              <p className="text-2xl font-bold text-slate-900 mt-1">{formatCurrency(expenseSummary.totalExpenses)}</p>
               <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
                 <Calendar className="w-3 h-3" /> This period
               </p>
@@ -291,7 +291,7 @@ export default function FinancialsPage() {
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all duration-300 ${
                   activeTab === tab.id
                     ? 'border-navy-500 text-navy-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-600'
+                    : 'border-transparent text-slate-500 hover:text-gray-200 hover:border-gray-600'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -310,13 +310,13 @@ export default function FinancialsPage() {
             subtitle="All properties with rent status"
             action={
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input
                   type="text"
                   placeholder="Search properties..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50 w-64 transition-all"
+                  className="pl-10 pr-4 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50 w-64 transition-all"
                 />
               </div>
             }
@@ -325,25 +325,25 @@ export default function FinancialsPage() {
             <table className="w-full">
               <thead className="bg-dark-800/50 border-b border-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Property</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Tenant</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Monthly Rent</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Collected</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Outstanding</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Property</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tenant</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Monthly Rent</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Collected</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Outstanding</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
                 {filteredRentRoll.map((item) => (
                   <tr key={item.propertyId} className="hover:bg-dark-700/50 transition-all duration-200">
                     <td className="px-6 py-4">
-                      <span className="font-medium text-white">{item.propertyAddress}</span>
+                      <span className="font-medium text-slate-900">{item.propertyAddress}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-gray-400">{item.tenantName}</span>
+                      <span className="text-slate-500">{item.tenantName}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="font-semibold text-white">{formatCurrency(item.monthlyRent)}</span>
+                      <span className="font-semibold text-slate-900">{formatCurrency(item.monthlyRent)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span className="text-gold-400 font-medium">{formatCurrency(item.collected)}</span>
@@ -390,7 +390,7 @@ export default function FinancialsPage() {
                 <select
                   value={expenseFilter}
                   onChange={(e) => setExpenseFilter(e.target.value as ExpenseCategory | 'all')}
-                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="all" className="bg-dark-800">All Categories</option>
                   <option value="maintenance" className="bg-dark-800">Maintenance</option>
@@ -407,29 +407,29 @@ export default function FinancialsPage() {
             <table className="w-full">
               <thead className="bg-dark-800/50 border-b border-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Property</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Description</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Vendor</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Property</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Category</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Description</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Vendor</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Amount</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
                 {filteredExpenses.map((expense) => (
                   <tr key={expense.id} className="hover:bg-dark-700/50 transition-colors">
-                    <td className="px-6 py-4 text-gray-400">{expense.date}</td>
-                    <td className="px-6 py-4 text-white font-medium">{expense.propertyAddress}</td>
+                    <td className="px-6 py-4 text-slate-500">{expense.date}</td>
+                    <td className="px-6 py-4 text-slate-900 font-medium">{expense.propertyAddress}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium capitalize ${getExpenseCategoryColor(expense.category)}`}>
                         {expense.category}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-400">{expense.description}</td>
+                    <td className="px-6 py-4 text-slate-500">{expense.description}</td>
                     <td className="px-6 py-4 text-gray-500">{expense.vendor || '-'}</td>
                     <td className="px-6 py-4 text-right">
-                      <span className="font-semibold text-white">{formatCurrency(expense.amount)}</span>
+                      <span className="font-semibold text-slate-900">{formatCurrency(expense.amount)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
@@ -473,23 +473,23 @@ export default function FinancialsPage() {
               <table className="w-full">
                 <thead className="bg-dark-800/50 border-b border-gray-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Invoice #</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Property</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Tenant</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Amount</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Invoice #</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Property</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tenant</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Amount</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-800">
                   {invoices.map((invoice) => (
                     <tr key={invoice.id} className="hover:bg-dark-700/50 transition-colors">
                       <td className="px-6 py-4 text-navy-400 font-medium">{invoice.invoiceNumber}</td>
-                      <td className="px-6 py-4 text-white font-medium">{invoice.property}</td>
-                      <td className="px-6 py-4 text-gray-400">{invoice.tenant}</td>
-                      <td className="px-6 py-4 text-gray-400">{invoice.date}</td>
-                      <td className="px-6 py-4 text-right font-semibold text-white">{formatCurrency(invoice.total)}</td>
+                      <td className="px-6 py-4 text-slate-900 font-medium">{invoice.property}</td>
+                      <td className="px-6 py-4 text-slate-500">{invoice.tenant}</td>
+                      <td className="px-6 py-4 text-slate-500">{invoice.date}</td>
+                      <td className="px-6 py-4 text-right font-semibold text-slate-900">{formatCurrency(invoice.total)}</td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
                           invoice.status === 'paid' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' :
@@ -517,7 +517,7 @@ export default function FinancialsPage() {
                               Mark Paid
                             </button>
                           )}
-                          <button className="text-gray-400 hover:text-white">
+                          <button className="text-slate-500 hover:text-slate-900">
                             <Download className="w-4 h-4" />
                           </button>
                         </div>
@@ -530,7 +530,7 @@ export default function FinancialsPage() {
           ) : (
             <div className="p-12 text-center">
               <Receipt className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400 mb-4">No invoices yet</p>
+              <p className="text-slate-500 mb-4">No invoices yet</p>
               <Button 
                 className="btn-premium text-gray-900"
                 onClick={() => setShowInvoiceModal(true)}
@@ -553,13 +553,13 @@ export default function FinancialsPage() {
                 <select
                   value={reportPeriod}
                   onChange={(e) => setReportPeriod(e.target.value as ReportPeriod)}
-                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                 >
                   <option value="monthly" className="bg-dark-800">Monthly</option>
                   <option value="quarterly" className="bg-dark-800">Quarterly</option>
                   <option value="annually" className="bg-dark-800">Annually</option>
                 </select>
-                <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-dark-700">
+                <Button variant="outline" className="border-gray-600 text-slate-400 hover:bg-dark-700">
                   <Printer className="w-4 h-4 mr-2" />
                   Print
                 </Button>
@@ -576,15 +576,15 @@ export default function FinancialsPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
                   <p className="text-xs text-gray-500">Rent Collected</p>
-                  <p className="text-lg font-semibold text-white">{formatCurrency(report.rentCollected)}</p>
+                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.rentCollected)}</p>
                 </div>
                 <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
                   <p className="text-xs text-gray-500">Rent Outstanding</p>
-                  <p className="text-lg font-semibold text-white">{formatCurrency(report.rentOutstanding)}</p>
+                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.rentOutstanding)}</p>
                 </div>
                 <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
                   <p className="text-xs text-gray-500">Other Income</p>
-                  <p className="text-lg font-semibold text-white">{formatCurrency(report.otherIncome)}</p>
+                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.otherIncome)}</p>
                 </div>
                 <div className="bg-gold-500/10 rounded-lg p-4 border border-gold-500/30">
                   <p className="text-xs text-gold-400">Total Revenue</p>
@@ -602,19 +602,19 @@ export default function FinancialsPage() {
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
                   <p className="text-xs text-gray-500">Maintenance</p>
-                  <p className="text-lg font-semibold text-white">{formatCurrency(report.maintenanceExpenses)}</p>
+                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.maintenanceExpenses)}</p>
                 </div>
                 <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
                   <p className="text-xs text-gray-500">Rates</p>
-                  <p className="text-lg font-semibold text-white">{formatCurrency(report.ratesExpenses)}</p>
+                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.ratesExpenses)}</p>
                 </div>
                 <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
                   <p className="text-xs text-gray-500">Utilities</p>
-                  <p className="text-lg font-semibold text-white">{formatCurrency(report.utilitiesExpenses)}</p>
+                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.utilitiesExpenses)}</p>
                 </div>
                 <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
                   <p className="text-xs text-gray-500">Other</p>
-                  <p className="text-lg font-semibold text-white">{formatCurrency(report.otherExpenses)}</p>
+                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.otherExpenses)}</p>
                 </div>
                 <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/30">
                   <p className="text-xs text-red-400">Total Expenses</p>
@@ -634,7 +634,7 @@ export default function FinancialsPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-500">Occupancy Rate</p>
-                  <p className="text-lg font-semibold text-white">{formatPercent(report.occupancyRate)}</p>
+                  <p className="text-lg font-semibold text-slate-900">{formatPercent(report.occupancyRate)}</p>
                   <p className="text-xs text-gray-600">
                     {report.occupiedProperties} of {report.totalProperties} properties occupied
                   </p>
@@ -661,23 +661,23 @@ export default function FinancialsPage() {
             <table className="w-full">
               <thead className="bg-dark-800/50 border-b border-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Property</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Sale Price</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Commission</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Listing Agent</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Introducing Agent</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Platform Fee</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Property</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Sale Price</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Commission</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Listing Agent</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Introducing Agent</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Platform Fee</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
                 {commissions.map((item) => (
                   <tr key={item.propertyId} className="hover:bg-dark-700/50 transition-colors">
                     <td className="px-6 py-4">
-                      <span className="font-medium text-white">{item.propertyAddress}</span>
+                      <span className="font-medium text-slate-900">{item.propertyAddress}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="font-semibold text-white">{formatCurrency(item.salePrice)}</span>
+                      <span className="font-semibold text-slate-900">{formatCurrency(item.salePrice)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span>{formatCurrency(item.totalCommission)}</span>
@@ -697,7 +697,7 @@ export default function FinancialsPage() {
                         item.escrowStatus === 'released' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' :
                         item.escrowStatus === 'deposited' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
                         item.escrowStatus === 'in_verification' ? 'bg-navy-500/20 text-navy-400 border border-navy-500/30' :
-                        'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+                        'bg-gray-500/20 text-slate-500 border border-gray-500/30'
                       }`}>
                         {item.escrowStatus.replace('_', ' ')}
                       </span>
@@ -720,10 +720,10 @@ export default function FinancialsPage() {
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-dark-800 border border-gray-700 rounded-2xl w-full max-w-md shadow-2xl">
             <div className="flex items-center justify-between p-6 border-b border-gray-700">
-              <h2 className="text-xl font-bold text-white font-serif">Add New Expense</h2>
+              <h2 className="text-xl font-bold text-slate-900 font-serif">Add New Expense</h2>
               <button 
                 onClick={() => setShowAddExpense(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-slate-500 hover:text-slate-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -731,11 +731,11 @@ export default function FinancialsPage() {
             
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Property *</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Property *</label>
                 <select
                   value={newExpense.propertyId}
                   onChange={(e) => setNewExpense({...newExpense, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="">Select a property</option>
                   {mockProperties.map((property) => (
@@ -748,11 +748,11 @@ export default function FinancialsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Category *</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Category *</label>
                   <select
                     value={newExpense.category}
                     onChange={(e) => setNewExpense({...newExpense, category: e.target.value as ExpenseCategory})}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                   >
                     <option value="maintenance">Maintenance</option>
                     <option value="rates">Rates</option>
@@ -764,57 +764,57 @@ export default function FinancialsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Amount *</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Amount *</label>
                   <input
                     type="number"
                     value={newExpense.amount}
                     onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
                     placeholder="0.00"
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Description *</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Description *</label>
                 <input
                   type="text"
                   value={newExpense.description}
                   onChange={(e) => setNewExpense({...newExpense, description: e.target.value})}
                   placeholder="Enter expense description"
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Vendor</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Vendor</label>
                   <input
                     type="text"
                     value={newExpense.vendor}
                     onChange={(e) => setNewExpense({...newExpense, vendor: e.target.value})}
                     placeholder="Vendor name"
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Date</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Date</label>
                   <input
                     type="date"
                     value={newExpense.date}
                     onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Status</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Status</label>
                 <select
                   value={newExpense.status}
                   onChange={(e) => setNewExpense({...newExpense, status: e.target.value as 'pending' | 'paid'})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="pending">Pending</option>
                   <option value="paid">Paid</option>
@@ -825,7 +825,7 @@ export default function FinancialsPage() {
             <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-700">
               <Button 
                 variant="outline" 
-                className="border-gray-600 text-gray-300 hover:bg-dark-700"
+                className="border-gray-600 text-slate-400 hover:bg-dark-700"
                 onClick={() => setShowAddExpense(false)}
               >
                 Cancel
@@ -847,10 +847,10 @@ export default function FinancialsPage() {
           <div className="bg-dark-800 border border-gray-700 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-700">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-white">Create Invoice</h2>
+                <h2 className="text-xl font-semibold text-slate-900">Create Invoice</h2>
                 <button 
                   onClick={() => setShowInvoiceModal(false)}
-                  className="text-gray-400 hover:text-white"
+                  className="text-slate-500 hover:text-slate-900"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -861,17 +861,17 @@ export default function FinancialsPage() {
               {/* Invoice Number & Status */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Invoice Number</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Invoice Number</label>
                   <div className="px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-navy-400 font-medium">
                     INV-{Date.now().toString().slice(-8)}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Status</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Status</label>
                   <select
                     value={invoiceStatus}
                     onChange={(e) => setInvoiceStatus(e.target.value as 'draft' | 'sent' | 'paid')}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   >
                     <option value="draft">Draft</option>
                     <option value="sent">Sent</option>
@@ -883,11 +883,11 @@ export default function FinancialsPage() {
               {/* Property & Tenant Selection */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Property</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Property</label>
                   <select
                     value={selectedProperty}
                     onChange={(e) => setSelectedProperty(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   >
                     <option value="">Select Property</option>
                     {mockProperties.map(prop => (
@@ -896,11 +896,11 @@ export default function FinancialsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Tenant</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Tenant</label>
                   <select
                     value={selectedTenant}
                     onChange={(e) => setSelectedTenant(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   >
                     <option value="">Select Tenant</option>
                     {mockTenants.map(tenant => (
@@ -913,28 +913,28 @@ export default function FinancialsPage() {
               {/* Dates */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Invoice Date</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Invoice Date</label>
                   <input
                     type="date"
                     value={invoiceDate}
                     onChange={(e) => setInvoiceDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Due Date</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Due Date</label>
                   <input
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                   />
                 </div>
               </div>
 
               {/* Line Items */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Line Items</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Line Items</label>
                 <div className="space-y-3">
                   {lineItems.map((item, index) => (
                     <div key={index} className="flex gap-3 items-start">
@@ -947,7 +947,7 @@ export default function FinancialsPage() {
                           setLineItems(newItems);
                         }}
                         placeholder="Description"
-                        className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                        className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                       />
                       <input
                         type="number"
@@ -958,7 +958,7 @@ export default function FinancialsPage() {
                           setLineItems(newItems);
                         }}
                         placeholder="Amount"
-                        className="w-32 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                        className="w-32 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                       />
                       {lineItems.length > 1 && (
                         <button
@@ -982,39 +982,39 @@ export default function FinancialsPage() {
 
               {/* Tax Rate */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Tax Rate (%)</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Tax Rate (%)</label>
                 <input
                   type="number"
                   value={taxRate}
                   onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
                 />
               </div>
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Notes (Optional)</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Notes (Optional)</label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add any notes for the tenant..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 resize-none"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 resize-none"
                 />
               </div>
 
               {/* Summary */}
               <div className="bg-dark-700 rounded-xl p-4 space-y-2">
-                <div className="flex justify-between text-gray-400">
+                <div className="flex justify-between text-slate-500">
                   <span>Subtotal</span>
-                  <span className="text-white">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0))}</span>
+                  <span className="text-slate-900">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0))}</span>
                 </div>
-                <div className="flex justify-between text-gray-400">
+                <div className="flex justify-between text-slate-500">
                   <span>Tax ({taxRate}%)</span>
-                  <span className="text-white">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0) * taxRate / 100)}</span>
+                  <span className="text-slate-900">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0) * taxRate / 100)}</span>
                 </div>
                 <div className="border-t border-gray-600 pt-2 flex justify-between text-lg font-semibold">
-                  <span className="text-white">Total</span>
+                  <span className="text-slate-900">Total</span>
                   <span className="text-navy-400">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0) * (1 + taxRate / 100))}</span>
                 </div>
               </div>
@@ -1023,7 +1023,7 @@ export default function FinancialsPage() {
             <div className="p-6 border-t border-gray-700 flex items-center justify-between">
               <Button 
                 variant="outline" 
-                className="border-gray-600 text-gray-300 hover:bg-dark-700"
+                className="border-gray-600 text-slate-400 hover:bg-dark-700"
                 onClick={() => setShowInvoiceModal(false)}
               >
                 Cancel
@@ -1031,7 +1031,7 @@ export default function FinancialsPage() {
               <div className="flex gap-3">
                 <Button 
                   variant="outline"
-                  className="border-gray-600 text-gray-300 hover:bg-dark-700"
+                  className="border-gray-600 text-slate-400 hover:bg-dark-700"
                   onClick={() => {
                     const subtotal = lineItems.reduce((sum, item) => sum + (item.amount || 0), 0);
                     const tax = subtotal * taxRate / 100;

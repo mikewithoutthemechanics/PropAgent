@@ -240,7 +240,7 @@ export default function DocumentsPage() {
       expiring_soon: "glass glass-card bg-orange-500/20 text-orange-300 border-orange-500/30",
       expired: "glass glass-card bg-red-500/20 text-red-300 border-red-500/30",
       pending: "glass glass-card bg-navy-500/20 text-gold-300 border-navy-500/30",
-      archived: "glass glass-card bg-slate-500/20 text-slate-300 border-slate-500/30",
+      archived: "glass glass-card bg-slate-500/20 text-slate-500 border-slate-500/30",
     };
 
     return (
@@ -278,8 +278,8 @@ export default function DocumentsPage() {
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-white text-gradient-gold">Document Management</h1>
-              <p className="text-slate-300 mt-1">
+              <h1 className="text-3xl font-bold text-slate-900 text-gradient-gold">Document Management</h1>
+              <p className="text-slate-500 mt-1">
                 Secure storage for leases, contracts & property documents
               </p>
             </div>
@@ -307,8 +307,8 @@ export default function DocumentsPage() {
                 {stat.icon}
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
-                <p className="text-xs text-slate-400">{stat.label}</p>
+                <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+                <p className="text-xs text-slate-500">{stat.label}</p>
               </div>
             </div>
           </div>
@@ -326,7 +326,7 @@ export default function DocumentsPage() {
                 placeholder="Search documents..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-navy-500/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 text-white placeholder-slate-400"
+                className="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-navy-500/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 text-slate-900 placeholder-slate-400"
               />
             </div>
           </div>
@@ -339,8 +339,8 @@ export default function DocumentsPage() {
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300",
                   selectedCategory === cat.value
-                    ? "bg-gradient-to-r from-navy-500 to-yellow-500 text-white shadow-lg glow-gold"
-                    : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-navy-500/20"
+                    ? "bg-gradient-to-r from-navy-500 to-yellow-500 text-slate-900 shadow-lg glow-gold"
+                    : "bg-slate-100/50 text-slate-500 hover:bg-slate-50/50 border border-navy-500/20"
                 )}
               >
                 {cat.label} ({cat.count})
@@ -367,7 +367,7 @@ export default function DocumentsPage() {
         <div className={cn("glass-card rounded-xl overflow-hidden border border-navy-500/20 lg:col-span-2", isVisible && "animate-on-scroll visible delay-300")}>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-800/50 border-b border-navy-500/20">
+              <thead className="bg-slate-100/50 border-b border-navy-500/20">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Document</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Property</th>
@@ -381,7 +381,7 @@ export default function DocumentsPage() {
                   <tr 
                     key={doc.id} 
                     className={cn(
-                      "hover:bg-slate-800/30 cursor-pointer transition-colors",
+                      "hover:bg-slate-100/30 cursor-pointer transition-colors",
                       selectedDoc === doc.id && "bg-navy-500/10"
                     )}
                     onClick={() => setSelectedDoc(doc.id)}
@@ -392,13 +392,13 @@ export default function DocumentsPage() {
                           <FileText className="w-4 h-4 text-navy-400" />
                         </div>
                         <div>
-                          <p className="font-medium text-white text-sm">{doc.title}</p>
+                          <p className="font-medium text-slate-900 text-sm">{doc.title}</p>
                           <p className="text-xs text-slate-500">{formatFileSize(doc.fileSize)}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="text-sm text-slate-300">{doc.propertyAddress}</p>
+                      <p className="text-sm text-slate-500">{doc.propertyAddress}</p>
                       {doc.tenantName && (
                         <p className="text-xs text-slate-500 flex items-center gap-1">
                           <User className="w-3 h-3" /> {doc.tenantName}
@@ -412,7 +412,7 @@ export default function DocumentsPage() {
                     </td>
                     <td className="px-4 py-3">
                       {doc.endDate ? (
-                        <p className="text-sm text-slate-300">
+                        <p className="text-sm text-slate-500">
                           {new Date(doc.endDate).toLocaleDateString('en-ZA')}
                           {getDaysUntilExpiry(doc) !== null && getDaysUntilExpiry(doc)! <= 30 && (
                             <span className="ml-2 text-xs text-orange-400 font-medium">
@@ -453,12 +453,12 @@ export default function DocumentsPage() {
                     <FileText className="w-6 h-6 text-navy-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white">{selectedDocData.title}</h3>
+                    <h3 className="font-semibold text-slate-900">{selectedDocData.title}</h3>
                     <p className="text-xs text-slate-500">{selectedDocData.fileName}</p>
                   </div>
                 </div>
-                <button className="p-2 hover:bg-slate-800/50 rounded-lg transition-colors">
-                  <MoreVertical className="w-4 h-4 text-slate-400" />
+                <button className="p-2 hover:bg-slate-100/50 rounded-lg transition-colors">
+                  <MoreVertical className="w-4 h-4 text-slate-500" />
                 </button>
               </div>
 
@@ -469,23 +469,23 @@ export default function DocumentsPage() {
               <div className="space-y-3 border-t border-navy-500/20 pt-4">
                 <div className="flex items-center gap-2 text-sm">
                   <Building className="w-4 h-4 text-navy-400" />
-                  <span className="text-slate-400">Property:</span>
-                  <span className="font-medium text-white">{selectedDocData.propertyAddress}</span>
+                  <span className="text-slate-500">Property:</span>
+                  <span className="font-medium text-slate-900">{selectedDocData.propertyAddress}</span>
                 </div>
                 
                 {selectedDocData.tenantName && (
                   <div className="flex items-center gap-2 text-sm">
                     <User className="w-4 h-4 text-navy-400" />
-                    <span className="text-slate-400">Tenant:</span>
-                    <span className="font-medium text-white">{selectedDocData.tenantName}</span>
+                    <span className="text-slate-500">Tenant:</span>
+                    <span className="font-medium text-slate-900">{selectedDocData.tenantName}</span>
                   </div>
                 )}
 
                 {selectedDocData.startDate && (
                   <div className="flex items-center gap-2 text-sm">
                     <Calendar className="w-4 h-4 text-navy-400" />
-                    <span className="text-slate-400">Lease Period:</span>
-                    <span className="font-medium text-white">
+                    <span className="text-slate-500">Lease Period:</span>
+                    <span className="font-medium text-slate-900">
                       {new Date(selectedDocData.startDate).toLocaleDateString('en-ZA')} - {new Date(selectedDocData.endDate!).toLocaleDateString('en-ZA')}
                     </span>
                   </div>
@@ -494,15 +494,15 @@ export default function DocumentsPage() {
                 {selectedDocData.monthlyRent && (
                   <div className="flex items-center gap-2 text-sm">
                     <DollarSign className="w-4 h-4 text-navy-400" />
-                    <span className="text-slate-400">Monthly Rent:</span>
-                    <span className="font-medium text-white">R{selectedDocData.monthlyRent.toLocaleString()}</span>
+                    <span className="text-slate-500">Monthly Rent:</span>
+                    <span className="font-medium text-slate-900">R{selectedDocData.monthlyRent.toLocaleString()}</span>
                   </div>
                 )}
 
                 <div className="flex items-center gap-2 text-sm">
                   <Clock className="w-4 h-4 text-navy-400" />
-                  <span className="text-slate-400">Uploaded:</span>
-                  <span className="font-medium text-white">
+                  <span className="text-slate-500">Uploaded:</span>
+                  <span className="font-medium text-slate-900">
                     {new Date(selectedDocData.uploadedAt).toLocaleDateString('en-ZA')}
                   </span>
                 </div>
@@ -510,8 +510,8 @@ export default function DocumentsPage() {
                 {selectedDocData.lastReviewedAt && (
                   <div className="flex items-center gap-2 text-sm">
                     <CheckCircle className="w-4 h-4 text-navy-400" />
-                    <span className="text-slate-400">Last Reviewed:</span>
-                    <span className="font-medium text-white">
+                    <span className="text-slate-500">Last Reviewed:</span>
+                    <span className="font-medium text-slate-900">
                       {new Date(selectedDocData.lastReviewedAt).toLocaleDateString('en-ZA')}
                     </span>
                   </div>
@@ -567,7 +567,7 @@ export default function DocumentsPage() {
           ) : (
             <div className="py-12 text-center">
               <FolderOpen className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-              <p className="text-slate-400">Select a document to view details</p>
+              <p className="text-slate-500">Select a document to view details</p>
             </div>
           )}
         </div>
@@ -578,8 +578,8 @@ export default function DocumentsPage() {
         <div className="flex items-start gap-3">
           <Shield className="w-5 h-5 text-navy-400 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-white">Secure Document Storage</p>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="font-medium text-slate-900">Secure Document Storage</p>
+            <p className="text-sm text-slate-500 mt-1">
               All documents are encrypted at rest. Lease agreements automatically trigger expiry alerts at 30, 14, 7, and 1 day(s) before expiration. 
               ID documents are stored with the highest security level and are only accessible to authorized agents.
             </p>
@@ -592,10 +592,10 @@ export default function DocumentsPage() {
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-dark-800 border border-gray-700 rounded-2xl w-full max-w-md shadow-2xl">
             <div className="flex items-center justify-between p-6 border-b border-gray-700">
-              <h2 className="text-xl font-bold text-white font-serif">Upload Document</h2>
+              <h2 className="text-xl font-bold text-slate-900 font-serif">Upload Document</h2>
               <button 
                 onClick={() => setShowUploadModal(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-slate-500 hover:text-slate-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -603,22 +603,22 @@ export default function DocumentsPage() {
             
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Document Title *</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Document Title *</label>
                 <input
                   type="text"
                   value={newDocument.title}
                   onChange={(e) => setNewDocument({...newDocument, title: e.target.value})}
                   placeholder="e.g., Lease Agreement - Unit 4B"
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Category *</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Category *</label>
                 <select
                   value={newDocument.category}
                   onChange={(e) => setNewDocument({...newDocument, category: e.target.value as DocumentCategory})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="lease">Lease Agreement</option>
                   <option value="id">ID Document</option>
@@ -631,11 +631,11 @@ export default function DocumentsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Property *</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Property *</label>
                 <select
                   value={newDocument.propertyId}
                   onChange={(e) => setNewDocument({...newDocument, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 >
                   <option value="">Select a property</option>
                   {mockProperties.map((property) => (
@@ -647,29 +647,29 @@ export default function DocumentsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Expiry Date (optional)</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Expiry Date (optional)</label>
                 <input
                   type="date"
                   value={newDocument.expiryDate}
                   onChange={(e) => setNewDocument({...newDocument, expiryDate: e.target.value})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">Notes (optional)</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Notes (optional)</label>
                 <textarea
                   value={newDocument.notes}
                   onChange={(e) => setNewDocument({...newDocument, notes: e.target.value})}
                   placeholder="Additional notes..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50 resize-none"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50 resize-none"
                 />
               </div>
 
               <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
                 <FileIcon className="w-10 h-10 text-gray-500 mx-auto mb-3" />
-                <p className="text-gray-400 text-sm">
+                <p className="text-slate-500 text-sm">
                   Drag and drop files here, or click to browse
                 </p>
                 <p className="text-gray-500 text-xs mt-2">
@@ -681,7 +681,7 @@ export default function DocumentsPage() {
             <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-700">
               <Button 
                 variant="outline" 
-                className="border-gray-600 text-gray-300 hover:bg-dark-700"
+                className="border-gray-600 text-slate-400 hover:bg-dark-700"
                 onClick={() => setShowUploadModal(false)}
               >
                 Cancel
@@ -708,13 +708,13 @@ export default function DocumentsPage() {
                   <FileText className="w-5 h-5 text-navy-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-white font-serif">{viewingDoc.title}</h2>
-                  <p className="text-sm text-gray-400">{viewingDoc.fileName}</p>
+                  <h2 className="text-xl font-bold text-slate-900 font-serif">{viewingDoc.title}</h2>
+                  <p className="text-sm text-slate-500">{viewingDoc.fileName}</p>
                 </div>
               </div>
               <button 
                 onClick={() => setShowViewModal(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-slate-500 hover:text-slate-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -724,7 +724,7 @@ export default function DocumentsPage() {
               {/* Document Preview Placeholder */}
               <div className="bg-dark-900 border border-dark-700 rounded-lg p-8 text-center mb-6">
                 <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">Document Preview</p>
+                <p className="text-slate-500">Document Preview</p>
                 <p className="text-sm text-gray-500 mt-2">
                   {viewingDoc.mimeType} • {formatFileSize(viewingDoc.fileSize)}
                 </p>
@@ -734,32 +734,32 @@ export default function DocumentsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-dark-800/50 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Property</p>
-                  <p className="text-sm font-medium text-white">{viewingDoc.propertyAddress}</p>
+                  <p className="text-sm font-medium text-slate-900">{viewingDoc.propertyAddress}</p>
                 </div>
                 <div className="p-4 bg-dark-800/50 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Category</p>
-                  <p className="text-sm font-medium text-white">{getCategoryLabel(viewingDoc.category)}</p>
+                  <p className="text-sm font-medium text-slate-900">{getCategoryLabel(viewingDoc.category)}</p>
                 </div>
                 <div className="p-4 bg-dark-800/50 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Uploaded By</p>
-                  <p className="text-sm font-medium text-white">{viewingDoc.uploadedBy}</p>
+                  <p className="text-sm font-medium text-slate-900">{viewingDoc.uploadedBy}</p>
                 </div>
                 <div className="p-4 bg-dark-800/50 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Upload Date</p>
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-sm font-medium text-slate-900">
                     {new Date(viewingDoc.uploadedAt).toLocaleDateString('en-ZA')}
                   </p>
                 </div>
                 {viewingDoc.tenantName && (
                   <div className="p-4 bg-dark-800/50 rounded-lg">
                     <p className="text-xs text-gray-500 mb-1">Tenant</p>
-                    <p className="text-sm font-medium text-white">{viewingDoc.tenantName}</p>
+                    <p className="text-sm font-medium text-slate-900">{viewingDoc.tenantName}</p>
                   </div>
                 )}
                 {viewingDoc.endDate && (
                   <div className="p-4 bg-dark-800/50 rounded-lg">
                     <p className="text-xs text-gray-500 mb-1">Expiry Date</p>
-                    <p className="text-sm font-medium text-white">
+                    <p className="text-sm font-medium text-slate-900">
                       {new Date(viewingDoc.endDate).toLocaleDateString('en-ZA')}
                     </p>
                   </div>
@@ -769,7 +769,7 @@ export default function DocumentsPage() {
               {viewingDoc.notes && (
                 <div className="mt-4 p-4 bg-dark-800/50 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Notes</p>
-                  <p className="text-sm text-white">{viewingDoc.notes}</p>
+                  <p className="text-sm text-slate-900">{viewingDoc.notes}</p>
                 </div>
               )}
             </div>
@@ -781,7 +781,7 @@ export default function DocumentsPage() {
               <div className="flex items-center gap-3">
                 <Button 
                   variant="outline" 
-                  className="border-gray-600 text-gray-300 hover:bg-dark-700"
+                  className="border-gray-600 text-slate-400 hover:bg-dark-700"
                   onClick={() => setShowViewModal(false)}
                 >
                   Close
@@ -810,8 +810,8 @@ export default function DocumentsPage() {
               <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle className="w-8 h-8 text-red-400" />
               </div>
-              <h2 className="text-xl font-bold text-white mb-2">Delete Document?</h2>
-              <p className="text-gray-400 text-sm">
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Delete Document?</h2>
+              <p className="text-slate-500 text-sm">
                 This action cannot be undone. The document "{documents.find(d => d.id === deletingDocId)?.title}" will be permanently removed.
               </p>
             </div>
@@ -819,7 +819,7 @@ export default function DocumentsPage() {
             <div className="flex items-center justify-center gap-3 p-6 border-t border-dark-700">
               <Button 
                 variant="outline" 
-                className="border-gray-600 text-gray-300 hover:bg-dark-700"
+                className="border-gray-600 text-slate-400 hover:bg-dark-700"
                 onClick={() => {
                   setShowDeleteConfirm(false);
                   setDeletingDocId(null);
@@ -828,7 +828,7 @@ export default function DocumentsPage() {
                 Cancel
               </Button>
               <Button 
-                className="bg-red-500 hover:bg-red-600 text-white"
+                className="bg-red-500 hover:bg-red-600 text-slate-900"
                 onClick={handleDeleteDocument}
               >
                 <Trash2 className="w-4 h-4 mr-2" />

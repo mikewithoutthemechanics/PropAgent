@@ -45,7 +45,7 @@ export default function MatchingPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-10">
         <div>
-          <h1 className="text-2xl md:text-4xl font-light tracking-tight">Tenant Matching</h1>
+          <h1 className="text-2xl md:text-4xl font-semibold">Tenant Matching</h1>
           <p className="text-slate-500 mt-2 flex items-center gap-3 text-sm md:text-base">
             <Users className="w-4 h-4" />
             <span>{criteria.length} active criteria</span>
@@ -54,11 +54,11 @@ export default function MatchingPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Badge className="gap-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs md:text-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <Badge className="gap-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 text-xs md:text-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             FFC Verified
           </Badge>
-          <Button className="bg-white text-slate-900 font-medium hover:bg-gold-400 transition-all duration-300 text-xs md:text-sm py-2 px-4 md:py-2.5 md:px-5 rounded-full">
+          <Button className="bg-navy-500 text-slate-900 hover:bg-navy-600 transition-all text-xs md:text-sm py-2 px-4 md:py-2.5 md:px-5 rounded-lg">
             <Plus className="w-4 h-4 mr-2" />
             Add Criteria
           </Button>
@@ -71,10 +71,10 @@ export default function MatchingPage() {
         <div className="lg:hidden">
           <button 
             onClick={() => setMobileListOpen(!mobileListOpen)}
-            className="w-full flex items-center justify-between px-5 py-4 bg-slate-900 border border-white/5 rounded-xl"
+            className="w-full flex items-center justify-between px-5 py-4 bg-white border border-slate-200 rounded-xl"
           >
-            <span className="font-light">Criteria ({criteria.length})</span>
-            <ChevronRight className={cn("w-5 h-5 transition-transform", mobileListOpen && "rotate-90")} />
+            <span className="font-medium">Criteria ({criteria.length})</span>
+            <ChevronRight className={cn("w-5 h-5", mobileListOpen && "rotate-90")} />
           </button>
         </div>
 
@@ -84,8 +84,8 @@ export default function MatchingPage() {
           mobileListOpen ? "block" : "hidden lg:block"
         )}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-light text-white/50 uppercase tracking-widest">Active Criteria</h2>
-            <span className="text-xs text-white/30">{criteria.length}</span>
+            <h2 className="text-sm font-medium text-slate-500 uppercase tracking-widest">Active Criteria</h2>
+            <span className="text-xs text-slate-500">{criteria.length}</span>
           </div>
           
           {criteria.map((c) => (
@@ -96,33 +96,33 @@ export default function MatchingPage() {
                 setMobileListOpen(false);
               }}
               className={cn(
-                "group cursor-pointer p-5 bg-slate-900/30 border border-white/5 rounded-xl transition-all duration-300",
+                "group cursor-pointer p-5 bg-white border rounded-xl transition-all duration-300",
                 selectedCriteria === c.id 
-                  ? "border-gold-500/30 bg-slate-900/60" 
-                  : "hover:border-white/10 hover:bg-slate-900/50"
+                  ? "border-amber-300 shadow-md" 
+                  : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
               )}
             >
               <div className="flex items-start justify-between mb-4">
-                <span className="text-lg font-light">{c.budget}</span>
-                <Badge variant="success" className="text-xs bg-emerald-500/10">{c.matchCount} matches</Badge>
+                <span className="text-lg font-medium">{c.budget}</span>
+                <Badge variant="success" className="text-xs">{c.matchCount} matches</Badge>
               </div>
-              <div className="space-y-2 text-sm text-white/50">
+              <div className="space-y-2 text-sm text-slate-500">
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-white/30" />
+                  <MapPin className="w-4 h-4" />
                   {c.location}
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1.5">
-                    <Home className="w-4 h-4 text-white/30" />
+                    <Home className="w-4 h-4" />
                     {c.beds}
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-white/30" />
+                    <Calendar className="w-4 h-4" />
                     {c.moveIn}
                   </span>
                 </div>
                 {c.pets && (
-                  <div className="flex items-center gap-1.5 text-emerald-400/70">
+                  <div className="flex items-center gap-1.5 text-emerald-600">
                     <Sparkles className="w-4 h-4" />
                     Pets considered
                   </div>
@@ -134,19 +134,19 @@ export default function MatchingPage() {
 
         {/* Property Matches */}
         <div className="lg:col-span-3">
-          <Card className="h-full min-h-[400px] bg-slate-900/30 border-white/5">
+          <Card className="h-full min-h-[400px]">
             {/* Filters */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-white/5">
-              <h2 className="text-lg font-light">Property Matches</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200">
+              <h2 className="text-lg font-semibold">Property Matches</h2>
               <div className="flex items-center gap-3">
                 <button 
                   onClick={() => setFilterOpen(!filterOpen)}
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 border border-white/5 rounded-lg text-sm hover:border-white/20 transition-all"
+                  className="flex items-center gap-2 px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm hover:border-slate-300 transition-all"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                   Filters
                 </button>
-                <select className="px-4 py-2 bg-slate-800/50 border border-white/5 rounded-lg text-sm focus:outline-none focus:border-gold-500/30">
+                <select className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-300">
                   <option>Sort by match %</option>
                   <option>Sort by price</option>
                   <option>Sort by date</option>
@@ -157,38 +157,38 @@ export default function MatchingPage() {
             {selectedCriteria ? (
               <div className="grid gap-4">
                 {[1,2,3,4,5].map((i) => (
-                  <div key={i} className="group flex items-center gap-5 p-4 bg-slate-900/30 border border-white/5 rounded-xl hover:border-gold-500/20 hover:bg-slate-900/50 transition-all duration-300 cursor-pointer">
-                    <div className="w-28 h-24 bg-slate-800 rounded-lg overflow-hidden flex-shrink-0">
-                      <div className="w-full h-full bg-gradient-to-br from-slate-700 to-slate-800" />
+                  <div key={i} className="group flex items-center gap-5 p-4 bg-white border border-slate-100 rounded-xl hover:border-amber-200 hover:shadow-md transition-all duration-300 cursor-pointer">
+                    <div className="w-28 h-24 bg-slate-200 rounded-lg overflow-hidden flex-shrink-0">
+                      <div className="w-full h-full bg-gradient-to-br from-slate-300 to-slate-200" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
                         <div>
-                          <h4 className="text-lg font-light mb-1">Modern Apartment in Umhlanga</h4>
-                          <p className="text-white/50 text-sm">R12,500 • 2 bed • 1 bath • 85m²</p>
+                          <h4 className="text-lg font-medium mb-1">Modern Apartment in Umhlanga</h4>
+                          <p className="text-slate-500 text-sm">R12,500 • 2 bed • 1 bath • 85m²</p>
                         </div>
                         <div className="text-right">
-                          <span className="block text-2xl font-light text-gold-400">{98 - (i * 2)}%</span>
-                          <span className="text-xs text-white/30">match</span>
+                          <span className="block text-2xl font-semibold text-amber-600">{98 - (i * 2)}%</span>
+                          <span className="text-xs text-slate-500">match</span>
                         </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-2 mt-3">
-                        <Badge className="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Available now</Badge>
-                        <Badge className="text-xs bg-blue-500/10 text-blue-400 border border-blue-500/20">Garden</Badge>
-                        <Badge className="text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20">Parking</Badge>
+                        <Badge variant="success" className="text-xs">Available now</Badge>
+                        <Badge variant="info" className="text-xs">Garden</Badge>
+                        <Badge variant="info" className="text-xs">Parking</Badge>
                       </div>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-gold-400 transition-colors flex-shrink-0" />
+                    <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-amber-500 transition-colors flex-shrink-0" />
                   </div>
                 ))}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-64 text-center">
-                <div className="w-20 h-20 bg-slate-900/50 rounded-full flex items-center justify-center mb-6">
-                  <Target className="w-10 h-10 text-white/20" />
+                <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+                  <Target className="w-10 h-10 text-slate-500" />
                 </div>
-                <h3 className="text-xl font-light text-white/60 mb-2">Select criteria to view matches</h3>
-                <p className="text-white/30 text-sm max-w-sm">
+                <h3 className="text-xl font-medium text-slate-600 mb-2">Select criteria to view matches</h3>
+                <p className="text-slate-500 text-sm max-w-sm">
                   Choose a tenant criteria from the left panel to see matching properties
                 </p>
               </div>
@@ -198,13 +198,13 @@ export default function MatchingPage() {
       </div>
 
       {/* Info Box */}
-      <div className="mt-8 p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl flex items-start gap-4">
-        <div className="w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center flex-shrink-0">
-          <Bell className="w-5 h-5 text-blue-400" />
+      <div className="mt-8 p-5 bg-blue-50 border border-blue-100 rounded-2xl flex items-start gap-4">
+        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <Bell className="w-5 h-5 text-blue-600" />
         </div>
         <div>
-          <h4 className="font-light text-lg mb-1">POPIA Protected Matching</h4>
-          <p className="text-white/50 text-sm leading-relaxed">
+          <h4 className="font-medium text-lg mb-1">POPIA Protected Matching</h4>
+          <p className="text-slate-500 text-sm leading-relaxed">
             Criteria-only matching ensures no client personal data ever touches our servers. 
             Client requirements are anonymized and matched property-to-property. 
             Agent contact details are kept internal. FFC verification required for all agents.

@@ -108,9 +108,9 @@ function OnboardingContent() {
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
                   currentStep > step.id
-                    ? "bg-gold-500 text-white"
+                    ? "bg-gold-500 text-slate-900"
                     : currentStep === step.id
-                    ? "bg-gold-500 text-white"
+                    ? "bg-gold-500 text-slate-900"
                     : "bg-slate-200 text-slate-500"
                 }`}
               >
@@ -291,7 +291,7 @@ function OnboardingContent() {
                     onClick={() => handleSpecializationToggle(spec)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                       formData.specializations.includes(spec)
-                        ? "bg-gold-500 text-white"
+                        ? "bg-gold-500 text-slate-900"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
@@ -316,7 +316,7 @@ function OnboardingContent() {
             type="button"
             onClick={handleNext}
             disabled={loading}
-            className="px-6 py-3 bg-gold-500 text-white rounded-lg hover:bg-gold-600 disabled:opacity-50"
+            className="px-6 py-3 bg-gold-500 text-slate-900 rounded-lg hover:bg-gold-600 disabled:opacity-50"
           >
             {loading ? "Saving..." : currentStep === 4 ? "Complete" : "Next"}
           </button>

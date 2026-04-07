@@ -120,19 +120,19 @@ function AddPlanModal({
   };
 
   const inputClasses =
-    "w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/20 transition-colors";
+    "w-full px-4 py-2.5 bg-slate-100 border border-gray-700 rounded-lg text-slate-900 placeholder-gray-400 text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/20 transition-colors";
 
-  const labelClasses = "block text-sm font-medium text-gray-300 mb-1.5";
+  const labelClasses = "block text-sm font-medium text-slate-400 mb-1.5";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-gray-900 border border-gray-800 rounded-xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Add New Pricing Plan</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Add New Pricing Plan</h2>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
             aria-label="Close modal"
           >
             <XIcon className="w-5 h-5" />
@@ -235,9 +235,9 @@ function AddPlanModal({
               type="checkbox"
               checked={formData.popular}
               onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
-              className="w-4 h-4 rounded border-gray-700 bg-gray-800 text-gold-500 focus:ring-gold-500 focus:ring-offset-gray-900"
+              className="w-4 h-4 rounded border-gray-700 bg-slate-100 text-gold-500 focus:ring-gold-500 focus:ring-offset-gray-900"
             />
-            <label htmlFor="popular" className="text-sm text-gray-300">
+            <label htmlFor="popular" className="text-sm text-slate-400">
               Mark as Most Popular
             </label>
           </div>
@@ -246,7 +246,7 @@ function AddPlanModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 border border-gray-700 text-gray-300 rounded-lg hover:bg-gray-800 transition-colors"
+              className="flex-1 px-4 py-2.5 border border-gray-700 text-slate-400 rounded-lg hover:bg-slate-100 transition-colors"
             >
               Cancel
             </button>
@@ -332,9 +332,9 @@ export default function PricingPage() {
                     {feature.included ? (
                       <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
                     ) : (
-                      <X className="w-5 h-5 text-gray-300 flex-shrink-0" />
+                      <X className="w-5 h-5 text-slate-400 flex-shrink-0" />
                     )}
-                    <span className={feature.included ? 'text-gray-700' : 'text-gray-400'}>
+                    <span className={feature.included ? 'text-gray-700' : 'text-slate-500'}>
                       {feature.name}
                     </span>
                   </div>

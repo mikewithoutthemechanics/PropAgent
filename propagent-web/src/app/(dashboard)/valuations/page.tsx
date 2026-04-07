@@ -341,8 +341,8 @@ PropAgent Property Valuation System
       <div className="gradient-header rounded-xl p-6 -mx-1">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white text-gradient-gold">Property Valuation</h1>
-            <p className="text-slate-400 mt-1">Automated valuation model and comparable analysis</p>
+            <h1 className="text-2xl font-bold text-slate-900 text-gradient-gold">Property Valuation</h1>
+            <p className="text-slate-500 mt-1">Automated valuation model and comparable analysis</p>
           </div>
           <div className="flex items-center gap-2">
             {valuationHistory.length > 0 && (
@@ -365,7 +365,7 @@ PropAgent Property Valuation System
       {/* History Panel */}
       {showHistory && valuationHistory.length > 0 && (
         <Card className="glass-card hover-3d-card p-4">
-          <h3 className="font-medium text-white mb-3 text-gradient-gold">Valuation History</h3>
+          <h3 className="font-medium text-slate-900 mb-3 text-gradient-gold">Valuation History</h3>
           <div className="space-y-2">
             {valuationHistory.map((saved) => (
               <div 
@@ -374,7 +374,7 @@ PropAgent Property Valuation System
                 onClick={() => handleLoadFromHistory(saved)}
               >
                 <div>
-                  <p className="text-sm font-medium text-white">{saved.propertyAddress}</p>
+                  <p className="text-sm font-medium text-slate-900">{saved.propertyAddress}</p>
                   <p className="text-xs text-slate-500">
                     {new Date(saved.valuationDate).toLocaleDateString('en-ZA')}
                   </p>
@@ -421,7 +421,7 @@ PropAgent Property Valuation System
               <Button 
                 onClick={handleCalculate} 
                 disabled={isCalculating || !formData.address || !formData.suburb}
-                className="gap-2 btn-premium text-white"
+                className="gap-2 btn-premium text-slate-900"
               >
                 {isCalculating ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
@@ -456,8 +456,8 @@ PropAgent Property Valuation System
                     className="w-full text-left px-4 py-3 hover:bg-dark-700 border-b border-dark-700 last:border-0"
                     onClick={() => handlePropertySelect(property)}
                   >
-                    <p className="text-sm font-medium text-white">{property.address}</p>
-                    <p className="text-xs text-slate-400">{property.suburb} • {property.type}</p>
+                    <p className="text-sm font-medium text-slate-900">{property.address}</p>
+                    <p className="text-xs text-slate-500">{property.suburb} • {property.type}</p>
                   </button>
                 ))}
               </div>
@@ -533,7 +533,7 @@ PropAgent Property Valuation System
 
         {/* Feature Toggles */}
         <div className="mt-4 pt-4 border-t border-dark-700">
-          <label className="block text-sm font-medium text-slate-300 mb-3">Additional Features</label>
+          <label className="block text-sm font-medium text-slate-500 mb-3">Additional Features</label>
           <div className="flex flex-wrap gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input 
@@ -542,7 +542,7 @@ PropAgent Property Valuation System
                 onChange={(e) => handleInputChange('pool', e.target.checked)}
                 className="w-4 h-4 rounded border-dark-500 text-gold-500 focus:ring-gold-500 bg-dark-800"
               />
-              <span className="text-sm text-slate-400">Pool</span>
+              <span className="text-sm text-slate-500">Pool</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input 
@@ -551,7 +551,7 @@ PropAgent Property Valuation System
                 onChange={(e) => handleInputChange('garden', e.target.checked)}
                 className="w-4 h-4 rounded border-dark-500 text-gold-500 focus:ring-gold-500 bg-dark-800"
               />
-              <span className="text-sm text-slate-400">Garden</span>
+              <span className="text-sm text-slate-500">Garden</span>
             </label>
           </div>
         </div>
@@ -565,7 +565,7 @@ PropAgent Property Valuation System
             <Card className="p-6 glass-card hover-3d-card animate-on-scroll">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-medium text-slate-400">Estimated Value</p>
+                  <p className="text-sm font-medium text-slate-500">Estimated Value</p>
                   <p className="text-2xl font-bold text-gradient-gold mt-1">
                     {formatCurrency(valuation.estimatedValue)}
                   </p>
@@ -582,14 +582,14 @@ PropAgent Property Valuation System
             <Card className="p-6 glass-card hover-3d-card animate-on-scroll delay-100">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-medium text-slate-400">Price / sqm</p>
-                  <p className="text-2xl font-bold text-white mt-1">
+                  <p className="text-sm font-medium text-slate-500">Price / sqm</p>
+                  <p className="text-2xl font-bold text-slate-900 mt-1">
                     {formatCurrency(valuation.pricePerSqm)}
                   </p>
                   <p className="text-xs text-slate-500 mt-1">{valuation.size} sqm total</p>
                 </div>
                 <div className="w-12 h-12 bg-dark-700 rounded-xl flex items-center justify-center">
-                  <Square className="w-6 h-6 text-slate-400" />
+                  <Square className="w-6 h-6 text-slate-500" />
                 </div>
               </div>
             </Card>
@@ -597,14 +597,14 @@ PropAgent Property Valuation System
             <Card className="p-6 glass-card hover-3d-card animate-on-scroll delay-200">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-medium text-slate-400">Confidence</p>
-                  <p className="text-2xl font-bold text-white mt-1">{valuation.confidenceScore}%</p>
+                  <p className="text-sm font-medium text-slate-500">Confidence</p>
+                  <p className="text-2xl font-bold text-slate-900 mt-1">{valuation.confidenceScore}%</p>
                   <Badge variant={getConfidenceColor(valuation.confidence) as any} className="mt-1">
                     {valuation.confidence} confidence
                   </Badge>
                 </div>
                 <div className="w-12 h-12 bg-dark-700 rounded-xl flex items-center justify-center">
-                  <Target className="w-6 h-6 text-slate-400" />
+                  <Target className="w-6 h-6 text-slate-500" />
                 </div>
               </div>
             </Card>
@@ -613,7 +613,7 @@ PropAgent Property Valuation System
               <Card className="p-6 glass-card hover-3d-card animate-on-scroll delay-300">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-sm font-medium text-slate-400">Est. Rental Yield</p>
+                    <p className="text-sm font-medium text-slate-500">Est. Rental Yield</p>
                     <p className="text-2xl font-bold text-gradient-gold mt-1">{rentalYield.grossYield}%</p>
                     <p className="text-xs text-slate-500 mt-1">Net: {rentalYield.netYield}%</p>
                   </div>
@@ -641,7 +641,7 @@ PropAgent Property Valuation System
                     className={`px-4 py-3 text-sm font-medium border-b-2 transition-all ${
                       activeTab === tab.id
                         ? 'border-gold-500 text-gradient-gold'
-                        : 'border-transparent text-slate-400 hover:text-gold-400'
+                        : 'border-transparent text-slate-500 hover:text-gold-400'
                     }`}
                   >
                     {tab.label}
@@ -655,13 +655,13 @@ PropAgent Property Valuation System
               <div className="space-y-6">
                 {/* Value Factors */}
                 <div>
-                  <h4 className="font-medium text-white mb-4 text-gradient-gold">Value Factors</h4>
+                  <h4 className="font-medium text-slate-900 mb-4 text-gradient-gold">Value Factors</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {valuation.factors.map((factor, index) => (
                       <div key={index} className="flex items-center justify-between p-4 bg-dark-800/50 rounded-lg border border-dark-700">
                         <div>
-                          <p className="font-medium text-white">{factor.name}</p>
-                          <p className="text-sm text-slate-400">{factor.description}</p>
+                          <p className="font-medium text-slate-900">{factor.name}</p>
+                          <p className="text-sm text-slate-500">{factor.description}</p>
                         </div>
                         <div className={`text-sm font-medium ${factor.impact >= 0 ? 'text-gold-400' : 'text-red-400'}`}>
                           {factor.impact > 0 ? '+' : ''}{factor.impact.toFixed(1)}%
@@ -676,15 +676,15 @@ PropAgent Property Valuation System
                   const cma = generateCMASubject(formData, valuation);
                   return (
                     <div className="p-4 bg-dark-800/50 rounded-lg border border-gold-500/20">
-                      <h4 className="font-medium text-white mb-2 text-gradient-gold">Comparative Market Analysis</h4>
-                      <p className="text-sm text-slate-400 mb-4">{cma.summary}</p>
+                      <h4 className="font-medium text-slate-900 mb-2 text-gradient-gold">Comparative Market Analysis</h4>
+                      <p className="text-sm text-slate-500 mb-4">{cma.summary}</p>
                       <div className="mb-3">
-                        <span className="text-sm font-medium text-slate-300">Market Conditions: </span>
+                        <span className="text-sm font-medium text-slate-500">Market Conditions: </span>
                         <span className="text-sm text-gold-400">{cma.marketConditions}</span>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-slate-300 mb-2">Recommendations:</p>
-                        <ul className="text-sm text-slate-400 space-y-1">
+                        <p className="text-sm font-medium text-slate-500 mb-2">Recommendations:</p>
+                        <ul className="text-sm text-slate-500 space-y-1">
                           {cma.recommendations.map((rec, i) => (
                             <li key={i} className="flex items-start gap-2">
                               <span className="text-gold-400 mt-1">•</span>
@@ -702,7 +702,7 @@ PropAgent Property Valuation System
             {activeTab === 'comparables' && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-slate-500">
                     {valuation.comparables.length} comparable sales found
                   </p>
                 </div>
@@ -720,8 +720,8 @@ PropAgent Property Valuation System
                           <Home className="w-5 h-5 text-gold-400" />
                         </div>
                         <div className="text-left">
-                          <p className="font-medium text-white">{comp.address}</p>
-                          <p className="text-sm text-slate-400">
+                          <p className="font-medium text-slate-900">{comp.address}</p>
+                          <p className="text-sm text-slate-500">
                             {comp.bedrooms} bed • {comp.bathrooms} bath • {comp.size} sqm • {comp.distance}km away
                           </p>
                         </div>
@@ -746,13 +746,13 @@ PropAgent Property Valuation System
                         <div className="grid grid-cols-3 gap-4 pt-4">
                           <div>
                             <p className="text-xs text-slate-500">Sale Date</p>
-                            <p className="text-sm font-medium text-white">
+                            <p className="text-sm font-medium text-slate-900">
                               {new Date(comp.saleDate).toLocaleDateString()}
                             </p>
                           </div>
                           <div>
                             <p className="text-xs text-slate-500">Source</p>
-                            <p className="text-sm font-medium text-white capitalize">{comp.source}</p>
+                            <p className="text-sm font-medium text-slate-900 capitalize">{comp.source}</p>
                           </div>
                           <div>
                             <p className="text-xs text-slate-500">Similarity Score</p>
@@ -793,11 +793,11 @@ PropAgent Property Valuation System
                 <div className="space-y-2">
                   {valuation.trends.map((trend, index) => (
                     <div key={index} className="flex items-center justify-between py-2 border-b border-dark-700 last:border-0">
-                      <span className="text-sm text-slate-400">
+                      <span className="text-sm text-slate-500">
                         {new Date(trend.date).toLocaleDateString('en-ZA', { month: 'long', year: 'numeric' })}
                       </span>
                       <div className="flex items-center gap-4">
-                        <span className="text-sm font-medium text-white">
+                        <span className="text-sm font-medium text-slate-900">
                           {formatCurrency(trend.value)}
                         </span>
                         <span className={`text-sm ${getTrendColor(trend.change)}`}>
@@ -818,7 +818,7 @@ PropAgent Property Valuation System
                   </div>
                   <div className="text-center p-4 bg-dark-800/50 rounded-lg border border-dark-700">
                     <p className="text-xs text-slate-500 mb-1">Avg Monthly</p>
-                    <p className="text-lg font-bold text-white">
+                    <p className="text-lg font-bold text-slate-900">
                       {(valuation.trends.reduce((sum, t) => sum + t.change, 0) / 12).toFixed(1)}%
                     </p>
                   </div>
@@ -845,7 +845,7 @@ PropAgent Property Valuation System
                               <Icon className="w-5 h-5 text-gold-400" />
                             </div>
                             <div>
-                              <p className="font-medium text-white">{factor.name}</p>
+                              <p className="font-medium text-slate-900">{factor.name}</p>
                               <p className="text-xs text-slate-500 capitalize">{factor.category}</p>
                             </div>
                           </div>
@@ -855,7 +855,7 @@ PropAgent Property Valuation System
                         <div className="mb-2">
                           <div className="flex items-center justify-between text-xs mb-1">
                             <span className="text-slate-500">Score</span>
-                            <span className="font-medium text-white">{factor.score.toFixed(1)}/10</span>
+                            <span className="font-medium text-slate-900">{factor.score.toFixed(1)}/10</span>
                           </div>
                           <div className="h-2 bg-dark-700 rounded-full overflow-hidden">
                             <div 
@@ -875,8 +875,8 @@ PropAgent Property Valuation System
 
                 {/* Summary */}
                 <div className="p-4 bg-dark-800/50 rounded-lg border border-dark-700">
-                  <h4 className="font-medium text-white mb-2 text-gradient-gold">Neighborhood Analysis Summary</h4>
-                  <p className="text-sm text-slate-400">
+                  <h4 className="font-medium text-slate-900 mb-2 text-gradient-gold">Neighborhood Analysis Summary</h4>
+                  <p className="text-sm text-slate-500">
                     The {formData.suburb} area in {formData.city} shows a combined neighborhood score of{' '}
                     <span className="font-medium text-gold-400">
                       {(neighborhoodFactors.reduce((sum, f) => sum + f.score, 0) / neighborhoodFactors.length).toFixed(1)}/10
@@ -905,8 +905,8 @@ PropAgent Property Valuation System
             <div className="w-16 h-16 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-gold-500/30">
               <Calculator className="w-8 h-8 text-gold-400" />
             </div>
-            <h3 className="text-lg font-medium text-white mb-2">No Valuation Yet</h3>
-            <p className="text-slate-400 max-w-md mx-auto">
+            <h3 className="text-lg font-medium text-slate-900 mb-2">No Valuation Yet</h3>
+            <p className="text-slate-500 max-w-md mx-auto">
               Enter property details above and click &quot;Calculate Value&quot; to get an automated valuation estimate based on market data and comparable sales.
             </p>
           </div>

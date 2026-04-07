@@ -28,22 +28,22 @@ function AnimatedGradientHeader() {
           <div className="p-2 bg-navy-500/20 rounded-lg backdrop-blur-sm">
             <Shield className="w-6 h-6 text-navy-400" />
           </div>
-          <h1 className="text-2xl font-bold text-white">Escrow Management</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Escrow Management</h1>
         </div>
-        <p className="text-slate-400 text-sm">
+        <p className="text-slate-500 text-sm">
           Secure commission holding & verified releases
         </p>
         
         {/* Animated metrics bar */}
-        <div className="flex items-center gap-6 mt-6 pt-4 border-t border-slate-700/50">
+        <div className="flex items-center gap-6 mt-6 pt-4 border-t border-slate-200/50">
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-gold-400 animate-pulse" />
-            <span className="text-xs text-slate-400">System Status</span>
+            <span className="text-xs text-slate-500">System Status</span>
             <span className="text-xs font-medium text-gold-400 bg-gold-500/10 px-2 py-0.5 rounded-full">Active</span>
           </div>
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-navy-400" />
-            <span className="text-xs text-slate-400">Trust Score</span>
+            <span className="text-xs text-slate-500">Trust Score</span>
             <span className="text-xs font-medium text-navy-400">98.5%</span>
           </div>
         </div>
@@ -58,7 +58,7 @@ function GlassCard({ children, className, hoverEffect = false }: { children: Rea
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl bg-slate-800/40 backdrop-blur-xl border border-slate-700/50",
+        "relative overflow-hidden rounded-xl bg-slate-100/40 backdrop-blur-xl border border-slate-200/50",
         "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:pointer-events-none",
         hoverEffect && "transition-all duration-300 ease-out",
         hoverEffect && isHovered && "transform -translate-y-1 shadow-2xl shadow-navy-500/20 border-navy-500/30 scale-[1.02]",
@@ -122,10 +122,10 @@ function StatCard({ icon: Icon, iconBg, label, value, delay = 0 }: {
           <Icon className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-2xl font-bold text-white">
+          <p className="text-2xl font-bold text-slate-900">
             {typeof value === 'number' ? count : value}
           </p>
-          <p className="text-xs text-slate-400">{label}</p>
+          <p className="text-xs text-slate-500">{label}</p>
         </div>
       </div>
     </GlassCard>
@@ -174,7 +174,7 @@ function AnimatedProgressBar({ progress, status }: { progress: number; status: E
   };
 
   return (
-    <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
+    <div className="h-2 bg-slate-50/50 rounded-full overflow-hidden">
       <div 
         className={cn(
           "h-full rounded-full bg-gradient-to-r transition-all duration-1000 ease-out",
@@ -194,7 +194,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
         "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
         active 
           ? "bg-gradient-to-r from-navy-500 to-yellow-500 text-slate-900 shadow-lg shadow-navy-500/25" 
-          : "text-slate-400 hover:text-white hover:bg-slate-700/50"
+          : "text-slate-500 hover:text-slate-900 hover:bg-slate-50/50"
       )}
     >
       {children}
@@ -303,7 +303,7 @@ export default function EscrowManagementPage() {
   const selectedEscrowData = sampleEscrowTransactions.find(e => e.id === selectedEscrow);
 
   return (
-    <div className="space-y-6 min-h-screen bg-slate-900 p-6">
+    <div className="space-y-6 min-h-screen bg-white p-6">
       <style>{`
         @keyframes float {
           0%, 100% { transform: translate(0, 0) rotate(0deg); }
@@ -387,13 +387,13 @@ export default function EscrowManagementPage() {
         <GlassCard className="lg:col-span-2 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-800/50 border-b border-slate-700/50">
+              <thead className="bg-slate-100/50 border-b border-slate-200/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">Transaction</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">Agents</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">Value</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">Progress</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Transaction</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Agents</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Value</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Progress</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/50">
@@ -411,25 +411,25 @@ export default function EscrowManagementPage() {
                     <tr 
                       key={escrow.id} 
                       className={cn(
-                        "cursor-pointer transition-all duration-300 hover:bg-slate-700/30 group",
-                        selectedEscrow === escrow.id && "bg-slate-700/50"
+                        "cursor-pointer transition-all duration-300 hover:bg-slate-50/30 group",
+                        selectedEscrow === escrow.id && "bg-slate-50/50"
                       )}
                       onClick={() => setSelectedEscrow(escrow.id)}
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       <td className="px-4 py-3">
-                        <p className="font-medium text-white text-sm group-hover:text-navy-400 transition-colors">{escrow.propertyTitle}</p>
+                        <p className="font-medium text-slate-900 text-sm group-hover:text-navy-400 transition-colors">{escrow.propertyTitle}</p>
                         <p className="text-xs text-slate-500">{new Date(escrow.createdAt).toLocaleDateString()}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-sm text-slate-300">
+                        <div className="flex items-center gap-1 text-sm text-slate-500">
                           <span className="group-hover:text-navy-400 transition-colors">{escrow.agent1Name.split(' ')[0]}</span>
                           <ArrowRightLeft className="w-3 h-3 text-slate-500" />
                           <span className="group-hover:text-navy-400 transition-colors">{escrow.agent2Name.split(' ')[0]}</span>
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="font-medium text-white">
+                        <p className="font-medium text-slate-900">
                           R{(escrow.agent1Deposit + escrow.agent2Deposit).toLocaleString()}
                         </p>
                       </td>
@@ -451,32 +451,32 @@ export default function EscrowManagementPage() {
         <GlassCard className="p-4">
           {selectedEscrowData ? (
             <div className="space-y-4">
-              <div className="flex items-center gap-2 pb-3 border-b border-slate-700/50">
+              <div className="flex items-center gap-2 pb-3 border-b border-slate-200/50">
                 <div className="p-2 bg-navy-500/20 rounded-lg">
                   <Wallet className="w-5 h-5 text-navy-400" />
                 </div>
-                <h3 className="font-semibold text-white">{selectedEscrowData.propertyTitle}</h3>
+                <h3 className="font-semibold text-slate-900">{selectedEscrowData.propertyTitle}</h3>
               </div>
               
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Property Price</span>
-                  <span className="font-medium text-white">R{selectedEscrowData.propertyPrice.toLocaleString()}</span>
+                  <span className="text-slate-500">Property Price</span>
+                  <span className="font-medium text-slate-900">R{selectedEscrowData.propertyPrice.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Total Commission</span>
-                  <span className="font-medium text-white">R{selectedEscrowData.totalCommission.toLocaleString()}</span>
+                  <span className="text-slate-500">Total Commission</span>
+                  <span className="font-medium text-slate-900">R{selectedEscrowData.totalCommission.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Agent 1 Share</span>
-                  <span className="font-medium text-white">R{selectedEscrowData.agent1Share.toLocaleString()}</span>
+                  <span className="text-slate-500">Agent 1 Share</span>
+                  <span className="font-medium text-slate-900">R{selectedEscrowData.agent1Share.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Agent 2 Share</span>
-                  <span className="font-medium text-white">R{selectedEscrowData.agent2Share.toLocaleString()}</span>
+                  <span className="text-slate-500">Agent 2 Share</span>
+                  <span className="font-medium text-slate-900">R{selectedEscrowData.agent2Share.toLocaleString()}</span>
                 </div>
-                <div className="border-t border-slate-700/50 pt-3 flex justify-between text-sm">
-                  <span className="text-slate-400">Platform Fee (1.5%)</span>
+                <div className="border-t border-slate-200/50 pt-3 flex justify-between text-sm">
+                  <span className="text-slate-500">Platform Fee (1.5%)</span>
                   <span className="font-medium text-navy-400">
                     R{((selectedEscrowData.totalCommission * 0.5) * 0.015).toFixed(0)}
                   </span>
@@ -486,7 +486,7 @@ export default function EscrowManagementPage() {
               {/* Progress indicator */}
               <div className="pt-4">
                 <div className="flex items-center justify-between text-xs mb-2">
-                  <span className="text-slate-400">Escrow Progress</span>
+                  <span className="text-slate-500">Escrow Progress</span>
                   <span className="text-navy-400 font-medium">
                     {selectedEscrowData.status === 'pending_deposit' && '10%'}
                     {selectedEscrowData.status === 'deposited' && '40%'}
@@ -514,14 +514,14 @@ export default function EscrowManagementPage() {
               )}
               
               {selectedEscrowData.status === 'in_verification' && (
-                <Button variant="outline" className="w-full border-slate-600 text-slate-300 hover:bg-slate-800">
+                <Button variant="outline" className="w-full border-slate-600 text-slate-500 hover:bg-slate-100">
                   <Search className="w-4 h-4 mr-2" />
                   Check Verification Status
                 </Button>
               )}
               
               {canReleaseFunds(selectedEscrowData) && (
-                <Button className="w-full bg-gradient-to-r from-gold-500 to-green-500 text-white hover:from-gold-400 hover:to-green-400 shadow-lg shadow-gold-500/25">
+                <Button className="w-full bg-gradient-to-r from-gold-500 to-green-500 text-slate-900 hover:from-gold-400 hover:to-green-400 shadow-lg shadow-gold-500/25">
                   <CheckCircle className="w-4 h-4 mr-2" />
                   Release Funds
                 </Button>
@@ -529,7 +529,7 @@ export default function EscrowManagementPage() {
             </div>
           ) : (
             <div className="py-12 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-800/50 flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100/50 flex items-center justify-center">
                 <Wallet className="w-8 h-8 text-slate-500" />
               </div>
               <p className="text-slate-500">Select a transaction to view details</p>
@@ -545,8 +545,8 @@ export default function EscrowManagementPage() {
             <Shield className="w-5 h-5 text-gold-400" />
           </div>
           <div>
-            <p className="font-medium text-white">Secure Escrow System</p>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="font-medium text-slate-900">Secure Escrow System</p>
+            <p className="text-sm text-slate-500 mt-1">
               All funds are held in our Business Trust Account. After deal verification via Lightstone/Windeed API,
               funds are released minus 1.5% platform fee + R250 escrow charge. Off-app closures result in forfeited deposits.
             </p>
@@ -557,48 +557,48 @@ export default function EscrowManagementPage() {
       {/* Add Escrow Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-2xl max-w-lg w-full p-6 border border-slate-700 max-h-[90vh] overflow-y-auto">
+          <div className="bg-slate-100 rounded-2xl max-w-lg w-full p-6 border border-slate-200 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-semibold text-white">Add New Escrow</h2>
+              <h2 className="text-xl font-semibold text-slate-900">Add New Escrow</h2>
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="p-2 hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+                className="p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
-                <X className="w-5 h-5 text-white/60" />
+                <X className="w-5 h-5 text-slate-900/60" />
               </button>
             </div>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Property Address</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Property Address</label>
                 <input 
                   type="text" 
                   value={newEscrow.property}
                   onChange={(e) => setNewEscrow({...newEscrow, property: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   placeholder="123 Ocean View, Umhlanga"
                 />
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Property Price (ZAR)</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Property Price (ZAR)</label>
                   <input 
                     type="number" 
                     value={newEscrow.price}
                     onChange={(e) => setNewEscrow({...newEscrow, price: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     placeholder="2500000"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Commission %</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Commission %</label>
                   <input 
                     type="number" 
                     value={newEscrow.commission}
                     onChange={(e) => setNewEscrow({...newEscrow, commission: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     placeholder="6"
                     defaultValue="6"
                   />
@@ -607,22 +607,22 @@ export default function EscrowManagementPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Agent 1 Name</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Agent 1 Name</label>
                   <input 
                     type="text" 
                     value={newEscrow.agent1Name}
                     onChange={(e) => setNewEscrow({...newEscrow, agent1Name: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     placeholder="John Smith"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Agent 2 Name</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Agent 2 Name</label>
                   <input 
                     type="text" 
                     value={newEscrow.agent2Name}
                     onChange={(e) => setNewEscrow({...newEscrow, agent2Name: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     placeholder="Jane Doe"
                   />
                 </div>
@@ -630,21 +630,21 @@ export default function EscrowManagementPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Deposit Amount (ZAR)</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Deposit Amount (ZAR)</label>
                   <input 
                     type="number" 
                     value={newEscrow.deposit}
                     onChange={(e) => setNewEscrow({...newEscrow, deposit: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     placeholder="10000"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Status</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Status</label>
                   <select 
                     value={newEscrow.status}
                     onChange={(e) => setNewEscrow({...newEscrow, status: e.target.value as EscrowStatus})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                   >
                     <option value="pending_deposit">Pending Deposit</option>
                     <option value="deposited">Deposited</option>
@@ -660,7 +660,7 @@ export default function EscrowManagementPage() {
             <div className="flex items-center justify-end gap-3 mt-6">
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="px-4 py-2.5 bg-slate-700 rounded-lg text-white text-sm hover:bg-slate-600 transition-all cursor-pointer"
+                className="px-4 py-2.5 bg-slate-50 rounded-lg text-slate-900 text-sm hover:bg-slate-200 transition-all cursor-pointer"
               >
                 Cancel
               </button>

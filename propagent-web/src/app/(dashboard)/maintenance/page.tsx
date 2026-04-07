@@ -191,7 +191,7 @@ export default function MaintenancePage() {
         <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input
                 type="text"
                 placeholder="Search maintenance requests..."
@@ -242,7 +242,7 @@ export default function MaintenancePage() {
                     </span>
                   </div>
                   <p className="text-sm text-slate-500 mb-2">{request.description}</p>
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400">
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       {getPropertyAddress(request.propertyId)}
@@ -255,7 +255,7 @@ export default function MaintenancePage() {
                   </div>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <p className="text-xs text-slate-400">Created</p>
+                  <p className="text-xs text-slate-500">Created</p>
                   <p className="text-sm text-slate-600">{formatDate(request.createdAt)}</p>
                 </div>
               </div>
@@ -273,47 +273,47 @@ export default function MaintenancePage() {
       {/* Add Maintenance Request Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-700">
+          <div className="bg-slate-100 rounded-2xl max-w-md w-full p-6 border border-slate-200">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-semibold text-white">New Maintenance Request</h2>
+              <h2 className="text-xl font-semibold text-slate-900">New Maintenance Request</h2>
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="p-2 hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+                className="p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
-                <X className="w-5 h-5 text-white/60" />
+                <X className="w-5 h-5 text-slate-900/60" />
               </button>
             </div>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Title</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Title</label>
                 <input 
                   type="text" 
                   value={newRequest.title}
                   onChange={(e) => setNewRequest({...newRequest, title: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   placeholder="e.g., Leaking tap in kitchen"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Description</label>
                 <textarea 
                   rows={3}
                   value={newRequest.description}
                   onChange={(e) => setNewRequest({...newRequest, description: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   placeholder="Describe the issue in detail..."
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Property</label>
+                <label className="block text-sm font-medium text-slate-500 mb-2">Property</label>
                 <select 
                   value={newRequest.propertyId}
                   onChange={(e) => setNewRequest({...newRequest, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                 >
                   <option value="">Select a property...</option>
                   {mockProperties.map(prop => (
@@ -324,11 +324,11 @@ export default function MaintenancePage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Priority</label>
                   <select 
                     value={newRequest.priority}
                     onChange={(e) => setNewRequest({...newRequest, priority: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -337,11 +337,11 @@ export default function MaintenancePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Category</label>
+                  <label className="block text-sm font-medium text-slate-500 mb-2">Category</label>
                   <select 
                     value={newRequest.category}
                     onChange={(e) => setNewRequest({...newRequest, category: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
                   >
                     <option value="general">General</option>
                     <option value="plumbing">Plumbing</option>
@@ -357,13 +357,13 @@ export default function MaintenancePage() {
             <div className="flex items-center justify-end gap-3 mt-6">
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="px-4 py-2.5 bg-slate-700 rounded-lg text-white text-sm hover:bg-slate-600 transition-all cursor-pointer"
+                className="px-4 py-2.5 bg-slate-50 rounded-lg text-slate-900 text-sm hover:bg-slate-200 transition-all cursor-pointer"
               >
                 Cancel
               </button>
               <button 
                 onClick={handleAddRequest}
-                className="px-6 py-2.5 bg-gradient-to-r from-navy-500 to-navy-600 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-navy-500/25 transition-all cursor-pointer"
+                className="px-6 py-2.5 bg-gradient-to-r from-navy-500 to-navy-600 rounded-lg text-slate-900 text-sm font-medium hover:shadow-lg hover:shadow-navy-500/25 transition-all cursor-pointer"
               >
                 <Plus className="w-4 h-4 inline mr-1.5" />
                 Create Request

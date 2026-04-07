@@ -25,10 +25,10 @@ interface StatCardProps {
 
 function StatCard({ title, value, change, changeLabel, icon, color, href }: StatCardProps) {
   const colorStyles = {
-    navy: 'from-slate-700 to-slate-800 text-white',
-    amber: 'from-amber-400 to-amber-600 text-white',
-    blue: 'from-blue-500 to-blue-600 text-white',
-    green: 'from-emerald-500 to-emerald-600 text-white',
+    navy: 'from-slate-700 to-slate-800 text-slate-900',
+    amber: 'from-amber-400 to-amber-600 text-slate-900',
+    blue: 'from-blue-500 to-blue-600 text-slate-900',
+    green: 'from-emerald-500 to-emerald-600 text-slate-900',
   };
 
   const bgStyle = colorStyles[color];
@@ -90,21 +90,21 @@ function QuickActionCard({
       className={cn(
         "flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 border",
         variant === 'primary' 
-          ? "bg-navy-500 text-white border-navy-500 hover:bg-navy-600" 
+          ? "bg-navy-500 text-slate-900 border-navy-500 hover:bg-navy-600" 
           : "bg-white border-slate-200 hover:border-amber-300 hover:shadow-md"
       )}
     >
       <div className={cn(
         "p-3 rounded-xl transition-all duration-200",
-        variant === 'primary' ? "bg-white/20 text-white" : "bg-slate-100 text-amber-600"
+        variant === 'primary' ? "bg-white/20 text-slate-900" : "bg-slate-100 text-amber-600"
       )}>
         {icon}
       </div>
       <div className="flex-1">
-        <h4 className={cn("text-sm font-semibold", variant === 'primary' ? "text-white" : "text-slate-900")}>{title}</h4>
-        <p className={cn("text-xs mt-0.5", variant === 'primary' ? "text-white/80" : "text-slate-500")}>{description}</p>
+        <h4 className={cn("text-sm font-semibold", variant === 'primary' ? "text-slate-900" : "text-slate-900")}>{title}</h4>
+        <p className={cn("text-xs mt-0.5", variant === 'primary' ? "text-slate-900/80" : "text-slate-500")}>{description}</p>
       </div>
-      <ChevronRight className={cn("w-5 h-5", variant === 'primary' ? "text-white" : "text-slate-400 group-hover:text-amber-500 transition-colors")} />
+      <ChevronRight className={cn("w-5 h-5", variant === 'primary' ? "text-slate-900" : "text-slate-500 group-hover:text-amber-500 transition-colors")} />
     </Link>
   );
 }
@@ -236,7 +236,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-slate-500">{inquiry.date}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">{inquiry.time}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{inquiry.time}</p>
                   </div>
                 </Link>
               ))}

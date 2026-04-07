@@ -62,11 +62,11 @@ function ViewingCard({ viewing }: { viewing: PropertyViewing }) {
             <Home className="w-5 h-5 text-navy-400" />
           </div>
           <div className="min-w-0">
-            <p className="font-medium text-white text-sm">{viewing.clientName}</p>
-            <p className="text-xs text-white/60 truncate">{viewing.propertyTitle || viewing.propertyAddress}</p>
+            <p className="font-medium text-slate-900 text-sm">{viewing.clientName}</p>
+            <p className="text-xs text-slate-900/60 truncate">{viewing.propertyTitle || viewing.propertyAddress}</p>
             <div className="flex items-center gap-2 mt-1.5">
-              <Clock className="w-3 h-3 text-white/40" />
-              <span className="text-xs text-white/60">
+              <Clock className="w-3 h-3 text-slate-900/40" />
+              <span className="text-xs text-slate-900/60">
                 {new Date(viewing.scheduledTime).toLocaleTimeString('en-ZA', { 
                   hour: 'numeric', 
                   minute: '2-digit' 
@@ -82,11 +82,11 @@ function ViewingCard({ viewing }: { viewing: PropertyViewing }) {
       
       <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 text-xs text-white/60">
+          <div className="flex items-center gap-1 text-xs text-slate-900/60">
             <Mail className="w-3 h-3" />
             <span className="truncate max-w-[120px]">{viewing.clientEmail}</span>
           </div>
-          <div className="flex items-center gap-1 text-xs text-white/60">
+          <div className="flex items-center gap-1 text-xs text-slate-900/60">
             <Phone className="w-3 h-3" />
             <span>{viewing.clientPhone}</span>
           </div>
@@ -132,12 +132,12 @@ function StatusFilter({
       className={cn(
         "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover-3d",
         active 
-          ? "bg-gradient-to-r from-navy-500 to-gold-500 text-white shadow-lg glow-gold" 
-          : "glass text-white/80 hover:bg-white/10"
+          ? "bg-gradient-to-r from-navy-500 to-gold-500 text-slate-900 shadow-lg glow-gold" 
+          : "glass text-slate-900/80 hover:bg-white/10"
       )}
     >
       {label}
-      <span className={cn("ml-2", active ? "text-white/90" : "text-white/60")}>
+      <span className={cn("ml-2", active ? "text-slate-900/90" : "text-slate-900/60")}>
         ({count})
       </span>
     </button>
@@ -257,8 +257,8 @@ export default function CalendarPage() {
           <div className="absolute bottom-0 right-0 w-40 h-40 bg-yellow-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
         <div className="relative z-10">
-          <h1 className="text-2xl font-bold text-white">Calendar</h1>
-          <p className="text-white/80 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900">Calendar</h1>
+          <p className="text-slate-900/80 mt-1">
             Manage property viewings and schedule appointments
           </p>
         </div>
@@ -292,19 +292,19 @@ export default function CalendarPage() {
       {/* Stats - Glassmorphism Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-card hover-3d-card p-4 rounded-xl">
-          <p className="text-xs text-white/60 font-medium">Total Viewings</p>
-          <p className="text-2xl font-semibold text-white mt-1">{stats.total}</p>
+          <p className="text-xs text-slate-900/60 font-medium">Total Viewings</p>
+          <p className="text-2xl font-semibold text-slate-900 mt-1">{stats.total}</p>
         </div>
         <div className="glass-card hover-3d-card p-4 rounded-xl">
-          <p className="text-xs text-white/60 font-medium">Upcoming</p>
-          <p className="text-2xl font-semibold text-white mt-1">{stats.upcoming}</p>
+          <p className="text-xs text-slate-900/60 font-medium">Upcoming</p>
+          <p className="text-2xl font-semibold text-slate-900 mt-1">{stats.upcoming}</p>
         </div>
         <div className="glass-card hover-3d-card p-4 rounded-xl">
-          <p className="text-xs text-white/60 font-medium">Confirmed</p>
+          <p className="text-xs text-slate-900/60 font-medium">Confirmed</p>
           <p className="text-2xl font-semibold text-green-400 mt-1">{stats.confirmed}</p>
         </div>
         <div className="glass-card hover-3d-card p-4 rounded-xl">
-          <p className="text-xs text-white/60 font-medium">Pending</p>
+          <p className="text-xs text-slate-900/60 font-medium">Pending</p>
           <p className="text-2xl font-semibold text-navy-400 mt-1">{stats.pending}</p>
         </div>
       </div>
@@ -355,7 +355,7 @@ export default function CalendarPage() {
         <div className="lg:col-span-2 glass-card hover-3d-card rounded-xl overflow-hidden">
           {/* Calendar Header */}
           <div className="flex items-center justify-between p-5 border-b border-white/10">
-            <h3 className="font-semibold text-white text-lg">
+            <h3 className="font-semibold text-slate-900 text-lg">
               {monthNames[month]} {year}
             </h3>
             <div className="flex items-center gap-1">
@@ -363,13 +363,13 @@ export default function CalendarPage() {
                 onClick={() => navigateMonth(-1)}
                 className="p-2 rounded-lg hover:bg-white/10 transition-colors"
               >
-                <ChevronLeft className="w-5 h-5 text-white/70" />
+                <ChevronLeft className="w-5 h-5 text-slate-900/70" />
               </button>
               <button 
                 onClick={() => navigateMonth(1)}
                 className="p-2 rounded-lg hover:bg-white/10 transition-colors"
               >
-                <ChevronRight className="w-5 h-5 text-white/70" />
+                <ChevronRight className="w-5 h-5 text-slate-900/70" />
               </button>
             </div>
           </div>
@@ -377,7 +377,7 @@ export default function CalendarPage() {
           {/* Day Names */}
           <div className="grid grid-cols-7 border-b border-white/10">
             {dayNames.map(day => (
-              <div key={day} className="p-3 text-center text-sm font-medium text-white/60">
+              <div key={day} className="p-3 text-center text-sm font-medium text-slate-900/60">
                 {day}
               </div>
             ))}
@@ -414,7 +414,7 @@ export default function CalendarPage() {
                 >
                   <div className={cn(
                     "text-base font-medium",
-                    isSelected ? "text-navy-400" : "text-white"
+                    isSelected ? "text-navy-400" : "text-slate-900"
                   )}>
                     {day}
                   </div>
@@ -435,7 +435,7 @@ export default function CalendarPage() {
                         </div>
                       ))}
                       {dayViewings.length > 2 && (
-                        <div className="text-xs text-white/50">
+                        <div className="text-xs text-slate-900/50">
                           +{dayViewings.length - 2} more
                         </div>
                       )}
@@ -452,8 +452,8 @@ export default function CalendarPage() {
           {/* Upcoming Viewings */}
           <div className="glass-card hover-3d-card p-5 rounded-xl animate-on-scroll">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-white text-lg">Upcoming</h3>
-              <Badge variant="outline" className="glass text-white/80 text-xs">
+              <h3 className="font-semibold text-slate-900 text-lg">Upcoming</h3>
+              <Badge variant="outline" className="glass text-slate-900/80 text-xs">
                 {upcomingViewings.length}
               </Badge>
             </div>
@@ -463,7 +463,7 @@ export default function CalendarPage() {
                   <ViewingCard key={viewing.id} viewing={viewing} />
                 ))
               ) : (
-                <p className="text-center text-white/50 py-4 text-sm">
+                <p className="text-center text-slate-900/50 py-4 text-sm">
                   No upcoming viewings
                 </p>
               )}
@@ -472,7 +472,7 @@ export default function CalendarPage() {
           
           {/* Calendar Sync */}
           <div className="glass-card hover-3d-card p-5 rounded-xl animate-on-scroll" style={{ animationDelay: '0.1s' }}>
-            <h3 className="font-semibold text-white text-lg mb-4">Calendar Sync</h3>
+            <h3 className="font-semibold text-slate-900 text-lg mb-4">Calendar Sync</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 glass rounded-lg">
                 <div className="flex items-center gap-3">
@@ -480,8 +480,8 @@ export default function CalendarPage() {
                     <CalendarIcon className="w-5 h-5 text-navy-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">Google Calendar</p>
-                    <p className="text-xs text-white/60">Connected</p>
+                    <p className="text-sm font-medium text-slate-900">Google Calendar</p>
+                    <p className="text-xs text-slate-900/60">Connected</p>
                   </div>
                 </div>
                 <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-xs">
@@ -489,7 +489,7 @@ export default function CalendarPage() {
                 </Badge>
               </div>
               
-              <div className="flex items-center justify-between text-xs text-white/50">
+              <div className="flex items-center justify-between text-xs text-slate-900/50">
                 <span>Last synced: {sampleCalendarSyncConfig.lastSyncedAt ? new Date(sampleCalendarSyncConfig.lastSyncedAt).toLocaleString('en-ZA') : 'Never'}</span>
                 <button className="text-navy-400 hover:text-navy-300 flex items-center gap-1">
                   <ExternalLink className="w-3 h-3" />
@@ -501,17 +501,17 @@ export default function CalendarPage() {
           
           {/* Quick Actions */}
           <div className="glass-card hover-3d-card p-5 rounded-xl animate-on-scroll" style={{ animationDelay: '0.2s' }}>
-            <h3 className="font-semibold text-white text-lg mb-4">Quick Actions</h3>
+            <h3 className="font-semibold text-slate-900 text-lg mb-4">Quick Actions</h3>
             <div className="space-y-2">
-              <button className="w-full flex items-center gap-3 p-3 text-sm text-white/80 hover:bg-white/10 rounded-lg transition-all hover-3d text-left">
+              <button className="w-full flex items-center gap-3 p-3 text-sm text-slate-900/80 hover:bg-white/10 rounded-lg transition-all hover-3d text-left">
                 <Settings className="w-4 h-4 text-navy-400" />
                 Availability Settings
               </button>
-              <button className="w-full flex items-center gap-3 p-3 text-sm text-white/80 hover:bg-white/10 rounded-lg transition-all hover-3d text-left">
+              <button className="w-full flex items-center gap-3 p-3 text-sm text-slate-900/80 hover:bg-white/10 rounded-lg transition-all hover-3d text-left">
                 <Bell className="w-4 h-4 text-navy-400" />
                 Reminder Templates
               </button>
-              <button className="w-full flex items-center gap-3 p-3 text-sm text-white/80 hover:bg-white/10 rounded-lg transition-all hover-3d text-left">
+              <button className="w-full flex items-center gap-3 p-3 text-sm text-slate-900/80 hover:bg-white/10 rounded-lg transition-all hover-3d text-left">
                 <CalendarIcon className="w-4 h-4 text-navy-400" />
                 Block Time Slots
               </button>
@@ -524,7 +524,7 @@ export default function CalendarPage() {
       {selectedDate && (
         <div className="glass-card hover-3d-card p-5 rounded-xl animate-on-scroll">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="font-semibold text-white text-lg">
+            <h3 className="font-semibold text-slate-900 text-lg">
               Viewings for {new Date(selectedDate).toLocaleDateString('en-ZA', { 
                 weekday: 'long',
                 month: 'long', 
@@ -536,7 +536,7 @@ export default function CalendarPage() {
               onClick={() => setSelectedDate(null)}
               className="p-2 hover:bg-white/10 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-white/60" />
+              <X className="w-5 h-5 text-slate-900/60" />
             </button>
           </div>
           
@@ -549,9 +549,9 @@ export default function CalendarPage() {
           ) : (
             <div className="text-center py-10">
               <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
-                <CalendarIcon className="w-8 h-8 text-white/30" />
+                <CalendarIcon className="w-8 h-8 text-slate-900/30" />
               </div>
-              <p className="text-white/60 mb-4">No viewings scheduled for this day</p>
+              <p className="text-slate-900/60 mb-4">No viewings scheduled for this day</p>
               <Button variant="outline" size="sm" onClick={() => setShowNewViewing(true)} className="glass hover:bg-white/20">
                 <Plus className="w-4 h-4 mr-1.5" />
                 Schedule Viewing
@@ -566,22 +566,22 @@ export default function CalendarPage() {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="glass-card rounded-2xl max-w-md w-full p-6 animate-on-scroll">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-semibold text-white">Schedule New Viewing</h2>
+              <h2 className="text-xl font-semibold text-slate-900">Schedule New Viewing</h2>
               <button 
                 onClick={() => setShowNewViewing(false)}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
               >
-                <X className="w-5 h-5 text-white/60" />
+                <X className="w-5 h-5 text-slate-900/60" />
               </button>
             </div>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
+                <label className="block text-sm font-medium text-slate-900/80 mb-2">
                   Property
                 </label>
                 <select 
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.property}
                   onChange={(e) => setNewViewingForm({...newViewingForm, property: e.target.value})}
                 >
@@ -593,13 +593,13 @@ export default function CalendarPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
+                <label className="block text-sm font-medium text-slate-900/80 mb-2">
                   Client Name
                 </label>
                 <input 
                   type="text" 
                   placeholder="Enter client name"
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.clientName}
                   onChange={(e) => setNewViewingForm({...newViewingForm, clientName: e.target.value})}
                 />
@@ -607,23 +607,23 @@ export default function CalendarPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">
+                  <label className="block text-sm font-medium text-slate-900/80 mb-2">
                     Date
                   </label>
                   <input 
                     type="date" 
-                    className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 glass rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     value={newViewingForm.date}
                     onChange={(e) => setNewViewingForm({...newViewingForm, date: e.target.value})}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">
+                  <label className="block text-sm font-medium text-slate-900/80 mb-2">
                     Time
                   </label>
                   <input 
                     type="time" 
-                    className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 glass rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                     value={newViewingForm.time}
                     onChange={(e) => setNewViewingForm({...newViewingForm, time: e.target.value})}
                   />
@@ -631,39 +631,39 @@ export default function CalendarPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
+                <label className="block text-sm font-medium text-slate-900/80 mb-2">
                   Client Email
                 </label>
                 <input 
                   type="email" 
                   placeholder="client@email.com"
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.email}
                   onChange={(e) => setNewViewingForm({...newViewingForm, email: e.target.value})}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
+                <label className="block text-sm font-medium text-slate-900/80 mb-2">
                   Client Phone
                 </label>
                 <input 
                   type="tel" 
                   placeholder="+27831234567"
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.phone}
                   onChange={(e) => setNewViewingForm({...newViewingForm, phone: e.target.value})}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
+                <label className="block text-sm font-medium text-slate-900/80 mb-2">
                   Notes (optional)
                 </label>
                 <textarea 
                   rows={3}
                   placeholder="Any special instructions..."
-                  className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 glass rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
                   value={newViewingForm.notes}
                   onChange={(e) => setNewViewingForm({...newViewingForm, notes: e.target.value})}
                 />
@@ -671,7 +671,7 @@ export default function CalendarPage() {
             </div>
             
             <div className="flex items-center justify-end gap-3 mt-6">
-              <Button variant="outline" onClick={() => setShowNewViewing(false)} className="glass hover:bg-white/20 text-white">
+              <Button variant="outline" onClick={() => setShowNewViewing(false)} className="glass hover:bg-white/20 text-slate-900">
                 Cancel
               </Button>
               <Button variant="primary" className="glow-gold" onClick={handleScheduleViewing}>
