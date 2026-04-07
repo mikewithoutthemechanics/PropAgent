@@ -13,7 +13,7 @@ interface CardProps {
 
 export function Card({ className, children }: CardProps) {
   return (
-    <div className={cn("premium-card p-5", className)}>
+    <div className={cn("card", className)}>
       {children}
     </div>
   );
@@ -28,11 +28,11 @@ interface CardHeaderProps {
 
 export function CardHeader({ title, subtitle, action, className }: CardHeaderProps) {
   return (
-    <div className={cn("flex items-start justify-between mb-4 pb-3 border-b border-warm-gray/50", className)}>
+    <div className={cn("flex items-start justify-between mb-4 pb-3 border-b border-slate-700", className)}>
       <div>
-        <h3 className="font-serif text-lg font-semibold text-deep-charcoal">{title}</h3>
+        <h3 className="text-base font-semibold text-slate-100">{title}</h3>
         {subtitle && (
-          <p className="text-sm text-muted mt-0.5">{subtitle}</p>
+          <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>
         )}
       </div>
       {action && <div>{action}</div>}
@@ -47,20 +47,16 @@ interface BadgeProps {
 }
 
 const badgeStyles = {
-  default: "bg-soft-beige text-deep-charcoal",
-  success: "bg-[#E8EDE5] text-[#4A5540]",
-  warning: "bg-[#F5F0E6] text-[#6B5C40]",
-  danger: "bg-[#F5EDE9] text-[#704030]",
-  info: "bg-[#EDE8E3] text-[#5A4A3A]",
+  default: "bg-slate-700/50 text-slate-300 border-slate-600",
+  success: "badge-success",
+  warning: "badge-warning",
+  danger: "badge-danger",
+  info: "badge-info",
 };
 
 export function Badge({ variant = 'default', children, className }: BadgeProps) {
   return (
-    <span className={cn(
-      "inline-flex px-2.5 py-1 rounded text-xs font-medium",
-      badgeStyles[variant],
-      className
-    )}>
+    <span className={cn("badge", badgeStyles[variant], className)}>
       {children}
     </span>
   );
@@ -73,23 +69,23 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const buttonStyles = {
-  primary: "bg-deep-bronze text-white hover:bg-[#7A6548] border-deep-bronze",
-  secondary: "bg-warm-white text-deep-charcoal border-warm-gray hover:border-subtle-taupe hover:bg-soft-beige",
-  ghost: "bg-transparent text-deep-charcoal hover:bg-soft-beige",
-  outline: "bg-white text-navy-700 border-slate-200 hover:border-gold-400 hover:text-gold-700 hover:bg-gold-50",
+  primary: "btn-primary",
+  secondary: "bg-slate-700/50 text-slate-200 border border-slate-600 hover:bg-slate-700 hover:border-slate-500",
+  ghost: "bg-transparent text-slate-400 hover:text-slate-100 hover:bg-slate-800",
+  outline: "bg-transparent text-slate-300 border border-slate-600 hover:border-gold-500/50 hover:text-gold-400 hover:bg-gold-500/10",
 };
 
 const buttonSizes = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-sm",
-  lg: "px-5 py-2.5 text-base",
+  sm: "px-3 py-1.5 text-xs",
+  md: "px-4 py-2 text-xs",
+  lg: "px-5 py-2.5 text-sm",
 };
 
 export function Button({ variant = 'primary', size = 'md', className, children, ...props }: ButtonProps) {
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center font-medium rounded border transition-minimal",
+        "btn",
         buttonStyles[variant],
         buttonSizes[size],
         className
@@ -110,19 +106,17 @@ export function Input({ label, error, className, ...props }: InputProps) {
   return (
     <div className="space-y-1.5">
       {label && (
-        <label className="block text-sm font-medium text-deep-charcoal">{label}</label>
+        <label className="block text-xs font-medium text-slate-400">{label}</label>
       )}
       <input
         className={cn(
-          "w-full px-3 py-2 bg-warm-white border border-warm-gray rounded text-deep-charcoal placeholder:text-muted-light text-sm",
-          "focus:outline-none focus:border-deep-bronze focus:ring-1 focus:ring-deep-bronze/20",
-          "transition-minimal",
-          error && "border-danger focus:border-danger focus:ring-danger/20",
+          "input",
+          error && "border-red-500/50 focus:border-red-500 focus:ring-red-500/20",
           className
         )}
         {...props}
       />
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && <p className="text-xs text-red-400">{error}</p>}
     </div>
   );
 }
@@ -136,13 +130,11 @@ export function Select({ label, options, className, ...props }: SelectProps) {
   return (
     <div className="space-y-1.5">
       {label && (
-        <label className="block text-sm font-medium text-deep-charcoal">{label}</label>
+        <label className="block text-xs font-medium text-slate-400">{label}</label>
       )}
       <select
         className={cn(
-          "w-full px-3 py-2 bg-warm-white border border-warm-gray rounded text-deep-charcoal text-sm",
-          "focus:outline-none focus:border-deep-bronze focus:ring-1 focus:ring-deep-bronze/20",
-          "transition-minimal",
+          "input cursor-pointer",
           className
         )}
         {...props}
@@ -162,7 +154,7 @@ interface TableProps {
 
 export function Table({ children, className }: TableProps) {
   return (
-    <div className={cn("overflow-x-auto", className)}>
+    <div className={cn("table-container", className)}>
       <table className="w-full">
         {children}
       </table>
@@ -172,7 +164,7 @@ export function Table({ children, className }: TableProps) {
 
 export function TableHeader({ children }: { children: React.ReactNode }) {
   return (
-    <thead className="bg-soft-beige/50">
+    <thead>
       {children}
     </thead>
   );
@@ -180,7 +172,7 @@ export function TableHeader({ children }: { children: React.ReactNode }) {
 
 export function TableBody({ children }: { children: React.ReactNode }) {
   return (
-    <tbody className="divide-y divide-warm-gray/50">
+    <tbody className="divide-y divide-slate-700/50">
       {children}
     </tbody>
   );
@@ -188,7 +180,7 @@ export function TableBody({ children }: { children: React.ReactNode }) {
 
 export function TableRow({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <tr className={cn("hover:bg-soft-beige/30 transition-minimal", className)}>
+    <tr className={cn("hover:bg-slate-800/50 transition-smooth", className)}>
       {children}
     </tr>
   );
@@ -196,7 +188,7 @@ export function TableRow({ children, className }: { children: React.ReactNode; c
 
 export function TableHead({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <th className={cn("px-4 py-3 text-left text-xs font-semibold text-muted uppercase tracking-wider", className)}>
+    <th className={cn("text-xs font-semibold text-slate-500 uppercase tracking-wider", className)}>
       {children}
     </th>
   );
@@ -204,7 +196,7 @@ export function TableHead({ children, className }: { children: React.ReactNode; 
 
 export function TableCell({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <td className={cn("px-4 py-3 text-sm text-deep-charcoal", className)}>
+    <td className={cn("text-sm text-slate-300", className)}>
       {children}
     </td>
   );
@@ -223,14 +215,14 @@ export function Avatar({ src, alt, initials, className }: AvatarProps) {
       <img
         src={src}
         alt={alt}
-        className={cn("w-10 h-10 rounded object-cover", className)}
+        className={cn("w-10 h-10 rounded-full object-cover ring-2 ring-slate-700", className)}
       />
     );
   }
   
   return (
     <div className={cn(
-      "w-10 h-10 rounded bg-deep-bronze text-white flex items-center justify-center text-sm font-medium",
+      "w-10 h-10 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-slate-900 flex items-center justify-center text-xs font-semibold",
       className
     )}>
       {initials || "?"}
@@ -248,11 +240,11 @@ interface EmptyStateProps {
 export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="w-12 h-12 bg-soft-beige rounded-full flex items-center justify-center text-muted mb-4">
+      <div className="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center text-slate-500 mb-4">
         {icon}
       </div>
-      <h3 className="font-serif text-lg font-medium text-deep-charcoal mb-1">{title}</h3>
-      <p className="text-sm text-muted max-w-sm mb-4">{description}</p>
+      <h3 className="text-base font-medium text-slate-300 mb-1">{title}</h3>
+      <p className="text-sm text-slate-500 max-w-sm mb-4">{description}</p>
       {action}
     </div>
   );
@@ -260,6 +252,6 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
 
 export function Skeleton({ className }: { className?: string }) {
   return (
-    <div className={cn("animate-pulse bg-soft-beige rounded", className)} />
+    <div className={cn("skeleton", className)} />
   );
 }

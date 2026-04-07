@@ -24,7 +24,7 @@ export default function DashboardLayout({
   if (loading || (!user && !isDemoMode)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-950">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-navy-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500"></div>
       </div>
     );
   }
@@ -32,7 +32,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen flex bg-slate-950 text-slate-100">
       <Sidebar />
-      <div className="flex-1 flex flex-col ml-56">
+      <div className="flex-1 flex flex-col ml-[260px]">
         <Header />
         <main className="flex-1 p-6 overflow-auto bg-slate-950">
           {children}
