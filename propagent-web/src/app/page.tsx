@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
@@ -16,7 +16,13 @@ import {
   Play,
   Menu,
   X,
-  Building2
+  Building2,
+  ChevronDown,
+  Star,
+  Check,
+  MapPin,
+  Phone,
+  Mail
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -24,6 +30,7 @@ export default function LandingPage() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -46,12 +53,12 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
+    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans">
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'bg-slate-950/95 backdrop-blur-xl border-b border-slate-800/50' : 'bg-transparent'
+        scrolled ? 'bg-slate-950/95 backdrop-blur-2xl border-b border-white/5' : 'bg-transparent'
       }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link href="/" className="flex items-center gap-2 md:gap-3">
               <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg shadow-gold-500/20">
@@ -61,203 +68,335 @@ export default function LandingPage() {
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-8">
-              {['Features', 'Pricing', 'About'].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} className="text-sm text-slate-400 hover:text-white transition-colors">
-                  {item}
+            <div className="hidden md:flex items-center gap-10">
+              {[
+                { label: 'Features', href: '#features' },
+                { label: 'Pricing', href: '#pricing' },
+                { label: 'About', href: '#about' }
+              ].map((item) => (
+                <a 
+                  key={item.label} 
+                  href={item.href} 
+                  className="text-sm text-white/70 hover:text-white transition-all duration-300 relative group"
+                >
+                  {item.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-400 group-hover:w-full transition-all duration-300" />
                 </a>
               ))}
             </div>
 
             <div className="flex items-center gap-3 md:gap-4">
-              <Link href="/login" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:block">
+              <Link href="/login" className="text-sm text-white/70 hover:text-white transition-colors hidden sm:block">
                 Sign in
               </Link>
-              <Link href="/register" className="px-3 py-2 md:px-5 md:py-2.5 bg-gradient-to-r from-gold-500 to-gold-600 text-slate-900 text-xs md:text-sm font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all shadow-lg shadow-gold-500/20 cursor-pointer">
+              <Link href="/register" className="px-4 py-2 md:px-6 md:py-2.5 bg-white text-slate-900 text-xs md:text-sm font-semibold rounded-full hover:bg-gold-400 transition-all duration-300 cursor-pointer">
                 Get Started
               </Link>
-              {/* Mobile Menu Button */}
               <button 
-                className="md:hidden p-2 text-slate-400"
+                className="md:hidden p-2 text-white/70"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
           </div>
-
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-slate-800">
-              <div className="flex flex-col gap-4">
-                {['Features', 'Pricing', 'About'].map((item) => (
-                  <a 
-                    key={item} 
-                    href={`#${item.toLowerCase()}`} 
-                    className="text-sm text-slate-400 hover:text-white transition-colors py-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item}
-                  </a>
-                ))}
-                <Link href="/login" className="text-sm text-slate-400 hover:text-white transition-colors py-2">
-                  Sign in
-                </Link>
-              </div>
-            </div>
-          )}
         </div>
       </nav>
 
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 bg-slate-950 z-40 pt-20 px-6 md:hidden">
+          <div className="flex flex-col gap-6">
+            {['Features', 'Pricing', 'About'].map((item) => (
+              <a 
+                key={item} 
+                href={`#${item.toLowerCase()}`} 
+                className="text-2xl font-light text-white/80 hover:text-white transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item}
+              </a>
+            ))}
+            <Link href="/login" className="text-2xl font-light text-white/80 hover:text-white transition-colors">
+              Sign in
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
-      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Animated background */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Video/Image Background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950" />
-          <div className="absolute top-1/4 -left-32 w-64 md:w-96 h-64 md:h-96 bg-gold-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 -right-32 w-64 md:w-96 h-64 md:h-96 bg-blue-500/10 rounded-full blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/90 to-slate-950" />
+          <div className="absolute inset-0 opacity-30">
+            <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80')] bg-cover bg-center" />
+          </div>
+          {/* Gradient overlays */}
+          <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-gold-500/20 rounded-full blur-[150px]" />
+          <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-500/10 rounded-full blur-[150px]" />
         </div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-slate-800/50 border border-slate-700 rounded-full text-xs md:text-sm text-gold-400 mb-6 md:mb-8">
-                <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
-                <span>South Africa's #1 Property Platform</span>
-              </div>
-              
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight px-4 lg:px-0">
-                Property management{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 to-gold-300">
-                  reimagined
-                </span>
-              </h1>
-              
-              <p className="mt-4 md:mt-6 text-base md:text-lg text-slate-400 max-w-lg mx-auto lg:mx-0 px-4 lg:px-0 leading-relaxed">
-                Streamline your rental business with PropAgent. Track tenants, handle maintenance, 
-                and manage finances — all in one powerful platform.
-              </p>
-              
-              <div className="mt-8 md:mt-10 flex flex-col sm:flex-row gap-3 md:gap-4 justify-center lg:justify-start px-4 lg:px-0">
-                <Link href="/register" className="inline-flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-slate-900 font-semibold rounded-xl hover:from-gold-400 hover:to-gold-500 transition-all shadow-xl shadow-gold-500/20 cursor-pointer text-sm md:text-base">
-                  Start Free Trial
-                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-                </Link>
-                <Link href="#features" className="inline-flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 border border-slate-700 hover:border-slate-600 text-white font-semibold rounded-xl transition-all cursor-pointer text-sm md:text-base">
-                  <Play className="w-4 h-4 md:w-5 md:h-5" />
-                  See Features
-                </Link>
-              </div>
-              
-              <div className="mt-10 md:mt-12 flex items-center justify-center lg:justify-start gap-6 md:gap-8">
-                {[
-                  { value: '500+', label: 'Properties' },
-                  { value: '2,000+', label: 'Tenants' },
-                  { value: 'R50M+', label: 'Managed' }
-                ].map((stat, i) => (
-                  <div key={i} className="text-center">
-                    <p className="text-xl md:text-2xl font-semibold text-gold-400">{stat.value}</p>
-                    <p className="text-xs md:text-sm text-slate-500">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* Animated Grid */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }} />
+        </div>
 
-            {/* Hero UI Mockup - Hidden on mobile, shown on larger screens */}
-            <div className="hidden lg:block relative">
-              <div className="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700 p-4 shadow-2xl">
-                <div className="bg-slate-900 rounded-xl overflow-hidden">
-                  <div className="h-8 bg-slate-800 flex items-center px-4 gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                    <div className="w-3 h-3 rounded-full bg-green-500" />
-                  </div>
-                  <div className="p-6 space-y-4">
-                    <div className="h-4 w-2/3 bg-slate-700 rounded animate-pulse" />
-                    <div className="grid grid-cols-4 gap-3">
-                      {[1,2,3,4].map(i => (
-                        <div key={i} className="aspect-video bg-slate-800 rounded-lg" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Floating elements */}
-              <div className="absolute -top-6 -right-6 bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-xl">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-emerald-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-400">Revenue</p>
-                    <p className="text-lg font-semibold text-white">R125,000</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-gold-400 mb-8 md:mb-12 backdrop-blur-sm">
+            <Sparkles className="w-4 h-4" />
+            <span>South Africa's Premium Property Platform</span>
+          </div>
+          
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-[1.1] tracking-tight mb-6 md:mb-8">
+            Property management{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-gold-300 to-gold-400">
+              elevated
+            </span>
+          </h1>
+          
+          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-10 md:mb-12">
+            Experience the future of property management. Elegant, powerful, 
+            and designed for South Africa's finest properties.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
+            <Link href="/register" className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-slate-900 font-medium rounded-full hover:bg-gold-400 transition-all duration-300 cursor-pointer">
+              Start Free Trial
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link href="#features" className="inline-flex items-center justify-center gap-3 px-8 py-4 border border-white/20 text-white font-medium rounded-full hover:bg-white/5 transition-all duration-300 cursor-pointer">
+              <Play className="w-5 h-5" />
+              Watch Demo
+            </Link>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <ChevronDown className="w-6 h-6 text-white/30" />
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-slate-900">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10 md:mb-16">
-            <h2 className="text-2xl md:text-4xl lg:text-5xl font-semibold">
-              Everything you need
-            </h2>
-            <p className="mt-4 text-slate-400 text-base md:text-lg max-w-2xl mx-auto px-4">
-              Powerful tools to manage your property portfolio efficiently
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      {/* Stats Bar */}
+      <section className="py-12 md:py-16 border-y border-white/5 bg-slate-900/50">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {[
-              { icon: Building2, title: 'Property Management', desc: 'Track all your properties in one place with detailed analytics' },
-              { icon: Users, title: 'Tenant Portal', desc: 'Self-service portal for tenants to submit requests and pay rent' },
-              { icon: DollarSign, title: 'Financial Tracking', desc: 'Automated rent collection, expense tracking, and reporting' },
-              { icon: Calculator, title: 'Valuations', desc: 'AI-powered property valuations and market insights' },
-              { icon: FileCheck, title: 'Documents', desc: 'Digital lease management and document storage' },
-              { icon: TrendingUp, title: 'Analytics', desc: 'Real-time insights into your portfolio performance' }
-            ].map((feature, i) => (
-              <div key={i} className="group bg-slate-800/50 border border-slate-700 hover:border-gold-500/30 rounded-2xl p-5 md:p-6 transition-all hover:shadow-xl hover:shadow-gold-500/5">
-                <div className="w-10 md:w-12 h-10 md:h-12 bg-gradient-to-br from-gold-500/20 to-gold-600/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <feature.icon className="w-5 md:w-6 h-5 md:h-6 text-gold-400" />
-                </div>
-                <h3 className="text-base md:text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-slate-400 text-sm">{feature.desc}</p>
+              { value: '500+', label: 'Properties Managed' },
+              { value: '2,000+', label: 'Happy Tenants' },
+              { value: 'R50M+', label: 'Rent Collected' },
+              { value: '99.9%', label: 'Uptime' }
+            ].map((stat, i) => (
+              <div key={i} className="text-center">
+                <p className="text-3xl md:text-4xl font-light text-gold-400">{stat.value}</p>
+                <p className="text-sm text-white/50 mt-2">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+      {/* Features Section */}
+      <section id="features" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="text-center mb-16 md:mb-24">
+            <span className="text-gold-400 text-sm tracking-widest uppercase mb-4 block">Features</span>
+            <h2 className="text-3xl md:text-5xl font-light tracking-tight">
+              Everything you need
+            </h2>
+            <p className="mt-4 text-white/50 text-lg max-w-xl mx-auto">
+              Powerful tools to manage your property portfolio with elegance
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Building2, title: 'Property Management', desc: 'Track all your properties in one place with detailed analytics and insights.' },
+              { icon: Users, title: 'Tenant Portal', desc: 'Self-service portal for tenants to submit requests and pay rent seamlessly.' },
+              { icon: DollarSign, title: 'Financial Tracking', desc: 'Automated rent collection, expense tracking, and comprehensive reporting.' },
+              { icon: Calculator, title: 'Valuations', desc: 'AI-powered property valuations and real-time market insights.' },
+              { icon: FileCheck, title: 'Documents', desc: 'Digital lease management and secure document storage.' },
+              { icon: TrendingUp, title: 'Analytics', desc: 'Real-time insights into your portfolio performance.' }
+            ].map((feature, i) => (
+              <div 
+                key={i} 
+                className="group p-8 md:p-10 bg-slate-900/50 border border-white/5 hover:border-gold-500/20 rounded-2xl transition-all duration-500 hover:bg-slate-900"
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-gold-500/10 to-gold-600/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-gold-500/20 transition-all duration-500">
+                  <feature.icon className="w-6 h-6 text-gold-400" />
+                </div>
+                <h3 className="text-xl font-medium mb-3">{feature.title}</h3>
+                <p className="text-white/50 leading-relaxed">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial */}
+      <section className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-slate-900/30">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl md:text-4xl lg:text-5xl font-semibold mb-4 md:mb-6">
-            Ready to transform your property management?
+          <div className="flex justify-center gap-1 mb-8">
+            {[1,2,3,4,5].map((_, i) => (
+              <Star key={i} className="w-5 h-5 text-gold-400 fill-gold-400" />
+            ))}
+          </div>
+          <blockquote className="text-2xl md:text-4xl font-light leading-tight text-white/80 mb-8">
+            "PropAgent has transformed how we manage our property portfolio. 
+            The elegance and functionality is unmatched in South Africa."
+          </blockquote>
+          <div className="flex items-center justify-center gap-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full" />
+            <div className="text-left">
+              <p className="font-medium">James Mitchell</p>
+              <p className="text-sm text-white/50">CEO, Mitchell Properties</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="text-center mb-16 md:mb-24">
+            <span className="text-gold-400 text-sm tracking-widest uppercase mb-4 block">Pricing</span>
+            <h2 className="text-3xl md:text-5xl font-light tracking-tight">
+              Simple, transparent pricing
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {[
+              { 
+                name: 'Starter', 
+                price: 'R499', 
+                desc: 'Perfect for small portfolios',
+                features: ['Up to 10 properties', 'Basic analytics', 'Email support']
+              },
+              { 
+                name: 'Professional', 
+                price: 'R999', 
+                desc: 'For growing portfolios',
+                features: ['Up to 50 properties', 'Advanced analytics', 'Priority support', 'API access'],
+                popular: true
+              },
+              { 
+                name: 'Enterprise', 
+                price: 'Custom', 
+                desc: 'For large portfolios',
+                features: ['Unlimited properties', 'Custom integrations', 'Dedicated account manager', 'SLA']
+              }
+            ].map((plan, i) => (
+              <div 
+                key={i}
+                className={`p-8 md:p-10 rounded-2xl border transition-all duration-300 ${
+                  plan.popular 
+                    ? 'bg-slate-900 border-gold-500/50 scale-105 shadow-xl shadow-gold-500/10' 
+                    : 'bg-slate-900/30 border-white/5 hover:border-white/10'
+                }`}
+              >
+                {plan.popular && (
+                  <span className="inline-block px-3 py-1 bg-gold-500 text-slate-900 text-xs font-medium rounded-full mb-4">
+                    Most Popular
+                  </span>
+                )}
+                <h3 className="text-xl font-medium mb-2">{plan.name}</h3>
+                <div className="flex items-baseline gap-1 mb-2">
+                  <span className="text-4xl font-light">{plan.price}</span>
+                  {plan.price !== 'Custom' && <span className="text-white/50">/month</span>}
+                </div>
+                <p className="text-white/50 text-sm mb-6">{plan.desc}</p>
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((f, j) => (
+                    <li key={j} className="flex items-center gap-3 text-sm text-white/70">
+                      <Check className="w-4 h-4 text-gold-400" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link 
+                  href="/register" 
+                  className={`block text-center py-3 rounded-full transition-all duration-300 ${
+                    plan.popular 
+                      ? 'bg-white text-slate-900 hover:bg-gold-400' 
+                      : 'border border-white/20 hover:bg-white/5'
+                  }`}
+                >
+                  Get Started
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-5xl font-light tracking-tight mb-6">
+            Ready to elevate your property management?
           </h2>
-          <p className="text-slate-400 text-base md:text-lg mb-8 md:mb-10 px-4">
-            Join thousands of property managers who trust PropAgent
+          <p className="text-white/50 text-lg mb-10">
+            Join the waitlist for early access
           </p>
-          <Link href="/register" className="inline-flex items-center justify-center gap-2 md:gap-3 px-8 md:px-10 py-3 md:py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-slate-900 font-semibold rounded-xl hover:from-gold-400 hover:to-gold-500 transition-all shadow-xl shadow-gold-500/20 cursor-pointer">
+          <Link href="/register" className="inline-flex items-center justify-center gap-3 px-10 py-4 bg-white text-slate-900 font-medium rounded-full hover:bg-gold-400 transition-all duration-300 cursor-pointer">
             Start Your Free Trial
-            <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+            <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 md:py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 md:gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-gold-400 to-gold-600 rounded-lg flex items-center justify-center">
-              <Home className="w-4 h-4 text-slate-900" />
+      <footer className="py-12 md:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/5">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 md:gap-12 mb-12">
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl flex items-center justify-center">
+                  <Home className="w-5 h-5 text-slate-900" />
+                </div>
+                <span className="text-xl font-semibold">PropAgent</span>
+              </div>
+              <p className="text-white/50 max-w-md">
+                South Africa's premium property management platform. 
+                Elegant, powerful, and designed for the modern landlord.
+              </p>
             </div>
-            <span className="font-semibold">PropAgent</span>
+            <div>
+              <h4 className="font-medium mb-4">Product</h4>
+              <ul className="space-y-3 text-white/50">
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">API</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium mb-4">Contact</h4>
+              <ul className="space-y-3 text-white/50">
+                <li className="flex items-center gap-2">
+                  <Mail className="w-4 h-4" /> hello@propagent.co.za
+                </li>
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4" /> +27 21 555 0123
+                </li>
+                <li className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" /> Cape Town, SA
+                </li>
+              </ul>
+            </div>
           </div>
-          <p className="text-slate-500 text-sm">© 2026 PropAgent. All rights reserved.</p>
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-white/30 text-sm">© 2026 PropAgent. All rights reserved.</p>
+            <div className="flex items-center gap-6 text-white/30 text-sm">
+              <a href="#" className="hover:text-white transition-colors">Privacy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms</a>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
