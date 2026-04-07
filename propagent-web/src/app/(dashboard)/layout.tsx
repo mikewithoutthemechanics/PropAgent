@@ -33,7 +33,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen flex bg-slate-950 text-slate-100">
       {/* Desktop Sidebar - Hidden on mobile */}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[260px] bg-gradient-to-b from-slate-900 to-slate-950 flex-col z-50 border-r border-slate-800">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[220px] xl:w-[260px] bg-gradient-to-b from-slate-900 to-slate-950 flex-col z-50 border-r border-slate-800">
         <Sidebar />
       </aside>
 
@@ -41,7 +41,7 @@ export default function DashboardLayout({
       <MobileSidebar isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:ml-[260px]">
+      <div className="flex-1 flex flex-col lg:ml-[220px] xl:ml-[260px]">
         {/* Mobile Header */}
         <header className="lg:hidden h-14 bg-slate-900/90 backdrop-blur-xl border-b border-slate-800 px-4 flex items-center justify-between sticky top-0 z-30">
           <button 
