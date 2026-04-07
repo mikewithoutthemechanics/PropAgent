@@ -41,16 +41,16 @@ export default function MatchingPage() {
   const [filterOpen, setFilterOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-6 lg:p-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-10">
         <div>
           <h1 className="text-2xl md:text-4xl font-light tracking-tight">Tenant Matching</h1>
-          <p className="text-white/50 mt-2 flex items-center gap-3 text-sm md:text-base">
+          <p className="text-slate-500 mt-2 flex items-center gap-3 text-sm md:text-base">
             <Users className="w-4 h-4" />
             <span>{criteria.length} active criteria</span>
-            <span className="w-1 h-1 bg-white/20 rounded-full" />
-            <span className="text-emerald-400">POPIA compliant</span>
+            <span className="w-1 h-1 bg-slate-300 rounded-full" />
+            <span className="text-emerald-600">POPIA compliant</span>
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">

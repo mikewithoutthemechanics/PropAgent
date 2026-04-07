@@ -95,13 +95,13 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       </nav>
 
       {/* User Section */}
-      <div className="p-2 md:p-3 border-t border-slate-800">
-        <div className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-3 mb-2 bg-slate-800/50 rounded-lg md:rounded-xl border border-slate-700/50">
-          <div className="w-7 md:w-9 h-7 md:h-9 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center text-slate-900 font-semibold text-xs md:text-sm shadow-lg shadow-gold-500/20">
+      <div className="p-2 md:p-3 border-t border-slate-200">
+        <div className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-3 mb-2 bg-slate-100 rounded-lg md:rounded-xl">
+          <div className="w-7 md:w-9 h-7 md:h-9 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-white font-semibold text-xs md:text-sm shadow-lg shadow-amber-500/20">
             {user?.email?.charAt(0).toUpperCase() || 'U'}
           </div>
           <div className="flex-1 min-w-0 hidden md:block">
-            <p className="text-xs md:text-sm font-medium text-white truncate">
+            <p className="text-xs md:text-sm font-medium text-slate-900 truncate">
               {user?.email?.split('@')[0] || 'User'}
             </p>
             <p className="text-xs text-slate-500 truncate">
@@ -111,13 +111,13 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         </div>
         
         <div className="space-y-0.5 md:space-y-1">
-          <button className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-all cursor-pointer w-full text-xs md:text-sm font-medium">
+          <button className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all cursor-pointer w-full text-xs md:text-sm font-medium">
             <Settings className="w-4 h-4" />
             <span className="hidden md:inline">Settings</span>
           </button>
           <button 
             onClick={handleSignOut}
-            className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-rose-400 hover:bg-rose-500/10 transition-all cursor-pointer w-full text-xs md:text-sm font-medium"
+            className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-rose-600 hover:bg-rose-50 transition-all cursor-pointer w-full text-xs md:text-sm font-medium"
           >
             <LogOut className="w-4 h-4" />
             <span className="hidden md:inline">Sign Out</span>
@@ -142,7 +142,7 @@ export function MobileSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: (
       
       {/* Sidebar */}
       <aside className={cn(
-        "fixed left-0 top-0 h-full w-[260px] md:w-[220px] lg:w-[240px] bg-gradient-to-b from-slate-900 to-slate-950 text-white flex flex-col z-50 border-r border-slate-800 transition-transform duration-300 lg:hidden",
+        "fixed left-0 top-0 h-full w-[260px] md:w-[220px] bg-white text-slate-900 flex flex-col z-50 border-r border-slate-200 transition-transform duration-300 lg:hidden",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <Sidebar onClose={onClose} />

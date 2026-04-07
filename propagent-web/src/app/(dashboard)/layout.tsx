@@ -31,9 +31,9 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen flex bg-slate-950 text-slate-100">
+    <div className="min-h-screen flex bg-slate-50 text-slate-900">
       {/* Desktop Sidebar - Hidden on mobile */}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[220px] xl:w-[260px] bg-gradient-to-b from-slate-900 to-slate-950 flex-col z-50 border-r border-slate-800">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[220px] xl:w-[260px] bg-white border-r border-slate-200 flex-col z-50">
         <Sidebar />
       </aside>
 
@@ -43,10 +43,10 @@ export default function DashboardLayout({
       {/* Main Content */}
       <div className="flex-1 flex flex-col lg:ml-[220px] xl:ml-[260px]">
         {/* Mobile Header */}
-        <header className="lg:hidden h-14 bg-slate-900/90 backdrop-blur-xl border-b border-slate-800 px-4 flex items-center justify-between sticky top-0 z-30">
+        <header className="lg:hidden h-14 bg-white/90 backdrop-blur-xl border-b border-slate-200 px-4 flex items-center justify-between sticky top-0 z-30">
           <button 
             onClick={() => setMobileMenuOpen(true)}
-            className="p-2 -ml-2 text-slate-400 hover:text-white"
+            className="p-2 -ml-2 text-slate-600 hover:text-slate-900"
           >
             <Menu className="w-6 h-6" />
           </button>
@@ -70,7 +70,7 @@ export default function DashboardLayout({
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 p-4 md:p-6 overflow-auto bg-slate-950">
+        <main className="flex-1 p-4 md:p-6 overflow-auto bg-slate-50">
           {children}
         </main>
       </div>
