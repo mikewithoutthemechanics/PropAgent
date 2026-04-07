@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Plus, Bell, User, Command } from 'lucide-react';
+import { Search, Bell, User, Command, Plus } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 
@@ -10,7 +10,7 @@ export function Header() {
   const { user } = useAuth();
 
   return (
-    <header className="h-16 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-40">
+    <header className="hidden lg:flex h-16 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-40">
       {/* Search */}
       <div className="flex-1 max-w-xl">
         <div className="relative group">

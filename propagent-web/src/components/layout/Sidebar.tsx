@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -11,7 +12,6 @@ import {
   LogOut,
   Home,
   Bell,
-  Search,
   CreditCard,
   Target,
   UserCheck,
@@ -20,7 +20,9 @@ import {
   Calculator,
   FileText,
   Calendar,
-  Sparkles
+  Sparkles,
+  Menu,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/auth';
@@ -44,7 +46,7 @@ const navItems = [
   { href: '/pricing', label: 'Pricing', icon: CreditCard },
 ];
 
-export function Sidebar() {
+export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const { user, signOut } = useAuth();
 
@@ -53,16 +55,16 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[260px] bg-gradient-to-b from-slate-900 to-slate-950 text-white flex flex-col z-50 border-r border-slate-800">
+    <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="p-5 border-b border-slate-800">
+      <div className="p-4 md:p-5 border-b border-slate-800">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl flex items-center justify-center shadow-lg shadow-gold-500/20">
-            <Home className="w-5 h-5 text-slate-900" />
+          <div className="w-9 md:w-10 h-9 md:h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg shadow-gold-500/20">
+            <Home className="w-4 md:w-5 h-4 md:h-5 text-slate-900" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight text-white">PropAgent</h1>
-            <p className="text-xs text-slate-500">Property Management</p>
+            <h1 className="text-base md:text-lg font-semibold tracking-tight text-white">PropAgent</h1>
+            <p className="text-xs text-slate-500 hidden md:block">Property Management</p>
           </div>
         </Link>
       </div>
@@ -77,6 +79,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onClose}
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 cursor-pointer text-sm font-medium',
                 isActive 
@@ -92,12 +95,12 @@ export function Sidebar() {
       </nav>
 
       {/* User Section */}
-      <div className="p-4 border-t border-slate-800">
+      <div className="p-3 md:p-4 border-t border-slate-800">
         <div className="flex items-center gap-3 px-3 py-3 mb-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
-          <div className="w-9 h-9 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center text-slate-900 font-semibold text-sm shadow-lg shadow-gold-500/20">
+          <div className="w-8 md:w-9 h-8 md:h-9 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center text-slate-900 font-semibold text-xs md:text-sm shadow-lg shadow-gold-500/20">
             {user?.email?.charAt(0).toUpperCase() || 'U'}
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 hidden md:block">
             <p className="text-sm font-medium text-white truncate">
               {user?.email?.split('@')[0] || 'User'}
             </p>
@@ -110,17 +113,40 @@ export function Sidebar() {
         <div className="space-y-1">
           <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition-all cursor-pointer w-full text-sm font-medium">
             <Settings className="w-4.5 h-4.5" />
-            <span>Settings</span>
+            <span className="hidden md:inline">Settings</span>
           </button>
           <button 
             onClick={handleSignOut}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-all cursor-pointer w-full text-sm font-medium"
           >
             <LogOut className="w-4.5 h-4.5" />
-            <span>Sign Out</span>
+            <span className="hidden md:inline">Sign Out</span>
           </button>
         </div>
       </div>
-    </aside>
+    </div>
+  );
+}
+
+// Mobile sidebar wrapper with overlay
+export function MobileSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  return (
+    <>
+      {/* Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <aside className={cn(
+        "fixed left-0 top-0 h-full w-[280px] bg-gradient-to-b from-slate-900 to-slate-950 text-white flex flex-col z-50 border-r border-slate-800 transition-transform duration-300 lg:hidden",
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <Sidebar onClose={onClose} />
+      </aside>
+    </>
   );
 }
