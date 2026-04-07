@@ -79,6 +79,14 @@ export function PropertyFilters({
     updateFilter('maxPrice', max === Infinity ? undefined : max);
   };
 
+  const handleProvinceChange = (province: string) => {
+    const currentProvinces = filters.provinces || [];
+    const newProvinces = currentProvinces.includes(province)
+      ? currentProvinces.filter(p => p !== province)
+      : [...currentProvinces, province];
+    updateFilter('provinces', newProvinces.length > 0 ? newProvinces : undefined);
+  };
+
   const activeFiltersCount = Object.entries(filters).filter(([key, value]) => {
     if (key === 'sortBy') return false;
     if (value === undefined || value === '' || value === null) return false;
@@ -302,7 +310,9 @@ export function PropertyFilters({
                   >
                     <input
                       type="checkbox"
-                      className="w-4 h-4 rounded border-white/20 text-gold-500 focus:ring-amber-500 bg-white/5 cursor-pointer"
+                      checked={filters.provinces?.includes(province.value) || false}
+                      onChange={() => handleProvinceChange(province.value)}
+                      className="w-4 h-4 rounded border-white/20 text-gold-500 focus:ring-gold-500 bg-white/5 cursor-pointer"
                     />
                     <span className="text-sm text-slate-300">{province.label}</span>
                   </label>

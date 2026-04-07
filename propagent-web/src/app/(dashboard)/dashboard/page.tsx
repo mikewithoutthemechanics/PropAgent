@@ -184,7 +184,6 @@ function StatMiniCard({ label, value, subtext, icon, color = 'navy' }: {
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
   const stats = samplePropertyStats;
   const recentInquiries = sampleRecentInquiries.slice(0, 5);
   const recentProperties = sampleProperties.slice(0, 3);

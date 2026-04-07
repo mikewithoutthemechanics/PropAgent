@@ -20,7 +20,7 @@ export default function PropertyDetailPage() {
   
   // In a real app, fetch property by ID from API
   // For demo, we'll use the sample data
-  const property = sampleProperties[0]; // Replace with actual fetch
+  const property = sampleProperties.find(p => p.id === propertyId) || sampleProperties[0];
   const similarProperties = getSimilarProperties(property.id, 3);
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -119,7 +119,7 @@ export default function PropertyDetailPage() {
             <Heart className={cn("w-4 h-4 mr-1.5", isFavorite && "fill-current")} />
             {isFavorite ? 'Saved' : 'Save'}
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => alert('Edit functionality coming soon!')}>
             <Edit3 className="w-4 h-4 mr-1.5" />
             Edit
           </Button>
