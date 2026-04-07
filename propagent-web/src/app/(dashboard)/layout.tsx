@@ -11,29 +11,30 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useAuth();
+  const { user, loading, isDemoMode } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
+    // Allow access in demo mode
+    if (!loading && !user && !isDemoMode) {
       router.push('/login');
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, isDemoMode]);
 
-  if (loading || !user) {
+  if (loading || (!user && !isDemoMode)) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex bg-gray-50 text-gray-900">
+    <div className="min-h-screen flex bg-slate-950 text-slate-100">
       <Sidebar />
       <div className="flex-1 flex flex-col ml-56">
         <Header />
-        <main className="flex-1 p-6 overflow-auto bg-gray-50">
+        <main className="flex-1 p-6 overflow-auto bg-slate-950">
           {children}
         </main>
       </div>

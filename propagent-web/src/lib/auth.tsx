@@ -38,6 +38,21 @@ export interface Profile {
   updated_at?: string;
 }
 
+// Demo mode flag - set to true to bypass authentication for testing
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+
+// Demo user profile for testing
+const DEMO_PROFILE: Profile = {
+  id: 'demo-user-id',
+  email: 'demo@propagent.co.za',
+  first_name: 'Demo',
+  last_name: 'User',
+  role: 'agent',
+  agency_id: 'demo-agency',
+  phone: '+27 82 123 4567',
+  created_at: new Date().toISOString(),
+};
+
 interface AuthContextType {
   user: User | null;
   profile: Profile | null;
@@ -47,6 +62,8 @@ interface AuthContextType {
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   updateProfile: (data: Partial<Profile>) => Promise<{ error: Error | null }>;
+  isDemoMode: boolean;
+  enterDemoMode: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -56,6 +73,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDemoMode, setIsDemoMode] = useState(DEMO_MODE);
+
+// Check for demo mode on mount (e.g., from URL parameter or localStorage)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Check URL first, then localStorage
+      const params = new URLSearchParams(window.location.search);
+      const urlDemo = params.get('demo') === 'true';
+      const storedDemo = localStorage.getItem('propagent-demo-mode') === 'true';
+      
+      if (urlDemo || DEMO_MODE || storedDemo) {
+        setIsDemoMode(true);
+        if (urlDemo) {
+          localStorage.setItem('propagent-demo-mode', 'true');
+        }
+      }
+    }
+  }, []);
+
+  const enterDemoMode = () => {
+    setIsDemoMode(true);
+    setUser({
+      id: DEMO_PROFILE.id,
+      email: DEMO_PROFILE.email,
+      app_metadata: {},
+      user_metadata: {
+        first_name: DEMO_PROFILE.first_name,
+        last_name: DEMO_PROFILE.last_name,
+      },
+      aud: 'authenticated',
+      confirmed_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+    } as User);
+    setProfile(DEMO_PROFILE);
+    setLoading(false);
+  };
 
   const fetchProfile = async (userId: string) => {
     const client = getClient();
@@ -76,6 +129,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    // Skip auth initialization in demo mode
+    if (isDemoMode) {
+      setLoading(false);
+      return;
+    }
+
     const initAuth = async () => {
       try {
         const client = getClient();
@@ -118,7 +177,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [isDemoMode]);
 
   const signIn = async (email: string, password: string) => {
     const client = getClient();
@@ -177,6 +236,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
+    if (isDemoMode) {
+      setIsDemoMode(false);
+      localStorage.removeItem('propagent-demo-mode');
+      setUser(null);
+      setProfile(null);
+      setSession(null);
+      return;
+    }
     const client = getClient();
     if (client) {
       await client.auth.signOut();
@@ -217,6 +284,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signUp,
         signOut,
         updateProfile,
+        isDemoMode,
+        enterDemoMode,
       }}
     >
       {children}

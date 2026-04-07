@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Users, Plus, Home, Building2, Phone, Mail, Search, Filter, TrendingUp, Target, Globe, Share2, Handshake } from 'lucide-react';
+import { Users, Plus, Home, Building2, Phone, Mail, Search, Filter, TrendingUp, Target, Globe, Share2, Handshake, X } from 'lucide-react';
 import { Card, Button, Badge, Input } from '@/components/ui';
 import { Lead, sampleLeads, leadSourceConfig, getLeadStats } from '@/lib/leads';
 import { cn } from '@/lib/utils';
@@ -60,6 +60,22 @@ export default function LeadsPage() {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newLead, setNewLead] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    type: 'tenant',
+    source: 'website',
+    status: 'new',
+    bedrooms: '',
+    budgetMin: '',
+    budgetMax: '',
+    preferredSuburb: '',
+    propertyAddress: '',
+    askingRent: '',
+    notes: '',
+  });
   const pageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -126,6 +142,26 @@ export default function LeadsPage() {
     }
   };
 
+  const handleAddLead = () => {
+    alert('Lead added successfully! (Demo mode - data not persisted)');
+    setShowAddModal(false);
+    setNewLead({
+      name: '',
+      email: '',
+      phone: '',
+      type: 'tenant',
+      source: 'website',
+      status: 'new',
+      bedrooms: '',
+      budgetMin: '',
+      budgetMax: '',
+      preferredSuburb: '',
+      propertyAddress: '',
+      askingRent: '',
+      notes: '',
+    });
+  };
+
   return (
     <div ref={pageRef} className="space-y-6 relative">
       {/* Animated Gradient Header */}
@@ -140,7 +176,7 @@ export default function LeadsPage() {
                 Tenant & landlord leads from Property24, Facebook, Website
               </p>
             </div>
-            <Button className="glow-gold hover:scale-105 transition-transform duration-300">
+            <Button onClick={() => setShowAddModal(true)} className="glow-gold hover:scale-105 transition-transform duration-300">
               <Plus className="w-4 h-4 mr-1.5" />
               Add Lead
             </Button>
@@ -309,6 +345,191 @@ export default function LeadsPage() {
           </div>
         </div>
       </div>
+
+      {/* Add Lead Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-700 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-xl font-semibold text-white">Add New Lead</h2>
+              <button 
+                onClick={() => setShowAddModal(false)}
+                className="p-2 hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5 text-white/60" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
+                <input 
+                  type="text" 
+                  value={newLead.name}
+                  onChange={(e) => setNewLead({...newLead, name: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  placeholder="John Doe"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
+                  <input 
+                    type="email" 
+                    value={newLead.email}
+                    onChange={(e) => setNewLead({...newLead, email: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    placeholder="email@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Phone</label>
+                  <input 
+                    type="tel" 
+                    value={newLead.phone}
+                    onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    placeholder="+27831234567"
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Type</label>
+                  <select 
+                    value={newLead.type}
+                    onChange={(e) => setNewLead({...newLead, type: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                  >
+                    <option value="tenant">Tenant</option>
+                    <option value="landlord">Landlord</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Source</label>
+                  <select 
+                    value={newLead.source}
+                    onChange={(e) => setNewLead({...newLead, source: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                  >
+                    <option value="website">Website</option>
+                    <option value="property24">Property24</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="referral">Referral</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+              
+              {newLead.type === 'tenant' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Bedrooms</label>
+                    <select 
+                      value={newLead.bedrooms}
+                      onChange={(e) => setNewLead({...newLead, bedrooms: e.target.value})}
+                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                    >
+                      <option value="">Any</option>
+                      <option value="1">1 Bedroom</option>
+                      <option value="2">2 Bedrooms</option>
+                      <option value="3">3 Bedrooms</option>
+                      <option value="4">4+ Bedrooms</option>
+                    </select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-300 mb-2">Min Budget (ZAR)</label>
+                      <input 
+                        type="number" 
+                        value={newLead.budgetMin}
+                        onChange={(e) => setNewLead({...newLead, budgetMin: e.target.value})}
+                        className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        placeholder="10000"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-300 mb-2">Max Budget (ZAR)</label>
+                      <input 
+                        type="number" 
+                        value={newLead.budgetMax}
+                        onChange={(e) => setNewLead({...newLead, budgetMax: e.target.value})}
+                        className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        placeholder="20000"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Preferred Suburb</label>
+                    <input 
+                      type="text" 
+                      value={newLead.preferredSuburb}
+                      onChange={(e) => setNewLead({...newLead, preferredSuburb: e.target.value})}
+                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      placeholder="Sandton"
+                    />
+                  </div>
+                </>
+              )}
+              
+              {newLead.type === 'landlord' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Property Address</label>
+                    <input 
+                      type="text" 
+                      value={newLead.propertyAddress}
+                      onChange={(e) => setNewLead({...newLead, propertyAddress: e.target.value})}
+                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      placeholder="123 Main Street, Suburb"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Asking Rent (ZAR/month)</label>
+                    <input 
+                      type="number" 
+                      value={newLead.askingRent}
+                      onChange={(e) => setNewLead({...newLead, askingRent: e.target.value})}
+                      className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      placeholder="15000"
+                    />
+                  </div>
+                </>
+              )}
+              
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Notes</label>
+                <textarea 
+                  rows={3}
+                  value={newLead.notes}
+                  onChange={(e) => setNewLead({...newLead, notes: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  placeholder="Additional notes..."
+                />
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-end gap-3 mt-6">
+              <button 
+                onClick={() => setShowAddModal(false)}
+                className="px-4 py-2.5 bg-slate-700 rounded-lg text-white text-sm hover:bg-slate-600 transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleAddLead}
+                className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-amber-500/25 transition-all cursor-pointer"
+              >
+                <Plus className="w-4 h-4 inline mr-1.5" />
+                Add Lead
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

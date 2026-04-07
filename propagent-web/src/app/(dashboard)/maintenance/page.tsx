@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Search, AlertTriangle, Clock, CheckCircle, XCircle, Calendar } from 'lucide-react';
+import { Plus, Search, AlertTriangle, Clock, CheckCircle, XCircle, Calendar, X } from 'lucide-react';
 import { Card, Button, Badge } from '@/components/ui';
 import { mockMaintenanceRequests, mockProperties, mockTenants } from '@/lib/data';
 import { formatDate, getStatusColor } from '@/lib/utils';
@@ -10,6 +10,26 @@ export default function MaintenancePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newRequest, setNewRequest] = useState({
+    title: '',
+    description: '',
+    propertyId: '',
+    priority: 'medium',
+    category: 'general',
+  });
+
+  const handleAddRequest = () => {
+    alert('Maintenance request created! (Demo mode - data not persisted)');
+    setShowAddModal(false);
+    setNewRequest({
+      title: '',
+      description: '',
+      propertyId: '',
+      priority: 'medium',
+      category: 'general',
+    });
+  };
 
   const getPropertyAddress = (propertyId: string) => {
     const property = mockProperties.find(p => p.id === propertyId);
@@ -51,7 +71,7 @@ export default function MaintenancePage() {
           <h1 className="text-2xl font-bold text-slate-900">Maintenance</h1>
           <p className="text-slate-500 mt-1">Track and manage maintenance requests</p>
         </div>
-        <Button>
+        <Button onClick={() => setShowAddModal(true)}>
           <Plus className="w-4 h-4" />
           New Request
         </Button>
@@ -194,6 +214,109 @@ export default function MaintenancePage() {
           </div>
         )}
       </Card>
+
+      {/* Add Maintenance Request Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-700">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-xl font-semibold text-white">New Maintenance Request</h2>
+              <button 
+                onClick={() => setShowAddModal(false)}
+                className="p-2 hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5 text-white/60" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Title</label>
+                <input 
+                  type="text" 
+                  value={newRequest.title}
+                  onChange={(e) => setNewRequest({...newRequest, title: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  placeholder="e.g., Leaking tap in kitchen"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                <textarea 
+                  rows={3}
+                  value={newRequest.description}
+                  onChange={(e) => setNewRequest({...newRequest, description: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  placeholder="Describe the issue in detail..."
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Property</label>
+                <select 
+                  value={newRequest.propertyId}
+                  onChange={(e) => setNewRequest({...newRequest, propertyId: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                >
+                  <option value="">Select a property...</option>
+                  {mockProperties.map(prop => (
+                    <option key={prop.id} value={prop.id}>{prop.address}, {prop.suburb}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                  <select 
+                    value={newRequest.priority}
+                    onChange={(e) => setNewRequest({...newRequest, priority: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Category</label>
+                  <select 
+                    value={newRequest.category}
+                    onChange={(e) => setNewRequest({...newRequest, category: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                  >
+                    <option value="general">General</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="electrical">Electrical</option>
+                    <option value="hvac">HVAC</option>
+                    <option value="appliance">Appliance</option>
+                    <option value="structural">Structural</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-end gap-3 mt-6">
+              <button 
+                onClick={() => setShowAddModal(false)}
+                className="px-4 py-2.5 bg-slate-700 rounded-lg text-white text-sm hover:bg-slate-600 transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleAddRequest}
+                className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-amber-500/25 transition-all cursor-pointer"
+              >
+                <Plus className="w-4 h-4 inline mr-1.5" />
+                Create Request
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -61,7 +61,6 @@ export function PropertyFilters({
   const [isExpanded, setIsExpanded] = useState(false);
   const [localFilters, setLocalFilters] = useState<PropertyFiltersType>(filters);
 
-  // Sync local filters with prop filters
   useEffect(() => {
     setLocalFilters(filters);
   }, [filters]);
@@ -88,26 +87,28 @@ export function PropertyFilters({
   }).length;
 
   return (
-    <div className="bg-white rounded-xl border border-stone-200 shadow-sm">
+    <div className="bg-gray-900/60 border border-white/10 rounded-xl backdrop-blur-xl">
       {/* Main Search Bar */}
-      <div className="p-4 border-b border-stone-100">
+      <div className="p-4 border-b border-white/10">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search Input */}
           <div className="flex-1 relative">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               placeholder="Search by suburb, city, or province..."
               value={localFilters.location || ''}
               onChange={(e) => updateFilter('location', e.target.value || undefined)}
-              className="w-full pl-10 pr-4 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+              aria-label="Search properties by location"
+              className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
             />
             {localFilters.location && (
               <button
                 onClick={() => updateFilter('location', undefined)}
-                className="absolute right-3 top-1/2 -translate-y-1/2"
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                aria-label="Clear search"
               >
-                <X className="w-4 h-4 text-stone-400 hover:text-stone-600" />
+                <X className="w-4 h-4 text-slate-400 hover:text-white" />
               </button>
             )}
           </div>
@@ -119,14 +120,15 @@ export function PropertyFilters({
               <select
                 value={localFilters.listingType || ''}
                 onChange={(e) => updateFilter('listingType', (e.target.value as ListingType) || undefined)}
-                className="appearance-none pl-3 pr-8 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[120px]"
+                aria-label="Filter by listing type"
+                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[120px]"
               >
-                <option value="">All Listings</option>
+                <option value="" className="bg-gray-900">All Listings</option>
                 {listingTypes.map(type => (
-                  <option key={type.value} value={type.value}>{type.label}</option>
+                  <option key={type.value} value={type.value} className="bg-gray-900">{type.label}</option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             </div>
 
             {/* Property Type */}
@@ -137,14 +139,15 @@ export function PropertyFilters({
                   const value = e.target.value as PropertyType;
                   updateFilter('propertyTypes', value ? [value] : undefined);
                 }}
-                className="appearance-none pl-3 pr-8 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[140px]"
+                aria-label="Filter by property type"
+                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[140px]"
               >
-                <option value="">All Types</option>
+                <option value="" className="bg-gray-900">All Types</option>
                 {propertyTypes.map(type => (
-                  <option key={type.value} value={type.value}>{type.label}</option>
+                  <option key={type.value} value={type.value} className="bg-gray-900">{type.label}</option>
                 ))}
               </select>
-              <Home className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
+              <Home className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             </div>
 
             {/* Bedrooms */}
@@ -152,14 +155,15 @@ export function PropertyFilters({
               <select
                 value={localFilters.bedrooms || ''}
                 onChange={(e) => updateFilter('bedrooms', e.target.value ? Number(e.target.value) : undefined)}
-                className="appearance-none pl-3 pr-8 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[100px]"
+                aria-label="Filter by bedrooms"
+                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[100px]"
               >
-                <option value="">Beds</option>
+                <option value="" className="bg-gray-900">Beds</option>
                 {bedroomOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <option key={opt.value} value={opt.value} className="bg-gray-900">{opt.label}</option>
                 ))}
               </select>
-              <BedDouble className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
+              <BedDouble className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             </div>
 
             {/* Sort */}
@@ -167,13 +171,14 @@ export function PropertyFilters({
               <select
                 value={localFilters.sortBy || 'featured'}
                 onChange={(e) => updateFilter('sortBy', (e.target.value as PropertyFiltersType['sortBy']) || 'featured')}
-                className="appearance-none pl-3 pr-8 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[140px]"
+                aria-label="Sort properties"
+                className="appearance-none pl-3 pr-8 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer min-w-[140px]"
               >
                 {sortOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <option key={opt.value} value={opt.value} className="bg-gray-900">{opt.label}</option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             </div>
 
             {/* More Filters Toggle */}
@@ -181,9 +186,11 @@ export function PropertyFilters({
               variant="outline"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
+              aria-expanded={isExpanded}
+              aria-controls="expanded-filters"
               className={cn(
-                "relative",
-                activeFiltersCount > 0 && "border-amber-300 text-amber-700"
+                "cursor-pointer",
+                activeFiltersCount > 0 && "border-amber-500 text-amber-400"
               )}
             >
               <SlidersHorizontal className="w-4 h-4 mr-1.5" />
@@ -200,12 +207,12 @@ export function PropertyFilters({
 
       {/* Expanded Filters */}
       {isExpanded && (
-        <div className="p-4 border-b border-stone-100 bg-stone-50/50">
+        <div id="expanded-filters" className="p-4 border-b border-white/10 bg-white/5">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Price Range */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-stone-700 mb-3">
-                <DollarSign className="w-4 h-4 text-amber-500" />
+              <label className="flex items-center gap-2 text-sm font-medium text-slate-200 mb-3">
+                <DollarSign className="w-4 h-4 text-amber-400" />
                 Price Range
               </label>
               <div className="space-y-2">
@@ -214,10 +221,10 @@ export function PropertyFilters({
                     key={range.label}
                     onClick={() => handlePriceRangeChange(range.min, range.max)}
                     className={cn(
-                      "w-full text-left px-3 py-2 rounded-lg text-sm transition-colors",
+                      "w-full text-left px-3 py-2 rounded-lg text-sm transition-colors cursor-pointer",
                       (filters.minPrice === range.min && filters.maxPrice === (range.max === Infinity ? undefined : range.max))
-                        ? "bg-amber-100 text-amber-700 font-medium"
-                        : "hover:bg-stone-100 text-stone-600"
+                        ? "bg-amber-500/20 text-amber-400 font-medium border border-amber-500/30"
+                        : "hover:bg-white/10 text-slate-300"
                     )}
                   >
                     {range.label}
@@ -228,8 +235,8 @@ export function PropertyFilters({
 
             {/* Bathrooms */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-stone-700 mb-3">
-                <Bath className="w-4 h-4 text-amber-500" />
+              <label className="flex items-center gap-2 text-sm font-medium text-slate-200 mb-3">
+                <Bath className="w-4 h-4 text-amber-400" />
                 Bathrooms
               </label>
               <div className="flex flex-wrap gap-2">
@@ -238,10 +245,10 @@ export function PropertyFilters({
                     key={opt.value}
                     onClick={() => updateFilter('bathrooms', opt.value === filters.bathrooms ? undefined : opt.value)}
                     className={cn(
-                      "px-4 py-2 rounded-lg text-sm transition-colors",
+                      "px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer",
                       filters.bathrooms === opt.value
                         ? "bg-amber-500 text-white"
-                        : "bg-white border border-stone-200 text-stone-600 hover:border-amber-300"
+                        : "bg-white/5 border border-white/10 text-slate-300 hover:border-amber-500/30"
                     )}
                   >
                     {opt.label}
@@ -252,15 +259,15 @@ export function PropertyFilters({
 
             {/* Property Types (Multi-select) */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-stone-700 mb-3">
-                <Home className="w-4 h-4 text-amber-500" />
+              <label className="flex items-center gap-2 text-sm font-medium text-slate-200 mb-3">
+                <Home className="w-4 h-4 text-amber-400" />
                 Property Types
               </label>
-              <div className="space-y-2 max-h-48 overflow-y-auto">
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
                 {propertyTypes.map((type) => (
                   <label
                     key={type.value}
-                    className="flex items-center gap-2 cursor-pointer hover:bg-stone-100 p-2 rounded-lg transition-colors"
+                    className="flex items-center gap-2 cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors"
                   >
                     <input
                       type="checkbox"
@@ -273,9 +280,9 @@ export function PropertyFilters({
                           updateFilter('propertyTypes', current.filter(t => t !== type.value));
                         }
                       }}
-                      className="w-4 h-4 rounded border-stone-300 text-amber-500 focus:ring-amber-500"
+                      className="w-4 h-4 rounded border-white/20 text-amber-500 focus:ring-amber-500 bg-white/5 cursor-pointer"
                     />
-                    <span className="text-sm text-stone-600">{type.label}</span>
+                    <span className="text-sm text-slate-300">{type.label}</span>
                   </label>
                 ))}
               </div>
@@ -283,21 +290,21 @@ export function PropertyFilters({
 
             {/* Province */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-stone-700 mb-3">
-                <MapPin className="w-4 h-4 text-amber-500" />
+              <label className="flex items-center gap-2 text-sm font-medium text-slate-200 mb-3">
+                <MapPin className="w-4 h-4 text-amber-400" />
                 Province
               </label>
-              <div className="space-y-2 max-h-48 overflow-y-auto">
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
                 {saProvinces.map((province) => (
                   <label
                     key={province.value}
-                    className="flex items-center gap-2 cursor-pointer hover:bg-stone-100 p-2 rounded-lg transition-colors"
+                    className="flex items-center gap-2 cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors"
                   >
                     <input
                       type="checkbox"
-                      className="w-4 h-4 rounded border-stone-300 text-amber-500 focus:ring-amber-500"
+                      className="w-4 h-4 rounded border-white/20 text-amber-500 focus:ring-amber-500 bg-white/5 cursor-pointer"
                     />
-                    <span className="text-sm text-stone-600">{province.label}</span>
+                    <span className="text-sm text-slate-300">{province.label}</span>
                   </label>
                 ))}
               </div>
@@ -307,19 +314,19 @@ export function PropertyFilters({
       )}
 
       {/* Results Bar */}
-      <div className="px-4 py-3 bg-stone-50 rounded-b-xl flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-stone-500">
-          <span className="font-medium text-stone-700">{totalResults ?? 0}</span>
+      <div className="px-4 py-3 bg-white/5 rounded-b-xl flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm text-slate-400">
+          <span className="font-medium text-white">{totalResults ?? 0}</span>
           properties found
           {activeFiltersCount > 0 && (
-            <span className="text-amber-600">({activeFiltersCount} filters applied)</span>
+            <span className="text-amber-400">({activeFiltersCount} filters applied)</span>
           )}
         </div>
         
         {activeFiltersCount > 0 && (
           <button
             onClick={onReset}
-            className="flex items-center gap-1.5 text-sm text-stone-500 hover:text-red-600 transition-colors"
+            className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-red-400 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
             Reset all filters

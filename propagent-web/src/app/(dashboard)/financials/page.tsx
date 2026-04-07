@@ -21,9 +21,11 @@ import {
   ChevronDown,
   Printer,
   FileSpreadsheet,
-  FileIcon
+  FileIcon,
+  X,
+  Plus
 } from 'lucide-react';
-import { Card, CardHeader, Button, Badge } from '@/components/ui';
+import { Card, CardHeader, Button, Badge, Input, Select } from '@/components/ui';
 import { 
   getRentRollSummary,
   getExpenseSummary,
@@ -56,6 +58,18 @@ export default function FinancialsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [expenseFilter, setExpenseFilter] = useState<ExpenseCategory | 'all'>('all');
   const [isVisible, setIsVisible] = useState(false);
+
+  // Add expense modal state
+  const [showAddExpense, setShowAddExpense] = useState(false);
+  const [newExpense, setNewExpense] = useState({
+    propertyId: '',
+    category: 'maintenance' as ExpenseCategory,
+    description: '',
+    amount: '',
+    vendor: '',
+    date: new Date().toISOString().split('T')[0],
+    status: 'pending' as 'pending' | 'paid'
+  });
 
   useEffect(() => {
     setIsVisible(true);
@@ -104,6 +118,39 @@ export default function FinancialsPage() {
       link.download = data.filename;
       link.click();
     }
+  };
+
+  const handleAddExpense = () => {
+    if (!newExpense.propertyId || !newExpense.description || !newExpense.amount) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
+    const expense = {
+      id: `exp_${Date.now()}`,
+      propertyId: newExpense.propertyId,
+      propertyAddress: mockProperties.find(p => p.id === newExpense.propertyId)?.address || 'Unknown',
+      category: newExpense.category,
+      description: newExpense.description,
+      amount: parseFloat(newExpense.amount),
+      vendor: newExpense.vendor || undefined,
+      date: newExpense.date,
+      status: newExpense.status
+    };
+    
+    // In a real app, this would save to the database
+    console.log('Adding expense:', expense);
+    alert(`Expense added: ${formatCurrency(expense.amount)} for ${expense.propertyAddress}`);
+    setShowAddExpense(false);
+    setNewExpense({
+      propertyId: '',
+      category: 'maintenance',
+      description: '',
+      amount: '',
+      vendor: '',
+      date: new Date().toISOString().split('T')[0],
+      status: 'pending'
+    });
   };
 
   const tabs = [
@@ -309,19 +356,28 @@ export default function FinancialsPage() {
             title="Expense Tracking"
             subtitle="Maintenance, rates, utilities, and other expenses"
             action={
-              <select
-                value={expenseFilter}
-                onChange={(e) => setExpenseFilter(e.target.value as ExpenseCategory | 'all')}
-                className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50"
-              >
-                <option value="all" className="bg-dark-800">All Categories</option>
-                <option value="maintenance" className="bg-dark-800">Maintenance</option>
-                <option value="rates" className="bg-dark-800">Rates</option>
-                <option value="utilities" className="bg-dark-800">Utilities</option>
-                <option value="insurance" className="bg-dark-800">Insurance</option>
-                <option value="management" className="bg-dark-800">Management</option>
-                <option value="other" className="bg-dark-800">Other</option>
-              </select>
+              <div className="flex items-center gap-2">
+                <Button 
+                  className="btn-premium text-gray-900"
+                  onClick={() => setShowAddExpense(true)}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Expense
+                </Button>
+                <select
+                  value={expenseFilter}
+                  onChange={(e) => setExpenseFilter(e.target.value as ExpenseCategory | 'all')}
+                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50"
+                >
+                  <option value="all" className="bg-dark-800">All Categories</option>
+                  <option value="maintenance" className="bg-dark-800">Maintenance</option>
+                  <option value="rates" className="bg-dark-800">Rates</option>
+                  <option value="utilities" className="bg-dark-800">Utilities</option>
+                  <option value="insurance" className="bg-dark-800">Insurance</option>
+                  <option value="management" className="bg-dark-800">Management</option>
+                  <option value="other" className="bg-dark-800">Other</option>
+                </select>
+              </div>
             }
           />
           <div className="overflow-x-auto">
@@ -550,6 +606,132 @@ export default function FinancialsPage() {
             </div>
           )}
         </Card>
+      )}
+
+      {/* Add Expense Modal */}
+      {showAddExpense && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-dark-800 border border-gray-700 rounded-2xl w-full max-w-md shadow-2xl">
+            <div className="flex items-center justify-between p-6 border-b border-gray-700">
+              <h2 className="text-xl font-bold text-white font-serif">Add New Expense</h2>
+              <button 
+                onClick={() => setShowAddExpense(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Property *</label>
+                <select
+                  value={newExpense.propertyId}
+                  onChange={(e) => setNewExpense({...newExpense, propertyId: e.target.value})}
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50"
+                >
+                  <option value="">Select a property</option>
+                  {mockProperties.map((property) => (
+                    <option key={property.id} value={property.id}>
+                      {property.address}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Category *</label>
+                  <select
+                    value={newExpense.category}
+                    onChange={(e) => setNewExpense({...newExpense, category: e.target.value as ExpenseCategory})}
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50"
+                  >
+                    <option value="maintenance">Maintenance</option>
+                    <option value="rates">Rates</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="insurance">Insurance</option>
+                    <option value="management">Management</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Amount *</label>
+                  <input
+                    type="number"
+                    value={newExpense.amount}
+                    onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
+                    placeholder="0.00"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Description *</label>
+                <input
+                  type="text"
+                  value={newExpense.description}
+                  onChange={(e) => setNewExpense({...newExpense, description: e.target.value})}
+                  placeholder="Enter expense description"
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Vendor</label>
+                  <input
+                    type="text"
+                    value={newExpense.vendor}
+                    onChange={(e) => setNewExpense({...newExpense, vendor: e.target.value})}
+                    placeholder="Vendor name"
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Date</label>
+                  <input
+                    type="date"
+                    value={newExpense.date}
+                    onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
+                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Status</label>
+                <select
+                  value={newExpense.status}
+                  onChange={(e) => setNewExpense({...newExpense, status: e.target.value as 'pending' | 'paid'})}
+                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="paid">Paid</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-700">
+              <Button 
+                variant="outline" 
+                className="border-gray-600 text-gray-300 hover:bg-dark-700"
+                onClick={() => setShowAddExpense(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="btn-premium text-gray-900"
+                onClick={handleAddExpense}
+              >
+                Add Expense
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

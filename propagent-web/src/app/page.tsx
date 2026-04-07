@@ -211,7 +211,7 @@ const FeatureCard = ({ icon: Icon, title, description, color, delay }: {
 };
 
 export default function LandingPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, isDemoMode } = useAuth();
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -228,10 +228,10 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && (user || isDemoMode)) {
       router.push('/dashboard');
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, isDemoMode]);
 
   if (loading) {
     return (
@@ -363,11 +363,26 @@ export default function LandingPage() {
                 {/* Background glow */}
                 <div className="absolute w-96 h-96 bg-amber-500/20 rounded-full blur-3xl" />
                 
-                {/* 3D Cards Stack */}
-                <div className="relative w-full h-full">
+                {/* 3D Cards Stack - Behind the orbit */}
+                <div className="relative w-full h-full z-0">
                   <PropertyCard3D delay={0} />
                   
-                  <div className="absolute top-20 -right-8 animate-pulse">
+                  {/* Orbiting Elements around "You" */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    {/* Center "You" */}
+                    <div className="relative z-20">
+                      <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg shadow-amber-500/50 animate-pulse">
+                        <span className="text-white font-bold text-lg">You</span>
+                      </div>
+                      {/* Orbit ring */}
+                      <div className="absolute inset-0 rounded-full border border-white/10 animate-spin" style={{ animationDuration: '20s' }}>
+                        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-amber-400 rounded-full" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Revenue - orbits around "You" */}
+                  <div className="absolute top-20 -right-8 animate-orbit-revenue">
                     <GlassCard className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
@@ -381,7 +396,8 @@ export default function LandingPage() {
                     </GlassCard>
                   </div>
                   
-                  <div className="absolute bottom-32 -left-8 animate-pulse" style={{ animationDelay: '1s' }}>
+                  {/* Tenants - orbits around "You" */}
+                  <div className="absolute bottom-32 -left-8 animate-orbit-tenants">
                     <GlassCard className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center">
@@ -483,6 +499,149 @@ export default function LandingPage() {
                 {company}
               </span>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="relative py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-amber-400 mb-6">
+              <DollarSign className="w-4 h-4" />
+              <span>Pricing</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-semibold text-white mb-6">
+              Simple, transparent pricing
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              No hidden fees. No surprises. Start free, scale as you grow.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Free Tier */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-b from-amber-500/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8">
+                <h3 className="text-xl font-semibold text-white mb-2">Starter</h3>
+                <p className="text-4xl font-bold text-white mb-4">Free<span className="text-lg font-normal text-gray-400">/mo</span></p>
+                <p className="text-gray-400 mb-6">Perfect for getting started</p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />Up to 5 properties</li>
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />10 tenants</li>
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />Basic reports</li>
+                </ul>
+                <Link href="/register" className="block w-full py-3 text-center border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors cursor-pointer">Get Started</Link>
+              </div>
+            </div>
+
+            {/* Pro Tier */}
+            <div className="relative group">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full text-sm font-medium text-white">Most Popular</div>
+              <div className="absolute inset-0 bg-gradient-to-b from-amber-500/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative backdrop-blur-xl bg-white/10 border border-amber-500/30 rounded-3xl p-8">
+                <h3 className="text-xl font-semibold text-white mb-2">Professional</h3>
+                <p className="text-4xl font-bold text-white mb-4">$49<span className="text-lg font-normal text-gray-400">/mo</span></p>
+                <p className="text-gray-400 mb-6">For growing property managers</p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />Unlimited properties</li>
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />Unlimited tenants</li>
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />Advanced analytics</li>
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />Priority support</li>
+                </ul>
+                <Link href="/register" className="block w-full py-3 text-center bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all cursor-pointer">Start Free Trial</Link>
+              </div>
+            </div>
+
+            {/* Enterprise Tier */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-b from-amber-500/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8">
+                <h3 className="text-xl font-semibold text-white mb-2">Enterprise</h3>
+                <p className="text-4xl font-bold text-white mb-4">$149<span className="text-lg font-normal text-gray-400">/mo</span></p>
+                <p className="text-gray-400 mb-6">For large property portfolios</p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />Everything in Pro</li>
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />Custom integrations</li>
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />Dedicated account manager</li>
+                  <li className="flex items-center gap-2 text-gray-300"><CheckCircle2 className="w-4 h-4 text-emerald-400" />SLA guarantee</li>
+                </ul>
+                <Link href="/contact" className="block w-full py-3 text-center border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors cursor-pointer">Contact Sales</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="relative py-32 bg-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-amber-400 mb-6">
+                <Shield className="w-4 h-4" />
+                <span>About PropAgent</span>
+              </div>
+              <h2 className="text-4xl sm:text-5xl font-semibold text-white mb-6">
+                Built for South African property managers
+              </h2>
+              <p className="text-xl text-gray-400 mb-8">
+                PropAgent was founded in Cape Town with a simple mission: make property management effortless for landlords and property managers across South Africa.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                    <Building2 className="w-6 h-6 text-amber-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-semibold">500+ Properties</h4>
+                    <p className="text-gray-400 text-sm">Currently managed on our platform</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                    <Users className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-semibold">2000+ Tenants</h4>
+                    <p className="text-gray-400 text-sm">Happy tenants in managed properties</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-violet-500/20 flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-violet-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-semibold">24/7 Support</h4>
+                    <p className="text-gray-400 text-sm">Local support team based in Cape Town</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-violet-500/20 rounded-3xl blur-3xl" />
+              <div className="relative backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-amber-400">R50M+</p>
+                    <p className="text-gray-400 mt-1">Rent Collected</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-emerald-400">99.9%</p>
+                    <p className="text-gray-400 mt-1">Uptime</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-violet-400">4.9/5</p>
+                    <p className="text-gray-400 mt-1">User Rating</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-white">50+</p>
+                    <p className="text-gray-400 mt-1">Cities</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

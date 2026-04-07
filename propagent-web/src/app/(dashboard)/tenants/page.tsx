@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Search, Mail, Phone, MapPin, Calendar, MoreVertical, Building, User, Filter, Sparkles } from 'lucide-react';
+import { Plus, Search, Mail, Phone, MapPin, Calendar, MoreVertical, Building, User, Filter, Sparkles, X } from 'lucide-react';
 import { mockTenants, mockProperties } from '@/lib/data';
 import { formatDate, formatCurrency } from '@/lib/utils';
 
@@ -323,9 +323,9 @@ function AnimatedEmptyState({ searchQuery, filterStatus }: { searchQuery: string
   );
 }
 
-function FloatingActionButton() {
+function FloatingActionButton({ onClick }: { onClick: () => void }) {
   return (
-    <button className="fixed bottom-6 right-6 z-50 group">
+    <button onClick={onClick} className="fixed bottom-6 right-6 z-50 group cursor-pointer" aria-label="Add new tenant">
       <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-rose-500 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
       <div className="relative w-14 h-14 bg-gradient-to-r from-amber-500 to-rose-500 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110">
         <Plus className="w-6 h-6 text-white" />
@@ -368,10 +368,36 @@ export default function TenantsPage() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [view, setView] = useState<'table' | 'cards'>('table');
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newTenant, setNewTenant] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    propertyId: '',
+    leaseStart: '',
+    leaseEnd: '',
+    rentAmount: '',
+  });
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+
+  const handleAddTenant = () => {
+    alert('Tenant added successfully! (Demo mode - data not persisted)');
+    setShowAddModal(false);
+    setNewTenant({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      propertyId: '',
+      leaseStart: '',
+      leaseEnd: '',
+      rentAmount: '',
+    });
+  };
 
   const filteredTenants = mockTenants.filter(tenant => {
     const fullName = `${tenant.firstName} ${tenant.lastName}`.toLowerCase();
@@ -447,7 +473,135 @@ export default function TenantsPage() {
           </div>
         )}
 
-        <FloatingActionButton />
+        <FloatingActionButton onClick={() => setShowAddModal(true)} />
+        
+        {/* Add Tenant Modal */}
+        {showAddModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="glass-card rounded-2xl max-w-md w-full p-6 animate-on-scroll">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-xl font-semibold text-white">Add New Tenant</h2>
+                <button 
+                  onClick={() => setShowAddModal(false)}
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5 text-white/60" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-white/80 mb-2">First Name</label>
+                    <input 
+                      type="text" 
+                      value={newTenant.firstName}
+                      onChange={(e) => setNewTenant({...newTenant, firstName: e.target.value})}
+                      className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      placeholder="John"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-white/80 mb-2">Last Name</label>
+                    <input 
+                      type="text" 
+                      value={newTenant.lastName}
+                      onChange={(e) => setNewTenant({...newTenant, lastName: e.target.value})}
+                      className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      placeholder="Doe"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-2">Email</label>
+                  <input 
+                    type="email" 
+                    value={newTenant.email}
+                    onChange={(e) => setNewTenant({...newTenant, email: e.target.value})}
+                    className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    placeholder="tenant@email.com"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-2">Phone</label>
+                  <input 
+                    type="tel" 
+                    value={newTenant.phone}
+                    onChange={(e) => setNewTenant({...newTenant, phone: e.target.value})}
+                    className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    placeholder="+27831234567"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-2">Property</label>
+                  <select 
+                    value={newTenant.propertyId}
+                    onChange={(e) => setNewTenant({...newTenant, propertyId: e.target.value})}
+                    className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
+                  >
+                    <option value="" className="bg-gray-900">Select a property...</option>
+                    {mockProperties.map(prop => (
+                      <option key={prop.id} value={prop.id} className="bg-gray-900">{prop.address}, {prop.suburb}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-white/80 mb-2">Lease Start</label>
+                    <input 
+                      type="date" 
+                      value={newTenant.leaseStart}
+                      onChange={(e) => setNewTenant({...newTenant, leaseStart: e.target.value})}
+                      className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 [&::-webkit-calendar-picker-indicator]:invert"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-white/80 mb-2">Lease End</label>
+                    <input 
+                      type="date" 
+                      value={newTenant.leaseEnd}
+                      onChange={(e) => setNewTenant({...newTenant, leaseEnd: e.target.value})}
+                      className="w-full px-4 py-3 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 [&::-webkit-calendar-picker-indicator]:invert"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-2">Monthly Rent (ZAR)</label>
+                  <input 
+                    type="number" 
+                    value={newTenant.rentAmount}
+                    onChange={(e) => setNewTenant({...newTenant, rentAmount: e.target.value})}
+                    className="w-full px-4 py-3 glass rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    placeholder="15000"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-end gap-3 mt-6">
+                <button 
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2.5 glass rounded-lg text-white text-sm hover:bg-white/10 transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleAddTenant}
+                  className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-amber-500/25 transition-all cursor-pointer"
+                >
+                  <Plus className="w-4 h-4 inline mr-1.5" />
+                  Add Tenant
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <style jsx global>{`
