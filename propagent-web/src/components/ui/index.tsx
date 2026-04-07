@@ -76,7 +76,7 @@ const buttonStyles = {
   primary: "bg-deep-bronze text-white hover:bg-[#7A6548] border-deep-bronze",
   secondary: "bg-warm-white text-deep-charcoal border-warm-gray hover:border-subtle-taupe hover:bg-soft-beige",
   ghost: "bg-transparent text-deep-charcoal hover:bg-soft-beige",
-  outline: "bg-white text-stone-700 border-stone-200 hover:border-amber-400 hover:text-amber-700 hover:bg-amber-50",
+  outline: "bg-white text-navy-700 border-slate-200 hover:border-gold-400 hover:text-gold-700 hover:bg-gold-50",
 };
 
 const buttonSizes = {

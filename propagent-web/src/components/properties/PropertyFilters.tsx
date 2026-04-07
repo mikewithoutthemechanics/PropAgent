@@ -190,7 +190,7 @@ export function PropertyFilters({
               aria-controls="expanded-filters"
               className={cn(
                 "cursor-pointer",
-                activeFiltersCount > 0 && "border-amber-500 text-amber-400"
+                activeFiltersCount > 0 && "border-gold-500 text-gold-400"
               )}
             >
               <SlidersHorizontal className="w-4 h-4 mr-1.5" />
@@ -212,7 +212,7 @@ export function PropertyFilters({
             {/* Price Range */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-slate-200 mb-3">
-                <DollarSign className="w-4 h-4 text-amber-400" />
+                <DollarSign className="w-4 h-4 text-gold-400" />
                 Price Range
               </label>
               <div className="space-y-2">
@@ -223,7 +223,7 @@ export function PropertyFilters({
                     className={cn(
                       "w-full text-left px-3 py-2 rounded-lg text-sm transition-colors cursor-pointer",
                       (filters.minPrice === range.min && filters.maxPrice === (range.max === Infinity ? undefined : range.max))
-                        ? "bg-amber-500/20 text-amber-400 font-medium border border-amber-500/30"
+                        ? "bg-amber-500/20 text-gold-400 font-medium border border-gold-500/30"
                         : "hover:bg-white/10 text-slate-300"
                     )}
                   >
@@ -236,7 +236,7 @@ export function PropertyFilters({
             {/* Bathrooms */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-slate-200 mb-3">
-                <Bath className="w-4 h-4 text-amber-400" />
+                <Bath className="w-4 h-4 text-gold-400" />
                 Bathrooms
               </label>
               <div className="flex flex-wrap gap-2">
@@ -248,7 +248,7 @@ export function PropertyFilters({
                       "px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer",
                       filters.bathrooms === opt.value
                         ? "bg-amber-500 text-white"
-                        : "bg-white/5 border border-white/10 text-slate-300 hover:border-amber-500/30"
+                        : "bg-white/5 border border-white/10 text-slate-300 hover:border-gold-500/30"
                     )}
                   >
                     {opt.label}
@@ -260,7 +260,7 @@ export function PropertyFilters({
             {/* Property Types (Multi-select) */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-slate-200 mb-3">
-                <Home className="w-4 h-4 text-amber-400" />
+                <Home className="w-4 h-4 text-gold-400" />
                 Property Types
               </label>
               <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
@@ -280,7 +280,7 @@ export function PropertyFilters({
                           updateFilter('propertyTypes', current.filter(t => t !== type.value));
                         }
                       }}
-                      className="w-4 h-4 rounded border-white/20 text-amber-500 focus:ring-amber-500 bg-white/5 cursor-pointer"
+                      className="w-4 h-4 rounded border-white/20 text-gold-500 focus:ring-amber-500 bg-white/5 cursor-pointer"
                     />
                     <span className="text-sm text-slate-300">{type.label}</span>
                   </label>
@@ -291,7 +291,7 @@ export function PropertyFilters({
             {/* Province */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-slate-200 mb-3">
-                <MapPin className="w-4 h-4 text-amber-400" />
+                <MapPin className="w-4 h-4 text-gold-400" />
                 Province
               </label>
               <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
@@ -302,7 +302,7 @@ export function PropertyFilters({
                   >
                     <input
                       type="checkbox"
-                      className="w-4 h-4 rounded border-white/20 text-amber-500 focus:ring-amber-500 bg-white/5 cursor-pointer"
+                      className="w-4 h-4 rounded border-white/20 text-gold-500 focus:ring-amber-500 bg-white/5 cursor-pointer"
                     />
                     <span className="text-sm text-slate-300">{province.label}</span>
                   </label>
@@ -319,7 +319,7 @@ export function PropertyFilters({
           <span className="font-medium text-white">{totalResults ?? 0}</span>
           properties found
           {activeFiltersCount > 0 && (
-            <span className="text-amber-400">({activeFiltersCount} filters applied)</span>
+            <span className="text-gold-400">({activeFiltersCount} filters applied)</span>
           )}
         </div>
         

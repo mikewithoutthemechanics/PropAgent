@@ -55,21 +55,22 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-56 bg-navy-950 text-white flex flex-col z-50 border-r border-navy-800">
+    <aside className="fixed left-0 top-0 h-screen w-[260px] bg-navy-500 text-white flex flex-col z-50 border-r border-navy-700">
       {/* Logo */}
-      <div className="p-4 border-b border-navy-800">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-7 h-7 bg-blue-600 rounded-md flex items-center justify-center">
-            <Home className="w-4 h-4 text-white" />
+      <div className="p-5 border-b border-navy-700">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 bg-gold-500 rounded-lg flex items-center justify-center">
+            <Home className="w-5 h-5 text-navy-700" />
           </div>
           <div>
-            <h1 className="text-base font-semibold tracking-tight text-white">PropAgent</h1>
+            <h1 className="text-lg font-semibold tracking-tight text-white font-serif">PropAgent</h1>
+            <p className="text-xs text-navy-300">Property Management</p>
           </div>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5">
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
@@ -79,13 +80,13 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors cursor-pointer text-sm',
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 cursor-pointer text-sm font-medium',
                 isActive 
-                  ? 'bg-blue-600/10 text-blue-400 font-medium' 
-                  : 'text-navy-300 hover:bg-navy-800 hover:text-white'
+                  ? 'bg-gold-500/15 text-gold-400 border-l-[3px] border-gold-500' 
+                  : 'text-navy-200 hover:bg-navy-600 hover:text-white'
               )}
             >
-              <Icon className={cn("w-4 h-4", isActive && "text-blue-400")} />
+              <Icon className={cn("w-4.5 h-4.5", isActive ? "text-gold-400" : "text-navy-300")} />
               <span>{item.label}</span>
             </Link>
           );
@@ -93,28 +94,31 @@ export function Sidebar() {
       </nav>
 
       {/* User Section */}
-      <div className="p-3 border-t border-navy-800">
-        <div className="flex items-center gap-3 px-2 py-2 mb-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
+      <div className="p-4 border-t border-navy-700">
+        <div className="flex items-center gap-3 px-2 py-2 mb-3">
+          <div className="w-9 h-9 bg-gold-500 rounded-full flex items-center justify-center text-navy-700 font-semibold text-sm">
             {user?.email?.charAt(0).toUpperCase() || 'U'}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">
               {user?.email?.split('@')[0] || 'User'}
             </p>
+            <p className="text-xs text-navy-300 truncate">
+              {user?.email || ''}
+            </p>
           </div>
         </div>
         
-        <div className="space-y-0.5">
-          <button className="flex items-center gap-2.5 px-3 py-2 rounded-md text-navy-300 hover:bg-navy-800 hover:text-white transition-colors cursor-pointer w-full text-sm">
-            <Settings className="w-4 h-4" />
+        <div className="space-y-1">
+          <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-navy-200 hover:bg-navy-600 hover:text-white transition-all cursor-pointer w-full text-sm font-medium">
+            <Settings className="w-4.5 h-4.5" />
             <span>Settings</span>
           </button>
           <button 
             onClick={handleSignOut}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-md text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer w-full text-sm"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-all cursor-pointer w-full text-sm font-medium"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-4.5 h-4.5" />
             <span>Sign Out</span>
           </button>
         </div>

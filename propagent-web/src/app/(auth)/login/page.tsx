@@ -168,11 +168,11 @@ export default function LoginPage() {
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 rounded border-white/20 bg-white/5 text-amber-500 focus:ring-amber-500/50"
+                    className="w-4 h-4 rounded border-white/20 bg-white/5 text-gold-500 focus:ring-gold-500/50"
                   />
                   <span className="text-sm text-slate-400">Remember me</span>
                 </label>
-                <Link href="/forgot-password" className="text-sm text-amber-400 hover:text-amber-300 font-medium">
+                <Link href="/forgot-password" className="text-sm text-gold-400 hover:text-gold-300 font-medium">
                   Forgot password?
                 </Link>
               </div>
@@ -180,7 +180,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-medium rounded-md transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40"
+                className="w-full py-2.5 px-4 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-medium rounded-md transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-gold-500/20 hover:shadow-gold-500/40"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
@@ -211,7 +211,7 @@ export default function LoginPage() {
             <div className="mt-6 pt-6 border-t border-white/10 text-center">
               <p className="text-sm text-slate-400">
                 Don&apos;t have an account?{" "}
-                <Link href="/register" className="text-amber-400 hover:text-amber-300 font-medium">
+                <Link href="/register" className="text-gold-400 hover:text-gold-300 font-medium">
                   Create one
                 </Link>
               </p>
@@ -220,7 +220,7 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-6 text-center">
-          <Link href="/" className="text-sm text-slate-500 hover:text-amber-400 transition-colors">
+          <Link href="/" className="text-sm text-slate-500 hover:text-gold-400 transition-colors">
             ← Back to home
           </Link>
         </div>

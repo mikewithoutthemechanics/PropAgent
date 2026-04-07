@@ -50,7 +50,7 @@ export default function RankingsPage() {
               Performance scores • NPS-based feedback • Principals only
             </p>
           </div>
-          <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 gap-1 w-fit">
+          <Badge className="bg-indigo-500/20 text-indigo-400 border-indigo-500/30 gap-1 w-fit">
             <Crown className="w-3 h-3" />
             Principal Access Only
           </Badge>
@@ -64,16 +64,16 @@ export default function RankingsPage() {
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         )}>
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg glow-gold">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-lg glow-gold">
               <Trophy className="w-8 h-8 text-white" />
             </div>
             <div>
-              <p className="text-amber-400/80 text-sm">Top Performer</p>
+              <p className="text-indigo-400/80 text-sm">Top Performer</p>
               <p className="text-2xl font-bold text-white">{topPerformer.agentName}</p>
               <div className="flex items-center gap-4 mt-2">
                 <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 text-amber-400" />
-                  <span className="font-semibold text-amber-400">{topPerformer.npsScore} NPS</span>
+                  <Star className="w-4 h-4 text-indigo-400" />
+                  <span className="font-semibold text-indigo-400">{topPerformer.npsScore} NPS</span>
                 </div>
                 <span className="text-white/40">•</span>
                 <span className="text-white/60">{topPerformer.reviewCount} reviews</span>
@@ -135,8 +135,8 @@ export default function RankingsPage() {
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         )}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/30 to-amber-600/20 border border-amber-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Trophy className="w-5 h-5 text-amber-400" />
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500/30 to-indigo-600/20 border border-indigo-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Trophy className="w-5 h-5 text-indigo-400" />
             </div>
             <div>
               <p className="text-2xl font-bold text-white">{sampleRankings.length}</p>
@@ -174,7 +174,7 @@ export default function RankingsPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       {index === 0 ? (
-                        <span className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 text-white flex items-center justify-center text-xs font-bold shadow-lg glow-gold">
+                        <span className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 text-white flex items-center justify-center text-xs font-bold shadow-lg glow-gold">
                           1
                         </span>
                       ) : index === 1 ? (
@@ -196,7 +196,7 @@ export default function RankingsPage() {
                     <div className="flex items-center gap-3">
                       <div className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
-                        index === 0 ? "bg-gradient-to-br from-amber-500/30 to-amber-600/20 border border-amber-500/30 text-amber-400" :
+                        index === 0 ? "bg-gradient-to-br from-indigo-500/30 to-indigo-600/20 border border-indigo-500/30 text-indigo-400" :
                         index === 1 ? "bg-white/10 text-white/60" :
                         index === 2 ? "bg-gradient-to-br from-orange-500/30 to-orange-600/20 border border-orange-500/30 text-orange-400" :
                         "bg-white/5 text-white/60"
@@ -217,25 +217,25 @@ export default function RankingsPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1 text-white/80">
                       <span>{ranking.avgCommunication.toFixed(1)}</span>
-                      <Star className="w-3 h-3 text-amber-500" />
+                      <Star className="w-3 h-3 text-indigo-500" />
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1 text-white/80">
                       <span>{ranking.avgProfessionalism.toFixed(1)}</span>
-                      <Star className="w-3 h-3 text-amber-500" />
+                      <Star className="w-3 h-3 text-indigo-500" />
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1 text-white/80">
                       <span>{ranking.avgDealClose.toFixed(1)}</span>
-                      <Star className="w-3 h-3 text-amber-500" />
+                      <Star className="w-3 h-3 text-indigo-500" />
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1 text-xs">
                       <span className="text-red-400">{ranking.detractors}</span>
-                      <span className="text-amber-400">{ranking.passives}</span>
+                      <span className="text-indigo-400">{ranking.passives}</span>
                       <span className="text-green-400">{ranking.promoters}</span>
                     </div>
                   </td>
@@ -262,7 +262,7 @@ export default function RankingsPage() {
                   style={{ width: `${(ranking.detractors / ranking.reviewCount) * 100}%` }}
                 />
                 <div 
-                  className="h-full bg-amber-400/80" 
+                  className="h-full bg-indigo-400/80" 
                   style={{ width: `${(ranking.passives / ranking.reviewCount) * 100}%` }}
                 />
                 <div 
@@ -282,7 +282,7 @@ export default function RankingsPage() {
             <span className="text-white/50">Detractors (0-6)</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-full bg-amber-400/80" />
+            <div className="w-3 h-3 rounded-full bg-indigo-400/80" />
             <span className="text-white/50">Passives (7-8)</span>
           </div>
           <div className="flex items-center gap-1">
@@ -298,7 +298,7 @@ export default function RankingsPage() {
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       )}>
         <div className="flex items-start gap-3">
-          <Shield className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+          <Shield className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-medium text-white">Confidential Rankings</p>
             <p className="text-sm text-white/60 mt-1">

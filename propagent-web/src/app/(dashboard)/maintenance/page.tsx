@@ -11,23 +11,57 @@ export default function MaintenancePage() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [requests, setRequests] = useState(mockMaintenanceRequests);
   const [newRequest, setNewRequest] = useState({
     title: '',
     description: '',
     propertyId: '',
+    unitNumber: '',
+    tenantId: '',
     priority: 'medium',
     category: 'general',
+    dueDate: '',
+    estimatedCost: '',
+    assignedContractor: '',
+    notes: '',
   });
 
   const handleAddRequest = () => {
-    alert('Maintenance request created! (Demo mode - data not persisted)');
+    if (!newRequest.title || !newRequest.propertyId) {
+      alert('Please fill in required fields (Title, Property)');
+      return;
+    }
+    
+    const request = {
+      id: `maint_${Date.now()}`,
+      title: newRequest.title,
+      description: newRequest.description || 'No description provided',
+      propertyId: newRequest.propertyId,
+      tenantId: newRequest.tenantId || null,
+      priority: newRequest.priority as 'low' | 'medium' | 'high' | 'emergency',
+      category: newRequest.category,
+      status: 'pending' as const,
+      createdAt: new Date().toISOString(),
+      dueDate: newRequest.dueDate || null,
+      estimatedCost: newRequest.estimatedCost ? parseFloat(newRequest.estimatedCost) : null,
+      assignedContractor: newRequest.assignedContractor || null,
+      notes: newRequest.notes || null,
+    };
+    
+    setRequests([request, ...requests]);
     setShowAddModal(false);
     setNewRequest({
       title: '',
       description: '',
       propertyId: '',
+      unitNumber: '',
+      tenantId: '',
       priority: 'medium',
       category: 'general',
+      dueDate: '',
+      estimatedCost: '',
+      assignedContractor: '',
+      notes: '',
     });
   };
 
@@ -41,7 +75,7 @@ export default function MaintenancePage() {
     return tenant ? `${tenant.firstName} ${tenant.lastName}` : 'Unknown';
   };
 
-  const filteredRequests = mockMaintenanceRequests.filter(request => {
+  const filteredRequests = requests.filter(request => {
     const matchesSearch = request.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       request.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = filterStatus === 'all' || request.status === filterStatus;
@@ -64,6 +98,27 @@ export default function MaintenancePage() {
     }
   };
 
+  const getStatusBadge = (status: string) => {
+    const statusStyles = {
+      pending: 'bg-amber-100 text-amber-800 border-indigo-300',
+      'in-progress': 'bg-blue-100 text-blue-800 border-blue-300',
+      completed: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+      cancelled: 'bg-gray-100 text-gray-600 border-gray-300',
+    };
+    return statusStyles[status as keyof typeof statusStyles] || statusStyles.pending;
+  };
+
+  const getPriorityBadge = (priority: string) => {
+    const priorityStyles = {
+      low: 'bg-slate-100 text-slate-700 border-slate-300',
+      medium: 'bg-amber-100 text-amber-800 border-indigo-300',
+      high: 'bg-orange-100 text-orange-800 border-orange-300',
+      emergency: 'bg-red-100 text-red-800 border-red-300',
+      urgent: 'bg-red-100 text-red-800 border-red-300',
+    };
+    return priorityStyles[priority as keyof typeof priorityStyles] || priorityStyles.medium;
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -81,7 +136,7 @@ export default function MaintenancePage() {
         <Card className="p-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-              <Clock className="w-5 h-5 text-amber-600" />
+              <Clock className="w-5 h-5 text-indigo-600" />
             </div>
             <div>
               <p className="text-sm text-slate-500">Pending</p>
@@ -150,7 +205,7 @@ export default function MaintenancePage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 cursor-pointer"
+              className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
             >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
@@ -161,7 +216,7 @@ export default function MaintenancePage() {
             <select
               value={filterPriority}
               onChange={(e) => setFilterPriority(e.target.value)}
-              className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 cursor-pointer"
+              className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
             >
               <option value="all">All Priority</option>
               <option value="low">Low</option>
@@ -237,7 +292,7 @@ export default function MaintenancePage() {
                   type="text" 
                   value={newRequest.title}
                   onChange={(e) => setNewRequest({...newRequest, title: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="e.g., Leaking tap in kitchen"
                 />
               </div>
@@ -248,7 +303,7 @@ export default function MaintenancePage() {
                   rows={3}
                   value={newRequest.description}
                   onChange={(e) => setNewRequest({...newRequest, description: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Describe the issue in detail..."
                 />
               </div>
@@ -258,7 +313,7 @@ export default function MaintenancePage() {
                 <select 
                   value={newRequest.propertyId}
                   onChange={(e) => setNewRequest({...newRequest, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                 >
                   <option value="">Select a property...</option>
                   {mockProperties.map(prop => (
@@ -273,7 +328,7 @@ export default function MaintenancePage() {
                   <select 
                     value={newRequest.priority}
                     onChange={(e) => setNewRequest({...newRequest, priority: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -286,7 +341,7 @@ export default function MaintenancePage() {
                   <select 
                     value={newRequest.category}
                     onChange={(e) => setNewRequest({...newRequest, category: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                   >
                     <option value="general">General</option>
                     <option value="plumbing">Plumbing</option>
@@ -308,7 +363,7 @@ export default function MaintenancePage() {
               </button>
               <button 
                 onClick={handleAddRequest}
-                className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-amber-500/25 transition-all cursor-pointer"
+                className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-indigo-500/25 transition-all cursor-pointer"
               >
                 <Plus className="w-4 h-4 inline mr-1.5" />
                 Create Request

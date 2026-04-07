@@ -5,9 +5,11 @@ import { Property } from './types';
 
 export interface RentAnalysisInput {
   propertyId?: string;
+  address?: string;
   propertyType: 'house' | 'apartment' | 'flat' | 'townhouse' | 'room';
   bedrooms: number;
   bathrooms: number;
+  sqft?: number;
   parking: number;
   hasGarden: boolean;
   hasPool: boolean;

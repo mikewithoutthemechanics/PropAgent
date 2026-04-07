@@ -76,9 +76,9 @@ export function PropertyCard({
     return (
       <Link 
         href={`/properties/${property.slug}`}
-        className="group flex gap-4 p-3 bg-white rounded-lg border border-stone-200 hover:border-amber-300 hover:shadow-md transition-all duration-200"
+        className="group flex gap-4 p-3 bg-white rounded-lg border border-slate-200 hover:border-gold-300 hover:shadow-md transition-all duration-200"
       >
-        <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-stone-100">
+        <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-slate-100">
           {currentImage ? (
             <Image
               src={currentImage.url}
@@ -87,7 +87,7 @@ export function PropertyCard({
               className="object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-stone-300">
+            <div className="w-full h-full flex items-center justify-center text-slate-300">
               <MapPin className="w-8 h-8" />
             </div>
           )}
@@ -100,15 +100,15 @@ export function PropertyCard({
         </div>
         
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-stone-900 truncate group-hover:text-amber-600 transition-colors text-sm">
+          <h3 className="font-medium text-slate-900 truncate group-hover:text-navy-600 transition-colors text-sm">
             {property.title}
           </h3>
-          <p className="text-xs text-stone-500 flex items-center gap-1 mt-0.5">
+          <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
             <MapPin className="w-3 h-3" />
             {property.location.suburb}, {property.location.city}
           </p>
           
-          <div className="flex items-center gap-3 text-xs text-stone-500 mt-2">
+          <div className="flex items-center gap-3 text-xs text-slate-500 mt-2">
             <span className="flex items-center gap-0.5">
               <Bed className="w-3 h-3" /> {property.specs.bedrooms}
             </span>
@@ -122,9 +122,9 @@ export function PropertyCard({
             )}
           </div>
           
-          <p className="text-sm font-semibold text-amber-600 mt-2">
+          <p className="text-sm font-semibold text-navy-600 mt-2">
             {formatCurrency(property.pricing.price)}
-            {property.listingType === 'rent' && <span className="text-xs font-normal text-stone-400">/month</span>}
+            {property.listingType === 'rent' && <span className="text-xs font-normal text-slate-400">/month</span>}
           </p>
         </div>
       </Link>
@@ -135,10 +135,10 @@ export function PropertyCard({
     return (
       <Link 
         href={`/properties/${property.slug}`}
-        className="group relative block bg-white rounded-xl border border-stone-200 overflow-hidden hover:shadow-xl hover:border-amber-200 transition-all duration-300"
+        className="group relative block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-gold-200 transition-all duration-300"
       >
         {/* Image Gallery */}
-        <div className="relative h-72 bg-stone-100 overflow-hidden">
+        <div className="relative h-72 bg-slate-100 overflow-hidden">
           {currentImage ? (
             <Image
               src={currentImage.url}
@@ -153,7 +153,7 @@ export function PropertyCard({
               onLoad={() => setImageLoaded(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-stone-300">
+            <div className="w-full h-full flex items-center justify-center text-slate-300">
               <MapPin className="w-16 h-16" />
             </div>
           )}
@@ -170,7 +170,7 @@ export function PropertyCard({
           </span>
           
           {/* Listing Type Badge */}
-          <span className="absolute top-4 right-4 px-3 py-1 text-xs font-medium rounded-full bg-white/90 text-stone-700 backdrop-blur-sm">
+          <span className="absolute top-4 right-4 px-3 py-1 text-xs font-medium rounded-full bg-white/90 text-slate-700 backdrop-blur-sm">
             For {property.listingType}
           </span>
           
@@ -181,13 +181,13 @@ export function PropertyCard({
                 onClick={handlePrevImage}
                 className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
               >
-                <ChevronLeft className="w-4 h-4 text-stone-700" />
+                <ChevronLeft className="w-4 h-4 text-slate-700" />
               </button>
               <button
                 onClick={handleNextImage}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
               >
-                <ChevronRight className="w-4 h-4 text-stone-700" />
+                <ChevronRight className="w-4 h-4 text-slate-700" />
               </button>
               {/* Image Dots */}
               <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-1.5">
@@ -215,14 +215,14 @@ export function PropertyCard({
               onClick={handleFavorite}
               className={cn(
                 "p-2 rounded-full backdrop-blur-sm transition-colors",
-                isFavorite ? "bg-red-50 text-red-500" : "bg-white/80 text-stone-600 hover:bg-white"
+                isFavorite ? "bg-red-50 text-red-500" : "bg-white/80 text-slate-600 hover:bg-white"
               )}
             >
               <Heart className={cn("w-4 h-4", isFavorite && "fill-current")} />
             </button>
             <button
               onClick={handleShare}
-              className="p-2 rounded-full bg-white/80 text-stone-600 backdrop-blur-sm hover:bg-white transition-colors"
+              className="p-2 rounded-full bg-white/80 text-slate-600 backdrop-blur-sm hover:bg-white transition-colors"
             >
               <Share2 className="w-4 h-4" />
             </button>
@@ -244,33 +244,33 @@ export function PropertyCard({
         
         {/* Content */}
         <div className="p-5">
-          <h3 className="text-lg font-semibold text-stone-900 group-hover:text-amber-600 transition-colors line-clamp-1">
+          <h3 className="text-lg font-semibold text-slate-900 group-hover:text-navy-600 transition-colors line-clamp-1">
             {property.title}
           </h3>
-          <p className="text-sm text-stone-500 flex items-center gap-1.5 mt-1">
+          <p className="text-sm text-slate-500 flex items-center gap-1.5 mt-1">
             <MapPin className="w-4 h-4" />
             {property.location.suburb}, {property.location.city}
           </p>
           
-          <div className="flex items-center gap-6 text-sm text-stone-600 mt-4">
+          <div className="flex items-center gap-6 text-sm text-slate-600 mt-4">
             <span className="flex items-center gap-1.5">
-              <Bed className="w-4 h-4 text-amber-500" />
+              <Bed className="w-4 h-4 text-gold-500" />
               <span className="font-medium">{property.specs.bedrooms}</span> Beds
             </span>
             <span className="flex items-center gap-1.5">
-              <Bath className="w-4 h-4 text-amber-500" />
+              <Bath className="w-4 h-4 text-gold-500" />
               <span className="font-medium">{property.specs.bathrooms}</span> Baths
             </span>
             {property.specs.garages > 0 && (
               <span className="flex items-center gap-1.5">
-                <Car className="w-4 h-4 text-amber-500" />
+                <Car className="w-4 h-4 text-gold-500" />
                 <span className="font-medium">{property.specs.garages}</span> Garage{property.specs.garages !== 1 ? 's' : ''}
               </span>
             )}
           </div>
           
           {/* Quick Actions */}
-          <div className="flex items-center gap-2 mt-4 pt-4 border-t border-stone-100">
+          <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100">
             <Button 
               variant="outline" 
               size="sm" 
@@ -305,12 +305,12 @@ export function PropertyCard({
   return (
     <Link 
       href={`/properties/${property.slug}`}
-      className="group relative block bg-white rounded-xl border border-stone-200 overflow-hidden hover:shadow-lg hover:border-amber-200 transition-all duration-300"
+      className="group relative block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg hover:border-gold-200 transition-all duration-300"
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
       {/* Image Section */}
-      <div className="relative h-56 bg-stone-100 overflow-hidden">
+      <div className="relative h-56 bg-slate-100 overflow-hidden">
         {currentImage ? (
           <Image
             src={currentImage.url}
@@ -324,7 +324,7 @@ export function PropertyCard({
             onLoad={() => setImageLoaded(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-stone-300">
+          <div className="w-full h-full flex items-center justify-center text-slate-300">
             <MapPin className="w-12 h-12" />
           </div>
         )}
@@ -338,7 +338,7 @@ export function PropertyCard({
         </span>
         
         {/* Listing Type */}
-        <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium bg-white/90 text-stone-700">
+        <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium bg-white/90 text-slate-700">
           For {property.listingType}
         </span>
         
@@ -352,7 +352,7 @@ export function PropertyCard({
                 showActions ? "opacity-100" : "opacity-0"
               )}
             >
-              <ChevronLeft className="w-4 h-4 text-stone-700" />
+              <ChevronLeft className="w-4 h-4 text-slate-700" />
             </button>
             <button
               onClick={handleNextImage}
@@ -361,7 +361,7 @@ export function PropertyCard({
                 showActions ? "opacity-100" : "opacity-0"
               )}
             >
-              <ChevronRight className="w-4 h-4 text-stone-700" />
+              <ChevronRight className="w-4 h-4 text-slate-700" />
             </button>
             {/* Image Counter */}
             <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-black/50 text-white text-xs">
@@ -377,7 +377,7 @@ export function PropertyCard({
             "absolute top-3 right-24 p-1.5 rounded-full transition-all",
             isFavorite 
               ? "bg-red-50 text-red-500 opacity-100" 
-              : "bg-white/80 text-stone-600 opacity-0 group-hover:opacity-100 hover:bg-white"
+              : "bg-white/80 text-slate-600 opacity-0 group-hover:opacity-100 hover:bg-white"
           )}
         >
           <Heart className={cn("w-4 h-4", isFavorite && "fill-current")} />
@@ -388,10 +388,10 @@ export function PropertyCard({
       <div className="p-4">
         {/* Price */}
         <div className="flex items-baseline justify-between mb-2">
-          <p className="text-xl font-bold text-amber-600">
+          <p className="text-xl font-bold text-navy-600">
             {formatCurrency(property.pricing.price)}
             {property.listingType === 'rent' && (
-              <span className="text-xs font-normal text-stone-400">/month</span>
+              <span className="text-xs font-normal text-slate-400">/month</span>
             )}
           </p>
           {property.pricing.negotiable && (
@@ -400,16 +400,16 @@ export function PropertyCard({
         </div>
         
         {/* Title & Location */}
-        <h3 className="font-semibold text-stone-900 group-hover:text-amber-600 transition-colors line-clamp-1 text-sm">
+        <h3 className="font-semibold text-slate-900 group-hover:text-navy-600 transition-colors line-clamp-1 text-sm">
           {property.title}
         </h3>
-        <p className="text-xs text-stone-500 flex items-center gap-1 mt-1">
+        <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
           <MapPin className="w-3 h-3" />
           {property.location.suburb}, {property.location.city}
         </p>
         
         {/* Specs */}
-        <div className="flex items-center gap-4 text-xs text-stone-500 mt-3">
+        <div className="flex items-center gap-4 text-xs text-slate-500 mt-3">
           <span className="flex items-center gap-1">
             <Bed className="w-3.5 h-3.5" />
             {property.specs.bedrooms}
@@ -431,7 +431,7 @@ export function PropertyCard({
         </div>
         
         {/* Actions */}
-        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-stone-100">
+        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-slate-100">
           <Button 
             variant="ghost" 
             size="sm" 

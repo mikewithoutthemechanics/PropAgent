@@ -633,7 +633,7 @@ export function formatPercent(value: number): string {
 
 export function getCollectionRateColor(rate: number): string {
   if (rate >= 95) return 'text-emerald-600';
-  if (rate >= 80) return 'text-amber-600';
+  if (rate >= 80) return 'text-gold-600';
   return 'text-red-600';
 }
 
@@ -641,7 +641,7 @@ export function getExpenseCategoryColor(category: ExpenseCategory): string {
   switch (category) {
     case 'maintenance': return 'bg-blue-100 text-blue-700';
     case 'rates': return 'bg-purple-100 text-purple-700';
-    case 'utilities': return 'bg-amber-100 text-amber-700';
+    case 'utilities': return 'bg-gold-100 text-gold-700';
     case 'insurance': return 'bg-cyan-100 text-cyan-700';
     case 'management': return 'bg-pink-100 text-pink-700';
     default: return 'bg-slate-100 text-slate-700';

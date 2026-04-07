@@ -104,8 +104,8 @@ const GradientHeader = () => {
         mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       )}>
         <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-4 h-4 text-amber-400" />
-          <span className="text-amber-400 text-sm font-medium">Property Portfolio</span>
+          <Sparkles className="w-4 h-4 text-indigo-400" />
+          <span className="text-indigo-400 text-sm font-medium">Property Portfolio</span>
         </div>
         <h1 className="text-3xl font-bold text-white mb-2">Properties</h1>
         <p className="text-gray-400">
@@ -113,7 +113,7 @@ const GradientHeader = () => {
         </p>
       </div>
 
-      <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl" />
+      <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl" />
       <div className="absolute -top-24 -left-24 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl" />
     </div>
   );
@@ -122,14 +122,14 @@ const GradientHeader = () => {
 const GlassFilters = ({ children, totalResults }: { children: React.ReactNode; totalResults: number }) => (
   <div className="relative backdrop-blur-xl bg-gray-900/60 border border-white/10 rounded-2xl p-5">
     <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent" />
+    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
     <div className="relative">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
           <span className="text-gray-300 text-sm font-medium">Filters</span>
         </div>
-        <span className="text-amber-400 text-sm font-semibold">{totalResults} results</span>
+        <span className="text-indigo-400 text-sm font-semibold">{totalResults} results</span>
       </div>
       {children}
     </div>
@@ -196,7 +196,7 @@ const PropertyCardWrapper = ({
         isHovered && "transform scale-[1.02]"
       )}>
         <div className={cn(
-          "absolute -inset-2 bg-gradient-to-r from-amber-500/20 to-amber-700/20 rounded-2xl blur-xl opacity-0 transition-opacity duration-300",
+          "absolute -inset-2 bg-gradient-to-r from-indigo-500/20 to-indigo-700/20 rounded-2xl blur-xl opacity-0 transition-opacity duration-300",
           isHovered && "opacity-100"
         )} />
         <PropertyCard
@@ -262,15 +262,15 @@ const AnimatedPagination = ({
       isAnimating ? "opacity-0 translate-y-2" : "opacity-100"
     )}>
       <p className="text-sm text-gray-400">
-        Showing <span className="text-amber-400 font-medium">{startItem}</span> - <span className="text-amber-400 font-medium">{endItem}</span> of <span className="text-amber-400 font-medium">{totalItems}</span> properties
+        Showing <span className="text-indigo-400 font-medium">{startItem}</span> - <span className="text-indigo-400 font-medium">{endItem}</span> of <span className="text-indigo-400 font-medium">{totalItems}</span> properties
       </p>
       <div className="flex items-center gap-2">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="group p-2 rounded-xl border border-white/10 hover:border-amber-500/50 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
+          className="group p-2 rounded-xl border border-white/10 hover:border-indigo-500/50 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
         >
-          <ChevronLeft className="w-4 h-4 text-gray-400 group-hover:text-amber-400 transition-colors" />
+          <ChevronLeft className="w-4 h-4 text-gray-400 group-hover:text-indigo-400 transition-colors" />
         </button>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
           <button
@@ -279,8 +279,8 @@ const AnimatedPagination = ({
             className={cn(
               "w-10 h-10 rounded-xl text-sm font-medium transition-all duration-300",
               currentPage === page
-                ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/25 scale-105"
-                : "border border-white/10 hover:border-amber-500/30 text-gray-400 hover:text-amber-400"
+                ? "bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-500/25 scale-105"
+                : "border border-white/10 hover:border-indigo-500/30 text-gray-400 hover:text-indigo-400"
             )}
           >
             {page}
@@ -289,9 +289,9 @@ const AnimatedPagination = ({
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="group p-2 rounded-xl border border-white/10 hover:border-amber-500/50 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
+          className="group p-2 rounded-xl border border-white/10 hover:border-indigo-500/50 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
         >
-          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-amber-400 transition-colors" />
+          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-indigo-400 transition-colors" />
         </button>
       </div>
     </div>
@@ -312,8 +312,8 @@ const FloatingActionButton = ({ onClick }: { onClick: () => void }) => {
         transition: 'transform 0.3s ease',
       }}
     >
-      <div className="absolute -inset-3 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full blur-lg opacity-60 group-hover:opacity-80 transition-opacity" />
-      <div className="relative flex items-center justify-center w-14 h-14 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full shadow-xl shadow-amber-500/30 transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-amber-500/40">
+      <div className="absolute -inset-3 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full blur-lg opacity-60 group-hover:opacity-80 transition-opacity" />
+      <div className="relative flex items-center justify-center w-14 h-14 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full shadow-xl shadow-indigo-500/30 transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-indigo-500/40">
         <Plus className="w-6 h-6 text-white transition-transform duration-300 group-hover:rotate-90" />
       </div>
     </button>
@@ -475,7 +475,7 @@ export default function PropertiesPage() {
       {/* Floating Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div 
-          className="absolute top-40 -right-16 w-32 h-32 border border-amber-500/10 rotate-45 rounded-2xl animate-pulse"
+          className="absolute top-40 -right-16 w-32 h-32 border border-indigo-500/10 rotate-45 rounded-2xl animate-pulse"
           style={{ animationDuration: '8s' }}
         />
         <div 
@@ -506,7 +506,7 @@ export default function PropertiesPage() {
                 className={cn(
                   "p-2.5 rounded-lg transition-all duration-300",
                   viewMode === 'grid' 
-                    ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/25" 
+                    ? "bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-500/25" 
                     : "text-gray-400 hover:text-white hover:bg-white/5"
                 )}
                 title="Grid view"
@@ -518,7 +518,7 @@ export default function PropertiesPage() {
                 className={cn(
                   "p-2.5 rounded-lg transition-all duration-300",
                   viewMode === 'list' 
-                    ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/25" 
+                    ? "bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-500/25" 
                     : "text-gray-400 hover:text-white hover:bg-white/5"
                 )}
                 title="List view"
@@ -529,7 +529,7 @@ export default function PropertiesPage() {
           </div>
           <Button 
             onClick={handleAddProperty}
-            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 shadow-lg shadow-amber-500/25"
+            className="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-400 hover:to-indigo-500 shadow-lg shadow-indigo-500/25"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Add Property
@@ -602,7 +602,7 @@ export default function PropertiesPage() {
                 </div>
                 <h3 className="text-lg font-medium text-white">No properties found</h3>
                 <p className="text-gray-500 mt-1 mb-4">Try adjusting your filters or add a new property.</p>
-                <Button variant="outline" onClick={handleResetFilters} className="border-white/20 hover:border-amber-500/50">
+                <Button variant="outline" onClick={handleResetFilters} className="border-white/20 hover:border-indigo-500/50">
                   Clear Filters
                 </Button>
               </div>

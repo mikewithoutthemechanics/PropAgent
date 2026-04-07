@@ -73,9 +73,9 @@ export function getStatusBadgeStyles(status: PropertyStatus): string {
     rented: 'bg-purple-100 text-purple-700 border-purple-200',
     under_offer: 'bg-orange-100 text-orange-700 border-orange-200',
     withdrawn: 'bg-gray-100 text-gray-700 border-gray-200',
-    draft: 'bg-stone-100 text-stone-700 border-stone-200',
+    draft: 'bg-slate-100 text-navy-700 border-slate-200',
   };
-  return styles[status] || 'bg-stone-100 text-stone-700';
+  return styles[status] || 'bg-slate-100 text-navy-700';
 }
 
 // Get status color (for non-badge uses)
@@ -83,14 +83,14 @@ export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
     available: 'bg-green-100 text-green-700',
     occupied: 'bg-blue-100 text-blue-700',
-    maintenance: 'bg-amber-100 text-amber-700',
+    maintenance: 'bg-gold-100 text-gold-700',
     active: 'bg-green-100 text-green-700',
     pending: 'bg-yellow-100 text-yellow-700',
     sold: 'bg-blue-100 text-blue-700',
     rented: 'bg-purple-100 text-purple-700',
-    draft: 'bg-stone-100 text-stone-700',
+    draft: 'bg-slate-100 text-navy-700',
   };
-  return colors[status] || 'bg-stone-100 text-stone-700';
+  return colors[status] || 'bg-slate-100 text-navy-700';
 }
 
 // Get inquiry status styles
@@ -102,7 +102,7 @@ export function getInquiryStatusStyles(status: string): string {
     converted: 'bg-green-100 text-green-700 border-green-200',
     closed: 'bg-gray-100 text-gray-700 border-gray-200',
   };
-  return styles[status] || 'bg-stone-100 text-stone-700';
+  return styles[status] || 'bg-slate-100 text-navy-700';
 }
 
 // Truncate text

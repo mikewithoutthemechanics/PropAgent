@@ -83,7 +83,7 @@ export function getNPSColor(nps: number): string {
   switch (category) {
     case 'excellent': return 'text-green-600';
     case 'good': return 'text-blue-600';
-    case 'average': return 'text-amber-600';
+    case 'average': return 'text-gold-600';
     case 'poor': return 'text-red-600';
   }
 }

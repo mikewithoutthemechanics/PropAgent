@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Building2, MessageSquare, Phone } from 'lucide-react';
+import { Send, Bot, User, Building2, MessageSquare, Phone, Plus, X } from 'lucide-react';
 import { Card, CardHeader, Button, Avatar, Input } from '@/components/ui';
-import { mockConversations } from '@/lib/data';
+import { mockConversations, mockProperties } from '@/lib/data';
 import { formatDateTime } from '@/lib/utils';
 
 export default function ChatPage() {
@@ -11,6 +11,8 @@ export default function ChatPage() {
   const [activeConversationId, setActiveConversationId] = useState(conversations[0]?.id);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showNewChatModal, setShowNewChatModal] = useState(false);
+  const [newChat, setNewChat] = useState({ tenantName: '', propertyId: '', initialMessage: '' });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const activeConversation = conversations.find(c => c.id === activeConversationId);
@@ -68,6 +70,36 @@ export default function ChatPage() {
     }, 1500);
   };
 
+  const handleAddChat = () => {
+    if (!newChat.tenantName.trim() || !newChat.propertyId) return;
+
+    const selectedProperty = mockProperties.find(p => p.id === newChat.propertyId);
+    
+    const newConversation = {
+      id: `conv-${Date.now()}`,
+      tenantId: `tenant-${Date.now()}`,
+      tenantName: newChat.tenantName,
+      propertyId: newChat.propertyId,
+      propertyAddress: selectedProperty ? `${selectedProperty.address}, ${selectedProperty.suburb}` : '',
+      lastMessage: newChat.initialMessage || 'New conversation started',
+      lastMessageTime: new Date().toISOString(),
+      unreadCount: 0,
+      messages: newChat.initialMessage.trim() ? [{
+        id: `msg-${Date.now()}`,
+        senderId: 'agent',
+        senderType: 'agent' as const,
+        content: newChat.initialMessage,
+        timestamp: new Date().toISOString(),
+        read: true,
+      }] : [],
+    };
+
+    setConversations(prev => [newConversation, ...prev]);
+    setActiveConversationId(newConversation.id);
+    setNewChat({ tenantName: '', propertyId: '', initialMessage: '' });
+    setShowNewChatModal(false);
+  };
+
   const generateAIResponse = (message: string): string => {
     const lowerMessage = message.toLowerCase();
     
@@ -101,6 +133,12 @@ export default function ChatPage() {
           <CardHeader 
             title="Conversations" 
             subtitle={`${totalUnread} unread`}
+            action={
+              <Button onClick={() => setShowNewChatModal(true)} className="text-xs px-2 py-1">
+                <Plus className="w-3 h-3 mr-1" />
+                New
+              </Button>
+            }
           />
           <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
             {conversations.map((conv) => (
@@ -120,7 +158,7 @@ export default function ChatPage() {
                     <div className="flex items-center justify-between">
                       <p className="font-medium text-slate-900 truncate">{conv.tenantName}</p>
                       {conv.unreadCount > 0 && (
-                        <span className="bg-amber-500 text-white text-xs font-medium px-1.5 py-0.5 rounded-full">
+                        <span className="bg-indigo-500 text-white text-xs font-medium px-1.5 py-0.5 rounded-full">
                           {conv.unreadCount}
                         </span>
                       )}
@@ -163,9 +201,9 @@ export default function ChatPage() {
                       {message.senderType === 'ai' && (
                         <div className="flex items-center gap-2 mb-1">
                           <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center">
-                            <Bot className="w-3 h-3 text-amber-600" />
+                            <Bot className="w-3 h-3 text-indigo-600" />
                           </div>
-                          <span className="text-xs font-medium text-amber-600">PropAgent AI</span>
+                          <span className="text-xs font-medium text-indigo-600">PropAgent AI</span>
                         </div>
                       )}
                       {message.senderType === 'tenant' && (
@@ -176,7 +214,7 @@ export default function ChatPage() {
                       )}
                       <div className={`rounded-2xl px-4 py-3 ${
                         message.senderType === 'agent' || message.senderType === 'landlord'
-                          ? 'bg-amber-500 text-white rounded-br-md'
+                          ? 'bg-indigo-500 text-white rounded-br-md'
                           : message.senderType === 'ai'
                           ? 'bg-slate-100 text-slate-800 rounded-bl-md'
                           : 'bg-slate-100 text-slate-800 rounded-bl-md'
@@ -193,7 +231,7 @@ export default function ChatPage() {
                 {isTyping && (
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center">
-                      <Bot className="w-3 h-3 text-amber-600" />
+                      <Bot className="w-3 h-3 text-indigo-600" />
                     </div>
                     <div className="bg-slate-100 rounded-2xl rounded-bl-md px-4 py-3">
                       <div className="flex gap-1">
@@ -231,6 +269,79 @@ export default function ChatPage() {
           )}
         </Card>
       </div>
+
+      {/* Add New Chat Modal */}
+      {showNewChatModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-slate-700">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-xl font-semibold text-white">New Chat</h2>
+              <button 
+                onClick={() => setShowNewChatModal(false)}
+                className="p-2 hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5 text-white/60" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Tenant Name</label>
+                <input 
+                  type="text" 
+                  value={newChat.tenantName}
+                  onChange={(e) => setNewChat({...newChat, tenantName: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="e.g., John Smith"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Property</label>
+                <select 
+                  value={newChat.propertyId}
+                  onChange={(e) => setNewChat({...newChat, propertyId: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                >
+                  <option value="">Select a property...</option>
+                  {mockProperties.map(prop => (
+                    <option key={prop.id} value={prop.id}>{prop.address}, {prop.suburb}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Initial Message (optional)</label>
+                <textarea 
+                  rows={3}
+                  value={newChat.initialMessage}
+                  onChange={(e) => setNewChat({...newChat, initialMessage: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Type an initial message to send..."
+                />
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-end gap-3 mt-6">
+              <button 
+                onClick={() => setShowNewChatModal(false)}
+                className="px-4 py-2.5 bg-slate-700 rounded-lg text-white text-sm hover:bg-slate-600 transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleAddChat}
+                disabled={!newChat.tenantName.trim() || !newChat.propertyId}
+                className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-lg text-white text-sm font-medium hover:shadow-lg hover:shadow-indigo-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <Plus className="w-4 h-4 inline mr-1.5" />
+                Start Chat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

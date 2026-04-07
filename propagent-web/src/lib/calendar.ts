@@ -122,7 +122,7 @@ export interface CalendarSyncConfig {
 // Viewing status helpers
 export function getViewingStatusStyles(status: ViewingStatus): string {
   const styles: Record<ViewingStatus, string> = {
-    pending: 'bg-amber-50 text-amber-700 border-amber-200',
+    pending: 'bg-gold-50 text-gold-700 border-gold-200',
     confirmed: 'bg-green-50 text-green-700 border-green-200',
     cancelled: 'bg-gray-50 text-gray-600 border-gray-200',
     completed: 'bg-blue-50 text-blue-700 border-blue-200',

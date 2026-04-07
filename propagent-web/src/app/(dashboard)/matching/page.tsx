@@ -63,7 +63,7 @@ function AnimatedGradientHeader() {
             Tenant Matching
           </h1>
           <p className="text-dark-200 mt-2 flex items-center gap-2">
-            <Users className="w-4 h-4 text-amber-400" />
+            <Users className="w-4 h-4 text-indigo-400" />
             {sampleCriteria.length} active tenant criteria
             <span className="mx-2 text-dark-400">•</span>
             <span className="text-green-400">POPIA compliant</span>
@@ -75,7 +75,10 @@ function AnimatedGradientHeader() {
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             FFC Verified Only
           </Badge>
-          <Button className="btn-premium text-white border-0">
+          <Button 
+            className="btn-premium text-white border-0"
+            onClick={() => setShowAddModal(true)}
+          >
             <Plus className="w-4 h-4 mr-1.5" />
             Add Criteria
           </Button>
@@ -83,7 +86,7 @@ function AnimatedGradientHeader() {
       </div>
       
       {/* Bottom decorative line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
     </div>
   );
 }
@@ -122,7 +125,7 @@ function CriteriaCard({
         "w-full p-4 rounded-xl text-left transition-all duration-300",
         isSelected
           ? "matching-selection"
-          : "glass-light hover:bg-dark-600/50 hover:border-amber-500/30"
+          : "glass-light hover:bg-dark-600/50 hover:border-indigo-500/30"
       )}
       style={{ animationDelay: `${index * 100}ms` }}
     >
@@ -132,7 +135,7 @@ function CriteriaCard({
             R{criteria.budget.min.toLocaleString()} - R{criteria.budget.max.toLocaleString()}
           </p>
           <p className="text-dark-300 text-sm mt-1.5 flex items-center gap-1">
-            <MapPin className="w-3.5 h-3.5 text-amber-400" />
+            <MapPin className="w-3.5 h-3.5 text-indigo-400" />
             {criteria.location.suburb || criteria.location.city}, {criteria.location.province}
           </p>
           <div className="flex items-center gap-2 mt-3">
@@ -145,7 +148,7 @@ function CriteriaCard({
                 criteria.urgency === 'immediate' 
                   ? "bg-red-500/20 text-red-400 border-red-500/30" 
                   : criteria.urgency === '30_days'
-                  ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                  ? "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
                   : "bg-dark-700/80 text-dark-300 border-dark-500/50"
               )}
             >
@@ -161,7 +164,7 @@ function CriteriaCard({
         
         {/* Selection indicator */}
         {isSelected && (
-          <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center animate-pulse-glow">
+          <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center animate-pulse-glow">
             <Sparkles className="w-3.5 h-3.5 text-dark-900" />
           </div>
         )}
@@ -190,7 +193,7 @@ function MatchCard({
 
   const getScoreGradient = (score: number) => {
     if (score >= 80) return "from-green-400 to-green-500";
-    if (score >= 70) return "from-amber-400 to-amber-500";
+    if (score >= 70) return "from-indigo-400 to-indigo-500";
     return "from-gray-400 to-gray-500";
   };
 
@@ -202,7 +205,7 @@ function MatchCard({
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <Home className="w-4 h-4 text-amber-400" />
+            <Home className="w-4 h-4 text-indigo-400" />
             <p className="font-medium text-dark-100 group-hover:text-gradient-gold transition-colors">
               {match.propertyTitle}
             </p>
@@ -211,7 +214,7 @@ function MatchCard({
             {match.matchReasons.map((reason, i) => (
               <Badge 
                 key={i} 
-                className="bg-amber-500/15 text-amber-300 border-amber-500/30 text-xs backdrop-blur-sm"
+                className="bg-indigo-500/15 text-indigo-300 border-indigo-500/30 text-xs backdrop-blur-sm"
               >
                 <Sparkles className="w-3 h-3 mr-1" />
                 {reason}
@@ -257,8 +260,8 @@ function FloatingDecorations() {
   return (
     <>
       {/* Corner decorations */}
-      <div className="fixed top-20 right-20 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="fixed bottom-40 left-10 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed top-20 right-20 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed bottom-40 left-10 w-48 h-48 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
       
       {/* Grid pattern overlay */}
       <div 
@@ -328,7 +331,7 @@ function EmptyState({ type }: { type: 'select' | 'no-results' }) {
           <Search className="w-14 h-14 text-dark-400 mx-auto" />
         )}
         {/* Glow effect */}
-        <div className="absolute inset-0 bg-amber-500/20 blur-2xl rounded-full" />
+        <div className="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full" />
       </div>
       <p className="text-dark-300 text-lg">
         {type === 'select' ? 'Select criteria to view matches' : 'No matching properties found'}
@@ -344,8 +347,17 @@ function EmptyState({ type }: { type: 'select' | 'no-results' }) {
 }
 
 export default function TenantMatchingPage() {
-  const [criteria] = useState<TenantCriteria[]>(sampleCriteria);
+  const [criteria, setCriteria] = useState<TenantCriteria[]>(sampleCriteria);
   const [selectedCriteria, setSelectedCriteria] = useState<string | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newCriteria, setNewCriteria] = useState({
+    name: '',
+    type: 'Tenant',
+    minRent: '',
+    maxRent: '',
+    minCredit: '',
+    location: ''
+  });
   
   const matches = selectedCriteria
     ? criteria
@@ -367,6 +379,35 @@ export default function TenantMatchingPage() {
 
   const selectedCriteriaData = criteria.find(c => c.id === selectedCriteria);
 
+  const handleAddCriteria = () => {
+    if (!newCriteria.name || !newCriteria.minRent || !newCriteria.maxRent) return;
+
+    const minRent = parseInt(newCriteria.minRent) || 0;
+    const maxRent = parseInt(newCriteria.maxRent) || 0;
+    const minCredit = parseInt(newCriteria.minCredit) || 650;
+
+    const newTenantCriteria: TenantCriteria = {
+      id: `c${Date.now()}`,
+      agentId: 'agent_new',
+      budget: { min: minRent, max: maxRent },
+      location: { 
+        suburb: newCriteria.location || 'Unknown', 
+        city: 'Durban', 
+        province: 'KZN' 
+      },
+      bedrooms: 2,
+      urgency: 'immediate',
+      propertyTypes: ['apartment', 'flat'],
+      hasPets: false,
+      employmentStatus: 'employed',
+      dateCreated: new Date().toISOString().split('T')[0],
+    };
+
+    setCriteria([...criteria, newTenantCriteria]);
+    setNewCriteria({ name: '', type: 'Tenant', minRent: '', maxRent: '', minCredit: '', location: '' });
+    setShowAddModal(false);
+  };
+
   return (
     <div className="min-h-screen bg-dark-950 relative">
       {/* Floating decorations */}
@@ -381,8 +422,8 @@ export default function TenantMatchingPage() {
           <ScrollAnimationWrapper className="lg:col-span-1" delay={100}>
             <GlassCard className="p-5">
               <div className="flex items-center gap-3 mb-5 pb-4 border-b border-dark-600/50">
-                <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
-                  <Target className="w-5 h-5 text-amber-400" />
+                <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                  <Target className="w-5 h-5 text-indigo-400" />
                 </div>
                 <h2 className="text-lg font-semibold text-gradient-gold font-serif">
                   Active Criteria
@@ -408,14 +449,14 @@ export default function TenantMatchingPage() {
             <GlassCard className="p-5">
               <div className="flex items-center justify-between mb-5 pb-4 border-b border-dark-600/50">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-amber-400" />
+                  <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-indigo-400" />
                   </div>
                   <h2 className="text-lg font-semibold text-gradient-gold font-serif">
                     Property Matches
                   </h2>
                   {selectedCriteriaData && (
-                    <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30">
+                    <Badge className="bg-indigo-500/20 text-indigo-300 border-indigo-500/30">
                       {matches.length} found
                     </Badge>
                   )}
@@ -428,8 +469,8 @@ export default function TenantMatchingPage() {
                       <span className="w-2 h-2 rounded-full bg-green-400" />
                       {matches.filter(m => m.matchScore >= 80).length} excellent
                     </div>
-                    <div className="flex items-center gap-1.5 text-amber-400">
-                      <span className="w-2 h-2 rounded-full bg-amber-400" />
+                    <div className="flex items-center gap-1.5 text-indigo-400">
+                      <span className="w-2 h-2 rounded-full bg-indigo-400" />
                       {matches.filter(m => m.matchScore >= 70 && m.matchScore < 80).length} good
                     </div>
                   </div>
@@ -457,8 +498,8 @@ export default function TenantMatchingPage() {
         <ScrollAnimationWrapper className="mt-6" delay={300}>
           <div className="info-banner-premium rounded-xl p-5">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-amber-400 font-bold text-lg">i</span>
+              <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                <span className="text-indigo-400 font-bold text-lg">i</span>
               </div>
               <div>
                 <p className="font-semibold text-gradient-gold text-lg">
@@ -473,6 +514,149 @@ export default function TenantMatchingPage() {
             </div>
           </div>
         </ScrollAnimationWrapper>
+        
+        {/* Add Criteria Modal */}
+        {showAddModal && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+          >
+            {/* Backdrop */}
+            <div 
+              className="absolute inset-0 bg-dark-950/90 backdrop-blur-sm"
+              onClick={() => setShowAddModal(false)}
+            />
+            
+            {/* Modal Content */}
+            <div className="relative w-full max-w-md bg-dark-800 rounded-2xl border border-dark-600 shadow-2xl overflow-hidden animate-fade-in-up">
+              {/* Header */}
+              <div className="flex items-center justify-between p-5 border-b border-dark-600">
+                <h2 id="modal-title" className="text-xl font-semibold text-gradient-gold font-serif">
+                  Add New Criteria
+                </h2>
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="w-8 h-8 rounded-lg bg-dark-700 hover:bg-dark-600 flex items-center justify-center transition-colors"
+                  aria-label="Close modal"
+                >
+                  <span className="text-dark-300 text-xl">×</span>
+                </button>
+              </div>
+              
+              {/* Form */}
+              <div className="p-5 space-y-4">
+                {/* Criteria Name */}
+                <div>
+                  <label htmlFor="criteriaName" className="block text-sm font-medium text-dark-200 mb-2">
+                    Criteria Name
+                  </label>
+                  <input
+                    id="criteriaName"
+                    type="text"
+                    value={newCriteria.name}
+                    onChange={(e) => setNewCriteria({ ...newCriteria, name: e.target.value })}
+                    placeholder="e.g., Client A - Umhlanga"
+                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                  />
+                </div>
+                
+                {/* Type */}
+                <div>
+                  <label htmlFor="criteriaType" className="block text-sm font-medium text-dark-200 mb-2">
+                    Type
+                  </label>
+                  <select
+                    id="criteriaType"
+                    value={newCriteria.type}
+                    onChange={(e) => setNewCriteria({ ...newCriteria, type: e.target.value })}
+                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                  >
+                    <option value="Tenant">Tenant</option>
+                    <option value="Landlord">Landlord</option>
+                  </select>
+                </div>
+                
+                {/* Rent Range */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="minRent" className="block text-sm font-medium text-dark-200 mb-2">
+                      Min Rent (R)
+                    </label>
+                    <input
+                      id="minRent"
+                      type="number"
+                      value={newCriteria.minRent}
+                      onChange={(e) => setNewCriteria({ ...newCriteria, minRent: e.target.value })}
+                      placeholder="8000"
+                      className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="maxRent" className="block text-sm font-medium text-dark-200 mb-2">
+                      Max Rent (R)
+                    </label>
+                    <input
+                      id="maxRent"
+                      type="number"
+                      value={newCriteria.maxRent}
+                      onChange={(e) => setNewCriteria({ ...newCriteria, maxRent: e.target.value })}
+                      placeholder="15000"
+                      className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                    />
+                  </div>
+                </div>
+                
+                {/* Min Credit Score */}
+                <div>
+                  <label htmlFor="minCredit" className="block text-sm font-medium text-dark-200 mb-2">
+                    Min Credit Score
+                  </label>
+                  <input
+                    id="minCredit"
+                    type="number"
+                    value={newCriteria.minCredit}
+                    onChange={(e) => setNewCriteria({ ...newCriteria, minCredit: e.target.value })}
+                    placeholder="650"
+                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                  />
+                </div>
+                
+                {/* Location */}
+                <div>
+                  <label htmlFor="location" className="block text-sm font-medium text-dark-200 mb-2">
+                    Location
+                  </label>
+                  <input
+                    id="location"
+                    type="text"
+                    value={newCriteria.location}
+                    onChange={(e) => setNewCriteria({ ...newCriteria, location: e.target.value })}
+                    placeholder="e.g., Umhlanga"
+                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                  />
+                </div>
+              </div>
+              
+              {/* Footer */}
+              <div className="flex items-center gap-3 p-5 border-t border-dark-600">
+                <Button 
+                  className="flex-1 btn-premium text-white border-0"
+                  onClick={handleAddCriteria}
+                >
+                  Add Criteria
+                </Button>
+                <Button 
+                  className="px-5 py-3 bg-dark-700 hover:bg-dark-600 text-dark-200 border border-dark-600 rounded-lg transition-colors"
+                  onClick={() => setShowAddModal(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

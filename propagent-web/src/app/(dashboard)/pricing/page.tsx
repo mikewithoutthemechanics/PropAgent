@@ -1,9 +1,25 @@
 'use client';
 
-import { Check, X, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { Check, X, Plus, X as XIcon } from 'lucide-react';
 import Link from 'next/link';
 
-const plans = [
+interface PlanFeature {
+  name: string;
+  included: boolean;
+}
+
+interface Plan {
+  name: string;
+  description: string;
+  price: string;
+  period: string;
+  features: PlanFeature[];
+  cta: string;
+  popular: boolean;
+}
+
+const initialPlans: Plan[] = [
   {
     name: 'Starter',
     description: 'Perfect for individual property managers',
@@ -63,10 +79,211 @@ const plans = [
   },
 ];
 
+function AddPlanModal({
+  isOpen,
+  onClose,
+  onSubmit,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (plan: Plan) => void;
+}) {
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    period: '/month',
+    description: '',
+    features: '',
+    cta: 'Get Started',
+    popular: false,
+  });
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const featuresList = formData.features
+      .split('\n')
+      .filter((f) => f.trim())
+      .map((name) => ({ name: name.trim(), included: true }));
+
+    onSubmit({
+      name: formData.name,
+      price: formData.price,
+      period: formData.period,
+      description: formData.description,
+      features: featuresList,
+      cta: formData.cta,
+      popular: formData.popular,
+    });
+    onClose();
+  };
+
+  const inputClasses =
+    "w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-colors";
+
+  const labelClasses = "block text-sm font-medium text-gray-300 mb-1.5";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-gray-900 border border-gray-800 rounded-xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Add New Pricing Plan</h2>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            aria-label="Close modal"
+          >
+            <XIcon className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          <div>
+            <label htmlFor="planName" className={labelClasses}>
+              Plan Name
+            </label>
+            <input
+              id="planName"
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className={inputClasses}
+              placeholder="e.g., Professional"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="price" className={labelClasses}>
+                Price
+              </label>
+              <input
+                id="price"
+                type="text"
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                className={inputClasses}
+                placeholder="e.g., R299 or Free"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="period" className={labelClasses}>
+                Period
+              </label>
+              <input
+                id="period"
+                type="text"
+                value={formData.period}
+                onChange={(e) => setFormData({ ...formData, period: e.target.value })}
+                className={inputClasses}
+                placeholder="/month"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="description" className={labelClasses}>
+              Description
+            </label>
+            <input
+              id="description"
+              type="text"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className={inputClasses}
+              placeholder="Short description of the plan"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="features" className={labelClasses}>
+              Features (one per line)
+            </label>
+            <textarea
+              id="features"
+              value={formData.features}
+              onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+              className={`${inputClasses} min-h-[120px] resize-none`}
+              placeholder="e.g., Up to 50 properties&#10;Tenant management&#10;Priority support"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="cta" className={labelClasses}>
+              CTA Button Text
+            </label>
+            <input
+              id="cta"
+              type="text"
+              value={formData.cta}
+              onChange={(e) => setFormData({ ...formData, cta: e.target.value })}
+              className={inputClasses}
+              placeholder="Get Started"
+              required
+            />
+          </div>
+
+          <div className="flex items-center gap-3">
+            <input
+              id="popular"
+              type="checkbox"
+              checked={formData.popular}
+              onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
+              className="w-4 h-4 rounded border-gray-700 bg-gray-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-gray-900"
+            />
+            <label htmlFor="popular" className="text-sm text-gray-300">
+              Mark as Most Popular
+            </label>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-4 py-2.5 border border-gray-700 text-gray-300 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-4 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-gray-900 font-medium rounded-lg transition-colors"
+            >
+              Add Plan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export default function PricingPage() {
+  const [plans, setPlans] = useState<Plan[]>(initialPlans);
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  const handleAddPlan = (plan: Plan) => {
+    setPlans([...plans, plan]);
+  };
+
   return (
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-12">
+        <div className="flex items-center justify-between mb-8">
+          <div />
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-gray-900 font-medium rounded-lg transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Add Plan
+          </button>
+        </div>
         <h1 className="text-3xl font-semibold text-gray-900">Simple, transparent pricing</h1>
         <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
           Choose the plan that fits your property management needs. All plans include a 14-day free trial.
@@ -78,21 +295,21 @@ export default function PricingPage() {
           <div
             key={plan.name}
             className={`relative bg-white rounded-xl border ${
-              plan.popular ? 'border-blue-500 shadow-lg' : 'border-gray-200'
+              plan.popular ? 'border-indigo-500 shadow-lg shadow-indigo-500/20' : 'border-gray-200'
             }`}
           >
             {plan.popular && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="bg-blue-600 text-white text-sm font-medium px-3 py-1 rounded-full">
+                <span className="bg-indigo-500 text-gray-900 text-sm font-medium px-3 py-1 rounded-full">
                   Most Popular
                 </span>
               </div>
             )}
-            
+
             <div className="p-6">
               <h3 className="text-xl font-semibold text-gray-900">{plan.name}</h3>
               <p className="mt-2 text-gray-600 text-sm">{plan.description}</p>
-              
+
               <div className="mt-6">
                 <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
                 {plan.period && <span className="text-gray-500">{plan.period}</span>}
@@ -102,7 +319,7 @@ export default function PricingPage() {
                 href="/register"
                 className={`mt-6 block w-full py-3 px-4 rounded-lg font-medium text-center transition-colors cursor-pointer ${
                   plan.popular
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    ? 'bg-indigo-500 hover:bg-indigo-600 text-gray-900'
                     : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
                 }`}
               >
@@ -149,6 +366,12 @@ export default function PricingPage() {
           </div>
         </div>
       </div>
+
+      <AddPlanModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSubmit={handleAddPlan}
+      />
     </div>
   );
 }
