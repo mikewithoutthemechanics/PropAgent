@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Grid3X3, List, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { Plus, Grid3X3, List, ChevronLeft, ChevronRight, Sparkles, Search, SlidersHorizontal, X } from 'lucide-react';
 import { sampleProperties, samplePropertyStats } from '@/lib/sample-data';
 import { PropertyFilters } from '@/components/properties/PropertyFilters';
 import { PropertyCard } from '@/components/properties/PropertyCard';
@@ -13,37 +13,35 @@ import { cn } from '@/lib/utils';
 const ITEMS_PER_PAGE = 9;
 
 const GradientHeader = () => (
-  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900">
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(201,162,39,0.15)_0%,_transparent_50%)]" />
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(45,156,219,0.1)_0%,_transparent_50%)]" />
+  <div className="relative overflow-hidden rounded-2xl bg-white border border-[var(--charcoal-100)]">
+    <div className="absolute inset-0 bg-gradient-to-br from-[var(--lime-50)] via-white to-[var(--sky-50)]" />
     
     <div className="relative px-6 py-8">
       <div className="flex items-center gap-2 mb-2">
-        <Sparkles className="w-4 h-4 text-gold-400" />
-        <span className="text-gold-400 text-sm font-medium">Property Portfolio</span>
+        <Sparkles className="w-4 h-4 text-[var(--lime-500)]" />
+        <span className="text-[var(--lime-600)] text-sm font-medium">Property Portfolio</span>
       </div>
-      <h1 className="text-3xl font-bold text-slate-900 mb-2">Properties</h1>
-      <p className="text-slate-500">
+      <h1 className="text-3xl font-bold text-[var(--charcoal-900)] mb-2">Properties</h1>
+      <p className="text-[var(--charcoal-500)]">
         {samplePropertyStats.totalListings} total listings • {samplePropertyStats.activeListings} active
       </p>
     </div>
 
-    <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-navy-600/20 rounded-full blur-3xl" />
-    <div className="absolute -top-24 -left-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
+    <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-[var(--lime-400)]/10 rounded-full blur-3xl" />
+    <div className="absolute -top-24 -left-24 w-48 h-48 bg-[var(--sky-400)]/10 rounded-full blur-3xl" />
   </div>
 );
 
 const GlassFilters = ({ children, totalResults }: { children: React.ReactNode; totalResults: number }) => (
-  <div className="relative backdrop-blur-xl bg-navy-900/60 border border-white/10 rounded-2xl p-5">
-    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
+  <div className="relative bg-white border border-[var(--charcoal-100)] rounded-2xl p-5">
+    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--lime-400)]/30 to-transparent" />
     <div className="relative">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
-          <span className="text-slate-500 text-sm font-medium">Filters</span>
+          <div className="w-2 h-2 rounded-full bg-[var(--lime-500)] animate-pulse" />
+          <span className="text-[var(--charcoal-500)] text-sm font-medium">Filters</span>
         </div>
-        <span className="text-gold-400 text-sm font-semibold">{totalResults} results</span>
+        <span className="text-[var(--lime-600)] text-sm font-semibold">{totalResults} results</span>
       </div>
       {children}
     </div>
@@ -81,20 +79,20 @@ const PropertyCardWrapper = ({
 
 const SkeletonCard = ({ variant = 'default' }: { variant?: 'default' | 'compact' }) => (
   <div className={cn(
-    "animate-pulse bg-navy-100/50 rounded-xl border border-white/5",
+    "animate-pulse bg-[var(--charcoal-50)] rounded-xl border border-[var(--charcoal-100)]",
     variant === 'default' ? "h-[420px]" : "h-28"
   )}>
     {variant === 'default' && (
-      <div className="h-56 bg-navy-50/30 rounded-t-xl" />
+      <div className="h-56 bg-[var(--charcoal-100)]/50 rounded-t-xl" />
     )}
     <div className="p-4 space-y-3">
-      <div className="h-4 bg-navy-50/30 rounded w-3/4" />
-      <div className="h-3 bg-navy-50/30 rounded w-1/2" />
-      <div className="h-3 bg-navy-50/30 rounded w-full" />
+      <div className="h-4 bg-[var(--charcoal-100)]/50 rounded w-3/4" />
+      <div className="h-3 bg-[var(--charcoal-100)]/50 rounded w-1/2" />
+      <div className="h-3 bg-[var(--charcoal-100)]/50 rounded w-full" />
       <div className="flex gap-4 pt-2">
-        <div className="h-3 bg-navy-50/30 rounded w-12" />
-        <div className="h-3 bg-navy-50/30 rounded w-12" />
-        <div className="h-3 bg-navy-50/30 rounded w-12" />
+        <div className="h-3 bg-[var(--charcoal-100)]/50 rounded w-12" />
+        <div className="h-3 bg-[var(--charcoal-100)]/50 rounded w-12" />
+        <div className="h-3 bg-[var(--charcoal-100)]/50 rounded w-12" />
       </div>
     </div>
   </div>
@@ -116,26 +114,26 @@ const Pagination = ({
 
   return (
     <div className="flex items-center justify-between">
-      <p className="text-sm text-slate-500">
-        Showing <span className="text-gold-400 font-medium">{startItem}</span> - <span className="text-gold-400 font-medium">{endItem}</span> of <span className="text-gold-400 font-medium">{totalItems}</span> properties
+      <p className="text-sm text-[var(--charcoal-500)]">
+        Showing <span className="text-[var(--lime-600)] font-medium">{startItem}</span> - <span className="text-[var(--lime-600)] font-medium">{endItem}</span> of <span className="text-[var(--lime-600)] font-medium">{totalItems}</span> properties
       </p>
       <div className="flex items-center gap-2">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="group p-2 rounded-xl border border-white/10 hover:border-gold-500/50 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
+          className="group p-2 rounded-xl border border-[var(--charcoal-200)] hover:border-[var(--lime-400)] hover:bg-[var(--lime-50)] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
         >
-          <ChevronLeft className="w-4 h-4 text-slate-500 group-hover:text-gold-400 transition-colors" />
+          <ChevronLeft className="w-4 h-4 text-[var(--charcoal-500)] group-hover:text-[var(--charcoal-900)] transition-colors" />
         </button>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
           <button
             key={page}
             onClick={() => onPageChange(page)}
             className={cn(
-              "w-10 h-10 rounded-xl text-sm font-medium transition-all duration-300",
+              "w-10 h-10 rounded-full text-sm font-medium transition-all duration-300",
               currentPage === page
-                ? "bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 shadow-lg shadow-gold-500/25"
-                : "border border-white/10 hover:border-gold-500/30 text-slate-500 hover:text-gold-400"
+                ? "bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-lg shadow-[var(--lime-400)]/25"
+                : "border border-[var(--charcoal-200)] hover:border-[var(--lime-400)] text-[var(--charcoal-500)] hover:text-[var(--charcoal-900)]"
             )}
           >
             {page}
@@ -144,9 +142,9 @@ const Pagination = ({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="group p-2 rounded-xl border border-white/10 hover:border-gold-500/50 hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
+          className="group p-2 rounded-xl border border-[var(--charcoal-200)] hover:border-[var(--lime-400)] hover:bg-[var(--lime-50)] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
         >
-          <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-gold-400 transition-colors" />
+          <ChevronRight className="w-4 h-4 text-[var(--charcoal-500)] group-hover:text-[var(--charcoal-900)] transition-colors" />
         </button>
       </div>
     </div>
@@ -271,9 +269,7 @@ export default function PropertiesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-navy-950 relative">
-      <div className="fixed inset-0 bg-gradient-to-br from-navy-950 via-navy-900 to-navy-950" />
-
+    <div className="min-h-screen bg-white relative">
       <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
         {/* Premium Header */}
         <div className="mb-6">
@@ -283,16 +279,16 @@ export default function PropertiesPage() {
         {/* Controls */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
-            <div className="flex items-center bg-navy-900/60 border border-white/10 rounded-xl p-1 backdrop-blur-sm">
+            <div className="flex items-center bg-[var(--charcoal-50)] border border-[var(--charcoal-200)] rounded-xl p-1">
               <button
                 onClick={() => setViewMode('grid')}
                 className={cn(
                   "p-2.5 rounded-lg transition-all duration-300",
                   viewMode === 'grid' 
-                    ? "bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 shadow-lg shadow-gold-500/25" 
-                    : "text-slate-500 hover:text-slate-900 hover:bg-white/5"
+                    ? "bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-lg shadow-[var(--lime-400)]/25" 
+                    : "text-[var(--charcoal-500)] hover:text-[var(--charcoal-900)] hover:bg-[var(--charcoal-100)]"
                 )}
-                title="Grid view"
+                aria-label="Grid view"
               >
                 <Grid3X3 className="w-4 h-4" />
               </button>
@@ -301,10 +297,10 @@ export default function PropertiesPage() {
                 className={cn(
                   "p-2.5 rounded-lg transition-all duration-300",
                   viewMode === 'list' 
-                    ? "bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 shadow-lg shadow-gold-500/25" 
-                    : "text-slate-500 hover:text-slate-900 hover:bg-white/5"
+                    ? "bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-lg shadow-[var(--lime-400)]/25" 
+                    : "text-[var(--charcoal-500)] hover:text-[var(--charcoal-900)] hover:bg-[var(--charcoal-100)]"
                 )}
-                title="List view"
+                aria-label="List view"
               >
                 <List className="w-4 h-4" />
               </button>
@@ -312,7 +308,7 @@ export default function PropertiesPage() {
           </div>
           <Button 
             onClick={handleAddProperty}
-            className="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 shadow-lg shadow-gold-500/25 text-navy-900"
+            className="bg-[var(--lime-400)] hover:bg-[var(--lime-500)] shadow-lg shadow-[var(--lime-400)]/25 text-[var(--charcoal-900)]"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Add Property
@@ -333,7 +329,7 @@ export default function PropertiesPage() {
 
         {/* Properties Grid/List */}
         <div className="mb-6">
-          <Card className="p-6 bg-navy-900/60 border border-white/10 backdrop-blur-xl">
+          <Card className="p-6 bg-white border border-[var(--charcoal-100)]">
             {isLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {Array.from({ length: 9 }).map((_, i) => (
@@ -374,12 +370,12 @@ export default function PropertiesPage() {
 
             {filteredProperties.length === 0 && !isLoading && (
               <div className="py-16 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-navy-100/50 flex items-center justify-center border border-white/10">
-                  <Plus className="w-8 h-8 text-slate-500" />
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--charcoal-50)] flex items-center justify-center border border-[var(--charcoal-100)]">
+                  <Plus className="w-8 h-8 text-[var(--charcoal-400)]" />
                 </div>
-                <h3 className="text-lg font-medium text-slate-900">No properties found</h3>
-                <p className="text-slate-500 mt-1 mb-4">Try adjusting your filters or add a new property.</p>
-                <Button variant="outline" onClick={handleResetFilters} className="border-white/20 hover:border-gold-500/50 text-gold-400 hover:text-gold-300">
+                <h3 className="text-lg font-medium text-[var(--charcoal-900)]">No properties found</h3>
+                <p className="text-[var(--charcoal-500)] mt-1 mb-4">Try adjusting your filters or add a new property.</p>
+                <Button variant="outline" onClick={handleResetFilters} className="border-[var(--charcoal-200)] hover:border-[var(--lime-400)] text-[var(--charcoal-700)] hover:text-[var(--charcoal-900)]">
                   Clear Filters
                 </Button>
               </div>

@@ -22,8 +22,8 @@ import {
   Calendar,
   Sparkles,
   Share2,
-  Menu,
-  X
+  ArrowUpRight,
+  BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/auth';
@@ -57,22 +57,22 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white">
       {/* Logo */}
-      <div className="p-3 md:p-4 border-b border-slate-800">
-        <Link href="/" className="flex items-center gap-2 md:gap-3 group">
-          <div className="w-8 md:w-10 h-8 md:h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg shadow-gold-500/20">
-            <Home className="w-4 md:w-5 h-4 md:h-5 text-slate-900" />
+      <div className="p-4 border-b border-gray-100">
+        <Link href="/dashboard" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 bg-[#D8F053] rounded-full flex items-center justify-center">
+            <span className="text-black font-bold text-lg">S</span>
           </div>
           <div>
-            <h1 className="text-base md:text-lg font-semibold tracking-tight text-white">PropAgent</h1>
-            <p className="text-xs text-slate-500 hidden md:block">Property Management</p>
+            <h1 className="text-lg font-semibold tracking-tight text-black">PropAgent</h1>
+            <p className="text-xs text-gray-500">Property Management</p>
           </div>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-2 py-3 md:px-3 md:py-4 space-y-0.5 md:space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-2 py-3 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
@@ -83,46 +83,43 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               href={item.href}
               onClick={onClose}
               className={cn(
-                'flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl transition-all duration-200 cursor-pointer text-xs md:text-sm font-medium',
+                'flex items-center gap-3 px-3 py-2.5 rounded-full transition-all duration-200 cursor-pointer text-sm font-medium',
                 isActive 
-                  ? 'bg-gradient-to-r from-gold-500/20 to-transparent text-gold-400 border-l-[3px] border-gold-500' 
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/50'
+                  ? 'bg-black text-white' 
+                  : 'text-black hover:bg-gray-100'
               )}
             >
-              <Icon className={cn("w-4 h-4", isActive ? "text-gold-400" : "text-slate-500")} />
-              <span className="hidden md:inline">{item.label}</span>
+              <Icon className={cn("w-5 h-5", isActive ? "text-white" : "text-black")} />
+              <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
       {/* User Section */}
-      <div className="p-2 md:p-3 border-t border-slate-200">
-        <div className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-3 mb-2 bg-slate-100 rounded-lg md:rounded-xl">
-          <div className="w-7 md:w-9 h-7 md:h-9 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-white font-semibold text-xs md:text-sm shadow-lg shadow-amber-500/20">
+      <div className="p-2 border-t border-gray-100">
+        <div className="flex items-center gap-3 px-3 py-3 mb-2 bg-gray-50 rounded-full">
+          <div className="w-8 h-8 bg-[#D8F053] rounded-full flex items-center justify-center text-black font-semibold text-sm">
             {user?.email?.charAt(0).toUpperCase() || 'U'}
           </div>
-          <div className="flex-1 min-w-0 hidden md:block">
-            <p className="text-xs md:text-sm font-medium text-slate-900 truncate">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-black truncate">
               {user?.email?.split('@')[0] || 'User'}
-            </p>
-            <p className="text-xs text-slate-500 truncate">
-              {user?.email || ''}
             </p>
           </div>
         </div>
         
-        <div className="space-y-0.5 md:space-y-1">
-          <button className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all cursor-pointer w-full text-xs md:text-sm font-medium">
-            <Settings className="w-4 h-4" />
-            <span className="hidden md:inline">Settings</span>
+        <div className="space-y-1">
+          <button className="flex items-center gap-3 px-3 py-2.5 rounded-full text-black hover:bg-gray-100 transition-all cursor-pointer w-full text-sm font-medium">
+            <Settings className="w-5 h-5" />
+            <span>Settings</span>
           </button>
           <button 
             onClick={handleSignOut}
-            className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-rose-600 hover:bg-rose-50 transition-all cursor-pointer w-full text-xs md:text-sm font-medium"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-full text-red-600 hover:bg-red-50 transition-all cursor-pointer w-full text-sm font-medium"
           >
-            <LogOut className="w-4 h-4" />
-            <span className="hidden md:inline">Sign Out</span>
+            <LogOut className="w-5 h-5" />
+            <span>Sign Out</span>
           </button>
         </div>
       </div>
@@ -137,14 +134,15 @@ export function MobileSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: (
       {/* Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          style={{ backdropFilter: 'blur(4px)' }}
           onClick={onClose}
         />
       )}
       
       {/* Sidebar */}
       <aside className={cn(
-        "fixed left-0 top-0 h-full w-[260px] md:w-[220px] bg-white text-slate-900 flex flex-col z-50 border-r border-slate-200 transition-transform duration-300 lg:hidden",
+        "fixed left-0 top-0 h-full w-[260px] bg-white text-black flex flex-col z-50 border-r border-gray-200 transition-transform duration-300 lg:hidden",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <Sidebar onClose={onClose} />

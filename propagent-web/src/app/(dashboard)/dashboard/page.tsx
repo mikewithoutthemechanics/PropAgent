@@ -7,341 +7,268 @@ import {
   MessageSquare, Plus, ArrowUpRight, ArrowDownRight,
   Calendar, Clock, CheckCircle2, AlertCircle,
   Building2, Target, Wallet, FileText, Trophy,
-  UserCheck, Sparkles, Bell, Search, ChevronRight
+  UserCheck, Sparkles, Bell, Search, ChevronRight, X
 } from 'lucide-react';
-import { samplePropertyStats, sampleRecentInquiries, sampleProperties } from '@/lib/sample-data';
-import { Card, Button, Badge } from '@/components/ui';
-import { formatCurrency, cn, getStatusBadgeStyles, getInquiryStatusStyles } from '@/lib/utils';
 
-interface StatCardProps {
-  title: string;
-  value: string | number;
-  change?: number;
-  changeLabel?: string;
-  icon: React.ReactNode;
-  color: 'navy' | 'amber' | 'blue' | 'green';
-  href?: string;
-}
+const mockPaymentData = {
+  rent: { value: 102054, change: 5 },
+  additionalServices: { value: 28450, change: 12 },
+  maintenance: { value: 12800, change: -3 },
+  debt: { value: 4200, change: -15 },
+};
 
-function StatCard({ title, value, change, changeLabel, icon, color, href }: StatCardProps) {
-  const colorStyles = {
-    navy: 'from-slate-700 to-slate-800 text-slate-900',
-    amber: 'from-amber-400 to-amber-600 text-slate-900',
-    blue: 'from-blue-500 to-blue-600 text-slate-900',
-    green: 'from-emerald-500 to-emerald-600 text-slate-900',
-  };
+const mockPropertySpotlight = {
+  title: "Modern Residential Complex",
+  image: "https://images.unsplash.com/photo-1545324418-cc1a3fa84830?w=800&q=80",
+  stats: { residents: 1054, units: 512, vacant: 102, upcoming: 54 },
+  priceHistory: [3200, 3350, 3280, 3420, 3500, 3450, 3600, 3580, 3720, 3800, 3750, 3900],
+};
 
-  const bgStyle = colorStyles[color];
+const mockRequests = [
+  { id: 1, name: "Sarah Mitchell", unit: "Unit 204", status: "New", avatar: "S" },
+  { id: 2, name: "James Wilson", unit: "Unit 512", status: "In Progress", avatar: "J" },
+  { id: 3, name: "Maria Garcia", unit: "Unit 108", status: "Pending", avatar: "M" },
+  { id: 4, name: "David Chen", unit: "Unit 356", status: "New", avatar: "D" },
+  { id: 5, name: "Emma Thompson", unit: "Unit 421", status: "In Progress", avatar: "E" },
+];
 
-  const content = (
-    <div className="group relative overflow-hidden bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-      <div className="relative flex items-start justify-between">
-        <div className={cn("p-3 rounded-xl bg-gradient-to-br shadow-md", bgStyle)}>
-          {icon}
-        </div>
-        {change !== undefined && (
-          <div className={cn(
-            "flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full",
-            change >= 0 ? "bg-emerald-50 text-emerald-600 border border-emerald-200" : "bg-rose-50 text-rose-600 border border-rose-200"
-          )}>
-            {change >= 0 ? (
-              <ArrowUpRight className="w-3 h-3" />
-            ) : (
-              <ArrowDownRight className="w-3 h-3" />
-            )}
-            {Math.abs(change)}%
-          </div>
-        )}
+const mockUpcomingUnits = [
+  { id: 1, unitNumber: "Unit 618", price: 2450, availableDate: "May 1, 2026", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&q=80" },
+  { id: 2, unitNumber: "Unit 302", price: 3200, availableDate: "June 15, 2026", image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=80" },
+];
+
+const statusStyles = {
+  New: "bg-black text-white",
+  "In Progress": "bg-[#D8F053] text-black",
+  Pending: "bg-[#53B4F0] text-white",
+};
+
+function PaymentsOverview() {
+  const payments = [
+    { label: "Rent", ...mockPaymentData.rent, isPrimary: true },
+    { label: "Additional services", ...mockPaymentData.additionalServices, isPrimary: false },
+    { label: "Maintenance", ...mockPaymentData.maintenance, isPrimary: false },
+    { label: "Debt", ...mockPaymentData.debt, isPrimary: false },
+  ];
+
+  return (
+    <div className="bg-black rounded-2xl p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-white text-lg font-semibold">Payments</h2>
+        <button className="bg-white/10 text-white text-sm px-4 py-2 rounded-full flex items-center gap-2 hover:bg-white/20 transition-colors">
+          This month <ChevronRight className="w-4 h-4 rotate-90" />
+        </button>
       </div>
       
-      <div className="relative mt-4">
-        <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{title}</p>
-        <p className="text-2xl font-semibold text-slate-900 mt-1 tracking-tight">{value}</p>
-        {changeLabel && (
-          <p className="text-xs text-slate-500 mt-1">{changeLabel}</p>
-        )}
+      <div className="grid grid-cols-4 gap-4">
+        {payments.map((payment, index) => (
+          <div
+            key={payment.label}
+            className={`${
+              payment.isPrimary 
+                ? "bg-[#D8F053]" 
+                : "bg-[#1A1A1A]"
+            } rounded-2xl p-5 transition-transform hover:scale-[1.02]`}
+          >
+            <div className="flex items-start justify-between">
+              <span className={`text-sm font-medium ${payment.isPrimary ? "text-black/70" : "text-white/70"}`}>
+                {payment.label}
+              </span>
+              <ArrowUpRight className={`w-4 h-4 ${payment.isPrimary ? "text-black/50" : "text-white/50"}`} />
+            </div>
+            <p className={`text-2xl font-bold mt-3 ${payment.isPrimary ? "text-black" : "text-white"}`}>
+              ${payment.value.toLocaleString()}.00
+            </p>
+            <p className={`text-xs mt-2 ${payment.isPrimary ? "text-black/60" : "text-white/60"}`}>
+              {payment.change >= 0 ? "+" : ""}{payment.change}% vs last month
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );
-
-  if (href) {
-    return <Link href={href}>{content}</Link>;
-  }
-
-  return content;
 }
 
-function QuickActionCard({ 
-  title, 
-  description, 
-  icon, 
-  href,
-  variant = 'default',
-}: { 
-  title: string; 
-  description: string; 
-  icon: React.ReactNode; 
-  href: string;
-  variant?: 'default' | 'primary';
-}) {
+function PropertySpotlight() {
+  const maxPrice = Math.max(...mockPropertySpotlight.priceHistory);
+  const minPrice = Math.min(...mockPropertySpotlight.priceHistory);
+  const range = maxPrice - minPrice;
+  
+  const points = mockPropertySpotlight.priceHistory
+    .map((price, i) => {
+      const x = (i / (mockPropertySpotlight.priceHistory.length - 1)) * 100;
+      const y = 100 - ((price - minPrice) / range) * 100;
+      return `${x},${y}`;
+    })
+    .join(" ");
+
   return (
-    <Link 
-      href={href}
-      className={cn(
-        "flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 border",
-        variant === 'primary' 
-          ? "bg-navy-500 text-slate-900 border-navy-500 hover:bg-navy-600" 
-          : "bg-white border-slate-200 hover:border-amber-300 hover:shadow-md"
-      )}
-    >
-      <div className={cn(
-        "p-3 rounded-xl transition-all duration-200",
-        variant === 'primary' ? "bg-white/20 text-slate-900" : "bg-slate-100 text-amber-600"
-      )}>
-        {icon}
+    <div className="bg-white rounded-2xl overflow-hidden border border-slate-200">
+      <div className="relative h-48 bg-slate-100">
+        <img 
+          src={mockPropertySpotlight.image} 
+          alt={mockPropertySpotlight.title}
+          className="w-full h-full object-cover"
+        />
+        <button className="absolute top-3 right-3 w-11 h-11 bg-white rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors" aria-label="Close property spotlight">
+          <X className="w-4 h-4 text-slate-600" />
+        </button>
       </div>
-      <div className="flex-1">
-        <h4 className={cn("text-sm font-semibold", variant === 'primary' ? "text-slate-900" : "text-slate-900")}>{title}</h4>
-        <p className={cn("text-xs mt-0.5", variant === 'primary' ? "text-slate-900/80" : "text-slate-500")}>{description}</p>
+      
+      <div className="p-5">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-slate-900">{mockPropertySpotlight.title}</h3>
+          <ArrowUpRight className="w-5 h-5 text-slate-400" />
+        </div>
+        
+        <div className="grid grid-cols-4 gap-4 mt-4 py-4 border-y border-slate-100">
+          {[
+            { label: "Residents", value: mockPropertySpotlight.stats.residents },
+            { label: "Units", value: mockPropertySpotlight.stats.units },
+            { label: "Vacant", value: mockPropertySpotlight.stats.vacant },
+            { label: "Upcoming", value: mockPropertySpotlight.stats.upcoming },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <p className="text-xl font-bold text-slate-900">{stat.value}</p>
+              <p className="text-xs text-slate-500 mt-1">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+        
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-semibold text-slate-900">Price Trend</h4>
+            <button className="bg-slate-100 text-slate-600 text-xs px-3 py-1.5 rounded-full flex items-center gap-1 hover:bg-slate-200 transition-colors">
+              Last year <ChevronRight className="w-3 h-3 rotate-90" />
+            </button>
+          </div>
+          <div className="h-24">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+              <defs>
+                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#53B4F0" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#53B4F0" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <polyline
+                fill="none"
+                stroke="#53B4F0"
+                strokeWidth="2"
+                points={points}
+                vectorEffect="non-scaling-stroke"
+              />
+              <polygon
+                fill="url(#chartGradient)"
+                points={`0,100 ${points} 100,100`}
+              />
+            </svg>
+          </div>
+        </div>
       </div>
-      <ChevronRight className={cn("w-5 h-5", variant === 'primary' ? "text-slate-900" : "text-slate-500 group-hover:text-amber-500 transition-colors")} />
-    </Link>
+    </div>
+  );
+}
+
+function RequestsList() {
+  return (
+    <div className="bg-white rounded-2xl p-5 border border-slate-200 h-full">
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-slate-900">Requests</h3>
+          <ArrowUpRight className="w-4 h-4 text-slate-400" />
+        </div>
+        <Link href="/requests" className="text-xs text-slate-500 hover:text-slate-700 transition-colors">
+          View all →
+        </Link>
+      </div>
+      
+      <div className="space-y-3">
+        {mockRequests.map((request) => (
+          <div 
+            key={request.id}
+            className="flex items-center justify-between p-3 rounded-xl hover:bg-charcoal-50 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-medium">
+                {request.avatar}
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-900">{request.name}</p>
+                <p className="text-xs text-slate-500">{request.unit}</p>
+              </div>
+            </div>
+            <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${statusStyles[request.status as keyof typeof statusStyles]}`}>
+              {request.status}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function UpcomingUnits() {
+  return (
+    <div className="bg-white rounded-2xl p-5 border border-slate-200">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-lg font-semibold text-slate-900">Upcoming units</h3>
+        <button className="bg-slate-100 text-slate-600 text-xs px-3 py-1.5 rounded-full flex items-center gap-1 hover:bg-slate-200 transition-colors">
+          Next 6 months <ChevronRight className="w-3 h-3 rotate-90" />
+        </button>
+      </div>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {mockUpcomingUnits.map((unit) => (
+          <div 
+            key={unit.id}
+            className="border border-slate-200 rounded-xl overflow-hidden hover:border-slate-300 transition-colors"
+          >
+            <div className="h-20 bg-slate-100">
+              <img 
+                src={unit.image} 
+                alt={unit.unitNumber}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-slate-900">{unit.unitNumber}</span>
+                <span className="text-sm font-bold text-slate-900">${unit.price}/mo</span>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">Available {unit.availableDate}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
 export default function DashboardPage() {
-  const stats = samplePropertyStats;
-  const inquiries = sampleRecentInquiries;
-  const properties = sampleProperties;
-
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Dashboard</h1>
-          <p className="text-sm text-slate-500 mt-1">Welcome back! Here's what's happening with your properties.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm">
-            <FileText className="w-4 h-4" />
-            Export
-          </Button>
-          <Link href="/properties/new">
-            <Button variant="primary" size="sm">
-              <Plus className="w-4 h-4" />
-              Add Property
-            </Button>
-          </Link>
+          <p className="text-sm text-slate-500 mt-1">Welcome back! Here&apos;s an overview of your properties.</p>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          title="Total Properties"
-          value={stats.totalProperties}
-          change={12}
-          changeLabel="vs last month"
-          icon={<Building2 className="w-5 h-5" />}
-          color="navy"
-          href="/properties"
-        />
-        <StatCard
-          title="Active Tenants"
-          value={stats.activeTenants}
-          change={8}
-          changeLabel="vs last month"
-          icon={<Users className="w-5 h-5" />}
-          color="blue"
-          href="/tenants"
-        />
-        <StatCard
-          title="Monthly Revenue"
-          value={formatCurrency(stats.monthlyRevenue)}
-          change={23}
-          changeLabel="vs last month"
-          icon={<DollarSign className="w-5 h-5" />}
-          color="green"
-          href="/financials"
-        />
-        <StatCard
-          title="Pending Inquiries"
-          value={stats.pendingInquiries}
-          change={-5}
-          changeLabel="vs last month"
-          icon={<MessageSquare className="w-5 h-5" />}
-          color="amber"
-          href="/chat"
-        />
-      </div>
+      {/* A. Payments Overview */}
+      <PaymentsOverview />
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <QuickActionCard
-          title="Add New Property"
-          description="List a new property"
-          icon={<Building2 className="w-5 h-5" />}
-          href="/properties/new"
-        />
-        <QuickActionCard
-          title="Review Inquiries"
-          description="12 new messages"
-          icon={<MessageSquare className="w-5 h-5" />}
-          href="/chat"
-        />
-        <QuickActionCard
-          title="Schedule Viewing"
-          description="Calendar overview"
-          icon={<Calendar className="w-5 h-5" />}
-          href="/calendar"
-        />
-        <QuickActionCard
-          title="Rent AI Assistant"
-          description="Smart pricing help"
-          icon={<Sparkles className="w-5 h-5" />}
-          href="/rent-ai"
-          variant="primary"
-        />
-      </div>
-
-      {/* Main Content Grid */}
+      {/* B. Property Spotlight & C. Requests List */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Inquiries */}
         <div className="lg:col-span-2">
-          <Card className="h-full">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-slate-900">Recent Inquiries</h2>
-              <Link href="/chat" className="text-xs text-amber-600 hover:text-amber-700 transition-colors">
-                View all →
-              </Link>
-            </div>
-            
-            <div className="space-y-3">
-              {inquiries.slice(0, 5).map((inquiry) => (
-                <Link 
-                  key={inquiry.id}
-                  href={`/chat/${inquiry.id}`}
-                  className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-200"
-                >
-                  <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 text-sm font-medium">
-                    {inquiry.name.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-sm font-medium text-slate-900 truncate">{inquiry.name}</h4>
-                      <Badge variant={getInquiryStatusStyles(inquiry.status) as any}>{inquiry.status}</Badge>
-                    </div>
-                    <p className="text-xs text-slate-500 truncate mt-0.5">{inquiry.property}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-slate-500">{inquiry.date}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{inquiry.time}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </Card>
+          <PropertySpotlight />
         </div>
-
-        {/* Property Overview */}
         <div className="lg:col-span-1">
-          <Card className="h-full">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-slate-900">Properties</h2>
-              <Link href="/properties" className="text-xs text-amber-600 hover:text-amber-700 transition-colors">
-                View all →
-              </Link>
-            </div>
-            
-            <div className="space-y-3">
-              {properties.slice(0, 4).map((property) => (
-                <Link 
-                  key={property.id}
-                  href={`/properties/${property.id}`}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-200"
-                >
-                  <div className="w-12 h-12 rounded-lg bg-slate-200 overflow-hidden">
-                    <img src={property.image} alt={property.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium text-slate-900 truncate">{property.name}</h4>
-                    <p className="text-xs text-slate-500 truncate">{property.address}</p>
-                  </div>
-                  <Badge>{property.status}</Badge>
-                </Link>
-              ))}
-            </div>
-
-            {/* Mini Stats */}
-            <div className="mt-6 pt-4 border-t border-slate-200">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 rounded-xl bg-slate-50">
-                  <p className="text-xl font-semibold text-slate-900">{stats.occupiedUnits}</p>
-                  <p className="text-xs text-slate-500">Occupied</p>
-                </div>
-                <div className="text-center p-3 rounded-xl bg-amber-50">
-                  <p className="text-xl font-semibold text-amber-600">{stats.vacantUnits}</p>
-                  <p className="text-xs text-slate-500">Vacant</p>
-                </div>
-              </div>
-            </div>
-          </Card>
+          <RequestsList />
         </div>
       </div>
 
-      {/* Activity & Notifications */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-slate-900">Recent Activity</h2>
-          </div>
-          
-          <div className="space-y-4">
-            {[
-              { icon: UserCheck, color: "text-emerald-600", bg: "bg-emerald-50", text: "New tenant application", sub: "2 hours ago" },
-              { icon: DollarSign, color: "text-blue-600", bg: "bg-blue-50", text: "Rent payment received", sub: "4 hours ago" },
-              { icon: Wrench, color: "text-amber-600", bg: "bg-amber-50", text: "Maintenance request", sub: "6 hours ago" },
-              { icon: Building2, color: "text-slate-500", bg: "bg-slate-100", text: "Property listing updated", sub: "1 day ago" },
-            ].map((activity, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className={cn("p-2 rounded-lg", activity.bg)}>
-                  <activity.icon className={cn("w-4 h-4", activity.color)} />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-slate-700">{activity.text}</p>
-                  <p className="text-xs text-slate-500">{activity.sub}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-slate-900">Upcoming</h2>
-          </div>
-          
-          <div className="space-y-4">
-            {[
-              { icon: Calendar, color: "text-amber-600", bg: "bg-amber-50", text: "Property viewing", sub: "Tomorrow, 10:00 AM" },
-              { icon: Clock, color: "text-blue-600", bg: "bg-blue-50", text: "Lease renewal", sub: "Feb 15, 2026" },
-              { icon: AlertCircle, color: "text-rose-600", bg: "bg-rose-50", text: "Maintenance deadline", sub: "Feb 18, 2026" },
-              { icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50", text: "Inspection scheduled", sub: "Feb 20, 2026" },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className={cn("p-2 rounded-lg", item.bg)}>
-                  <item.icon className={cn("w-4 h-4", item.color)} />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-slate-700">{item.text}</p>
-                  <p className="text-xs text-slate-500">{item.sub}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
+      {/* D. Upcoming Units */}
+      <UpcomingUnits />
     </div>
   );
 }

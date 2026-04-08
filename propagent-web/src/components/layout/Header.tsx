@@ -15,12 +15,12 @@ export function Header() {
       <div className="flex-1 max-w-xl">
         <div className="relative group">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-gold-400 transition-colors" />
-          <input
+            <input
             type="text"
             placeholder="Search properties, tenants, documents..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-20 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-gold-500/50 focus:ring-2 focus:ring-gold-500/10 transition-all"
+            className="w-full pl-10 pr-20 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-gold-500/50 focus:ring-2 focus:ring-gold-500/10 transition-all truncate"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-slate-500">
             <Command className="w-3 h-3" />
@@ -31,7 +31,7 @@ export function Header() {
 
       {/* Actions */}
       <div className="flex items-center gap-3">
-        <button className="p-2.5 text-slate-400 hover:text-gold-400 hover:bg-slate-800/50 rounded-xl transition-all">
+        <button className="p-2.5 text-slate-400 hover:text-gold-400 hover:bg-slate-800/50 rounded-xl transition-all" aria-label="View notifications">
           <Bell className="w-5 h-5" />
         </button>
         

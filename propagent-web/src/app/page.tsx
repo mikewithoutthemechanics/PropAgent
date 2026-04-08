@@ -86,7 +86,7 @@ export default function LandingPage() {
             </div>
 
             <div className="flex items-center gap-3 md:gap-4">
-              <Link href="/login" className="text-sm text-white/70 hover:text-white transition-colors hidden sm:block">
+              <Link href="/login" className="text-sm text-white/70 hover:text-white transition-colors">
                 Sign in
               </Link>
               <Link href="/register" className="px-4 py-2 md:px-6 md:py-2.5 bg-white text-slate-900 text-xs md:text-sm font-semibold rounded-full hover:bg-gold-400 transition-all duration-300 cursor-pointer">
@@ -225,9 +225,9 @@ export default function LandingPage() {
             ].map((feature, i) => (
               <div 
                 key={i} 
-                className="group p-8 md:p-10 bg-slate-900/50 border border-white/5 hover:border-gold-500/20 rounded-2xl transition-all duration-500 hover:bg-slate-900"
+                className="group p-8 md:p-10 bg-slate-900/50 border border-white/5 hover:border-gold-500/20 rounded-2xl transition-all duration-500 hover:bg-slate-900 active:bg-slate-800"
               >
-                <div className="w-12 h-12 bg-gradient-to-br from-gold-500/10 to-gold-600/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-gold-500/20 transition-all duration-500">
+                <div className="w-12 h-12 bg-gradient-to-br from-gold-500/10 to-gold-600/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-gold-500/20 group-active:scale-105 group-active:bg-gold-500/30 transition-all duration-500">
                   <feature.icon className="w-6 h-6 text-gold-400" />
                 </div>
                 <h3 className="text-xl font-medium mb-3">{feature.title}</h3>

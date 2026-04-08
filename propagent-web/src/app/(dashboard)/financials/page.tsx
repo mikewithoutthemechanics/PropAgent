@@ -57,6 +57,21 @@ import { mockProperties, mockTenants } from '@/lib/data';
 
 type TabType = 'rentroll' | 'expenses' | 'invoices' | 'reports' | 'commissions';
 
+interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  property: string;
+  tenant: string;
+  date: string;
+  dueDate: string;
+  lineItems: { description: string; amount: number; type: string }[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  status: 'draft' | 'sent' | 'paid';
+  notes?: string;
+}
+
 export default function FinancialsPage() {
   const [activeTab, setActiveTab] = useState<TabType>('rentroll');
   const [reportPeriod, setReportPeriod] = useState<ReportPeriod>('monthly');
@@ -66,7 +81,8 @@ export default function FinancialsPage() {
 
   // Invoice modal state
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
-  const [invoices, setInvoices] = useState<any[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [invoiceNumber, setInvoiceNumber] = useState(() => `INV-${Date.now().toString().slice(-8)}`);
   const [selectedProperty, setSelectedProperty] = useState('');
   const [selectedTenant, setSelectedTenant] = useState('');
   const [invoiceDate, setInvoiceDate] = useState(new Date().toISOString().split('T')[0]);
@@ -186,89 +202,83 @@ export default function FinancialsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Animated Gradient Header */}
-      <div className={`gradient-header rounded-2xl p-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      {/* Header */}
+      <div className={`bg-gradient-to-r from-lime-400 via-sky-400 to-lime-400 rounded-2xl p-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <div className="flex items-center justify-between relative z-10">
           <div>
-            <h1 className="text-3xl font-bold text-gradient-gold font-serif">Financials</h1>
-            <p className="text-slate-500 mt-1">Track revenue, expenses, and generate reports</p>
+            <h1 className="text-3xl font-bold text-charcoal-900 font-serif">Financials</h1>
+            <p className="text-charcoal-500 mt-1">Track revenue, expenses, and generate reports</p>
           </div>
           <div className="flex items-center gap-3">
             <Button 
               variant="outline" 
-              className="glass-light border-navy-500/30 text-navy-400 hover:bg-navy-500/20 hover:border-navy-400/50"
+              className="border-charcoal-200 text-charcoal-700 hover:bg-lime-400/20 hover:border-lime-400/50"
               onClick={() => handleExportCSV('rentroll')}
             >
               <FileSpreadsheet className="w-4 h-4 mr-2" />
               Export CSV
             </Button>
-            <Button className="btn-premium text-gray-900" onClick={() => setShowInvoiceModal(true)}>
+            <Button className="bg-lime-400 text-charcoal-900 rounded-full hover:bg-lime-500" onClick={() => setShowInvoiceModal(true)}>
               <Receipt className="w-4 h-4 mr-2" />
               Generate Invoice
             </Button>
           </div>
         </div>
-        {/* Floating particles */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl">
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-        </div>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children visible">
-        <Card className={`glass-card p-6 hover-3d-card cursor-pointer transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <Card className={`bg-white border-2 border-charcoal-100 rounded-2xl p-6 hover-3d-card cursor-pointer transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-500">Total Rent Collectible</p>
-              <p className="text-2xl font-bold text-gradient-gold mt-1">{formatCurrency(rentRoll.totalRent)}</p>
-              <p className="text-xs text-gold-400 mt-1 flex items-center gap-1">
+              <p className="text-sm font-medium text-charcoal-500">Total Rent Collectible</p>
+              <p className="text-2xl font-bold text-lime-500 mt-1">{formatCurrency(rentRoll.totalRent)}</p>
+              <p className="text-xs text-lime-500 mt-1 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" /> +{rentRoll.totalProperties} properties
               </p>
             </div>
-            <div className="w-12 h-12 bg-navy-500/20 rounded-xl flex items-center justify-center border border-navy-500/30">
-              <Home className="w-6 h-6 text-navy-400" />
+            <div className="w-12 h-12 bg-lime-400/20 rounded-xl flex items-center justify-center border border-lime-400/30">
+              <Home className="w-6 h-6 text-lime-500" />
             </div>
           </div>
         </Card>
 
-        <Card className={`glass-card p-6 hover-3d-card cursor-pointer transition-all duration-500 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <Card className={`bg-white border-2 border-charcoal-100 rounded-2xl p-6 hover-3d-card cursor-pointer transition-all duration-500 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-500">Collected This Month</p>
-              <p className="text-2xl font-bold text-slate-900 mt-1">{formatCurrency(rentRoll.totalCollected)}</p>
-              <p className={`text-xs mt-1 flex items-center gap-1 ${rentRoll.collectionRate >= 80 ? 'text-gold-400' : 'text-navy-400'}`}>
+              <p className="text-sm font-medium text-charcoal-500">Collected This Month</p>
+              <p className="text-2xl font-bold text-charcoal-900 mt-1">{formatCurrency(rentRoll.totalCollected)}</p>
+              <p className={`text-xs mt-1 flex items-center gap-1 ${rentRoll.collectionRate >= 80 ? 'text-lime-500' : 'text-lime-600'}`}>
                 <TrendingUp className="w-3 h-3" /> {formatPercent(rentRoll.collectionRate)} collection rate
               </p>
             </div>
-            <div className="w-12 h-12 bg-gold-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
-              <DollarSign className="w-6 h-6 text-gold-400" />
+            <div className="w-12 h-12 bg-lime-400/20 rounded-xl flex items-center justify-center border border-lime-400/30">
+              <DollarSign className="w-6 h-6 text-lime-500" />
             </div>
           </div>
         </Card>
 
-        <Card className={`glass-card p-6 hover-3d-card cursor-pointer transition-all duration-500 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <Card className={`bg-white border-2 border-charcoal-100 rounded-2xl p-6 hover-3d-card cursor-pointer transition-all duration-500 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-500">Outstanding</p>
-              <p className="text-2xl font-bold text-slate-900 mt-1">{formatCurrency(rentRoll.totalOutstanding)}</p>
-              <p className="text-xs text-navy-400 mt-1 flex items-center gap-1">
+              <p className="text-sm font-medium text-charcoal-500">Outstanding</p>
+              <p className="text-2xl font-bold text-charcoal-900 mt-1">{formatCurrency(rentRoll.totalOutstanding)}</p>
+              <p className="text-xs text-lime-600 mt-1 flex items-center gap-1">
                 <TrendingDown className="w-3 h-3" /> Requires attention
               </p>
             </div>
-            <div className="w-12 h-12 bg-navy-500/20 rounded-xl flex items-center justify-center border border-navy-500/30">
-              <CreditCard className="w-6 h-6 text-navy-400" />
+            <div className="w-12 h-12 bg-lime-400/20 rounded-xl flex items-center justify-center border border-lime-400/30">
+              <CreditCard className="w-6 h-6 text-lime-500" />
             </div>
           </div>
         </Card>
 
-        <Card className={`glass-card p-6 hover-3d-card cursor-pointer transition-all duration-500 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <Card className={`bg-white border-2 border-charcoal-100 rounded-2xl p-6 hover-3d-card cursor-pointer transition-all duration-500 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-500">Total Expenses</p>
-              <p className="text-2xl font-bold text-slate-900 mt-1">{formatCurrency(expenseSummary.totalExpenses)}</p>
-              <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+              <p className="text-sm font-medium text-charcoal-500">Total Expenses</p>
+              <p className="text-2xl font-bold text-charcoal-900 mt-1">{formatCurrency(expenseSummary.totalExpenses)}</p>
+              <p className="text-xs text-charcoal-500 mt-1 flex items-center gap-1">
                 <Calendar className="w-3 h-3" /> This period
               </p>
             </div>
@@ -279,19 +289,22 @@ export default function FinancialsPage() {
         </Card>
       </div>
 
-      {/* Tabs - Dark Theme */}
-      <div className="border-b border-gray-700/50 bg-dark-800/50 rounded-t-xl backdrop-blur-sm">
-        <nav className="flex space-x-1 -mb-px px-4">
+      {/* Tabs */}
+      <div className="border-b border-charcoal-200 bg-white rounded-t-xl">
+        <nav className="flex space-x-1 -mb-px px-4 overflow-x-auto" role="tablist" aria-label="Financials sections">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as TabType)}
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                aria-controls={`panel-${tab.id}`}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all duration-300 ${
                   activeTab === tab.id
-                    ? 'border-navy-500 text-navy-400'
-                    : 'border-transparent text-slate-500 hover:text-gray-200 hover:border-gray-600'
+                    ? 'border-lime-500 text-lime-600'
+                    : 'border-transparent text-charcoal-500 hover:text-charcoal-900 hover:border-charcoal-300'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -304,58 +317,58 @@ export default function FinancialsPage() {
 
       {/* Tab Content */}
       {activeTab === 'rentroll' && (
-        <Card className="glass-card card-gold-shimmer">
+        <Card className="bg-white border-2 border-charcoal-100 rounded-2xl">
           <CardHeader
             title="Rent Roll Summary"
             subtitle="All properties with rent status"
             action={
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-500" />
                 <input
                   type="text"
                   placeholder="Search properties..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50 w-64 transition-all"
+                  className="pl-10 pr-4 py-2 bg-white border border-charcoal-200 rounded-lg text-sm text-charcoal-900 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50 w-full sm:w-64 transition-all"
                 />
               </div>
             }
           />
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-dark-800/50 border-b border-gray-700">
+              <thead className="bg-charcoal-50 border-b border-charcoal-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Property</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tenant</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Monthly Rent</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Collected</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Outstanding</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Property</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Tenant</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Monthly Rent</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Collected</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Outstanding</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-charcoal-100">
                 {filteredRentRoll.map((item) => (
-                  <tr key={item.propertyId} className="hover:bg-dark-700/50 transition-all duration-200">
+                  <tr key={item.propertyId} className="hover:bg-charcoal-50 transition-all duration-200">
                     <td className="px-6 py-4">
-                      <span className="font-medium text-slate-900">{item.propertyAddress}</span>
+                      <span className="font-medium text-charcoal-900">{item.propertyAddress}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-slate-500">{item.tenantName}</span>
+                      <span className="text-charcoal-500">{item.tenantName}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="font-semibold text-slate-900">{formatCurrency(item.monthlyRent)}</span>
+                      <span className="font-semibold text-charcoal-900">{formatCurrency(item.monthlyRent)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="text-gold-400 font-medium">{formatCurrency(item.collected)}</span>
+                      <span className="text-lime-500 font-medium">{formatCurrency(item.collected)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className={`font-medium ${item.outstanding > 0 ? 'text-navy-400' : 'text-gray-500'}`}>
+                      <span className={`font-medium ${item.outstanding > 0 ? 'text-lime-600' : 'text-charcoal-500'}`}>
                         {formatCurrency(item.outstanding)}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-                        item.status === 'paid' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' : 'bg-navy-500/20 text-navy-400 border border-navy-500/30'
+                        item.status === 'paid' ? 'bg-lime-400/20 text-lime-600 border border-lime-400/30' : 'bg-lime-400/20 text-lime-600 border border-lime-400/30'
                       }`}>
                         {item.status}
                       </span>
@@ -367,21 +380,21 @@ export default function FinancialsPage() {
           </div>
           {filteredRentRoll.length === 0 && (
             <div className="p-12 text-center">
-              <p className="text-gray-500">No rent roll items found.</p>
+              <p className="text-charcoal-500">No rent roll items found.</p>
             </div>
           )}
         </Card>
       )}
 
       {activeTab === 'expenses' && (
-        <Card className="glass-card card-gold-shimmer">
+        <Card className="bg-white border-2 border-charcoal-100 rounded-2xl">
           <CardHeader
             title="Expense Tracking"
             subtitle="Maintenance, rates, utilities, and other expenses"
             action={
               <div className="flex items-center gap-2">
                 <Button 
-                  className="btn-premium text-gray-900"
+                  className="bg-lime-400 text-charcoal-900 rounded-full hover:bg-lime-500"
                   onClick={() => setShowAddExpense(true)}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -390,50 +403,50 @@ export default function FinancialsPage() {
                 <select
                   value={expenseFilter}
                   onChange={(e) => setExpenseFilter(e.target.value as ExpenseCategory | 'all')}
-                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="px-3 py-2 bg-white border border-charcoal-200 rounded-lg text-sm text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                 >
-                  <option value="all" className="bg-dark-800">All Categories</option>
-                  <option value="maintenance" className="bg-dark-800">Maintenance</option>
-                  <option value="rates" className="bg-dark-800">Rates</option>
-                  <option value="utilities" className="bg-dark-800">Utilities</option>
-                  <option value="insurance" className="bg-dark-800">Insurance</option>
-                  <option value="management" className="bg-dark-800">Management</option>
-                  <option value="other" className="bg-dark-800">Other</option>
+                  <option value="all" className="bg-white">All Categories</option>
+                  <option value="maintenance" className="bg-white">Maintenance</option>
+                  <option value="rates" className="bg-white">Rates</option>
+                  <option value="utilities" className="bg-white">Utilities</option>
+                  <option value="insurance" className="bg-white">Insurance</option>
+                  <option value="management" className="bg-white">Management</option>
+                  <option value="other" className="bg-white">Other</option>
                 </select>
               </div>
             }
           />
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-dark-800/50 border-b border-gray-700">
+              <thead className="bg-charcoal-50 border-b border-charcoal-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Property</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Description</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Vendor</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Property</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Category</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Description</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Vendor</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Amount</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-charcoal-100">
                 {filteredExpenses.map((expense) => (
-                  <tr key={expense.id} className="hover:bg-dark-700/50 transition-colors">
-                    <td className="px-6 py-4 text-slate-500">{expense.date}</td>
-                    <td className="px-6 py-4 text-slate-900 font-medium">{expense.propertyAddress}</td>
+                  <tr key={expense.id} className="hover:bg-charcoal-50 transition-colors">
+                    <td className="px-6 py-4 text-charcoal-500">{expense.date}</td>
+                    <td className="px-6 py-4 text-charcoal-900 font-medium">{expense.propertyAddress}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium capitalize ${getExpenseCategoryColor(expense.category)}`}>
                         {expense.category}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-500">{expense.description}</td>
-                    <td className="px-6 py-4 text-gray-500">{expense.vendor || '-'}</td>
+                    <td className="px-6 py-4 text-charcoal-500">{expense.description}</td>
+                    <td className="px-6 py-4 text-charcoal-500">{expense.vendor || '-'}</td>
                     <td className="px-6 py-4 text-right">
-                      <span className="font-semibold text-slate-900">{formatCurrency(expense.amount)}</span>
+                      <span className="font-semibold text-charcoal-900">{formatCurrency(expense.amount)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-                        expense.status === 'paid' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' : 'bg-navy-500/20 text-navy-400 border border-navy-500/30'
+                        expense.status === 'paid' ? 'bg-lime-400/20 text-lime-600 border border-lime-400/30' : 'bg-lime-400/20 text-lime-600 border border-lime-400/30'
                       }`}>
                         {expense.status}
                       </span>
@@ -445,21 +458,21 @@ export default function FinancialsPage() {
           </div>
           {filteredExpenses.length === 0 && (
             <div className="p-12 text-center">
-              <p className="text-gray-500">No expenses found.</p>
+              <p className="text-charcoal-500">No expenses found.</p>
             </div>
           )}
         </Card>
       )}
 
       {activeTab === 'invoices' && (
-        <Card className="glass-card card-gold-shimmer">
+        <Card className="bg-white border-2 border-charcoal-100 rounded-2xl">
           <CardHeader
             title="Invoice Management"
             subtitle="Generate and track rent invoices"
             action={
               <div className="flex items-center gap-2">
                 <Button 
-                  className="btn-premium text-gray-900"
+                  className="bg-lime-400 text-charcoal-900 rounded-full hover:bg-lime-500"
                   onClick={() => setShowInvoiceModal(true)}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -469,32 +482,32 @@ export default function FinancialsPage() {
             }
           />
           {invoices.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-dark-800/50 border-b border-gray-700">
+          <div className="overflow-x-auto">
+            <table className="w-full" role="table" aria-label="Rent roll summary">
+              <thead className="bg-charcoal-50 border-b border-charcoal-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Invoice #</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Property</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tenant</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Amount</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Invoice #</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Property</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Tenant</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Amount</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-800">
+                <tbody className="divide-y divide-charcoal-100">
                   {invoices.map((invoice) => (
-                    <tr key={invoice.id} className="hover:bg-dark-700/50 transition-colors">
-                      <td className="px-6 py-4 text-navy-400 font-medium">{invoice.invoiceNumber}</td>
-                      <td className="px-6 py-4 text-slate-900 font-medium">{invoice.property}</td>
-                      <td className="px-6 py-4 text-slate-500">{invoice.tenant}</td>
-                      <td className="px-6 py-4 text-slate-500">{invoice.date}</td>
-                      <td className="px-6 py-4 text-right font-semibold text-slate-900">{formatCurrency(invoice.total)}</td>
+                    <tr key={invoice.id} className="hover:bg-charcoal-50 transition-colors">
+                      <td className="px-6 py-4 text-lime-600 font-medium">{invoice.invoiceNumber}</td>
+                      <td className="px-6 py-4 text-charcoal-900 font-medium">{invoice.property}</td>
+                      <td className="px-6 py-4 text-charcoal-500">{invoice.tenant}</td>
+                      <td className="px-6 py-4 text-charcoal-500">{invoice.date}</td>
+                      <td className="px-6 py-4 text-right font-semibold text-charcoal-900">{formatCurrency(invoice.total)}</td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-                          invoice.status === 'paid' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' :
-                          invoice.status === 'sent' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                          'bg-navy-500/20 text-navy-400 border border-navy-500/30'
+                          invoice.status === 'paid' ? 'bg-lime-400/20 text-lime-600 border border-lime-400/30' :
+                          invoice.status === 'sent' ? 'bg-blue-500/20 text-blue-600 border border-blue-500/30' :
+                          'bg-lime-400/20 text-lime-600 border border-lime-400/30'
                         }`}>
                           {invoice.status}
                         </span>
@@ -504,7 +517,7 @@ export default function FinancialsPage() {
                           {invoice.status === 'draft' && (
                             <button 
                               onClick={() => setInvoices(invoices.map(i => i.id === invoice.id ? { ...i, status: 'sent' as const } : i))}
-                              className="text-blue-400 hover:text-blue-300 text-sm"
+                              className="text-blue-600 hover:text-blue-700 text-sm"
                             >
                               Send
                             </button>
@@ -512,12 +525,12 @@ export default function FinancialsPage() {
                           {invoice.status === 'sent' && (
                             <button 
                               onClick={() => setInvoices(invoices.map(i => i.id === invoice.id ? { ...i, status: 'paid' as const } : i))}
-                              className="text-gold-400 text-gold-300 text-sm"
+                              className="text-lime-600 hover:text-lime-700 text-sm"
                             >
                               Mark Paid
                             </button>
                           )}
-                          <button className="text-slate-500 hover:text-slate-900">
+                          <button className="text-charcoal-500 hover:text-charcoal-900">
                             <Download className="w-4 h-4" />
                           </button>
                         </div>
@@ -529,10 +542,10 @@ export default function FinancialsPage() {
             </div>
           ) : (
             <div className="p-12 text-center">
-              <Receipt className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-              <p className="text-slate-500 mb-4">No invoices yet</p>
+              <Receipt className="w-12 h-12 text-charcoal-300 mx-auto mb-4" />
+              <p className="text-charcoal-500 mb-4">No invoices yet</p>
               <Button 
-                className="btn-premium text-gray-900"
+                className="bg-lime-400 text-charcoal-900 rounded-full hover:bg-lime-500"
                 onClick={() => setShowInvoiceModal(true)}
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -544,7 +557,7 @@ export default function FinancialsPage() {
       )}
 
       {activeTab === 'reports' && (
-        <Card className="glass-card">
+        <Card className="bg-white border-2 border-charcoal-100 rounded-2xl">
           <CardHeader
             title="Financial Reports"
             subtitle="Monthly, quarterly, and annual financial summaries"
@@ -553,13 +566,13 @@ export default function FinancialsPage() {
                 <select
                   value={reportPeriod}
                   onChange={(e) => setReportPeriod(e.target.value as ReportPeriod)}
-                  className="px-3 py-2 bg-dark-700 border border-gray-600 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                  className="px-3 py-2 bg-white border border-charcoal-200 rounded-lg text-sm text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
                 >
-                  <option value="monthly" className="bg-dark-800">Monthly</option>
-                  <option value="quarterly" className="bg-dark-800">Quarterly</option>
-                  <option value="annually" className="bg-dark-800">Annually</option>
+                  <option value="monthly" className="bg-white">Monthly</option>
+                  <option value="quarterly" className="bg-white">Quarterly</option>
+                  <option value="annually" className="bg-white">Annually</option>
                 </select>
-                <Button variant="outline" className="border-gray-600 text-slate-400 hover:bg-dark-700">
+                <Button variant="outline" className="border-charcoal-200 text-charcoal-700 hover:bg-lime-400/20">
                   <Printer className="w-4 h-4 mr-2" />
                   Print
                 </Button>
@@ -569,73 +582,73 @@ export default function FinancialsPage() {
           <div className="p-6 space-y-6">
             {/* Revenue Section */}
             <div>
-              <h3 className="text-sm font-semibold text-navy-400 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-lime-600 mb-4 flex items-center gap-2">
                 <TrendingUp className="w-4 h-4" />
                 Revenue
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-xs text-gray-500">Rent Collected</p>
-                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.rentCollected)}</p>
+                <div className="bg-charcoal-50 rounded-lg p-4 border border-charcoal-200">
+                  <p className="text-xs text-charcoal-500">Rent Collected</p>
+                  <p className="text-lg font-semibold text-charcoal-900">{formatCurrency(report.rentCollected)}</p>
                 </div>
-                <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-xs text-gray-500">Rent Outstanding</p>
-                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.rentOutstanding)}</p>
+                <div className="bg-charcoal-50 rounded-lg p-4 border border-charcoal-200">
+                  <p className="text-xs text-charcoal-500">Rent Outstanding</p>
+                  <p className="text-lg font-semibold text-charcoal-900">{formatCurrency(report.rentOutstanding)}</p>
                 </div>
-                <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-xs text-gray-500">Other Income</p>
-                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.otherIncome)}</p>
+                <div className="bg-charcoal-50 rounded-lg p-4 border border-charcoal-200">
+                  <p className="text-xs text-charcoal-500">Other Income</p>
+                  <p className="text-lg font-semibold text-charcoal-900">{formatCurrency(report.otherIncome)}</p>
                 </div>
-                <div className="bg-gold-500/10 rounded-lg p-4 border border-gold-500/30">
-                  <p className="text-xs text-gold-400">Total Revenue</p>
-                  <p className="text-lg font-semibold text-gold-400">{formatCurrency(report.totalRevenue)}</p>
+                <div className="bg-lime-400/10 rounded-lg p-4 border border-lime-400/30">
+                  <p className="text-xs text-lime-600">Total Revenue</p>
+                  <p className="text-lg font-semibold text-lime-600">{formatCurrency(report.totalRevenue)}</p>
                 </div>
               </div>
             </div>
 
             {/* Expenses Section */}
             <div>
-              <h3 className="text-sm font-semibold text-red-400 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-red-500 mb-4 flex items-center gap-2">
                 <Wrench className="w-4 h-4" />
                 Expenses
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-xs text-gray-500">Maintenance</p>
-                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.maintenanceExpenses)}</p>
+                <div className="bg-charcoal-50 rounded-lg p-4 border border-charcoal-200">
+                  <p className="text-xs text-charcoal-500">Maintenance</p>
+                  <p className="text-lg font-semibold text-charcoal-900">{formatCurrency(report.maintenanceExpenses)}</p>
                 </div>
-                <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-xs text-gray-500">Rates</p>
-                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.ratesExpenses)}</p>
+                <div className="bg-charcoal-50 rounded-lg p-4 border border-charcoal-200">
+                  <p className="text-xs text-charcoal-500">Rates</p>
+                  <p className="text-lg font-semibold text-charcoal-900">{formatCurrency(report.ratesExpenses)}</p>
                 </div>
-                <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-xs text-gray-500">Utilities</p>
-                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.utilitiesExpenses)}</p>
+                <div className="bg-charcoal-50 rounded-lg p-4 border border-charcoal-200">
+                  <p className="text-xs text-charcoal-500">Utilities</p>
+                  <p className="text-lg font-semibold text-charcoal-900">{formatCurrency(report.utilitiesExpenses)}</p>
                 </div>
-                <div className="bg-dark-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-xs text-gray-500">Other</p>
-                  <p className="text-lg font-semibold text-slate-900">{formatCurrency(report.otherExpenses)}</p>
+                <div className="bg-charcoal-50 rounded-lg p-4 border border-charcoal-200">
+                  <p className="text-xs text-charcoal-500">Other</p>
+                  <p className="text-lg font-semibold text-charcoal-900">{formatCurrency(report.otherExpenses)}</p>
                 </div>
                 <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/30">
-                  <p className="text-xs text-red-400">Total Expenses</p>
-                  <p className="text-lg font-semibold text-red-400">{formatCurrency(report.totalExpenses)}</p>
+                  <p className="text-xs text-red-500">Total Expenses</p>
+                  <p className="text-lg font-semibold text-red-500">{formatCurrency(report.totalExpenses)}</p>
                 </div>
               </div>
             </div>
 
             {/* Net Income */}
-            <div className="border-t border-gray-700 pt-6">
+            <div className="border-t border-charcoal-200 pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">Net Income</p>
-                  <p className={`text-3xl font-bold ${report.netIncome >= 0 ? 'text-gold-400' : 'text-red-400'}`}>
+                  <p className="text-sm text-charcoal-500">Net Income</p>
+                  <p className={`text-3xl font-bold ${report.netIncome >= 0 ? 'text-lime-600' : 'text-red-500'}`}>
                     {formatCurrency(report.netIncome)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-500">Occupancy Rate</p>
-                  <p className="text-lg font-semibold text-slate-900">{formatPercent(report.occupancyRate)}</p>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-sm text-charcoal-500">Occupancy Rate</p>
+                  <p className="text-lg font-semibold text-charcoal-900">{formatPercent(report.occupancyRate)}</p>
+                  <p className="text-xs text-charcoal-400">
                     {report.occupiedProperties} of {report.totalProperties} properties occupied
                   </p>
                 </div>
@@ -646,12 +659,12 @@ export default function FinancialsPage() {
       )}
 
       {activeTab === 'commissions' && (
-        <Card className="glass-card card-gold-shimmer">
+        <Card className="bg-white border-2 border-charcoal-100 rounded-2xl">
           <CardHeader
             title="Commission Breakdown"
             subtitle="Escrow-based agent commissions from property sales"
             action={
-              <Button variant="outline" className="border-navy-500/30 text-navy-400 hover:bg-navy-500/20" onClick={() => handleExportCSV('commissions')}>
+              <Button variant="outline" className="border-charcoal-200 text-charcoal-700 hover:bg-lime-400/20" onClick={() => handleExportCSV('commissions')}>
                 <Download className="w-4 h-4 mr-2" />
                 Export CSV
               </Button>
@@ -659,45 +672,45 @@ export default function FinancialsPage() {
           />
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-dark-800/50 border-b border-gray-700">
+              <thead className="bg-charcoal-50 border-b border-charcoal-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Property</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Sale Price</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Commission</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Listing Agent</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Introducing Agent</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Platform Fee</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Property</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Sale Price</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Commission</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Listing Agent</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Introducing Agent</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-charcoal-500 uppercase tracking-wider">Platform Fee</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-charcoal-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800">
+              <tbody className="divide-y divide-charcoal-100">
                 {commissions.map((item) => (
-                  <tr key={item.propertyId} className="hover:bg-dark-700/50 transition-colors">
+                  <tr key={item.propertyId} className="hover:bg-charcoal-50 transition-colors">
                     <td className="px-6 py-4">
-                      <span className="font-medium text-slate-900">{item.propertyAddress}</span>
+                      <span className="font-medium text-charcoal-900">{item.propertyAddress}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="font-semibold text-slate-900">{formatCurrency(item.salePrice)}</span>
+                      <span className="font-semibold text-charcoal-900">{formatCurrency(item.salePrice)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span>{formatCurrency(item.totalCommission)}</span>
-                      <span className="text-xs text-gray-500 ml-1">({item.commissionPercent}%)</span>
+                      <span className="text-xs text-charcoal-500 ml-1">({item.commissionPercent}%)</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="text-gold-400 font-medium">{formatCurrency(item.listingAgentShare)}</span>
+                      <span className="text-lime-600 font-medium">{formatCurrency(item.listingAgentShare)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="text-gold-400 font-medium">{formatCurrency(item.introducingAgentShare)}</span>
+                      <span className="text-lime-600 font-medium">{formatCurrency(item.introducingAgentShare)}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="text-gray-500">{formatCurrency(item.platformFee)}</span>
+                      <span className="text-charcoal-500">{formatCurrency(item.platformFee)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium capitalize ${
-                        item.escrowStatus === 'released' ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' :
-                        item.escrowStatus === 'deposited' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                        item.escrowStatus === 'in_verification' ? 'bg-navy-500/20 text-navy-400 border border-navy-500/30' :
-                        'bg-gray-500/20 text-slate-500 border border-gray-500/30'
+                        item.escrowStatus === 'released' ? 'bg-lime-400/20 text-lime-600 border border-lime-400/30' :
+                        item.escrowStatus === 'deposited' ? 'bg-blue-500/20 text-blue-600 border border-blue-500/30' :
+                        item.escrowStatus === 'in_verification' ? 'bg-lime-400/20 text-lime-600 border border-lime-400/30' :
+                        'bg-charcoal-100 text-charcoal-600 border border-charcoal-200'
                       }`}>
                         {item.escrowStatus.replace('_', ' ')}
                       </span>
@@ -709,7 +722,7 @@ export default function FinancialsPage() {
           </div>
           {commissions.length === 0 && (
             <div className="p-12 text-center">
-              <p className="text-gray-500">No commissions found.</p>
+              <p className="text-charcoal-500">No commissions found.</p>
             </div>
           )}
         </Card>
@@ -717,13 +730,13 @@ export default function FinancialsPage() {
 
       {/* Add Expense Modal */}
       {showAddExpense && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-800 border border-gray-700 rounded-2xl w-full max-w-md shadow-2xl">
-            <div className="flex items-center justify-between p-6 border-b border-gray-700">
-              <h2 className="text-xl font-bold text-slate-900 font-serif">Add New Expense</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white border-2 border-charcoal-100 rounded-2xl w-full max-w-md shadow-2xl">
+            <div className="flex items-center justify-between p-6 border-b border-charcoal-200">
+              <h2 className="text-xl font-bold text-charcoal-900 font-serif">Add New Expense</h2>
               <button 
                 onClick={() => setShowAddExpense(false)}
-                className="text-slate-500 hover:text-slate-900 transition-colors"
+                className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -731,11 +744,11 @@ export default function FinancialsPage() {
             
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Property *</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Property *</label>
                 <select
                   value={newExpense.propertyId}
                   onChange={(e) => setNewExpense({...newExpense, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                 >
                   <option value="">Select a property</option>
                   {mockProperties.map((property) => (
@@ -748,11 +761,11 @@ export default function FinancialsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Category *</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Category *</label>
                   <select
                     value={newExpense.category}
                     onChange={(e) => setNewExpense({...newExpense, category: e.target.value as ExpenseCategory})}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                    className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                   >
                     <option value="maintenance">Maintenance</option>
                     <option value="rates">Rates</option>
@@ -764,57 +777,57 @@ export default function FinancialsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Amount *</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Amount *</label>
                   <input
                     type="number"
                     value={newExpense.amount}
                     onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
                     placeholder="0.00"
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                    className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Description *</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Description *</label>
                 <input
                   type="text"
                   value={newExpense.description}
                   onChange={(e) => setNewExpense({...newExpense, description: e.target.value})}
                   placeholder="Enter expense description"
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Vendor</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Vendor</label>
                   <input
                     type="text"
                     value={newExpense.vendor}
                     onChange={(e) => setNewExpense({...newExpense, vendor: e.target.value})}
                     placeholder="Vendor name"
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                    className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Date</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Date</label>
                   <input
                     type="date"
                     value={newExpense.date}
                     onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                    className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Status</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Status</label>
                 <select
                   value={newExpense.status}
                   onChange={(e) => setNewExpense({...newExpense, status: e.target.value as 'pending' | 'paid'})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                 >
                   <option value="pending">Pending</option>
                   <option value="paid">Paid</option>
@@ -822,16 +835,16 @@ export default function FinancialsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-700">
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-charcoal-200">
               <Button 
                 variant="outline" 
-                className="border-gray-600 text-slate-400 hover:bg-dark-700"
+                className="border-charcoal-200 text-charcoal-700 hover:bg-charcoal-50"
                 onClick={() => setShowAddExpense(false)}
               >
                 Cancel
               </Button>
               <Button 
-                className="btn-premium text-gray-900"
+                className="bg-lime-400 text-charcoal-900 rounded-full hover:bg-lime-500"
                 onClick={handleAddExpense}
               >
                 Add Expense
@@ -843,14 +856,14 @@ export default function FinancialsPage() {
 
       {/* Invoice Modal */}
       {showInvoiceModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-800 border border-gray-700 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-700">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white border-2 border-charcoal-100 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-charcoal-200">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-slate-900">Create Invoice</h2>
+                <h2 className="text-xl font-semibold text-charcoal-900">Create Invoice</h2>
                 <button 
                   onClick={() => setShowInvoiceModal(false)}
-                  className="text-slate-500 hover:text-slate-900"
+                  className="text-charcoal-500 hover:text-charcoal-900"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -861,17 +874,17 @@ export default function FinancialsPage() {
               {/* Invoice Number & Status */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Invoice Number</label>
-                  <div className="px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-navy-400 font-medium">
-                    INV-{Date.now().toString().slice(-8)}
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Invoice Number</label>
+                  <div className="px-4 py-3 bg-charcoal-50 border border-charcoal-200 rounded-lg text-lime-600 font-medium">
+                    {invoiceNumber}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Status</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Status</label>
                   <select
                     value={invoiceStatus}
                     onChange={(e) => setInvoiceStatus(e.target.value as 'draft' | 'sent' | 'paid')}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
                   >
                     <option value="draft">Draft</option>
                     <option value="sent">Sent</option>
@@ -883,11 +896,11 @@ export default function FinancialsPage() {
               {/* Property & Tenant Selection */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Property</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Property</label>
                   <select
                     value={selectedProperty}
                     onChange={(e) => setSelectedProperty(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
                   >
                     <option value="">Select Property</option>
                     {mockProperties.map(prop => (
@@ -896,11 +909,11 @@ export default function FinancialsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Tenant</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Tenant</label>
                   <select
                     value={selectedTenant}
                     onChange={(e) => setSelectedTenant(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
                   >
                     <option value="">Select Tenant</option>
                     {mockTenants.map(tenant => (
@@ -913,28 +926,28 @@ export default function FinancialsPage() {
               {/* Dates */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Invoice Date</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Invoice Date</label>
                   <input
                     type="date"
                     value={invoiceDate}
                     onChange={(e) => setInvoiceDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Due Date</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Due Date</label>
                   <input
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                    className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
                   />
                 </div>
               </div>
 
               {/* Line Items */}
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Line Items</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Line Items</label>
                 <div className="space-y-3">
                   {lineItems.map((item, index) => (
                     <div key={index} className="flex gap-3 items-start">
@@ -947,7 +960,7 @@ export default function FinancialsPage() {
                           setLineItems(newItems);
                         }}
                         placeholder="Description"
-                        className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                        className="flex-1 px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
                       />
                       <input
                         type="number"
@@ -958,12 +971,12 @@ export default function FinancialsPage() {
                           setLineItems(newItems);
                         }}
                         placeholder="Amount"
-                        className="w-32 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                        className="w-32 px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
                       />
                       {lineItems.length > 1 && (
                         <button
                           onClick={() => setLineItems(lineItems.filter((_, i) => i !== index))}
-                          className="p-3 text-red-400 hover:text-red-300"
+                          className="p-3 text-red-500 hover:text-red-600"
                         >
                           <X className="w-5 h-5" />
                         </button>
@@ -973,7 +986,7 @@ export default function FinancialsPage() {
                 </div>
                 <button
                   onClick={() => setLineItems([...lineItems, { description: '', amount: 0, type: 'other' }])}
-                  className="mt-3 text-navy-400 hover:text-navy-300 text-sm flex items-center gap-1"
+                  className="mt-3 text-lime-600 hover:text-lime-700 text-sm flex items-center gap-1"
                 >
                   <Plus className="w-4 h-4" />
                   Add Line Item
@@ -982,48 +995,48 @@ export default function FinancialsPage() {
 
               {/* Tax Rate */}
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Tax Rate (%)</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Tax Rate (%)</label>
                 <input
                   type="number"
                   value={taxRate}
                   onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20"
+                  className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20"
                 />
               </div>
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Notes (Optional)</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Notes (Optional)</label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add any notes for the tenant..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 resize-none"
+                  className="w-full px-4 py-3 bg-white border border-charcoal-200 rounded-lg text-charcoal-900 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-lime-400/20 resize-none"
                 />
               </div>
 
               {/* Summary */}
-              <div className="bg-dark-700 rounded-xl p-4 space-y-2">
-                <div className="flex justify-between text-slate-500">
+              <div className="bg-charcoal-50 rounded-xl p-4 space-y-2">
+                <div className="flex justify-between text-charcoal-500">
                   <span>Subtotal</span>
-                  <span className="text-slate-900">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0))}</span>
+                  <span className="text-charcoal-900">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0))}</span>
                 </div>
-                <div className="flex justify-between text-slate-500">
+                <div className="flex justify-between text-charcoal-500">
                   <span>Tax ({taxRate}%)</span>
-                  <span className="text-slate-900">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0) * taxRate / 100)}</span>
+                  <span className="text-charcoal-900">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0) * taxRate / 100)}</span>
                 </div>
-                <div className="border-t border-gray-600 pt-2 flex justify-between text-lg font-semibold">
-                  <span className="text-slate-900">Total</span>
-                  <span className="text-navy-400">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0) * (1 + taxRate / 100))}</span>
+                <div className="border-t border-charcoal-200 pt-2 flex justify-between text-lg font-semibold">
+                  <span className="text-charcoal-900">Total</span>
+                  <span className="text-lime-600">{formatCurrency(lineItems.reduce((sum, item) => sum + (item.amount || 0), 0) * (1 + taxRate / 100))}</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-6 border-t border-gray-700 flex items-center justify-between">
+            <div className="p-6 border-t border-charcoal-200 flex items-center justify-between">
               <Button 
                 variant="outline" 
-                className="border-gray-600 text-slate-400 hover:bg-dark-700"
+                className="border-charcoal-200 text-charcoal-700 hover:bg-charcoal-50"
                 onClick={() => setShowInvoiceModal(false)}
               >
                 Cancel
@@ -1031,7 +1044,7 @@ export default function FinancialsPage() {
               <div className="flex gap-3">
                 <Button 
                   variant="outline"
-                  className="border-gray-600 text-slate-400 hover:bg-dark-700"
+                  className="border-charcoal-200 text-charcoal-700 hover:bg-charcoal-50"
                   onClick={() => {
                     const subtotal = lineItems.reduce((sum, item) => sum + (item.amount || 0), 0);
                     const tax = subtotal * taxRate / 100;
@@ -1062,7 +1075,38 @@ export default function FinancialsPage() {
                   Save Draft
                 </Button>
                 <Button 
-                  className="btn-premium text-gray-900"
+                  className="bg-lime-400 text-charcoal-900 rounded-full hover:bg-lime-500"
+                  onClick={() => {
+                    const subtotal = lineItems.reduce((sum, item) => sum + (item.amount || 0), 0);
+                    const tax = subtotal * taxRate / 100;
+                    const total = subtotal + tax;
+                    const newInvoice = {
+                      id: Date.now(),
+                      invoiceNumber: `INV-${Date.now().toString().slice(-8)}`,
+                      property: selectedProperty || 'N/A',
+                      tenant: selectedTenant || 'N/A',
+                      date: invoiceDate,
+                      dueDate: dueDate,
+                      items: lineItems,
+                      subtotal,
+                      tax,
+                      total,
+                      status: invoiceStatus,
+                      notes
+                    };
+                    setInvoices([...invoices, newInvoice]);
+                    setShowInvoiceModal(false);
+                    setSelectedProperty('');
+                    setSelectedTenant('');
+                    setLineItems([{ description: 'Monthly Rent', amount: 0, type: 'rent' }]);
+                    setNotes('');
+                  }}
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Draft
+                </Button>
+                <Button 
+                  className="bg-lime-400 text-charcoal-900 rounded-full hover:bg-lime-500"
                   onClick={() => {
                     const subtotal = lineItems.reduce((sum, item) => sum + (item.amount || 0), 0);
                     const tax = subtotal * taxRate / 100;
