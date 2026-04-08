@@ -480,6 +480,43 @@ tr:hover {
   animation: float 3s ease-in-out infinite;
 }
 
+/* Additional animation variants */
+.animate-pulse-slow {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 4s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-float-slow {
+  animation: float 5s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+.animate-shimmer-fast {
+  animation: shimmer 1s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Gradient animation */
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientMove 3s ease infinite;
+}
+
+@keyframes gradientMove {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
 .animate-shake {
   animation: shake 0.5s ease-in-out;
 }
