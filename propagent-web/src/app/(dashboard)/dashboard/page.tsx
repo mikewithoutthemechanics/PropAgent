@@ -77,7 +77,7 @@ function PaymentsOverview() {
               <ArrowUpRight className={`w-4 h-4 ${payment.isPrimary ? "text-black/50" : "text-white/50"}`} />
             </div>
             <p className={`text-2xl font-bold mt-3 ${payment.isPrimary ? "text-black" : "text-white"}`}>
-              ${payment.value.toLocaleString()}.00
+              R{payment.value.toLocaleString()}.00
             </p>
             <p className={`text-xs mt-2 ${payment.isPrimary ? "text-black/60" : "text-white/60"}`}>
               {payment.change >= 0 ? "+" : ""}{payment.change}% vs last month
