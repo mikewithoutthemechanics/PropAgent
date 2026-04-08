@@ -16,25 +16,31 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
+// SA Timezone
+const SA_LOCALE = 'en-ZA';
+const SA_TIMEZONE = 'Africa/Johannesburg';
+
 // Format date
 export function formatDate(date: string | Date): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('en-ZA', {
+  return new Intl.DateTimeFormat(SA_LOCALE, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
+    timeZone: SA_TIMEZONE,
   }).format(d);
 }
 
 // Format date with time
 export function formatDateTime(date: string | Date): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('en-ZA', {
+  return new Intl.DateTimeFormat(SA_LOCALE, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: SA_TIMEZONE,
   }).format(d);
 }
 
