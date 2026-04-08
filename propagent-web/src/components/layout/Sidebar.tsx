@@ -110,10 +110,10 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         </div>
         
         <div className="space-y-1">
-          <button className="flex items-center gap-3 px-3 py-2.5 rounded-full text-black hover:bg-gray-100 transition-all cursor-pointer w-full text-sm font-medium">
+          <Link href="/settings" className="flex items-center gap-3 px-3 py-2.5 rounded-full text-black hover:bg-gray-100 transition-all cursor-pointer w-full text-sm font-medium">
             <Settings className="w-5 h-5" />
             <span>Settings</span>
-          </button>
+          </Link>
           <button 
             onClick={handleSignOut}
             className="flex items-center gap-3 px-3 py-2.5 rounded-full text-red-600 hover:bg-red-50 transition-all cursor-pointer w-full text-sm font-medium"
