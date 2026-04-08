@@ -238,7 +238,7 @@ export default function PropertyDetailPage() {
 
           {/* Key Specs */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+            <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
               <div className="p-2 bg-gold-100 rounded-lg">
                 <Bed className="w-5 h-5 text-navy-600" />
               </div>
@@ -247,7 +247,7 @@ export default function PropertyDetailPage() {
                 <p className="text-xs text-slate-500">Bedrooms</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+            <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
               <div className="p-2 bg-gold-100 rounded-lg">
                 <Bath className="w-5 h-5 text-navy-600" />
               </div>
@@ -256,7 +256,7 @@ export default function PropertyDetailPage() {
                 <p className="text-xs text-slate-500">Bathrooms</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+            <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
               <div className="p-2 bg-gold-100 rounded-lg">
                 <Car className="w-5 h-5 text-navy-600" />
               </div>
@@ -266,7 +266,7 @@ export default function PropertyDetailPage() {
               </div>
             </div>
             {property.specs.floorSize && (
-              <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+              <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
                 <div className="p-2 bg-gold-100 rounded-lg">
                   <Maximize className="w-5 h-5 text-navy-600" />
                 </div>
@@ -391,14 +391,14 @@ export default function PropertyDetailPage() {
             <div className="space-y-2">
               <a 
                 href={`tel:${property.agent.phone}`}
-                className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                className="flex items-center gap-2 p-3 bg-charcoal-50 rounded-lg hover:bg-charcoal-100 transition-colors"
               >
                 <Phone className="w-4 h-4 text-navy-500" />
                 <span className="text-sm font-medium text-slate-700">{property.agent.phone}</span>
               </a>
               <a 
                 href={`mailto:${property.agent.email}`}
-                className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                className="flex items-center gap-2 p-3 bg-charcoal-50 rounded-lg hover:bg-charcoal-100 transition-colors"
               >
                 <Mail className="w-4 h-4 text-navy-500" />
                 <span className="text-sm font-medium text-slate-700">{property.agent.email}</span>

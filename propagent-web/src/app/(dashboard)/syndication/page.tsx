@@ -4,10 +4,6 @@ import { useState } from 'react';
 import { 
   Building2, 
   Home, 
-  Facebook, 
-  Instagram, 
-  Twitter, 
-  Linkedin,
   Send,
   CheckCircle2,
   XCircle,
@@ -23,10 +19,10 @@ import { kznSampleProperties } from '@/lib/kzn-sample-properties';
 const platformIcons: Record<SyndicationPlatform, React.ReactNode> = {
   property24: <Building2 className="w-5 h-5" />,
   private_property: <Home className="w-5 h-5" />,
-  facebook: <Facebook className="w-5 h-5" />,
-  instagram: <Instagram className="w-5 h-5" />,
-  twitter: <Twitter className="w-5 h-5" />,
-  linkedin: <Linkedin className="w-5 h-5" />,
+  facebook: <Home className="w-5 h-5" />,
+  instagram: <Home className="w-5 h-5" />,
+  twitter: <Home className="w-5 h-5" />,
+  linkedin: <Home className="w-5 h-5" />,
 };
 
 const platformColors: Record<SyndicationPlatform, string> = {
@@ -111,18 +107,18 @@ export default function SyndicationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-white text-charcoal-900 p-4 md:p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl md:text-4xl font-semibold">Syndication</h1>
-        <p className="text-slate-500 mt-2">Post your properties to multiple platforms at once</p>
+        <h1 className="text-2xl md:text-4xl font-semibold text-charcoal-900">Syndication</h1>
+        <p className="text-charcoal-500 mt-2">Post your properties to multiple platforms at once</p>
       </div>
 
       {/* Platform Configuration */}
-      <Card className="mb-6">
+      <Card className="mb-6 border-2 border-charcoal-100 rounded-2xl">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold">Connect Platforms</h2>
-          <Badge variant="info">API Keys Required</Badge>
+          <h2 className="text-lg font-semibold text-charcoal-900">Connect Platforms</h2>
+          <Badge className="bg-lime-400 text-charcoal-900 rounded-full px-3 py-1 text-xs font-medium">API Keys Required</Badge>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -132,16 +128,16 @@ export default function SyndicationPage() {
               className={cn(
                 "p-4 rounded-xl border-2 transition-all cursor-pointer",
                 selectedPlatforms.has(platform.id)
-                  ? "border-amber-400 bg-amber-50"
-                  : "border-slate-200 hover:border-slate-300"
+                  ? "border-lime-400 bg-lime-400/10"
+                  : "border-charcoal-100 hover:border-charcoal-200 bg-white"
               )}
               onClick={() => togglePlatform(platform.id)}
             >
               <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center mb-3", platformColors[platform.id])}>
                 {platformIcons[platform.id]}
               </div>
-              <h3 className="font-medium text-sm">{platform.name}</h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <h3 className="font-medium text-sm text-charcoal-900">{platform.name}</h3>
+              <p className="text-xs text-charcoal-500 mt-1">
                 {apiKeys[platform.id] ? 'Configured' : 'Click to configure'}
               </p>
             </div>
@@ -150,19 +146,19 @@ export default function SyndicationPage() {
       </Card>
 
       {/* Property Preview */}
-      <Card className="mb-6">
-        <h2 className="text-lg font-semibold mb-4">Property to Syndicate</h2>
-        <div className="flex gap-4 p-4 bg-slate-50 rounded-xl">
-          <div className="w-24 h-20 bg-slate-200 rounded-lg overflow-hidden flex-shrink-0">
+      <Card className="mb-6 border-2 border-charcoal-100 rounded-2xl">
+        <h2 className="text-lg font-semibold mb-4 text-charcoal-900">Property to Syndicate</h2>
+        <div className="flex gap-4 p-4 bg-charcoal-50 rounded-xl">
+          <div className="w-24 h-20 bg-charcoal-200 rounded-lg overflow-hidden flex-shrink-0">
             <img src={sampleProperty.images[0]} alt={sampleProperty.title} className="w-full h-full object-cover" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium">{sampleProperty.title}</h3>
-            <p className="text-sm text-slate-500">R{sampleProperty.price.toLocaleString()}</p>
-            <p className="text-xs text-slate-400 mt-1">
+            <h3 className="font-medium text-charcoal-900">{sampleProperty.title}</h3>
+            <p className="text-sm text-charcoal-500">R{sampleProperty.price.toLocaleString()}</p>
+            <p className="text-xs text-charcoal-400 mt-1">
               {sampleProperty.specs.bedrooms} bed • {sampleProperty.specs.bathrooms} bath • {sampleProperty.specs.garages} garage
             </p>
-            <p className="text-xs text-slate-400">{sampleProperty.location.suburb}, {sampleProperty.location.city}</p>
+            <p className="text-xs text-charcoal-400">{sampleProperty.location.suburb}, {sampleProperty.location.city}</p>
           </div>
         </div>
       </Card>
@@ -172,7 +168,7 @@ export default function SyndicationPage() {
         <Button
           onClick={handlePost}
           disabled={selectedPlatforms.size === 0 || isPosting}
-          className="w-full py-4 text-base bg-navy-500 hover:bg-navy-600 disabled:opacity-50"
+          className="w-full py-4 text-base bg-lime-400 hover:bg-lime-500 text-charcoal-900 disabled:opacity-50 rounded-full font-medium"
         >
           {isPosting ? (
             <>
@@ -190,21 +186,21 @@ export default function SyndicationPage() {
 
       {/* Results */}
       {Object.keys(postResults).length > 0 && (
-        <Card>
-          <h2 className="text-lg font-semibold mb-4">Post Results</h2>
+        <Card className="border-2 border-charcoal-100 rounded-2xl">
+          <h2 className="text-lg font-semibold mb-4 text-charcoal-900">Post Results</h2>
           <div className="space-y-3">
             {Object.entries(postResults).map(([platform, result]) => (
-              <div key={platform} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+              <div key={platform} className="flex items-center justify-between p-3 bg-charcoal-50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", platformColors[platform as SyndicationPlatform])}>
                     {platformIcons[platform as SyndicationPlatform]}
                   </div>
-                  <span className="font-medium capitalize">{platform.replace('_', ' ')}</span>
+                  <span className="font-medium text-charcoal-900 capitalize">{platform.replace('_', ' ')}</span>
                 </div>
                 {result.success ? (
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                    <a href={result.url} target="_blank" rel="noopener noreferrer" className="text-sm text-amber-600 hover:underline flex items-center gap-1">
+                    <CheckCircle2 className="w-5 h-5 text-lime-500" />
+                    <a href={result.url} target="_blank" rel="noopener noreferrer" className="text-sm text-lime-600 hover:underline flex items-center gap-1">
                       View Post <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
@@ -221,9 +217,9 @@ export default function SyndicationPage() {
       )}
 
       {/* Help Text */}
-      <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-        <h4 className="font-medium text-blue-700 mb-2">How to Configure</h4>
-        <ul className="text-sm text-blue-600 space-y-1">
+      <div className="mt-8 p-4 bg-lime-400/10 border-2 border-lime-400/30 rounded-2xl">
+        <h4 className="font-medium text-charcoal-900 mb-2">How to Configure</h4>
+        <ul className="text-sm text-charcoal-600 space-y-1">
           <li>• <strong>Property24:</strong> Contact PropAgent for API access</li>
           <li>• <strong>Private Property:</strong> Contact Private Property for API credentials</li>
           <li>• <strong>Facebook/Instagram:</strong> Create a Meta Business App and get access tokens</li>

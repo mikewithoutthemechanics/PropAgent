@@ -120,19 +120,19 @@ function AddPlanModal({
   };
 
   const inputClasses =
-    "w-full px-4 py-2.5 bg-slate-100 border border-gray-700 rounded-lg text-slate-900 placeholder-gray-400 text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/20 transition-colors";
+    "w-full px-4 py-2.5 bg-white border-2 border-charcoal-100 rounded-xl text-charcoal-900 placeholder-charcoal-400 text-sm focus:outline-none focus:border-lime-400 focus:ring-1 focus:ring-lime-400/20 transition-colors";
 
-  const labelClasses = "block text-sm font-medium text-slate-400 mb-1.5";
+  const labelClasses = "block text-sm font-medium text-charcoal-500 mb-1.5";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-gray-900 border border-gray-800 rounded-xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">Add New Pricing Plan</h2>
+      <div className="absolute inset-0 bg-charcoal-900/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-white border-2 border-charcoal-100 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-charcoal-100 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-charcoal-900">Add New Pricing Plan</h2>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-1.5 text-charcoal-500 hover:text-charcoal-900 hover:bg-charcoal-100 rounded-lg transition-colors"
             aria-label="Close modal"
           >
             <XIcon className="w-5 h-5" />
@@ -235,9 +235,9 @@ function AddPlanModal({
               type="checkbox"
               checked={formData.popular}
               onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
-              className="w-4 h-4 rounded border-gray-700 bg-slate-100 text-gold-500 focus:ring-gold-500 focus:ring-offset-gray-900"
+              className="w-4 h-4 rounded border-charcoal-100 bg-white text-lime-400 focus:ring-lime-400 focus:ring-offset-white"
             />
-            <label htmlFor="popular" className="text-sm text-slate-400">
+            <label htmlFor="popular" className="text-sm text-charcoal-500">
               Mark as Most Popular
             </label>
           </div>
@@ -246,13 +246,13 @@ function AddPlanModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 border border-gray-700 text-slate-400 rounded-lg hover:bg-slate-100 transition-colors"
+              className="flex-1 px-4 py-2.5 border-2 border-charcoal-100 text-charcoal-500 rounded-xl hover:bg-charcoal-100 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2.5 bg-gold-500 hover:bg-gold-600 text-gray-900 font-medium rounded-lg transition-colors"
+              className="flex-1 px-4 py-2.5 bg-lime-400 hover:bg-lime-500 text-charcoal-900 font-medium rounded-full transition-colors"
             >
               Add Plan
             </button>
@@ -278,14 +278,14 @@ export default function PricingPage() {
           <div />
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500 hover:bg-gold-600 text-gray-900 font-medium rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-lime-400 hover:bg-lime-500 text-charcoal-900 font-medium rounded-full transition-colors"
           >
             <Plus className="w-4 h-4" />
             Add Plan
           </button>
         </div>
-        <h1 className="text-3xl font-semibold text-gray-900">Simple, transparent pricing</h1>
-        <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-3xl font-semibold text-charcoal-900">Simple, transparent pricing</h1>
+        <p className="mt-4 text-charcoal-500 max-w-2xl mx-auto">
           Choose the plan that fits your property management needs. All plans include a 14-day free trial.
         </p>
       </div>
@@ -294,33 +294,33 @@ export default function PricingPage() {
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`relative bg-white rounded-xl border ${
-              plan.popular ? 'border-gold-500 shadow-lg shadow-gold-500/20' : 'border-gray-200'
+            className={`relative bg-white rounded-2xl border-2 ${
+              plan.popular ? 'border-lime-400 shadow-lg shadow-lime-400/20' : 'border-charcoal-100'
             }`}
           >
             {plan.popular && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="bg-gold-500 text-gray-900 text-sm font-medium px-3 py-1 rounded-full">
+                <span className="bg-lime-400 text-charcoal-900 text-sm font-medium px-3 py-1 rounded-full">
                   Most Popular
                 </span>
               </div>
             )}
 
             <div className="p-6">
-              <h3 className="text-xl font-semibold text-gray-900">{plan.name}</h3>
-              <p className="mt-2 text-gray-600 text-sm">{plan.description}</p>
+              <h3 className="text-xl font-semibold text-charcoal-900">{plan.name}</h3>
+              <p className="mt-2 text-charcoal-500 text-sm">{plan.description}</p>
 
               <div className="mt-6">
-                <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                {plan.period && <span className="text-gray-500">{plan.period}</span>}
+                <span className="text-4xl font-bold text-charcoal-900">{plan.price}</span>
+                {plan.period && <span className="text-charcoal-500">{plan.period}</span>}
               </div>
 
               <Link
                 href="/register"
-                className={`mt-6 block w-full py-3 px-4 rounded-lg font-medium text-center transition-colors cursor-pointer ${
+                className={`mt-6 block w-full py-3 px-4 rounded-full font-medium text-center transition-colors cursor-pointer ${
                   plan.popular
-                    ? 'bg-gold-500 hover:bg-gold-600 text-gray-900'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
+                    ? 'bg-lime-400 hover:bg-lime-500 text-charcoal-900'
+                    : 'bg-white border-2 border-charcoal-100 hover:bg-charcoal-100 text-charcoal-900'
                 }`}
               >
                 {plan.cta}
@@ -330,11 +330,11 @@ export default function PricingPage() {
                 {plan.features.map((feature) => (
                   <div key={feature.name} className="flex items-center gap-3">
                     {feature.included ? (
-                      <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-lime-500 flex-shrink-0" />
                     ) : (
-                      <X className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                      <X className="w-5 h-5 text-charcoal-400 flex-shrink-0" />
                     )}
-                    <span className={feature.included ? 'text-gray-700' : 'text-slate-500'}>
+                    <span className={feature.included ? 'text-charcoal-700' : 'text-charcoal-500'}>
                       {feature.name}
                     </span>
                   </div>
@@ -345,24 +345,24 @@ export default function PricingPage() {
         ))}
       </div>
 
-      <div className="mt-16 bg-gray-50 rounded-xl p-8">
-        <h3 className="text-xl font-semibold text-gray-900">Frequently asked questions</h3>
+      <div className="mt-16 bg-white border-2 border-charcoal-100 rounded-2xl p-8">
+        <h3 className="text-xl font-semibold text-charcoal-900">Frequently asked questions</h3>
         <div className="mt-6 grid md:grid-cols-2 gap-6">
           <div>
-            <h4 className="font-medium text-gray-900">Can I change plans anytime?</h4>
-            <p className="mt-2 text-gray-600">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+            <h4 className="font-medium text-charcoal-900">Can I change plans anytime?</h4>
+            <p className="mt-2 text-charcoal-500">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
           </div>
           <div>
-            <h4 className="font-medium text-gray-900">Is there a free trial?</h4>
-            <p className="mt-2 text-gray-600">Yes, all paid plans include a 14-day free trial. No credit card required.</p>
+            <h4 className="font-medium text-charcoal-900">Is there a free trial?</h4>
+            <p className="mt-2 text-charcoal-500">Yes, all paid plans include a 14-day free trial. No credit card required.</p>
           </div>
           <div>
-            <h4 className="font-medium text-gray-900">What payment methods do you accept?</h4>
-            <p className="mt-2 text-gray-600">We accept all major credit cards, EFT, and bank transfers for annual plans.</p>
+            <h4 className="font-medium text-charcoal-900">What payment methods do you accept?</h4>
+            <p className="mt-2 text-charcoal-500">We accept all major credit cards, EFT, and bank transfers for annual plans.</p>
           </div>
           <div>
-            <h4 className="font-medium text-gray-900">Can I get a refund?</h4>
-            <p className="mt-2 text-gray-600">Yes, we offer a 30-day money-back guarantee on all plans.</p>
+            <h4 className="font-medium text-charcoal-900">Can I get a refund?</h4>
+            <p className="mt-2 text-charcoal-500">Yes, we offer a 30-day money-back guarantee on all plans.</p>
           </div>
         </div>
       </div>

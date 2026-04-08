@@ -48,28 +48,28 @@ import { cn } from '@/lib/utils';
 function AnimatedBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-navy-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
     </div>
   );
 }
 
 function FloatingParticles() {
-  const particles = Array.from({ length: 20 }, (_, i) => ({
+  const particles = useMemo(() => Array.from({ length: 20 }, (_, i) => ({
     id: i,
     size: Math.random() * 4 + 2,
     x: Math.random() * 100,
     y: Math.random() * 100,
     duration: Math.random() * 20 + 10,
     delay: Math.random() * 5,
-  }));
+  })), []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {particles.map((p) => (
         <div
           key={p.id}
-          className="absolute rounded-full bg-gradient-to-r from-navy-400 to-yellow-400"
+          className="absolute rounded-full bg-gradient-to-r from-lime-400 to-lime-400"
           style={{
             width: p.size,
             height: p.size,
@@ -236,11 +236,11 @@ export default function DocumentsPage() {
     };
     
     const badgeClass = {
-      active: "glass glass-card bg-gold-500/20 text-gold-300 border-gold-500/30",
-      expiring_soon: "glass glass-card bg-orange-500/20 text-orange-300 border-orange-500/30",
-      expired: "glass glass-card bg-red-500/20 text-red-300 border-red-500/30",
-      pending: "glass glass-card bg-navy-500/20 text-gold-300 border-navy-500/30",
-      archived: "glass glass-card bg-slate-500/20 text-slate-500 border-slate-500/30",
+      active: "bg-white border-2 border-charcoal-100 rounded-2xl bg-lime-400/20 text-lime-400 border-lime-400/30",
+      expiring_soon: "bg-white border-2 border-charcoal-100 rounded-2xl bg-lime-400/20 text-lime-400 border-lime-400/30",
+      expired: "bg-white border-2 border-charcoal-100 rounded-2xl bg-lime-400/20 text-lime-400 border-lime-400/30",
+      pending: "bg-white border-2 border-charcoal-100 rounded-2xl bg-lime-400/20 text-lime-400 border-lime-400/30",
+      archived: "bg-white border-2 border-charcoal-100 rounded-2xl bg-lime-400/20 text-lime-400 border-lime-400/30",
     };
 
     return (
@@ -262,28 +262,28 @@ export default function DocumentsPage() {
   ];
 
   const statCards = [
-    { icon: <FileText className="w-5 h-5 text-blue-400" />, value: stats.total, label: 'Total Docs', color: 'blue' },
-    { icon: <File className="w-5 h-5 text-navy-400" />, value: stats.leases, label: 'Leases', color: 'amber' },
-    { icon: <AlertTriangle className="w-5 h-5 text-orange-400" />, value: stats.expiringSoon, label: 'Expiring Soon', color: 'orange' },
-    { icon: <AlertTriangle className="w-5 h-5 text-red-400" />, value: stats.expired, label: 'Expired', color: 'red' },
-    { icon: <Shield className="w-5 h-5 text-gold-400" />, value: stats.idDocuments, label: 'ID Documents', color: 'emerald' },
+    { icon: <FileText className="w-5 h-5 text-lime-400" />, value: stats.total, label: 'Total Docs', color: 'lime' },
+    { icon: <File className="w-5 h-5 text-lime-400" />, value: stats.leases, label: 'Leases', color: 'lime' },
+    { icon: <AlertTriangle className="w-5 h-5 text-lime-400" />, value: stats.expiringSoon, label: 'Expiring Soon', color: 'lime' },
+    { icon: <AlertTriangle className="w-5 h-5 text-lime-400" />, value: stats.expired, label: 'Expired', color: 'lime' },
+    { icon: <Shield className="w-5 h-5 text-lime-400" />, value: stats.idDocuments, label: 'ID Documents', color: 'lime' },
   ];
 
   return (
     <div ref={pageRef} className="space-y-6 relative">
       {/* Animated Gradient Header */}
-      <div className="gradient-header relative rounded-2xl p-6 overflow-hidden">
+      <div className="bg-gradient-to-r from-lime-400 via-lime-400 to-lime-400 relative rounded-2xl p-6 overflow-hidden">
         <AnimatedBackground />
         <FloatingParticles />
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 text-gradient-gold">Document Management</h1>
-              <p className="text-slate-500 mt-1">
+              <h1 className="text-3xl font-bold text-charcoal-900">Document Management</h1>
+              <p className="text-charcoal-600 mt-1">
                 Secure storage for leases, contracts & property documents
               </p>
             </div>
-            <Button className="glow-gold hover:scale-105 transition-transform duration-300" onClick={() => setShowUploadModal(true)}>
+            <Button className="bg-lime-400 text-charcoal-900 hover:bg-lime-500 transition-transform duration-300 rounded-full font-medium" onClick={() => setShowUploadModal(true)}>
               <Upload className="w-4 h-4 mr-1.5" />
               Upload Document
             </Button>
@@ -297,18 +297,18 @@ export default function DocumentsPage() {
           <div 
             key={stat.label} 
             className={cn(
-              "glass-card hover-3d-card rounded-xl p-4 border border-navy-500/20",
+              "bg-white border-2 border-charcoal-100 rounded-2xl hover-3d-card rounded-xl p-4 border border-charcoal-100",
               isVisible && "animate-on-scroll"
             )}
             style={{ animationDelay: `${idx * 100}ms` }}
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg glass flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-white/50 border-2 border-charcoal-100 rounded-2xl flex items-center justify-center">
                 {stat.icon}
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-                <p className="text-xs text-slate-500">{stat.label}</p>
+                <p className="text-2xl font-bold text-charcoal-900">{stat.value}</p>
+                <p className="text-xs text-charcoal-500">{stat.label}</p>
               </div>
             </div>
           </div>
@@ -316,17 +316,17 @@ export default function DocumentsPage() {
       </div>
 
       {/* Filters Row */}
-      <div className={cn("glass-card rounded-xl p-4 border border-navy-500/20", isVisible && "animate-on-scroll visible delay-200")}>
+      <div className={cn("bg-white border-2 border-charcoal-100 rounded-2xl rounded-xl p-4 border border-charcoal-100", isVisible && "animate-on-scroll visible delay-200")}>
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-navy-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-lime-400" />
               <input
                 type="text"
                 placeholder="Search documents..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-navy-500/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 text-slate-900 placeholder-slate-400"
+                className="w-full pl-10 pr-4 py-2 bg-charcoal-100/50 border border-charcoal-300/30 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-lime-400 text-charcoal-900 placeholder-charcoal-400"
               />
             </div>
           </div>
@@ -339,8 +339,8 @@ export default function DocumentsPage() {
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300",
                   selectedCategory === cat.value
-                    ? "bg-gradient-to-r from-navy-500 to-yellow-500 text-slate-900 shadow-lg glow-gold"
-                    : "bg-slate-100/50 text-slate-500 hover:bg-slate-50/50 border border-navy-500/20"
+                    ? "bg-gradient-to-r from-lime-400 to-lime-400 text-charcoal-900 shadow-lg"
+                    : "bg-charcoal-100/50 text-charcoal-500 hover:bg-charcoal-50/50 border border-charcoal-100"
                 )}
               >
                 {cat.label} ({cat.count})
@@ -348,15 +348,15 @@ export default function DocumentsPage() {
             ))}
           </div>
           
-          <label className="flex items-center gap-2 px-3 py-2 glass rounded-lg cursor-pointer border border-orange-500/30">
+          <label className="flex items-center gap-2 px-3 py-2 bg-white/50 border-2 border-charcoal-100 rounded-2xl rounded-lg cursor-pointer border border-lime-400/30">
             <input
               type="checkbox"
               checked={showExpiringOnly}
               onChange={(e) => setShowExpiringOnly(e.target.checked)}
-              className="w-4 h-4 text-orange-500"
+              className="w-4 h-4 text-lime-500"
             />
-            <AlertTriangle className="w-4 h-4 text-orange-400" />
-            <span className="text-sm font-medium text-orange-400">Expiring Soon</span>
+            <AlertTriangle className="w-4 h-4 text-lime-400" />
+            <span className="text-sm font-medium text-lime-400">Expiring Soon</span>
           </label>
         </div>
       </div>
@@ -364,64 +364,64 @@ export default function DocumentsPage() {
       {/* Document List */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* List */}
-        <div className={cn("glass-card rounded-xl overflow-hidden border border-navy-500/20 lg:col-span-2", isVisible && "animate-on-scroll visible delay-300")}>
+        <div className={cn("bg-white border-2 border-charcoal-100 rounded-2xl rounded-xl overflow-hidden border border-charcoal-100 lg:col-span-2", isVisible && "animate-on-scroll visible delay-300")}>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-100/50 border-b border-navy-500/20">
+              <thead className="bg-charcoal-100/50 border-b border-charcoal-100">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Document</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Property</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Category</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Expiry</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-lime-400 uppercase">Document</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-lime-400 uppercase">Property</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-lime-400 uppercase">Category</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-lime-400 uppercase">Expiry</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-lime-400 uppercase">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-navy-500/10">
+              <tbody className="divide-y divide-charcoal-100">
                 {filteredDocs.map(doc => (
                   <tr 
                     key={doc.id} 
                     className={cn(
-                      "hover:bg-slate-100/30 cursor-pointer transition-colors",
-                      selectedDoc === doc.id && "bg-navy-500/10"
+                      "hover:bg-charcoal-100/30 cursor-pointer transition-colors",
+                      selectedDoc === doc.id && "bg-charcoal-100/10"
                     )}
                     onClick={() => setSelectedDoc(doc.id)}
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded glass flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-navy-400" />
+                        <div className="w-8 h-8 rounded-lg bg-white/50 border-2 border-charcoal-100 rounded-2xl flex items-center justify-center">
+                          <FileText className="w-4 h-4 text-lime-400" />
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900 text-sm">{doc.title}</p>
-                          <p className="text-xs text-slate-500">{formatFileSize(doc.fileSize)}</p>
+                          <p className="font-medium text-charcoal-900 text-sm">{doc.title}</p>
+                          <p className="text-xs text-charcoal-500">{formatFileSize(doc.fileSize)}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="text-sm text-slate-500">{doc.propertyAddress}</p>
+                      <p className="text-sm text-charcoal-500">{doc.propertyAddress}</p>
                       {doc.tenantName && (
-                        <p className="text-xs text-slate-500 flex items-center gap-1">
+                        <p className="text-xs text-charcoal-500 flex items-center gap-1">
                           <User className="w-3 h-3" /> {doc.tenantName}
                         </p>
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs font-medium text-navy-400 bg-navy-500/10 px-2 py-1 rounded glass">
+                      <span className="text-xs font-medium text-lime-400 bg-lime-400/10 px-2 py-1 rounded-lg bg-white/50 border-2 border-charcoal-100">
                         {getCategoryLabel(doc.category)}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       {doc.endDate ? (
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-charcoal-500">
                           {new Date(doc.endDate).toLocaleDateString('en-ZA')}
                           {getDaysUntilExpiry(doc) !== null && getDaysUntilExpiry(doc)! <= 30 && (
-                            <span className="ml-2 text-xs text-orange-400 font-medium">
+                            <span className="ml-2 text-xs text-lime-400 font-medium">
                               ({getDaysUntilExpiry(doc)} days)
                             </span>
                           )}
                         </p>
                       ) : (
-                        <span className="text-xs text-slate-600">—</span>
+                        <span className="text-xs text-charcoal-600">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -435,30 +435,30 @@ export default function DocumentsPage() {
           
           {filteredDocs.length === 0 && (
             <EmptyState
-              icon={<FileText className="w-8 h-8 text-slate-600" />}
+              icon={<FileText className="w-8 h-8 text-charcoal-600" />}
               title="No documents found"
               description="Try adjusting your filters or upload new documents"
-              action={<Button size="sm" className="glow-gold">Upload Document</Button>}
+              action={<Button size="sm" className="bg-lime-400 rounded-full">Upload Document</Button>}
             />
           )}
         </div>
 
         {/* Detail Panel */}
-        <div className={cn("glass-card rounded-xl p-4 border border-navy-500/20", isVisible && "animate-on-scroll visible delay-400")}>
+        <div className={cn("bg-white border-2 border-charcoal-100 rounded-2xl rounded-xl p-4 border border-charcoal-100", isVisible && "animate-on-scroll visible delay-400")}>
           {selectedDocData ? (
             <div className="space-y-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg glass flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-navy-400" />
+                  <div className="w-12 h-12 rounded-lg bg-white/50 border-2 border-charcoal-100 rounded-2xl flex items-center justify-center">
+                    <FileText className="w-6 h-6 text-lime-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">{selectedDocData.title}</h3>
-                    <p className="text-xs text-slate-500">{selectedDocData.fileName}</p>
+                    <h3 className="font-semibold text-charcoal-900">{selectedDocData.title}</h3>
+                    <p className="text-xs text-charcoal-500">{selectedDocData.fileName}</p>
                   </div>
                 </div>
-                <button className="p-2 hover:bg-slate-100/50 rounded-lg transition-colors">
-                  <MoreVertical className="w-4 h-4 text-slate-500" />
+                <button className="p-2 hover:bg-charcoal-100/50 rounded-lg transition-colors">
+                  <MoreVertical className="w-4 h-4 text-charcoal-500" />
                 </button>
               </div>
 
@@ -466,26 +466,26 @@ export default function DocumentsPage() {
                 {getStatusBadge(getDocumentStatus(selectedDocData))}
               </div>
 
-              <div className="space-y-3 border-t border-navy-500/20 pt-4">
+              <div className="space-y-3 border-t border-charcoal-100 pt-4">
                 <div className="flex items-center gap-2 text-sm">
-                  <Building className="w-4 h-4 text-navy-400" />
-                  <span className="text-slate-500">Property:</span>
-                  <span className="font-medium text-slate-900">{selectedDocData.propertyAddress}</span>
+                  <Building className="w-4 h-4 text-lime-400" />
+                  <span className="text-charcoal-500">Property:</span>
+                  <span className="font-medium text-charcoal-900">{selectedDocData.propertyAddress}</span>
                 </div>
                 
                 {selectedDocData.tenantName && (
                   <div className="flex items-center gap-2 text-sm">
-                    <User className="w-4 h-4 text-navy-400" />
-                    <span className="text-slate-500">Tenant:</span>
-                    <span className="font-medium text-slate-900">{selectedDocData.tenantName}</span>
+                    <User className="w-4 h-4 text-lime-400" />
+                    <span className="text-charcoal-500">Tenant:</span>
+                    <span className="font-medium text-charcoal-900">{selectedDocData.tenantName}</span>
                   </div>
                 )}
 
                 {selectedDocData.startDate && (
                   <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="w-4 h-4 text-navy-400" />
-                    <span className="text-slate-500">Lease Period:</span>
-                    <span className="font-medium text-slate-900">
+                    <Calendar className="w-4 h-4 text-lime-400" />
+                    <span className="text-charcoal-500">Lease Period:</span>
+                    <span className="font-medium text-charcoal-900">
                       {new Date(selectedDocData.startDate).toLocaleDateString('en-ZA')} - {new Date(selectedDocData.endDate!).toLocaleDateString('en-ZA')}
                     </span>
                   </div>
@@ -493,25 +493,25 @@ export default function DocumentsPage() {
 
                 {selectedDocData.monthlyRent && (
                   <div className="flex items-center gap-2 text-sm">
-                    <DollarSign className="w-4 h-4 text-navy-400" />
-                    <span className="text-slate-500">Monthly Rent:</span>
-                    <span className="font-medium text-slate-900">R{selectedDocData.monthlyRent.toLocaleString()}</span>
+                    <DollarSign className="w-4 h-4 text-lime-400" />
+                    <span className="text-charcoal-500">Monthly Rent:</span>
+                    <span className="font-medium text-charcoal-900">R{selectedDocData.monthlyRent.toLocaleString()}</span>
                   </div>
                 )}
 
                 <div className="flex items-center gap-2 text-sm">
-                  <Clock className="w-4 h-4 text-navy-400" />
-                  <span className="text-slate-500">Uploaded:</span>
-                  <span className="font-medium text-slate-900">
+                  <Clock className="w-4 h-4 text-lime-400" />
+                  <span className="text-charcoal-500">Uploaded:</span>
+                  <span className="font-medium text-charcoal-900">
                     {new Date(selectedDocData.uploadedAt).toLocaleDateString('en-ZA')}
                   </span>
                 </div>
 
                 {selectedDocData.lastReviewedAt && (
                   <div className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-navy-400" />
-                    <span className="text-slate-500">Last Reviewed:</span>
-                    <span className="font-medium text-slate-900">
+                    <CheckCircle className="w-4 h-4 text-lime-400" />
+                    <span className="text-charcoal-500">Last Reviewed:</span>
+                    <span className="font-medium text-charcoal-900">
                       {new Date(selectedDocData.lastReviewedAt).toLocaleDateString('en-ZA')}
                     </span>
                   </div>
@@ -519,42 +519,42 @@ export default function DocumentsPage() {
               </div>
 
               {selectedDocData.versions.length > 1 && (
-                <div className="border-t border-navy-500/20 pt-4">
-                  <h4 className="text-sm font-medium text-navy-400 mb-2">Version History</h4>
+                <div className="border-t border-charcoal-100 pt-4">
+                  <h4 className="text-sm font-medium text-lime-400 mb-2">Version History</h4>
                   <div className="space-y-2">
                     {selectedDocData.versions.map((v, i) => (
                       <div key={v.version} className="flex items-center justify-between text-xs">
-                        <span className="text-slate-500">v{v.version}</span>
-                        <span className="text-slate-600">{new Date(v.uploadedAt).toLocaleDateString('en-ZA')}</span>
+                        <span className="text-charcoal-500">v{v.version}</span>
+                        <span className="text-charcoal-600">{new Date(v.uploadedAt).toLocaleDateString('en-ZA')}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              <div className="flex gap-2 border-t border-navy-500/20 pt-4">
+              <div className="flex gap-2 border-t border-charcoal-100 pt-4">
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="flex-1 gap-1 glass hover:bg-navy-500/20"
+                  className="flex-1 gap-1 bg-white/50 border-2 border-charcoal-100 rounded-2xl hover:bg-lime-400/20"
                   onClick={() => handleViewDocument(selectedDocData)}
                 >
-                  <Eye className="w-4 h-4 text-navy-400" />
+                  <Eye className="w-4 h-4 text-lime-400" />
                   View
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="flex-1 gap-1 glass hover:bg-navy-500/20"
+                  className="flex-1 gap-1 bg-white/50 border-2 border-charcoal-100 rounded-2xl hover:bg-lime-400/20"
                   onClick={() => handleDownloadDocument(selectedDocData)}
                 >
-                  <Download className="w-4 h-4 text-navy-400" />
+                  <Download className="w-4 h-4 text-lime-400" />
                   Download
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="gap-1 glass hover:bg-red-500/20 text-red-400"
+                  className="gap-1 bg-white/50 border-2 border-charcoal-100 rounded-2xl hover:bg-lime-400/20 text-lime-400"
                   onClick={() => {
                     setDeletingDocId(selectedDocData.id);
                     setShowDeleteConfirm(true);
@@ -566,20 +566,20 @@ export default function DocumentsPage() {
             </div>
           ) : (
             <div className="py-12 text-center">
-              <FolderOpen className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-              <p className="text-slate-500">Select a document to view details</p>
+              <FolderOpen className="w-12 h-12 text-charcoal-600 mx-auto mb-3" />
+              <p className="text-charcoal-500">Select a document to view details</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Info Banner */}
-      <div className={cn("glass p-4 rounded-xl border border-navy-500/20", isVisible && "animate-on-scroll visible delay-500")}>
+      <div className={cn("bg-white p-4 rounded-xl border border-charcoal-100", isVisible && "animate-on-scroll visible delay-500")}>
         <div className="flex items-start gap-3">
-          <Shield className="w-5 h-5 text-navy-400 flex-shrink-0 mt-0.5" />
+          <Shield className="w-5 h-5 text-lime-400 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-slate-900">Secure Document Storage</p>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="font-medium text-charcoal-900">Secure Document Storage</p>
+            <p className="text-sm text-charcoal-500 mt-1">
               All documents are encrypted at rest. Lease agreements automatically trigger expiry alerts at 30, 14, 7, and 1 day(s) before expiration. 
               ID documents are stored with the highest security level and are only accessible to authorized agents.
             </p>
@@ -591,11 +591,11 @@ export default function DocumentsPage() {
       {showUploadModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-dark-800 border border-gray-700 rounded-2xl w-full max-w-md shadow-2xl">
-            <div className="flex items-center justify-between p-6 border-b border-gray-700">
-              <h2 className="text-xl font-bold text-slate-900 font-serif">Upload Document</h2>
+            <div className="flex items-center justify-between p-6 border-b border-charcoal-700">
+              <h2 className="text-xl font-bold text-charcoal-900 font-serif">Upload Document</h2>
               <button 
                 onClick={() => setShowUploadModal(false)}
-                className="text-slate-500 hover:text-slate-900 transition-colors"
+                className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -603,22 +603,22 @@ export default function DocumentsPage() {
             
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Document Title *</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Document Title *</label>
                 <input
                   type="text"
                   value={newDocument.title}
                   onChange={(e) => setNewDocument({...newDocument, title: e.target.value})}
                   placeholder="e.g., Lease Agreement - Unit 4B"
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-charcoal-800 border border-charcoal-600 rounded-lg text-charcoal-900 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Category *</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Category *</label>
                 <select
                   value={newDocument.category}
                   onChange={(e) => setNewDocument({...newDocument, category: e.target.value as DocumentCategory})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-charcoal-800 border border-charcoal-600 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                 >
                   <option value="lease">Lease Agreement</option>
                   <option value="id">ID Document</option>
@@ -631,11 +631,11 @@ export default function DocumentsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Property *</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Property *</label>
                 <select
                   value={newDocument.propertyId}
                   onChange={(e) => setNewDocument({...newDocument, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-charcoal-800 border border-charcoal-600 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                 >
                   <option value="">Select a property</option>
                   {mockProperties.map((property) => (
@@ -647,47 +647,47 @@ export default function DocumentsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Expiry Date (optional)</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Expiry Date (optional)</label>
                 <input
                   type="date"
                   value={newDocument.expiryDate}
                   onChange={(e) => setNewDocument({...newDocument, expiryDate: e.target.value})}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50"
+                  className="w-full px-4 py-3 bg-charcoal-800 border border-charcoal-600 rounded-lg text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Notes (optional)</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Notes (optional)</label>
                 <textarea
                   value={newDocument.notes}
                   onChange={(e) => setNewDocument({...newDocument, notes: e.target.value})}
                   placeholder="Additional notes..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg text-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500/50 resize-none"
+                  className="w-full px-4 py-3 bg-charcoal-800 border border-charcoal-600 rounded-lg text-charcoal-900 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-lime-400/20 focus:border-lime-400/50 resize-none"
                 />
               </div>
 
-              <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
-                <FileIcon className="w-10 h-10 text-gray-500 mx-auto mb-3" />
-                <p className="text-slate-500 text-sm">
+              <div className="border-2 border-dashed border-charcoal-600 rounded-lg p-8 text-center">
+                <FileIcon className="w-10 h-10 text-charcoal-500 mx-auto mb-3" />
+                <p className="text-charcoal-500 text-sm">
                   Drag and drop files here, or click to browse
                 </p>
-                <p className="text-gray-500 text-xs mt-2">
+                <p className="text-charcoal-500 text-xs mt-2">
                   PDF, DOC, DOCX, JPG, PNG (max 10MB)
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-700">
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-charcoal-700">
               <Button 
                 variant="outline" 
-                className="border-gray-600 text-slate-400 hover:bg-dark-700"
+                className="border-charcoal-600 text-charcoal-400 hover:bg-charcoal-700 bg-lime-400 rounded-full"
                 onClick={() => setShowUploadModal(false)}
               >
                 Cancel
               </Button>
               <Button 
-                className="glow-gold"
+                className="bg-lime-400 rounded-full"
                 onClick={handleUploadDocument}
               >
                 <Upload className="w-4 h-4 mr-2" />
@@ -704,17 +704,17 @@ export default function DocumentsPage() {
           <div className="bg-dark-800 border border-gray-700 rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b border-gray-700">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg glass flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-navy-400" />
+                <div className="w-10 h-10 rounded-lg bg-white/50 border-2 border-charcoal-100 rounded-2xl flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-lime-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900 font-serif">{viewingDoc.title}</h2>
-                  <p className="text-sm text-slate-500">{viewingDoc.fileName}</p>
+                  <h2 className="text-xl font-bold text-charcoal-900 font-serif">{viewingDoc.title}</h2>
+                  <p className="text-sm text-charcoal-500">{viewingDoc.fileName}</p>
                 </div>
               </div>
               <button 
                 onClick={() => setShowViewModal(false)}
-                className="text-slate-500 hover:text-slate-900 transition-colors"
+                className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -722,44 +722,44 @@ export default function DocumentsPage() {
             
             <div className="p-6 overflow-y-auto max-h-[60vh]">
               {/* Document Preview Placeholder */}
-              <div className="bg-dark-900 border border-dark-700 rounded-lg p-8 text-center mb-6">
-                <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-slate-500">Document Preview</p>
-                <p className="text-sm text-gray-500 mt-2">
+              <div className="bg-charcoal-900 border border-charcoal-700 rounded-lg p-8 text-center mb-6">
+                <FileText className="w-16 h-16 text-charcoal-600 mx-auto mb-4" />
+                <p className="text-charcoal-500">Document Preview</p>
+                <p className="text-sm text-charcoal-500 mt-2">
                   {viewingDoc.mimeType} • {formatFileSize(viewingDoc.fileSize)}
                 </p>
               </div>
 
               {/* Document Details */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-dark-800/50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Property</p>
-                  <p className="text-sm font-medium text-slate-900">{viewingDoc.propertyAddress}</p>
+                <div className="p-4 bg-charcoal-800/50 rounded-lg">
+                  <p className="text-xs text-charcoal-500 mb-1">Property</p>
+                  <p className="text-sm font-medium text-charcoal-900">{viewingDoc.propertyAddress}</p>
                 </div>
-                <div className="p-4 bg-dark-800/50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Category</p>
-                  <p className="text-sm font-medium text-slate-900">{getCategoryLabel(viewingDoc.category)}</p>
+                <div className="p-4 bg-charcoal-800/50 rounded-lg">
+                  <p className="text-xs text-charcoal-500 mb-1">Category</p>
+                  <p className="text-sm font-medium text-charcoal-900">{getCategoryLabel(viewingDoc.category)}</p>
                 </div>
-                <div className="p-4 bg-dark-800/50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Uploaded By</p>
-                  <p className="text-sm font-medium text-slate-900">{viewingDoc.uploadedBy}</p>
+                <div className="p-4 bg-charcoal-800/50 rounded-lg">
+                  <p className="text-xs text-charcoal-500 mb-1">Uploaded By</p>
+                  <p className="text-sm font-medium text-charcoal-900">{viewingDoc.uploadedBy}</p>
                 </div>
-                <div className="p-4 bg-dark-800/50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Upload Date</p>
-                  <p className="text-sm font-medium text-slate-900">
+                <div className="p-4 bg-charcoal-800/50 rounded-lg">
+                  <p className="text-xs text-charcoal-500 mb-1">Upload Date</p>
+                  <p className="text-sm font-medium text-charcoal-900">
                     {new Date(viewingDoc.uploadedAt).toLocaleDateString('en-ZA')}
                   </p>
                 </div>
                 {viewingDoc.tenantName && (
-                  <div className="p-4 bg-dark-800/50 rounded-lg">
-                    <p className="text-xs text-gray-500 mb-1">Tenant</p>
-                    <p className="text-sm font-medium text-slate-900">{viewingDoc.tenantName}</p>
+                  <div className="p-4 bg-charcoal-800/50 rounded-lg">
+                    <p className="text-xs text-charcoal-500 mb-1">Tenant</p>
+                    <p className="text-sm font-medium text-charcoal-900">{viewingDoc.tenantName}</p>
                   </div>
                 )}
                 {viewingDoc.endDate && (
-                  <div className="p-4 bg-dark-800/50 rounded-lg">
-                    <p className="text-xs text-gray-500 mb-1">Expiry Date</p>
-                    <p className="text-sm font-medium text-slate-900">
+                  <div className="p-4 bg-charcoal-800/50 rounded-lg">
+                    <p className="text-xs text-charcoal-500 mb-1">Expiry Date</p>
+                    <p className="text-sm font-medium text-charcoal-900">
                       {new Date(viewingDoc.endDate).toLocaleDateString('en-ZA')}
                     </p>
                   </div>
@@ -767,27 +767,27 @@ export default function DocumentsPage() {
               </div>
 
               {viewingDoc.notes && (
-                <div className="mt-4 p-4 bg-dark-800/50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Notes</p>
-                  <p className="text-sm text-slate-900">{viewingDoc.notes}</p>
+                <div className="mt-4 p-4 bg-charcoal-800/50 rounded-lg">
+                  <p className="text-xs text-charcoal-500 mb-1">Notes</p>
+                  <p className="text-sm text-charcoal-900">{viewingDoc.notes}</p>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center justify-between p-6 border-t border-gray-700">
+            <div className="flex items-center justify-between p-6 border-t border-charcoal-700">
               <div className="flex items-center gap-2">
                 {getStatusBadge(getDocumentStatus(viewingDoc))}
               </div>
               <div className="flex items-center gap-3">
                 <Button 
                   variant="outline" 
-                  className="border-gray-600 text-slate-400 hover:bg-dark-700"
+                  className="border-charcoal-600 text-charcoal-400 hover:bg-charcoal-700 bg-lime-400 rounded-full"
                   onClick={() => setShowViewModal(false)}
                 >
                   Close
                 </Button>
                 <Button 
-                  className="glow-gold"
+                  className="bg-lime-400 rounded-full"
                   onClick={() => {
                     handleDownloadDocument(viewingDoc);
                     setShowViewModal(false);
@@ -805,21 +805,21 @@ export default function DocumentsPage() {
       {/* Delete Confirmation Dialog */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-800 border border-red-500/30 rounded-2xl w-full max-w-md shadow-2xl">
+          <div className="bg-dark-800 border border-lime-400/30 rounded-2xl w-full max-w-md shadow-2xl">
             <div className="p-6 text-center">
-              <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertTriangle className="w-8 h-8 text-red-400" />
+              <div className="w-16 h-16 bg-lime-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertTriangle className="w-8 h-8 text-lime-400" />
               </div>
-              <h2 className="text-xl font-bold text-slate-900 mb-2">Delete Document?</h2>
-              <p className="text-slate-500 text-sm">
-                This action cannot be undone. The document "{documents.find(d => d.id === deletingDocId)?.title}" will be permanently removed.
+              <h2 className="text-xl font-bold text-charcoal-900 mb-2">Delete Document?</h2>
+              <p className="text-charcoal-500 text-sm">
+                This action cannot be undone. The document &quot;{documents.find(d => d.id === deletingDocId)?.title}&quot; will be permanently removed.
               </p>
             </div>
 
-            <div className="flex items-center justify-center gap-3 p-6 border-t border-dark-700">
+            <div className="flex items-center justify-center gap-3 p-6 border-t border-charcoal-700">
               <Button 
                 variant="outline" 
-                className="border-gray-600 text-slate-400 hover:bg-dark-700"
+                className="border-charcoal-600 text-charcoal-400 hover:bg-charcoal-700 bg-lime-400 rounded-full"
                 onClick={() => {
                   setShowDeleteConfirm(false);
                   setDeletingDocId(null);
@@ -828,7 +828,7 @@ export default function DocumentsPage() {
                 Cancel
               </Button>
               <Button 
-                className="bg-red-500 hover:bg-red-600 text-slate-900"
+                className="bg-lime-400 hover:bg-lime-500 text-charcoal-900 rounded-full"
                 onClick={handleDeleteDocument}
               >
                 <Trash2 className="w-4 h-4 mr-2" />

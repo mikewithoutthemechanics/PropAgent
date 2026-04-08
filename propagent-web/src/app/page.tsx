@@ -9,20 +9,34 @@ import {
   Users, 
   DollarSign, 
   ArrowRight,
-  Sparkles,
   TrendingUp,
-  Calculator,
-  FileCheck,
-  Play,
+  FileText,
+  Wrench,
+  Building,
+  Check,
+  Star,
+  MapPin,
+  Mail,
+  Phone,
   Menu,
   X,
-  Building2,
-  ChevronDown,
-  Star,
-  Check,
-  MapPin,
-  Phone,
-  Mail
+  Play,
+  ChevronRight,
+  BarChart3,
+  Shield,
+  Clock,
+  CreditCard,
+  HeadphonesMic,
+  Zap,
+  Layers,
+  Key,
+  Calendar,
+  MessageSquare,
+  FileCheck,
+  Calculator,
+  Target,
+  Award,
+  Heart
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -30,10 +44,9 @@ export default function LandingPage() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -46,54 +59,126 @@ export default function LandingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="relative">
+          <div className="w-12 h-12 border-4 border-charcoal-100 border-t-lime-400 rounded-full animate-spin"></div>
+        </div>
       </div>
     );
   }
 
+  const features = [
+    { icon: Building, title: 'Property Portfolio', desc: 'Manage unlimited properties with detailed tracking' },
+    { icon: Users, title: 'Tenant Management', desc: 'Full tenant profiles, lease tracking & communication' },
+    { icon: DollarSign, title: 'Rent Collection', desc: 'Automated payments, invoicing & financial reports' },
+    { icon: Calculator, title: 'Property Valuations', desc: 'AI-powered market valuations & trend analysis' },
+    { icon: FileText, title: 'Document Center', desc: 'Digital leases, agreements & e-signatures' },
+    { icon: Wrench, title: 'Maintenance', desc: 'Work orders, vendor management & tracking' },
+    { icon: BarChart3, title: 'Analytics', desc: 'Real-time insights & portfolio performance' },
+    { icon: Shield, title: 'Compliance', desc: 'Legal compliance & risk management' },
+  ];
+
+  const stats = [
+    { value: 'R2.5B+', label: 'Property Value Managed' },
+    { value: '12,000+', label: 'Units Under Management' },
+    { value: '98%', label: 'Client Satisfaction' },
+    { value: 'R180M+', label: 'Rent Collected Annually' },
+  ];
+
+  const testimonials = [
+    { 
+      quote: "PropAgent eliminated hours of administrative work. Our team now focuses on growth instead of paperwork.",
+      author: "Sarah van der Merwe",
+      role: "Director",
+      company: "Coastal Properties",
+      image: null
+    },
+    { 
+      quote: "The tenant portal alone revolutionized how we communicate. Maintenance requests dropped by 60% in the first month.",
+      author: "Michael Roberts",
+      role: "Portfolio Manager",
+      company: "Urban Living SA",
+      image: null
+    },
+    { 
+      quote: "Finally, a property management system that actually understands the South African market. Worth every rand.",
+      author: "James Mitchell",
+      role: "CEO",
+      company: "Mitchell Properties",
+      image: null
+    },
+  ];
+
+  const plans = [
+    {
+      name: 'Starter',
+      price: 'R499',
+      desc: 'For individual landlords',
+      features: ['Up to 10 units', 'Tenant portal', 'Basic reporting', 'Email support'],
+      popular: false
+    },
+    {
+      name: 'Professional',
+      price: 'R999',
+      desc: 'For growing portfolios',
+      features: ['Up to 50 units', 'Advanced analytics', 'Priority support', 'API access', 'Custom branding'],
+      popular: true
+    },
+    {
+      name: 'Enterprise',
+      price: 'Custom',
+      desc: 'For large organizations',
+      features: ['Unlimited units', 'Dedicated account manager', 'Custom integrations', 'SLA guarantee', 'On-premise option'],
+      popular: false
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-white text-charcoal-900 font-sans overflow-x-hidden">
+      {/* Noise Texture Overlay */}
+      <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-50 mix-blend-multiply" 
+        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} 
+      />
+
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'bg-slate-950/95 backdrop-blur-2xl border-b border-white/5' : 'bg-transparent'
+        scrolled ? 'bg-white/90 backdrop-blur-xl shadow-[0_1px_0_rgba(0,0,0,0.05)]' : 'bg-transparent'
       }`}>
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
-            <Link href="/" className="flex items-center gap-2 md:gap-3">
-              <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg shadow-gold-500/20">
-                <Home className="w-4 h-4 md:w-5 md:h-5 text-slate-900" />
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="w-9 h-9 bg-charcoal-900 rounded-xl flex items-center justify-center">
+                <Home className="w-5 h-5 text-lime-400" />
               </div>
-              <span className="text-lg md:text-xl font-semibold tracking-tight">PropAgent</span>
+              <span className="text-lg font-semibold tracking-tight">PropAgent</span>
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-10">
+            <div className="hidden md:flex items-center gap-8">
               {[
                 { label: 'Features', href: '#features' },
                 { label: 'Pricing', href: '#pricing' },
-                { label: 'About', href: '#about' }
+                { label: 'Testimonials', href: '#testimonials' }
               ].map((item) => (
                 <a 
                   key={item.label} 
                   href={item.href} 
-                  className="text-sm text-white/70 hover:text-white transition-all duration-300 relative group"
+                  className="text-sm text-charcoal-500 hover:text-charcoal-900 transition-colors relative"
                 >
                   {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-400 group-hover:w-full transition-all duration-300" />
                 </a>
               ))}
             </div>
 
-            <div className="flex items-center gap-3 md:gap-4">
-              <Link href="/login" className="text-sm text-white/70 hover:text-white transition-colors">
+            <div className="flex items-center gap-3">
+              <Link href="/login" className="hidden sm:block text-sm text-charcoal-500 hover:text-charcoal-900 transition-colors font-medium">
                 Sign in
               </Link>
-              <Link href="/register" className="px-4 py-2 md:px-6 md:py-2.5 bg-white text-slate-900 text-xs md:text-sm font-semibold rounded-full hover:bg-gold-400 transition-all duration-300 cursor-pointer">
+              <Link href="/register" className="px-4 py-2.5 bg-charcoal-900 text-white text-sm font-medium rounded-full hover:bg-charcoal-800 transition-all duration-300 hover:shadow-lg hover:shadow-charcoal-900/20">
                 Get Started
               </Link>
               <button 
-                className="md:hidden p-2 text-white/70"
+                className="md:hidden p-2 text-charcoal-900"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -105,19 +190,19 @@ export default function LandingPage() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-slate-950 z-40 pt-20 px-6 md:hidden">
+        <div className="fixed inset-0 bg-white z-40 pt-24 px-6 md:hidden">
           <div className="flex flex-col gap-6">
-            {['Features', 'Pricing', 'About'].map((item) => (
+            {['Features', 'Pricing', 'Testimonials'].map((item) => (
               <a 
                 key={item} 
                 href={`#${item.toLowerCase()}`} 
-                className="text-2xl font-light text-white/80 hover:text-white transition-colors"
+                className="text-2xl font-medium text-charcoal-900"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item}
               </a>
             ))}
-            <Link href="/login" className="text-2xl font-light text-white/80 hover:text-white transition-colors">
+            <Link href="/login" className="text-2xl font-medium text-charcoal-900">
               Sign in
             </Link>
           </div>
@@ -125,206 +210,233 @@ export default function LandingPage() {
       )}
 
       {/* Hero Section */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Video/Image Background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/90 to-slate-950" />
-          <div className="absolute inset-0 opacity-30">
-            <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80')] bg-cover bg-center" />
-          </div>
-          {/* Gradient overlays */}
-          <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-gold-500/20 rounded-full blur-[150px]" />
-          <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-500/10 rounded-full blur-[150px]" />
-        </div>
-
-        {/* Animated Grid */}
-        <div className="absolute inset-0 opacity-20">
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-lime-400/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-sky-400/5 rounded-full blur-3xl" />
           <div className="absolute inset-0" style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgb(0 0 0 / 3%) 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
           }} />
         </div>
 
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-gold-400 mb-8 md:mb-12 backdrop-blur-sm">
-            <Sparkles className="w-4 h-4" />
-            <span>South Africa's Premium Property Platform</span>
-          </div>
-          
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-[1.1] tracking-tight mb-6 md:mb-8">
-            Property management{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-gold-300 to-gold-400">
-              elevated
-            </span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-10 md:mb-12">
-            Experience the future of property management. Elegant, powerful, 
-            and designed for South Africa's finest properties.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
-            <Link href="/register" className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-slate-900 font-medium rounded-full hover:bg-gold-400 transition-all duration-300 cursor-pointer">
-              Start Free Trial
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link href="#features" className="inline-flex items-center justify-center gap-3 px-8 py-4 border border-white/20 text-white font-medium rounded-full hover:bg-white/5 transition-all duration-300 cursor-pointer">
-              <Play className="w-5 h-5" />
-              Watch Demo
-            </Link>
-          </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-lime-400/10 rounded-full text-sm font-medium text-lime-600 mb-6">
+              <Zap className="w-4 h-4" />
+              <span>South Africa's #1 Property Platform</span>
+            </div>
+            
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6">
+              Property management{' '}
+              <span className="text-lime-500">reimagined</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-charcoal-500 max-w-xl leading-relaxed mb-8">
+              The complete platform for South African property professionals. 
+              Streamline operations, delight tenants, and grow your portfolio.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/register" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-charcoal-900 text-white font-medium rounded-full hover:bg-charcoal-800 transition-all duration-300 hover:shadow-xl hover:shadow-charcoal-900/20 group">
+                Start Free Trial
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+              <Link href="#features" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-charcoal-200 text-charcoal-700 font-medium rounded-full hover:bg-charcoal-50 transition-all duration-300">
+                <Play className="w-4 h-4" />
+                See How It Works
+              </Link>
+            </div>
 
-          {/* Scroll indicator */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-            <ChevronDown className="w-6 h-6 text-white/30" />
+            <div className="flex items-center gap-6 mt-10 pt-10 border-t border-charcoal-100">
+              <div className="flex -space-x-3">
+                {[1,2,3,4,5].map((i) => (
+                  <div key={i} className="w-10 h-10 rounded-full bg-charcoal-200 border-2 border-white flex items-center justify-center text-xs font-medium">
+                    {String.fromCharCode(64 + i)}
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div className="flex items-center gap-1">
+                  {[1,2,3,4,5].map((i) => (
+                    <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-charcoal-500">Trusted by 500+ property professionals</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Stats Bar */}
-      <section className="py-12 md:py-16 border-y border-white/5 bg-slate-900/50">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-            {[
-              { value: '500+', label: 'Properties Managed' },
-              { value: '2,000+', label: 'Happy Tenants' },
-              { value: 'R50M+', label: 'Rent Collected' },
-              { value: '99.9%', label: 'Uptime' }
-            ].map((stat, i) => (
+      <section className="py-12 border-y border-charcoal-100 bg-charcoal-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, i) => (
               <div key={i} className="text-center">
-                <p className="text-3xl md:text-4xl font-light text-gold-400">{stat.value}</p>
-                <p className="text-sm text-white/50 mt-2">{stat.label}</p>
+                <p className="text-2xl md:text-3xl font-semibold text-charcoal-900">{stat.value}</p>
+                <p className="text-sm text-charcoal-500 mt-1">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Grid - Bento Style */}
       <section id="features" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="text-center mb-16 md:mb-24">
-            <span className="text-gold-400 text-sm tracking-widest uppercase mb-4 block">Features</span>
-            <h2 className="text-3xl md:text-5xl font-light tracking-tight">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-lime-500 text-sm font-medium tracking-wider uppercase mb-3 block">Features</span>
+            <h2 className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
               Everything you need
             </h2>
-            <p className="mt-4 text-white/50 text-lg max-w-xl mx-auto">
-              Powerful tools to manage your property portfolio with elegance
+            <p className="text-charcoal-500 text-lg max-w-xl mx-auto">
+              A complete suite of tools designed for South African property management
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Building2, title: 'Property Management', desc: 'Track all your properties in one place with detailed analytics and insights.' },
-              { icon: Users, title: 'Tenant Portal', desc: 'Self-service portal for tenants to submit requests and pay rent seamlessly.' },
-              { icon: DollarSign, title: 'Financial Tracking', desc: 'Automated rent collection, expense tracking, and comprehensive reporting.' },
-              { icon: Calculator, title: 'Valuations', desc: 'AI-powered property valuations and real-time market insights.' },
-              { icon: FileCheck, title: 'Documents', desc: 'Digital lease management and secure document storage.' },
-              { icon: TrendingUp, title: 'Analytics', desc: 'Real-time insights into your portfolio performance.' }
-            ].map((feature, i) => (
-              <div 
-                key={i} 
-                className="group p-8 md:p-10 bg-slate-900/50 border border-white/5 hover:border-gold-500/20 rounded-2xl transition-all duration-500 hover:bg-slate-900 active:bg-slate-800"
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-gold-500/10 to-gold-600/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-gold-500/20 group-active:scale-105 group-active:bg-gold-500/30 transition-all duration-500">
-                  <feature.icon className="w-6 h-6 text-gold-400" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Main feature - spans 2 cols */}
+            <div className="md:col-span-2 lg:row-span-2 bg-charcoal-900 rounded-3xl p-8 text-white relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-lime-400/10 rounded-full blur-3xl group-hover:bg-lime-400/20 transition-all duration-500" />
+              <div className="relative z-10">
+                <div className="w-14 h-14 bg-lime-400/20 rounded-2xl flex items-center justify-center mb-6">
+                  <BarChart3 className="w-7 h-7 text-lime-400" />
                 </div>
-                <h3 className="text-xl font-medium mb-3">{feature.title}</h3>
-                <p className="text-white/50 leading-relaxed">{feature.desc}</p>
+                <h3 className="text-2xl font-semibold mb-3">Powerful Analytics</h3>
+                <p className="text-white/60 mb-6">Get deep insights into your portfolio performance with real-time dashboards and custom reports.</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/5 rounded-xl p-4">
+                    <p className="text-2xl font-semibold text-lime-400">+24%</p>
+                    <p className="text-xs text-white/50">Revenue Growth</p>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4">
+                    <p className="text-2xl font-semibold text-lime-400">98%</p>
+                    <p className="text-xs text-white/50">Occupancy Rate</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Regular features */}
+            {features.slice(0, 4).map((feature, i) => (
+              <div key={i} className="bg-charcoal-50 rounded-3xl p-6 hover:bg-charcoal-100 transition-colors duration-300 group">
+                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:shadow-md transition-shadow">
+                  <feature.icon className="w-6 h-6 text-charcoal-700" />
+                </div>
+                <h3 className="font-semibold mb-2">{feature.title}</h3>
+                <p className="text-sm text-charcoal-500">{feature.desc}</p>
               </div>
             ))}
+
+            {/* Bottom row */}
+            {features.slice(4, 7).map((feature, i) => (
+              <div key={i + 4} className="bg-charcoal-50 rounded-3xl p-6 hover:bg-charcoal-100 transition-colors duration-300 group">
+                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:shadow-md transition-shadow">
+                  <feature.icon className="w-6 h-6 text-charcoal-700" />
+                </div>
+                <h3 className="font-semibold mb-2">{feature.title}</h3>
+                <p className="text-sm text-charcoal-500">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <Link href="#pricing" className="inline-flex items-center gap-2 text-charcoal-600 font-medium hover:text-charcoal-900 transition-colors">
+              View all features <ChevronRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Testimonial */}
-      <section className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-slate-900/30">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex justify-center gap-1 mb-8">
-            {[1,2,3,4,5].map((_, i) => (
-              <Star key={i} className="w-5 h-5 text-gold-400 fill-gold-400" />
-            ))}
+      {/* Testimonials - Horizontal Scroll Cards */}
+      <section id="testimonials" className="py-20 md:py-32 bg-charcoal-900 text-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-lime-400 text-sm font-medium tracking-wider uppercase mb-3 block">Testimonials</span>
+            <h2 className="text-3xl md:text-5xl font-semibold">
+              Loved by property professionals
+            </h2>
           </div>
-          <blockquote className="text-2xl md:text-4xl font-light leading-tight text-white/80 mb-8">
-            "PropAgent has transformed how we manage our property portfolio. 
-            The elegance and functionality is unmatched in South Africa."
-          </blockquote>
-          <div className="flex items-center justify-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full" />
-            <div className="text-left">
-              <p className="font-medium">James Mitchell</p>
-              <p className="text-sm text-white/50">CEO, Mitchell Properties</p>
-            </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((testimonial, i) => (
+              <div key={i} className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+                <div className="flex gap-1 mb-6">
+                  {[1,2,3,4,5].map((_, j) => (
+                    <Star key={j} className="w-4 h-4 text-amber-400 fill-amber-400" />
+                  ))}
+                </div>
+                <blockquote className="text-white/80 leading-relaxed mb-6">
+                  "{testimonial.quote}"
+                </blockquote>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-lime-400/20 rounded-full flex items-center justify-center font-semibold text-lime-400">
+                    {testimonial.author.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-medium">{testimonial.author}</p>
+                    <p className="text-sm text-white/50">{testimonial.role}, {testimonial.company}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Pricing */}
       <section id="pricing" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="text-center mb-16 md:mb-24">
-            <span className="text-gold-400 text-sm tracking-widest uppercase mb-4 block">Pricing</span>
-            <h2 className="text-3xl md:text-5xl font-light tracking-tight">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-lime-500 text-sm font-medium tracking-wider uppercase mb-3 block">Pricing</span>
+            <h2 className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
               Simple, transparent pricing
             </h2>
+            <p className="text-charcoal-500 text-lg max-w-xl mx-auto">
+              No hidden fees. No surprises. Just powerful property management.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              { 
-                name: 'Starter', 
-                price: 'R499', 
-                desc: 'Perfect for small portfolios',
-                features: ['Up to 10 properties', 'Basic analytics', 'Email support']
-              },
-              { 
-                name: 'Professional', 
-                price: 'R999', 
-                desc: 'For growing portfolios',
-                features: ['Up to 50 properties', 'Advanced analytics', 'Priority support', 'API access'],
-                popular: true
-              },
-              { 
-                name: 'Enterprise', 
-                price: 'Custom', 
-                desc: 'For large portfolios',
-                features: ['Unlimited properties', 'Custom integrations', 'Dedicated account manager', 'SLA']
-              }
-            ].map((plan, i) => (
+            {plans.map((plan, i) => (
               <div 
                 key={i}
-                className={`p-8 md:p-10 rounded-2xl border transition-all duration-300 ${
+                className={`relative rounded-3xl p-8 transition-all duration-300 ${
                   plan.popular 
-                    ? 'bg-slate-900 border-gold-500/50 scale-105 shadow-xl shadow-gold-500/10' 
-                    : 'bg-slate-900/30 border-white/5 hover:border-white/10'
+                    ? 'bg-charcoal-900 text-white shadow-2xl scale-105 z-10' 
+                    : 'bg-charcoal-50 hover:bg-charcoal-100'
                 }`}
               >
                 {plan.popular && (
-                  <span className="inline-block px-3 py-1 bg-gold-500 text-slate-900 text-xs font-medium rounded-full mb-4">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-lime-400 text-charcoal-900 text-xs font-medium rounded-full">
                     Most Popular
-                  </span>
+                  </div>
                 )}
-                <h3 className="text-xl font-medium mb-2">{plan.name}</h3>
+                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-4xl font-light">{plan.price}</span>
-                  {plan.price !== 'Custom' && <span className="text-white/50">/month</span>}
+                  <span className="text-4xl font-semibold">{plan.price}</span>
+                  {plan.price !== 'Custom' && <span className={plan.popular ? 'text-white/60' : 'text-charcoal-500'}>/month</span>}
                 </div>
-                <p className="text-white/50 text-sm mb-6">{plan.desc}</p>
+                <p className={plan.popular ? 'text-white/60 text-sm mb-6' : 'text-charcoal-500 text-sm mb-6'}>{plan.desc}</p>
+                
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((f, j) => (
-                    <li key={j} className="flex items-center gap-3 text-sm text-white/70">
-                      <Check className="w-4 h-4 text-gold-400" />
-                      {f}
+                    <li key={j} className="flex items-center gap-3 text-sm">
+                      <Check className={`w-4 h-4 ${plan.popular ? 'text-lime-400' : 'text-lime-500'}`} />
+                      <span className={plan.popular ? 'text-white/80' : 'text-charcoal-600'}>{f}</span>
                     </li>
                   ))}
                 </ul>
+                
                 <Link 
                   href="/register" 
-                  className={`block text-center py-3 rounded-full transition-all duration-300 ${
+                  className={`block text-center py-3 rounded-full font-medium transition-all duration-300 ${
                     plan.popular 
-                      ? 'bg-white text-slate-900 hover:bg-gold-400' 
-                      : 'border border-white/20 hover:bg-white/5'
+                      ? 'bg-lime-400 text-charcoal-900 hover:bg-lime-300' 
+                      : 'bg-charcoal-900 text-white hover:bg-charcoal-800'
                   }`}
                 >
                   Get Started
@@ -336,48 +448,50 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-light tracking-tight mb-6">
-            Ready to elevate your property management?
+      <section className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-charcoal-900 text-white">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl md:text-5xl font-semibold mb-6">
+            Ready to transform your property management?
           </h2>
-          <p className="text-white/50 text-lg mb-10">
-            Join the waitlist for early access
+          <p className="text-white/60 text-lg mb-10">
+            Join thousands of South African property professionals already using PropAgent
           </p>
-          <Link href="/register" className="inline-flex items-center justify-center gap-3 px-10 py-4 bg-white text-slate-900 font-medium rounded-full hover:bg-gold-400 transition-all duration-300 cursor-pointer">
+          <Link href="/register" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-lime-400 text-charcoal-900 font-semibold rounded-full hover:bg-lime-300 transition-all duration-300 hover:shadow-xl hover:shadow-lime-400/25 group">
             Start Your Free Trial
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
+          <p className="text-white/40 text-sm mt-6">No credit card required. 14-day free trial.</p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 md:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/5">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 md:gap-12 mb-12">
+      <footer className="py-16 px-4 sm:px-6 lg:px-8 border-t border-charcoal-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div className="md:col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl flex items-center justify-center">
-                  <Home className="w-5 h-5 text-slate-900" />
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-9 h-9 bg-charcoal-900 rounded-xl flex items-center justify-center">
+                  <Home className="w-5 h-5 text-lime-400" />
                 </div>
-                <span className="text-xl font-semibold">PropAgent</span>
+                <span className="text-lg font-semibold">PropAgent</span>
               </div>
-              <p className="text-white/50 max-w-md">
-                South Africa's premium property management platform. 
-                Elegant, powerful, and designed for the modern landlord.
+              <p className="text-charcoal-500 max-w-sm">
+                South Africa's leading property management platform. Built for modern property professionals.
               </p>
             </div>
+            
             <div>
-              <h4 className="font-medium mb-4">Product</h4>
-              <ul className="space-y-3 text-white/50">
-                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">API</a></li>
+              <h4 className="font-semibold mb-4">Product</h4>
+              <ul className="space-y-3 text-charcoal-500">
+                <li><a href="#features" className="hover:text-charcoal-900 transition-colors">Features</a></li>
+                <li><a href="#pricing" className="hover:text-charcoal-900 transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-charcoal-900 transition-colors">API</a></li>
               </ul>
             </div>
+            
             <div>
-              <h4 className="font-medium mb-4">Contact</h4>
-              <ul className="space-y-3 text-white/50">
+              <h4 className="font-semibold mb-4">Contact</h4>
+              <ul className="space-y-3 text-charcoal-500">
                 <li className="flex items-center gap-2">
                   <Mail className="w-4 h-4" /> hello@propagent.co.za
                 </li>
@@ -390,11 +504,12 @@ export default function LandingPage() {
               </ul>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-white/30 text-sm">© 2026 PropAgent. All rights reserved.</p>
-            <div className="flex items-center gap-6 text-white/30 text-sm">
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms</a>
+          
+          <div className="pt-8 border-t border-charcoal-100 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-charcoal-400 text-sm">© 2026 PropAgent. All rights reserved.</p>
+            <div className="flex items-center gap-6 text-charcoal-400 text-sm">
+              <a href="#" className="hover:text-charcoal-900 transition-colors">Privacy</a>
+              <a href="#" className="hover:text-charcoal-900 transition-colors">Terms</a>
             </div>
           </div>
         </div>
