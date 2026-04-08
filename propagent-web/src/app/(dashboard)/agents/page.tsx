@@ -37,7 +37,7 @@ function GlassCard({ children, hoverEffect = false }: { children: React.ReactNod
   );
 }
 
-function StatCard({ icon: Icon, value, label, color, delay }: { icon: React.ElementType; value: string | number; label: string; color: 'amber' | 'green' | 'blue' | 'purple'; delay?: number }) {
+function StatCard({ icon: Icon, value, label, color, delay }: { icon: React.ElementType; value: string | number; label: string; color: 'amber' | 'green' | 'gold' | 'blue' | 'purple'; delay?: number }) {
   const [visible, setVisible] = useState(false);
   
   useEffect(() => {
@@ -47,6 +47,7 @@ function StatCard({ icon: Icon, value, label, color, delay }: { icon: React.Elem
   
   const colorClasses = {
     amber: { bg: 'bg-lime-400/20', text: 'text-lime-400', border: 'border-lime-400/30', shadow: 'shadow-lime-400/20' },
+    green: { bg: 'bg-lime-400/20', text: 'text-lime-400', border: 'border-lime-400/30', shadow: 'shadow-lime-400/20' },
     gold: { bg: 'bg-sky-400/20', text: 'text-sky-400', border: 'border-sky-400/30', shadow: 'shadow-sky-400/20' },
     blue: { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30', shadow: 'shadow-blue-500/20' },
     purple: { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30', shadow: 'shadow-purple-500/20' },
