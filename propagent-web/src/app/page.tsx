@@ -61,13 +61,28 @@ export default function LandingPage() {
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
-  // Mouse position for spotlight effect
+  // Mouse position for spotlight effect - with touch support and center fallback
   useEffect(() => {
+    // Set initial position to center of viewport
+    setMousePosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        setMousePosition({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+      }
+    };
+    
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
+    };
   }, []);
 
   // Scroll handler with parallax
