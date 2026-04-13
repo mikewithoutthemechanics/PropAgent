@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
@@ -44,12 +44,59 @@ export default function LandingPage() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const heroRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
+  const parallaxOffset = useRef(0);
+
+  // Check for reduced motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  // Scroll handler with parallax
+  const handleScroll = useCallback(() => {
+    const scrollY = window.scrollY;
+    setScrolled(scrollY > 30);
+    parallaxOffset.current = scrollY * 0.3;
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [handleScroll]);
+
+  // Intersection observer for scroll-triggered animations
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setVisibleSections(new Set(['hero', 'features', 'testimonials', 'pricing', 'cta']));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => new Set([...prev, entry.target.id]));
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    const sections = ['hero', 'features', 'testimonials', 'pricing', 'cta'];
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
     if (!loading && (user || isDemoMode)) {
@@ -133,15 +180,33 @@ export default function LandingPage() {
     },
   ];
 
+  // Animation classes
+  const getFadeInClass = (section: string, delay = 0) => {
+    if (prefersReducedMotion) return 'animate-none';
+    return visibleSections.has(section) 
+      ? `opacity-100 translate-y-0 transition-all duration-700 ease-out` 
+      : `opacity-0 translate-y-8 transition-all duration-700 ease-out`;
+  };
+
   return (
     <div className="min-h-screen bg-white text-charcoal-900 font-sans overflow-x-hidden">
+      {/* Skip Link for Accessibility */}
+      <a 
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-charcoal-900 focus:text-white focus:rounded-lg focus:font-medium"
+      >
+        Skip to main content
+      </a>
+
       {/* Noise Texture Overlay */}
       <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-50 mix-blend-multiply" 
+        aria-hidden="true"
         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} 
       />
 
       {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      <nav 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled ? 'bg-white/90 backdrop-blur-xl shadow-[0_1px_0_rgba(0,0,0,0.05)]' : 'bg-transparent'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -210,27 +275,53 @@ export default function LandingPage() {
       )}
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-lime-400/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-sky-400/5 rounded-full blur-3xl" />
+      <section 
+        id="hero"
+        ref={heroRef as React.RefObject<HTMLElement>}
+        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden"
+        aria-labelledby="hero-title"
+      >
+        {/* Parallax Background Elements */}
+        <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div 
+            className="absolute top-0 right-0 w-[800px] h-[800px] bg-lime-400/5 rounded-full blur-3xl transition-transform duration-75 ease-out"
+            style={{ transform: `translateY(${parallaxOffset.current * 0.2}px)` }}
+          />
+          <div 
+            className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-sky-400/5 rounded-full blur-3xl transition-transform duration-75 ease-out"
+            style={{ transform: `translateY(${-parallaxOffset.current * 0.15}px)` }}
+          />
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, rgb(0 0 0 / 3%) 1px, transparent 0)`,
             backgroundSize: '40px 40px'
           }} />
+          {/* Animated grid lines */}
+          <div 
+            className="absolute inset-0 opacity-30 transition-opacity duration-1000"
+            style={{
+              backgroundImage: `linear-gradient(rgb(0 0 0 / 5%) 1px, transparent 1px), linear-gradient(90deg, rgb(0 0 0 / 5%) 1px, transparent 1px)`,
+              backgroundSize: '100px 100px',
+              transform: `translateY(${parallaxOffset.current * 0.05}px)`
+            }}
+          />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-lime-400/10 rounded-full text-sm font-medium text-lime-600 mb-6">
-              <Zap className="w-4 h-4" />
+          <div className={`max-w-3xl transition-all duration-1000 ease-out ${prefersReducedMotion ? 'opacity-100' : visibleSections.has('hero') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-lime-400/10 rounded-full text-sm font-medium text-lime-600 mb-6 animate-pulse-slow">
+              <Zap className="w-4 h-4" aria-hidden="true" />
               <span>South Africa's #1 Property Platform</span>
             </div>
             
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6">
+            <h1 
+              id="hero-title"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6"
+            >
               Property management{' '}
-              <span className="text-lime-500">reimagined</span>
+              <span className="text-lime-500 relative">
+                <span className="relative z-10">reimagined</span>
+                <span className="absolute inset-0 bg-lime-400/20 blur-xl rounded-full" aria-hidden="true" />
+              </span>
             </h1>
             
             <p className="text-lg md:text-xl text-charcoal-500 max-w-xl leading-relaxed mb-8">
@@ -239,28 +330,37 @@ export default function LandingPage() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/register" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-charcoal-900 text-white font-medium rounded-full hover:bg-charcoal-800 transition-all duration-300 hover:shadow-xl hover:shadow-charcoal-900/20 group">
+              <Link 
+                href="/register" 
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-charcoal-900 text-white font-medium rounded-full hover:bg-charcoal-800 transition-all duration-300 hover:shadow-xl hover:shadow-charcoal-900/20 group focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2"
+              >
                 Start Free Trial
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
               </Link>
-              <Link href="#features" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-charcoal-200 text-charcoal-700 font-medium rounded-full hover:bg-charcoal-50 transition-all duration-300">
-                <Play className="w-4 h-4" />
+              <Link 
+                href="#features" 
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-charcoal-200 text-charcoal-700 font-medium rounded-full hover:bg-charcoal-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2"
+              >
+                <Play className="w-4 h-4" aria-hidden="true" />
                 See How It Works
               </Link>
             </div>
 
             <div className="flex items-center gap-6 mt-10 pt-10 border-t border-charcoal-100">
-              <div className="flex -space-x-3">
+              <div className="flex -space-x-3" aria-label="Trusted by property professionals">
                 {[1,2,3,4,5].map((i) => (
-                  <div key={i} className="w-10 h-10 rounded-full bg-charcoal-200 border-2 border-white flex items-center justify-center text-xs font-medium">
+                  <div 
+                    key={i} 
+                    className="w-10 h-10 rounded-full bg-charcoal-200 border-2 border-white flex items-center justify-center text-xs font-medium"
+                  >
                     {String.fromCharCode(64 + i)}
                   </div>
                 ))}
               </div>
               <div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1" aria-label="5-star rating">
                   {[1,2,3,4,5].map((i) => (
-                    <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
+                    <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" aria-hidden="true" />
                   ))}
                 </div>
                 <p className="text-sm text-charcoal-500">Trusted by 500+ property professionals</p>
@@ -270,6 +370,8 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Main Content Wrapper for Skip Link */}
+      <main id="main-content">
       {/* Stats Bar */}
       <section className="py-12 border-y border-charcoal-100 bg-charcoal-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -285,11 +387,16 @@ export default function LandingPage() {
       </section>
 
       {/* Features Grid - Bento Style */}
-      <section id="features" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
+      <section 
+        id="features"
+        ref={featuresRef as React.RefObject<HTMLElement>}
+        className="py-20 md:py-32 px-4 sm:px-6 lg:px-8"
+        aria-labelledby="features-heading"
+      >
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className={`text-center mb-16 transition-all duration-700 delay-100 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <span className="text-lime-500 text-sm font-medium tracking-wider uppercase mb-3 block">Features</span>
-            <h2 className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
+            <h2 id="features-heading" className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
               Everything you need
             </h2>
             <p className="text-charcoal-500 text-lg max-w-xl mx-auto">
@@ -299,11 +406,16 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Main feature - spans 2 cols */}
-            <div className="md:col-span-2 lg:row-span-2 bg-charcoal-900 rounded-3xl p-8 text-white relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-lime-400/10 rounded-full blur-3xl group-hover:bg-lime-400/20 transition-all duration-500" />
+            <div 
+              className={`md:col-span-2 lg:row-span-2 bg-charcoal-900 rounded-3xl p-8 text-white relative overflow-hidden group transition-all duration-700 delay-200 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+            >
+              <div 
+                className="absolute top-0 right-0 w-64 h-64 bg-lime-400/10 rounded-full blur-3xl group-hover:bg-lime-400/20 transition-all duration-500" 
+                aria-hidden="true"
+              />
               <div className="relative z-10">
                 <div className="w-14 h-14 bg-lime-400/20 rounded-2xl flex items-center justify-center mb-6">
-                  <BarChart3 className="w-7 h-7 text-lime-400" />
+                  <BarChart3 className="w-7 h-7 text-lime-400" aria-hidden="true" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-3">Powerful Analytics</h3>
                 <p className="text-white/60 mb-6">Get deep insights into your portfolio performance with real-time dashboards and custom reports.</p>
@@ -320,11 +432,15 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Regular features */}
+            {/* Regular features with staggered animations */}
             {features.slice(0, 4).map((feature, i) => (
-              <div key={i} className="bg-charcoal-50 rounded-3xl p-6 hover:bg-charcoal-100 transition-colors duration-300 group">
+              <div 
+                key={i} 
+                className={`bg-charcoal-50 rounded-3xl p-6 hover:bg-charcoal-100 transition-all duration-300 group hover:shadow-lg hover:scale-[1.02] focus-within:ring-2 focus-within:ring-charcoal-900 focus-within:ring-offset-2 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ transitionDelay: `${300 + i * 100}ms` }}
+              >
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:shadow-md transition-shadow">
-                  <feature.icon className="w-6 h-6 text-charcoal-700" />
+                  <feature.icon className="w-6 h-6 text-charcoal-700" aria-hidden="true" />
                 </div>
                 <h3 className="font-semibold mb-2">{feature.title}</h3>
                 <p className="text-sm text-charcoal-500">{feature.desc}</p>
@@ -333,9 +449,13 @@ export default function LandingPage() {
 
             {/* Bottom row */}
             {features.slice(4, 7).map((feature, i) => (
-              <div key={i + 4} className="bg-charcoal-50 rounded-3xl p-6 hover:bg-charcoal-100 transition-colors duration-300 group">
+              <div 
+                key={i + 4} 
+                className={`bg-charcoal-50 rounded-3xl p-6 hover:bg-charcoal-100 transition-all duration-300 group hover:shadow-lg hover:scale-[1.02] ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ transitionDelay: `${600 + i * 100}ms` }}
+              >
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:shadow-md transition-shadow">
-                  <feature.icon className="w-6 h-6 text-charcoal-700" />
+                  <feature.icon className="w-6 h-6 text-charcoal-700" aria-hidden="true" />
                 </div>
                 <h3 className="font-semibold mb-2">{feature.title}</h3>
                 <p className="text-sm text-charcoal-500">{feature.desc}</p>
@@ -344,36 +464,44 @@ export default function LandingPage() {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <Link href="#pricing" className="inline-flex items-center gap-2 text-charcoal-600 font-medium hover:text-charcoal-900 transition-colors">
-              View all features <ChevronRight className="w-4 h-4" />
+            <Link href="#pricing" className="inline-flex items-center gap-2 text-charcoal-600 font-medium hover:text-charcoal-900 transition-colors focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2 rounded-lg">
+              View all features <ChevronRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Testimonials - Horizontal Scroll Cards */}
-      <section id="testimonials" className="py-20 md:py-32 bg-charcoal-900 text-white overflow-hidden">
+      <section 
+        id="testimonials" 
+        className={`py-20 md:py-32 bg-charcoal-900 text-white overflow-hidden transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100' : 'opacity-0'}`}
+        aria-labelledby="testimonials-heading"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-lime-400 text-sm font-medium tracking-wider uppercase mb-3 block">Testimonials</span>
-            <h2 className="text-3xl md:text-5xl font-semibold">
+            <h2 id="testimonials-heading" className="text-3xl md:text-5xl font-semibold">
               Loved by property professionals
             </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, i) => (
-              <div key={i} className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
-                <div className="flex gap-1 mb-6">
+              <div 
+                key={i} 
+                className={`bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-[1.02] focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-charcoal-900 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ transitionDelay: `${i * 150}ms` }}
+              >
+                <div className="flex gap-1 mb-6" aria-label="5-star rating">
                   {[1,2,3,4,5].map((_, j) => (
-                    <Star key={j} className="w-4 h-4 text-amber-400 fill-amber-400" />
+                    <Star key={j} className="w-4 h-4 text-amber-400 fill-amber-400" aria-hidden="true" />
                   ))}
                 </div>
                 <blockquote className="text-white/80 leading-relaxed mb-6">
                   "{testimonial.quote}"
                 </blockquote>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-lime-400/20 rounded-full flex items-center justify-center font-semibold text-lime-400">
+                  <div className="w-12 h-12 bg-lime-400/20 rounded-full flex items-center justify-center font-semibold text-lime-400" aria-hidden="true">
                     {testimonial.author.charAt(0)}
                   </div>
                   <div>
@@ -388,11 +516,15 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
+      <section 
+        id="pricing" 
+        className={`py-20 md:py-32 px-4 sm:px-6 lg:px-8 transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('pricing') ? 'opacity-100' : 'opacity-0'}`}
+        aria-labelledby="pricing-heading"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-lime-500 text-sm font-medium tracking-wider uppercase mb-3 block">Pricing</span>
-            <h2 className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
+            <h2 id="pricing-heading" className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
               Simple, transparent pricing
             </h2>
             <p className="text-charcoal-500 text-lg max-w-xl mx-auto">
@@ -404,7 +536,7 @@ export default function LandingPage() {
             {plans.map((plan, i) => (
               <div 
                 key={i}
-                className={`relative rounded-3xl p-8 transition-all duration-300 ${
+                className={`relative rounded-3xl p-8 transition-all duration-300 hover:shadow-xl ${
                   plan.popular 
                     ? 'bg-charcoal-900 text-white shadow-2xl scale-105 z-10' 
                     : 'bg-charcoal-50 hover:bg-charcoal-100'
@@ -425,7 +557,7 @@ export default function LandingPage() {
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((f, j) => (
                     <li key={j} className="flex items-center gap-3 text-sm">
-                      <Check className={`w-4 h-4 ${plan.popular ? 'text-lime-400' : 'text-lime-500'}`} />
+                      <Check className={`w-4 h-4 ${plan.popular ? 'text-lime-400' : 'text-lime-500'}`} aria-hidden="true" />
                       <span className={plan.popular ? 'text-white/80' : 'text-charcoal-600'}>{f}</span>
                     </li>
                   ))}
@@ -433,7 +565,7 @@ export default function LandingPage() {
                 
                 <Link 
                   href="/register" 
-                  className={`block text-center py-3 rounded-full font-medium transition-all duration-300 ${
+                  className={`block text-center py-3 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2 ${
                     plan.popular 
                       ? 'bg-lime-400 text-charcoal-900 hover:bg-lime-300' 
                       : 'bg-charcoal-900 text-white hover:bg-charcoal-800'
@@ -448,21 +580,29 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-charcoal-900 text-white">
+      <section 
+        id="cta"
+        className={`py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-charcoal-900 text-white transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('cta') ? 'opacity-100' : 'opacity-0'}`}
+        aria-labelledby="cta-heading"
+      >
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-semibold mb-6">
+          <h2 id="cta-heading" className="text-3xl md:text-5xl font-semibold mb-6">
             Ready to transform your property management?
           </h2>
           <p className="text-white/60 text-lg mb-10">
             Join thousands of South African property professionals already using PropAgent
           </p>
-          <Link href="/register" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-lime-400 text-charcoal-900 font-semibold rounded-full hover:bg-lime-300 transition-all duration-300 hover:shadow-xl hover:shadow-lime-400/25 group">
+          <Link 
+            href="/register" 
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-lime-400 text-charcoal-900 font-semibold rounded-full hover:bg-lime-300 transition-all duration-300 hover:shadow-xl hover:shadow-lime-400/25 group focus:outline-none focus:ring-2 focus:ring-lime-400 focus:ring-offset-2 focus:ring-charcoal-900"
+          >
             Start Your Free Trial
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
           <p className="text-white/40 text-sm mt-6">No credit card required. 14-day free trial.</p>
         </div>
       </section>
+      </main>
 
       {/* Footer */}
       <footer className="py-16 px-4 sm:px-6 lg:px-8 border-t border-charcoal-100">
