@@ -316,24 +316,24 @@ export default function LandingPage() {
         className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-amber-50/40"
         aria-labelledby="hero-title"
       >
-        {/* Mouse-following Spotlight - always visible */}
+        {/* Mouse-following Spotlight - always visible and bright */}
         <div 
           className="absolute inset-0 pointer-events-none z-0"
           aria-hidden="true"
           style={{
-            background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(251, 146, 60, 0.15), transparent 40%)`
+            background: `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(251, 146, 60, 0.25), transparent 50%)`
           }}
         />
         
         {/* Parallax Background Elements */}
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-          {/* Floating orbs with animation - more visible */}
+          {/* Floating orbs with animation - very visible */}
           <div 
-            className="absolute top-20 right-20 w-80 h-80 bg-gradient-to-br from-amber-400/40 to-orange-300/20 rounded-full blur-2xl animate-pulse"
+            className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-amber-400/50 to-orange-300/30 rounded-full blur-3xl animate-pulse"
             style={{ transform: `translateY(${parallaxOffset.current * 0.15}px)` }}
           />
           <div 
-            className="absolute bottom-40 left-10 w-64 h-64 bg-gradient-to-br from-orange-400/30 to-amber-300/20 rounded-full blur-2xl animate-pulse"
+            className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-orange-400/50 to-amber-300/30 rounded-full blur-3xl animate-pulse"
             style={{ transform: `translateY(${-parallaxOffset.current * 0.1}px)`, animationDelay: '1s' }}
           />
           <div 
