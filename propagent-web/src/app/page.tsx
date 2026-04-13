@@ -301,26 +301,24 @@ export default function LandingPage() {
         className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-amber-50/40"
         aria-labelledby="hero-title"
       >
-        {/* Mouse-following Spotlight */}
-        {!prefersReducedMotion && (
-          <div 
-            className="absolute inset-0 pointer-events-none z-0"
-            aria-hidden="true"
-            style={{
-              background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(251, 146, 60, 0.08), transparent 40%)`
-            }}
-          />
-        )}
+        {/* Mouse-following Spotlight - always visible */}
+        <div 
+          className="absolute inset-0 pointer-events-none z-0"
+          aria-hidden="true"
+          style={{
+            background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(251, 146, 60, 0.15), transparent 40%)`
+          }}
+        />
         
         {/* Parallax Background Elements */}
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-          {/* Floating orbs with animation */}
+          {/* Floating orbs with animation - more visible */}
           <div 
-            className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-amber-400/20 to-orange-300/10 rounded-full blur-2xl animate-pulse"
+            className="absolute top-20 right-20 w-80 h-80 bg-gradient-to-br from-amber-400/40 to-orange-300/20 rounded-full blur-2xl animate-pulse"
             style={{ transform: `translateY(${parallaxOffset.current * 0.15}px)` }}
           />
           <div 
-            className="absolute bottom-40 left-10 w-48 h-48 bg-gradient-to-br from-orange-400/15 to-amber-300/10 rounded-full blur-2xl animate-pulse"
+            className="absolute bottom-40 left-10 w-64 h-64 bg-gradient-to-br from-orange-400/30 to-amber-300/20 rounded-full blur-2xl animate-pulse"
             style={{ transform: `translateY(${-parallaxOffset.current * 0.1}px)`, animationDelay: '1s' }}
           />
           <div 
