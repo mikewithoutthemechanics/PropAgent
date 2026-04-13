@@ -278,17 +278,17 @@ export default function LandingPage() {
       <section 
         id="hero"
         ref={heroRef as React.RefObject<HTMLElement>}
-        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden"
+        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-gradient-to-b from-white via-white to-[#fafaf8]"
         aria-labelledby="hero-title"
       >
         {/* Parallax Background Elements */}
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
           <div 
-            className="absolute top-0 right-0 w-[800px] h-[800px] bg-lime-400/5 rounded-full blur-3xl transition-transform duration-75 ease-out"
+            className="absolute top-0 right-0 w-[800px] h-[800px] bg-lime-400/20 rounded-full blur-3xl transition-transform duration-75 ease-out"
             style={{ transform: `translateY(${parallaxOffset.current * 0.2}px)` }}
           />
           <div 
-            className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-sky-400/5 rounded-full blur-3xl transition-transform duration-75 ease-out"
+            className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-sky-400/20 rounded-full blur-3xl transition-transform duration-75 ease-out"
             style={{ transform: `translateY(${-parallaxOffset.current * 0.15}px)` }}
           />
           <div className="absolute inset-0" style={{
@@ -390,7 +390,7 @@ export default function LandingPage() {
       <section 
         id="features"
         ref={featuresRef as React.RefObject<HTMLElement>}
-        className="py-20 md:py-32 px-4 sm:px-6 lg:px-8"
+        className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-[#fafaf8]"
         aria-labelledby="features-heading"
       >
         <div className="max-w-7xl mx-auto">
@@ -518,7 +518,7 @@ export default function LandingPage() {
       {/* Pricing */}
       <section 
         id="pricing" 
-        className={`py-20 md:py-32 px-4 sm:px-6 lg:px-8 transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('pricing') ? 'opacity-100' : 'opacity-0'}`}
+        className={`py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-white transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('pricing') ? 'opacity-100' : 'opacity-0'}`}
         aria-labelledby="pricing-heading"
       >
         <div className="max-w-7xl mx-auto">
