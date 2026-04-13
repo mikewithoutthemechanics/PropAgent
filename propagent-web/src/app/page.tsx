@@ -592,11 +592,11 @@ export default function LandingPage() {
             {plans.map((plan, i) => (
               <div 
                 key={i}
-                className={`relative rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${
+                className={`relative rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:scale-105 ${
                   plan.popular 
-                    ? `${plan.bg} shadow-2xl scale-105 z-10` 
-                    : `${plan.bg} hover:shadow-xl`
-                } border ${plan.border}`}
+                    ? `${plan.bg} shadow-2xl scale-105 z-10 border-2 border-lime-400` 
+                    : `${plan.bg} hover:shadow-xl border-2 border-transparent hover:border-amber-300`
+                }`}
               >
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-lime-400 text-charcoal-900 text-xs font-semibold rounded-full shadow-lg">
