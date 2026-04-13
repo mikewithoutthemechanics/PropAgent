@@ -99,20 +99,10 @@ export default function LandingPage() {
   }, [prefersReducedMotion]);
 
   useEffect(() => {
-    if (!loading && (user || isDemoMode)) {
-      router.push('/dashboard');
-    }
-  }, [user, loading, router, isDemoMode]);
+    // Don't auto-redirect from landing page - let users explore first
+  }, [user, loading, isDemoMode]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="relative">
-          <div className="w-12 h-12 border-4 border-charcoal-100 border-t-lime-400 rounded-full animate-spin"></div>
-        </div>
-      </div>
-    );
-  }
+  // Always show landing page content
 
   const features = [
     { icon: Building, title: 'Property Portfolio', desc: 'Manage unlimited properties with detailed tracking' },
@@ -160,23 +150,35 @@ export default function LandingPage() {
     {
       name: 'Starter',
       price: 'R499',
+      period: '/mo',
       desc: 'For individual landlords',
       features: ['Up to 10 units', 'Tenant portal', 'Basic reporting', 'Email support'],
-      popular: false
+      popular: false,
+      bg: 'bg-gradient-to-br from-amber-50 to-orange-50',
+      border: 'border-amber-200',
+      accent: 'text-amber-600'
     },
     {
       name: 'Professional',
       price: 'R999',
+      period: '/mo',
       desc: 'For growing portfolios',
       features: ['Up to 50 units', 'Advanced analytics', 'Priority support', 'API access', 'Custom branding'],
-      popular: true
+      popular: true,
+      bg: 'bg-gradient-to-br from-charcoal-900 to-charcoal-800',
+      border: 'border-charcoal-700',
+      accent: 'text-lime-400'
     },
     {
       name: 'Enterprise',
       price: 'Custom',
+      period: '',
       desc: 'For large organizations',
       features: ['Unlimited units', 'Dedicated account manager', 'Custom integrations', 'SLA guarantee', 'On-premise option'],
-      popular: false
+      popular: false,
+      bg: 'bg-gradient-to-br from-slate-50 to-zinc-50',
+      border: 'border-slate-200',
+      accent: 'text-slate-600'
     },
   ];
 
@@ -207,13 +209,13 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'bg-white/90 backdrop-blur-xl shadow-[0_1px_0_rgba(0,0,0,0.05)]' : 'bg-transparent'
+        scrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-amber-500/5' : 'bg-white/50 backdrop-blur-sm'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 bg-charcoal-900 rounded-xl flex items-center justify-center">
-                <Home className="w-5 h-5 text-lime-400" />
+              <div className="w-9 h-9 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/25">
+                <Home className="w-5 h-5 text-white" />
               </div>
               <span className="text-lg font-semibold tracking-tight">PropAgent</span>
             </Link>
@@ -228,7 +230,7 @@ export default function LandingPage() {
                 <a 
                   key={item.label} 
                   href={item.href} 
-                  className="text-sm text-charcoal-500 hover:text-charcoal-900 transition-colors relative"
+                  className="text-sm text-charcoal-600 hover:text-amber-600 transition-colors relative font-medium"
                 >
                   {item.label}
                 </a>
@@ -236,10 +238,10 @@ export default function LandingPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <Link href="/login" className="hidden sm:block text-sm text-charcoal-500 hover:text-charcoal-900 transition-colors font-medium">
+              <Link href="/login" className="hidden sm:block text-sm text-charcoal-500 hover:text-amber-600 transition-colors font-medium">
                 Sign in
               </Link>
-              <Link href="/register" className="px-4 py-2.5 bg-charcoal-900 text-white text-sm font-medium rounded-full hover:bg-charcoal-800 transition-all duration-300 hover:shadow-lg hover:shadow-charcoal-900/20">
+              <Link href="/register" className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-full hover:from-amber-400 hover:to-orange-400 transition-all duration-300 shadow-lg shadow-amber-500/25 hover:shadow-xl">
                 Get Started
               </Link>
               <button 
@@ -278,28 +280,28 @@ export default function LandingPage() {
       <section 
         id="hero"
         ref={heroRef as React.RefObject<HTMLElement>}
-        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-gradient-to-b from-white via-white to-[#fafaf8]"
+        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-amber-50/40"
         aria-labelledby="hero-title"
       >
         {/* Parallax Background Elements */}
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
           <div 
-            className="absolute top-0 right-0 w-[800px] h-[800px] bg-lime-400/20 rounded-full blur-3xl transition-transform duration-75 ease-out"
+            className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-amber-300/30 via-orange-200/20 to-transparent rounded-full blur-3xl transition-transform duration-75 ease-out"
             style={{ transform: `translateY(${parallaxOffset.current * 0.2}px)` }}
           />
           <div 
-            className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-sky-400/20 rounded-full blur-3xl transition-transform duration-75 ease-out"
+            className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-lime-200/20 via-emerald-100/15 to-transparent rounded-full blur-3xl transition-transform duration-75 ease-out"
             style={{ transform: `translateY(${-parallaxOffset.current * 0.15}px)` }}
           />
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgb(0 0 0 / 3%) 1px, transparent 0)`,
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgb(0 0 0 / 4%) 1px, transparent 0)`,
             backgroundSize: '40px 40px'
           }} />
-          {/* Animated grid lines */}
+          {/* Decorative elements */}
           <div 
-            className="absolute inset-0 opacity-30 transition-opacity duration-1000"
+            className="absolute inset-0 opacity-40"
             style={{
-              backgroundImage: `linear-gradient(rgb(0 0 0 / 5%) 1px, transparent 1px), linear-gradient(90deg, rgb(0 0 0 / 5%) 1px, transparent 1px)`,
+              backgroundImage: `linear-gradient(rgb(245 158 11 / 8%) 1px, transparent 1px), linear-gradient(90deg, rgb(245 158 11 / 8%) 1px, transparent 1px)`,
               backgroundSize: '100px 100px',
               transform: `translateY(${parallaxOffset.current * 0.05}px)`
             }}
@@ -308,7 +310,7 @@ export default function LandingPage() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`max-w-3xl transition-all duration-1000 ease-out ${prefersReducedMotion ? 'opacity-100' : visibleSections.has('hero') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-lime-400/10 rounded-full text-sm font-medium text-lime-600 mb-6 animate-pulse-slow">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-amber-400 to-orange-400 text-charcoal-900 text-sm font-semibold rounded-full mb-6 shadow-lg shadow-amber-400/25">
               <Zap className="w-4 h-4" aria-hidden="true" />
               <span>South Africa's #1 Property Platform</span>
             </div>
@@ -318,40 +320,40 @@ export default function LandingPage() {
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6"
             >
               Property management{' '}
-              <span className="text-lime-500 relative">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500 relative">
                 <span className="relative z-10">reimagined</span>
-                <span className="absolute inset-0 bg-lime-400/20 blur-xl rounded-full" aria-hidden="true" />
+                <span className="absolute inset-0 bg-gradient-to-r from-amber-400/30 to-orange-400/30 blur-2xl rounded-full" aria-hidden="true" />
               </span>
             </h1>
             
-            <p className="text-lg md:text-xl text-charcoal-500 max-w-xl leading-relaxed mb-8">
+            <p className="text-lg md:text-xl text-charcoal-600 max-w-xl leading-relaxed mb-8">
               The complete platform for South African property professionals. 
-              Streamline operations, delight tenants, and grow your portfolio.
+              Streamline operations, delight tenants, and grow your portfolio with confidence.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
               <Link 
                 href="/register" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-charcoal-900 text-white font-medium rounded-full hover:bg-charcoal-800 transition-all duration-300 hover:shadow-xl hover:shadow-charcoal-900/20 group focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-charcoal-900 font-semibold rounded-full hover:from-amber-400 hover:to-orange-400 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/25 group focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
               >
                 Start Free Trial
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </Link>
               <Link 
                 href="#features" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-charcoal-200 text-charcoal-700 font-medium rounded-full hover:bg-charcoal-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2"
+                className="inline-flex items-center justify-center gap-2 px-6 py-4 border-2 border-charcoal-200 text-charcoal-700 font-medium rounded-full hover:bg-charcoal-50 hover:border-charcoal-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2"
               >
                 <Play className="w-4 h-4" aria-hidden="true" />
                 See How It Works
               </Link>
             </div>
 
-            <div className="flex items-center gap-6 mt-10 pt-10 border-t border-charcoal-100">
+            <div className="flex items-center gap-6 mt-10 pt-10 border-t border-charcoal-200/50">
               <div className="flex -space-x-3" aria-label="Trusted by property professionals">
                 {[1,2,3,4,5].map((i) => (
                   <div 
                     key={i} 
-                    className="w-10 h-10 rounded-full bg-charcoal-200 border-2 border-white flex items-center justify-center text-xs font-medium"
+                    className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 border-2 border-white flex items-center justify-center text-xs font-medium text-charcoal-700"
                   >
                     {String.fromCharCode(64 + i)}
                   </div>
@@ -360,10 +362,10 @@ export default function LandingPage() {
               <div>
                 <div className="flex items-center gap-1" aria-label="5-star rating">
                   {[1,2,3,4,5].map((i) => (
-                    <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" aria-hidden="true" />
+                    <Star key={i} className="w-4 h-4 text-amber-500 fill-amber-500" aria-hidden="true" />
                   ))}
                 </div>
-                <p className="text-sm text-charcoal-500">Trusted by 500+ property professionals</p>
+                <p className="text-sm text-charcoal-500 font-medium">Trusted by 500+ property professionals</p>
               </div>
             </div>
           </div>
@@ -373,13 +375,13 @@ export default function LandingPage() {
       {/* Main Content Wrapper for Skip Link */}
       <main id="main-content">
       {/* Stats Bar */}
-      <section className="py-12 border-y border-charcoal-100 bg-charcoal-50/50">
+      <section className="py-12 border-y border-amber-100/50 bg-gradient-to-r from-amber-50/50 via-white to-amber-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
               <div key={i} className="text-center">
-                <p className="text-2xl md:text-3xl font-semibold text-charcoal-900">{stat.value}</p>
-                <p className="text-sm text-charcoal-500 mt-1">{stat.label}</p>
+                <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">{stat.value}</p>
+                <p className="text-sm text-charcoal-500 mt-1 font-medium">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -390,42 +392,43 @@ export default function LandingPage() {
       <section 
         id="features"
         ref={featuresRef as React.RefObject<HTMLElement>}
-        className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-[#fafaf8]"
+        className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-amber-50/30 to-amber-50/50"
         aria-labelledby="features-heading"
       >
         <div className="max-w-7xl mx-auto">
           <div className={`text-center mb-16 transition-all duration-700 delay-100 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <span className="text-lime-500 text-sm font-medium tracking-wider uppercase mb-3 block">Features</span>
+            <span className="text-amber-600 text-sm font-medium tracking-wider uppercase mb-3 block">Features</span>
             <h2 id="features-heading" className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
-              Everything you need
+              Everything you need to scale
             </h2>
             <p className="text-charcoal-500 text-lg max-w-xl mx-auto">
               A complete suite of tools designed for South African property management
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {/* Main feature - spans 2 cols */}
             <div 
-              className={`md:col-span-2 lg:row-span-2 bg-charcoal-900 rounded-3xl p-8 text-white relative overflow-hidden group transition-all duration-700 delay-200 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              className={`md:col-span-2 lg:row-span-2 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-3xl p-8 text-white relative overflow-hidden group transition-all duration-700 delay-200 hover:shadow-2xl hover:shadow-amber-500/10 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
             >
               <div 
-                className="absolute top-0 right-0 w-64 h-64 bg-lime-400/10 rounded-full blur-3xl group-hover:bg-lime-400/20 transition-all duration-500" 
+                className="absolute top-0 right-0 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl group-hover:bg-amber-400/20 transition-all duration-500" 
                 aria-hidden="true"
               />
+              <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-lime-400/5 rounded-full blur-3xl" aria-hidden="true" />
               <div className="relative z-10">
-                <div className="w-14 h-14 bg-lime-400/20 rounded-2xl flex items-center justify-center mb-6">
-                  <BarChart3 className="w-7 h-7 text-lime-400" aria-hidden="true" />
+                <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-400/20">
+                  <BarChart3 className="w-7 h-7 text-charcoal-900" aria-hidden="true" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-3">Powerful Analytics</h3>
-                <p className="text-white/60 mb-6">Get deep insights into your portfolio performance with real-time dashboards and custom reports.</p>
+                <p className="text-white/70 mb-6">Get deep insights into your portfolio performance with real-time dashboards and custom reports.</p>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/5 rounded-xl p-4">
-                    <p className="text-2xl font-semibold text-lime-400">+24%</p>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+                    <p className="text-2xl font-bold text-amber-400">+24%</p>
                     <p className="text-xs text-white/50">Revenue Growth</p>
                   </div>
-                  <div className="bg-white/5 rounded-xl p-4">
-                    <p className="text-2xl font-semibold text-lime-400">98%</p>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+                    <p className="text-2xl font-bold text-lime-400">98%</p>
                     <p className="text-xs text-white/50">Occupancy Rate</p>
                   </div>
                 </div>
@@ -436,13 +439,13 @@ export default function LandingPage() {
             {features.slice(0, 4).map((feature, i) => (
               <div 
                 key={i} 
-                className={`bg-charcoal-50 rounded-3xl p-6 hover:bg-charcoal-100 transition-all duration-300 group hover:shadow-lg hover:scale-[1.02] focus-within:ring-2 focus-within:ring-charcoal-900 focus-within:ring-offset-2 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                className={`bg-white rounded-3xl p-6 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 transition-all duration-300 group hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 border border-amber-100/50 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${300 + i * 100}ms` }}
               >
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:shadow-md transition-shadow">
-                  <feature.icon className="w-6 h-6 text-charcoal-700" aria-hidden="true" />
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-400 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-amber-400/20 group-hover:shadow-xl group-hover:shadow-amber-400/30 transition-all">
+                  <feature.icon className="w-6 h-6 text-charcoal-900" aria-hidden="true" />
                 </div>
-                <h3 className="font-semibold mb-2">{feature.title}</h3>
+                <h3 className="font-semibold mb-2 text-charcoal-800">{feature.title}</h3>
                 <p className="text-sm text-charcoal-500">{feature.desc}</p>
               </div>
             ))}
@@ -451,20 +454,20 @@ export default function LandingPage() {
             {features.slice(4, 7).map((feature, i) => (
               <div 
                 key={i + 4} 
-                className={`bg-charcoal-50 rounded-3xl p-6 hover:bg-charcoal-100 transition-all duration-300 group hover:shadow-lg hover:scale-[1.02] ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                className={`bg-white rounded-3xl p-6 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 transition-all duration-300 group hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 border border-amber-100/50 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${600 + i * 100}ms` }}
               >
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:shadow-md transition-shadow">
-                  <feature.icon className="w-6 h-6 text-charcoal-700" aria-hidden="true" />
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-400 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-amber-400/20 group-hover:shadow-xl group-hover:shadow-amber-400/30 transition-all">
+                  <feature.icon className="w-6 h-6 text-charcoal-900" aria-hidden="true" />
                 </div>
-                <h3 className="font-semibold mb-2">{feature.title}</h3>
+                <h3 className="font-semibold mb-2 text-charcoal-800">{feature.title}</h3>
                 <p className="text-sm text-charcoal-500">{feature.desc}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-8 flex justify-center">
-            <Link href="#pricing" className="inline-flex items-center gap-2 text-charcoal-600 font-medium hover:text-charcoal-900 transition-colors focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2 rounded-lg">
+          <div className="mt-10 flex justify-center">
+            <Link href="#pricing" className="inline-flex items-center gap-2 text-amber-600 font-medium hover:text-amber-700 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2 rounded-lg px-4 py-2">
               View all features <ChevronRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           </div>
@@ -474,12 +477,12 @@ export default function LandingPage() {
       {/* Testimonials - Horizontal Scroll Cards */}
       <section 
         id="testimonials" 
-        className={`py-20 md:py-32 bg-charcoal-900 text-white overflow-hidden transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100' : 'opacity-0'}`}
+        className={`py-20 md:py-32 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-charcoal-900 text-white overflow-hidden transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100' : 'opacity-0'}`}
         aria-labelledby="testimonials-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="text-lime-400 text-sm font-medium tracking-wider uppercase mb-3 block">Testimonials</span>
+            <span className="text-amber-400 text-sm font-medium tracking-wider uppercase mb-3 block">Testimonials</span>
             <h2 id="testimonials-heading" className="text-3xl md:text-5xl font-semibold">
               Loved by property professionals
             </h2>
@@ -489,7 +492,7 @@ export default function LandingPage() {
             {testimonials.map((testimonial, i) => (
               <div 
                 key={i} 
-                className={`bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-[1.02] focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-charcoal-900 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                className={`bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-amber-400/30 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-amber-500/10 focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-charcoal-900 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${i * 150}ms` }}
               >
                 <div className="flex gap-1 mb-6" aria-label="5-star rating">
@@ -501,11 +504,11 @@ export default function LandingPage() {
                   "{testimonial.quote}"
                 </blockquote>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-lime-400/20 rounded-full flex items-center justify-center font-semibold text-lime-400" aria-hidden="true">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-400 rounded-full flex items-center justify-center font-bold text-charcoal-900" aria-hidden="true">
                     {testimonial.author.charAt(0)}
                   </div>
                   <div>
-                    <p className="font-medium">{testimonial.author}</p>
+                    <p className="font-semibold">{testimonial.author}</p>
                     <p className="text-sm text-white/50">{testimonial.role}, {testimonial.company}</p>
                   </div>
                 </div>
@@ -536,39 +539,39 @@ export default function LandingPage() {
             {plans.map((plan, i) => (
               <div 
                 key={i}
-                className={`relative rounded-3xl p-8 transition-all duration-300 hover:shadow-xl ${
+                className={`relative rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${
                   plan.popular 
-                    ? 'bg-charcoal-900 text-white shadow-2xl scale-105 z-10' 
-                    : 'bg-charcoal-50 hover:bg-charcoal-100'
-                }`}
+                    ? `${plan.bg} shadow-2xl scale-105 z-10` 
+                    : `${plan.bg} hover:shadow-xl`
+                } border ${plan.border}`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-lime-400 text-charcoal-900 text-xs font-medium rounded-full">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-lime-400 text-charcoal-900 text-xs font-semibold rounded-full shadow-lg">
                     Most Popular
                   </div>
                 )}
                 <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-4xl font-semibold">{plan.price}</span>
-                  {plan.price !== 'Custom' && <span className={plan.popular ? 'text-white/60' : 'text-charcoal-500'}>/month</span>}
+                  <span className="text-4xl font-bold">{plan.price}</span>
+                  {plan.period && <span className={plan.popular ? 'text-white/50' : 'text-charcoal-400'}>{plan.period}</span>}
                 </div>
                 <p className={plan.popular ? 'text-white/60 text-sm mb-6' : 'text-charcoal-500 text-sm mb-6'}>{plan.desc}</p>
                 
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((f, j) => (
                     <li key={j} className="flex items-center gap-3 text-sm">
-                      <Check className={`w-4 h-4 ${plan.popular ? 'text-lime-400' : 'text-lime-500'}`} aria-hidden="true" />
-                      <span className={plan.popular ? 'text-white/80' : 'text-charcoal-600'}>{f}</span>
+                      <Check className={`w-4 h-4 flex-shrink-0 ${plan.accent}`} aria-hidden="true" />
+                      <span className={plan.popular ? 'text-white/80' : 'text-charcoal-700'}>{f}</span>
                     </li>
                   ))}
                 </ul>
                 
                 <Link 
                   href="/register" 
-                  className={`block text-center py-3 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2 ${
+                  className={`block text-center py-3.5 rounded-full font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     plan.popular 
-                      ? 'bg-lime-400 text-charcoal-900 hover:bg-lime-300' 
-                      : 'bg-charcoal-900 text-white hover:bg-charcoal-800'
+                      ? 'bg-lime-400 text-charcoal-900 hover:bg-lime-300 focus:ring-lime-400' 
+                      : 'bg-charcoal-900 text-white hover:bg-charcoal-800 focus:ring-charcoal-900'
                   }`}
                 >
                   Get Started
@@ -582,7 +585,7 @@ export default function LandingPage() {
       {/* CTA */}
       <section 
         id="cta"
-        className={`py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-charcoal-900 text-white transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('cta') ? 'opacity-100' : 'opacity-0'}`}
+        className={`py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-charcoal-900 text-white transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('cta') ? 'opacity-100' : 'opacity-0'}`}
         aria-labelledby="cta-heading"
       >
         <div className="max-w-3xl mx-auto text-center">
@@ -594,7 +597,7 @@ export default function LandingPage() {
           </p>
           <Link 
             href="/register" 
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-lime-400 text-charcoal-900 font-semibold rounded-full hover:bg-lime-300 transition-all duration-300 hover:shadow-xl hover:shadow-lime-400/25 group focus:outline-none focus:ring-2 focus:ring-lime-400 focus:ring-offset-2 focus:ring-charcoal-900"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-charcoal-900 font-semibold rounded-full hover:from-amber-300 hover:to-orange-300 transition-all duration-300 hover:shadow-xl hover:shadow-amber-400/25 group focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-charcoal-900"
           >
             Start Your Free Trial
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />

@@ -1112,3 +1112,226 @@ textarea:focus-visible {
     scroll-behavior: smooth;
   }
 }
+
+/* ===== PARALLAX SCROLL EFFECTS ===== */
+.parallax-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.parallax-layer {
+  position: absolute;
+  width: 100%;
+  height: 120%;
+  top: -10%;
+  left: 0;
+  will-change: transform;
+}
+
+.parallax-slow {
+  transform: translateY(calc(var(--scroll-percent, 0) * 0.2px));
+}
+
+.parallax-medium {
+  transform: translateY(calc(var(--scroll-percent, 0) * 0.4px));
+}
+
+.parallax-fast {
+  transform: translateY(calc(var(--scroll-percent, 0) * 0.6px));
+}
+
+/* Hero parallax background elements */
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.hero-blob-1 {
+  width: 600px;
+  height: 600px;
+  background: var(--lime-400);
+  top: -20%;
+  right: -10%;
+  transform: translateY(calc(var(--scroll-y, 0) * 0.3px));
+}
+
+.hero-blob-2 {
+  width: 400px;
+  height: 400px;
+  background: var(--sky-400);
+  bottom: -10%;
+  left: -5%;
+  transform: translateY(calc(var(--scroll-y, 0) * -0.2px));
+}
+
+.hero-blob-3 {
+  width: 300px;
+  height: 300px;
+  background: var(--lime-300);
+  top: 40%;
+  left: 30%;
+  transform: translateY(calc(var(--scroll-y, 0) * -0.15px));
+}
+
+/* Parallax dot pattern */
+.parallax-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--charcoal-300) 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.3;
+  transform: translateY(calc(var(--scroll-y, 0) * 0.1px));
+}
+
+/* ===== SCROLL-TRIGGERED ANIMATIONS ===== */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-animate-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+.scroll-animate-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-animate-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+.scroll-animate-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-animate-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+.scroll-animate-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.scroll-animate-fade {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+  will-change: opacity;
+}
+
+.scroll-animate-fade.visible {
+  opacity: 1;
+}
+
+/* Stagger delays for lists */
+.scroll-animate:nth-child(1) { transition-delay: 0ms; }
+.scroll-animate:nth-child(2) { transition-delay: 100ms; }
+.scroll-animate:nth-child(3) { transition-delay: 200ms; }
+.scroll-animate:nth-child(4) { transition-delay: 300ms; }
+.scroll-animate:nth-child(5) { transition-delay: 400ms; }
+.scroll-animate:nth-child(6) { transition-delay: 500ms; }
+
+/* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--charcoal-900);
+  color: white;
+  padding: 8px 16px;
+  z-index: 100;
+  transition: top 0.2s ease;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 0 0 8px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--lime-400);
+  outline-offset: 2px;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus trap indicator */
+.focus-trap-active {
+  outline: 3px solid var(--lime-400);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card {
+    border-width: 2px;
+    border-color: var(--charcoal-900);
+  }
+  
+  .btn {
+    border-width: 2px;
+  }
+  
+  .btn-primary {
+    border: 2px solid var(--charcoal-900);
+  }
+  
+  .focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion - disable parallax and scroll animations */
+@media (prefers-reduced-motion: reduce) {
+  .parallax-slow,
+  .parallax-medium,
+  .parallax-fast,
+  .hero-blob,
+  .parallax-dots {
+    transform: none !important;
+  }
+  
+  .scroll-animate,
+  .scroll-animate-left,
+  .scroll-animate-right,
+  .scroll-animate-scale,
+  .scroll-animate-fade {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
