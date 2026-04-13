@@ -54,6 +54,7 @@ import {
   FinancialReport
 } from '@/lib/financials';
 import { mockProperties, mockTenants } from '@/lib/data';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 
 type TabType = 'rentroll' | 'expenses' | 'invoices' | 'reports' | 'commissions';
 

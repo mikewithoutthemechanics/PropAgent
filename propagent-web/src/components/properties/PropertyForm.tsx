@@ -4,12 +4,13 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { 
   Save, Upload, X, Plus, Image as ImageIcon, 
   Home, MapPin, DollarSign, BedDouble, Bath, Car, 
-  Maximize, Calendar, Check
+  Maximize, Calendar, Check, Sparkles
 } from 'lucide-react';
 import { PropertyFormData, PropertyType, ListingType, Province, PropertyFeatures, PropertyImage } from '@/types/property';
 import { Button } from '@/components/ui';
 import { cn, formatCurrency } from '@/lib/utils';
 import { saProvinces, propertyTypes, listingTypes, propertyFeatureOptions } from '@/lib/sample-data';
+import { generateListingDescription } from '@/lib/ai-listing';
 
 interface PropertyFormProps {
   initialData?: Partial<PropertyFormData>;
@@ -76,6 +77,7 @@ export function PropertyForm({
   const [images, setImages] = useState<PropertyImage[]>([]);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isDirty, setIsDirty] = useState(false);
+  const [isAIGenerating, setIsAIGenerating] = useState(false);
   const autoSaveRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-save draft functionality
@@ -199,6 +201,31 @@ export function PropertyForm({
     setIsDirty(false);
   };
 
+  const handleAIGenerate = async () => {
+    setIsAIGenerating(true);
+    
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    const generated = generateListingDescription({
+      title: formData.title,
+      description: formData.description,
+      type: formData.type,
+      location: formData.location,
+      specs: formData.specs,
+      features: formData.features,
+      listingType: formData.listingType,
+    });
+    
+    setFormData(prev => ({
+      ...prev,
+      title: generated.title,
+      description: generated.description,
+    }));
+    
+    setIsAIGenerating(false);
+    setIsDirty(true);
+  };
+
   const sections = [
     { id: 'basic', label: 'Basic Info', icon: Home },
     { id: 'location', label: 'Location', icon: MapPin },
@@ -266,14 +293,30 @@ export function PropertyForm({
               <label className="block text-sm font-medium text-stone-700 mb-1.5">
                 Property Title <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                required
-                placeholder="e.g., Modern 4-Bedroom Family Home in Sandton"
-                value={formData.title}
-                onChange={(e) => updateFormData('title', e.target.value)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Modern 4-Bedroom Family Home in Sandton"
+                  value={formData.title}
+                  onChange={(e) => updateFormData('title', e.target.value)}
+                  className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 pr-20"
+                />
+                <button
+                  type="button"
+                  onClick={handleAIGenerate}
+                  disabled={isAIGenerating}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs font-medium rounded-md hover:from-purple-600 hover:to-indigo-600 transition-all disabled:opacity-50 shadow-sm"
+                  title="Generate with AI"
+                >
+                  {isAIGenerating ? (
+                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3 h-3" />
+                  )}
+                  <span className="hidden sm:inline">AI Write</span>
+                </button>
+              </div>
               <p className="mt-1 text-xs text-stone-500">
                 A compelling title helps your listing stand out
               </p>
@@ -283,14 +326,30 @@ export function PropertyForm({
               <label className="block text-sm font-medium text-stone-700 mb-1.5">
                 Description <span className="text-red-500">*</span>
               </label>
-              <textarea
-                required
-                rows={6}
-                placeholder="Describe your property in detail..."
-                value={formData.description}
-                onChange={(e) => updateFormData('description', e.target.value)}
-                className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 resize-none"
-              />
+              <div className="relative">
+                <textarea
+                  required
+                  rows={8}
+                  placeholder="Describe your property in detail..."
+                  value={formData.description}
+                  onChange={(e) => updateFormData('description', e.target.value)}
+                  className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 resize-none pr-12"
+                />
+                <button
+                  type="button"
+                  onClick={handleAIGenerate}
+                  disabled={isAIGenerating}
+                  className="absolute right-2 top-2 flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs font-medium rounded-md hover:from-purple-600 hover:to-indigo-600 transition-all disabled:opacity-50 shadow-sm"
+                  title="Generate with AI"
+                >
+                  {isAIGenerating ? (
+                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3 h-3" />
+                  )}
+                  <span className="hidden sm:inline">AI Describe</span>
+                </button>
+              </div>
               <p className="mt-1 text-xs text-stone-500">
                 {formData.description.length} characters. Include key selling points and nearby amenities.
               </p>

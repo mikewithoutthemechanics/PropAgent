@@ -19,10 +19,12 @@ import {
   RentSuggestion, 
   RentAnalysisInput,
   generateRentSuggestion,
+  generateLiveRentSuggestion,
   formatRent,
   getRentRangeString,
   analyzeCompetitiveness,
-  getSeasonalRecommendation
+  getSeasonalRecommendation,
+  getMarketDataSourceStatus
 } from '@/lib/rentAI';
 import { cn } from '@/lib/utils';
 
@@ -56,8 +58,10 @@ export default function RentAIPage() {
   const [voiceError, setVoiceError] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [dataSource, setDataSource] = useState(getMarketDataSourceStatus());
   
   const seasonalInfo = useMemo(() => getSeasonalRecommendation(), []);
+  const { source: dataSourceType, name: dataSourceName } = dataSource;
   
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -190,17 +194,30 @@ export default function RentAIPage() {
     }
   };
   
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     setIsAnalyzing(true);
-    setTimeout(() => {
+    try {
+      const inputWithCurrentRent = {
+        ...propertyInput,
+        currentRent: currentRent ? parseInt(currentRent) : undefined,
+      };
+      // Try to use live data, fall back to algorithm
+      const result = await generateLiveRentSuggestion(inputWithCurrentRent);
+      setSuggestion(result);
+      // Update data source status
+      setDataSource(getMarketDataSourceStatus());
+    } catch (error) {
+      console.error('Analysis error:', error);
+      // Fallback to algorithm
       const inputWithCurrentRent = {
         ...propertyInput,
         currentRent: currentRent ? parseInt(currentRent) : undefined,
       };
       const result = generateRentSuggestion(inputWithCurrentRent);
       setSuggestion(result);
+    } finally {
       setIsAnalyzing(false);
-    }, 800);
+    }
   };
   
   const competitiveness = suggestion && currentRent 
@@ -243,6 +260,9 @@ export default function RentAIPage() {
           <div className="flex items-center gap-3">
             <Badge className="bg-[#D8F053] text-black rounded-full">
               {seasonalInfo.currentSeason}
+            </Badge>
+            <Badge className={dataSourceType === 'api' ? 'bg-green-500 text-white rounded-full' : 'bg-orange-500 text-white rounded-full'}>
+              {dataSourceName}
             </Badge>
             
             {/* Voice Input Button */}
@@ -480,8 +500,13 @@ export default function RentAIPage() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <p className="text-[#525252] text-sm font-medium mb-2">Market Rent Analysis</p>
-                    <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#D8F053]/20 text-black">
-                      {suggestion.confidence.charAt(0).toUpperCase() + suggestion.confidence.slice(1)} Confidence
+                    <div className="flex items-center gap-2">
+                      <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#D8F053]/20 text-black">
+                        {suggestion.confidence.charAt(0).toUpperCase() + suggestion.confidence.slice(1)} Confidence
+                      </div>
+                      <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {dataSourceType === 'api' ? 'Live Data' : 'Estimated'}
+                      </div>
                     </div>
                   </div>
                   <div className="text-right">

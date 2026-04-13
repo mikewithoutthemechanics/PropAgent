@@ -23,7 +23,8 @@ import {
   Sparkles,
   Share2,
   ArrowUpRight,
-  BarChart3
+  BarChart3,
+  TrendingUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/auth';
@@ -31,6 +32,7 @@ import { useAuth } from '@/lib/auth';
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/properties', label: 'Properties', icon: Building2 },
+  { href: '/leads', label: 'Leads', icon: TrendingUp },
   { href: '/syndication', label: 'Syndication', icon: Share2 },
   { href: '/rent-ai', label: 'Rent AI', icon: Sparkles },
   { href: '/calendar', label: 'Calendar', icon: Calendar },

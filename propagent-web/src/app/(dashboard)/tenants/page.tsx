@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Search, Mail, Phone, MapPin, Calendar, MoreVertical, Building, User, Filter, Sparkles, X } from 'lucide-react';
 import { mockTenants, mockProperties } from '@/lib/data';
 import { formatDate, formatCurrency } from '@/lib/utils';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 
 const statusConfig = {
   active: { label: 'Active', class: 'bg-[var(--emerald-500)]/15 text-[var(--emerald-600)]' },

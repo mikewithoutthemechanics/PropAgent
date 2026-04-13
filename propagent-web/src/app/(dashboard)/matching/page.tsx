@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Filter, Users, Home, DollarSign, MapPin, Calendar, Sparkles, Target, ChevronRight, Bell, SlidersHorizontal, Search } from 'lucide-react';
+import { Plus, Filter, Users, Home, DollarSign, MapPin, Calendar, Sparkles, Target, ChevronRight, Bell, SlidersHorizontal, Search, TrendingUp, Building, Key, HomeIcon } from 'lucide-react';
 import { Card, Button, Badge } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { kznLocations, areaProfiles } from '@/lib/kzn-locations';
 
-// Sample criteria with KZN locations
+type MatchTab = 'rentals' | 'sales';
+
+// Sample rental criteria with KZN locations
 const sampleCriteria = [
   {
     id: '1',
@@ -37,7 +39,39 @@ const sampleCriteria = [
   }
 ];
 
+// Sales/Buyer criteria
+const buyerCriteria = [
+  {
+    id: '1',
+    budget: 'R1.5M - R2.5M',
+    location: 'Umhlanga, KZN',
+    beds: '3 bed',
+    purchaseType: 'Primary residence',
+    preApproved: true,
+    matchCount: 4
+  },
+  {
+    id: '2',
+    budget: 'R800K - R1.2M',
+    location: 'Ballito, KZN',
+    beds: '2 bed',
+    purchaseType: 'Investment',
+    preApproved: true,
+    matchCount: 6
+  },
+  {
+    id: '3',
+    budget: 'R2.5M - R4M',
+    location: 'Zimbali, KZN',
+    beds: '4 bed',
+    purchaseType: 'Primary residence',
+    preApproved: false,
+    matchCount: 2
+  }
+];
+
 export default function MatchingPage() {
+  const [activeTab, setActiveTab] = useState<MatchTab>('rentals');
   const [selectedCriteria, setSelectedCriteria] = useState<string | null>(null);
   const [mobileListOpen, setMobileListOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -57,10 +91,49 @@ export default function MatchingPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-10">
         <div>
-          <h1 className="text-2xl md:text-4xl font-semibold">Tenant Matching</h1>
+          {/* Tab Selector */}
+          <div className="flex items-center gap-1 p-1 bg-charcoal-100 rounded-lg w-fit mb-3">
+            <button
+              onClick={() => setActiveTab('rentals')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all",
+                activeTab === 'rentals' 
+                  ? "bg-white text-charcoal-900 shadow-sm" 
+                  : "text-charcoal-500 hover:text-charcoal-700"
+              )}
+            >
+              <Home className="w-4 h-4" />
+              Rentals
+            </button>
+            <button
+              onClick={() => setActiveTab('sales')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all",
+                activeTab === 'sales' 
+                  ? "bg-white text-charcoal-900 shadow-sm" 
+                  : "text-charcoal-500 hover:text-charcoal-700"
+              )}
+            >
+              <TrendingUp className="w-4 h-4" />
+              Sales
+            </button>
+          </div>
+          
+          <h1 className="text-2xl md:text-4xl font-semibold">
+            {activeTab === 'rentals' ? 'Tenant Matching' : 'Buyer Matching'}
+          </h1>
           <p className="text-charcoal-500 mt-2 flex items-center gap-3 text-sm md:text-base">
-            <Users className="w-4 h-4" />
-            <span>{sampleCriteria.length} active criteria</span>
+            {activeTab === 'rentals' ? (
+              <>
+                <Users className="w-4 h-4" />
+                <span>{sampleCriteria.length} active criteria</span>
+              </>
+            ) : (
+              <>
+                <Key className="w-4 h-4" />
+                <span>{buyerCriteria.length} active buyers</span>
+              </>
+            )}
             <span className="w-1 h-1 bg-charcoal-200 rounded-full" />
             <span className="text-lime-600">POPIA compliant</span>
           </p>
@@ -72,11 +145,68 @@ export default function MatchingPage() {
           </Badge>
           <Button className="bg-lime-400 text-charcoal-900 hover:bg-lime-500 transition-all text-xs md:text-sm py-2 px-4 md:py-2.5 md:px-5 rounded-full">
             <Plus className="w-4 h-4 mr-2" />
-            Add Criteria
+            {activeTab === 'rentals' ? 'Add Criteria' : 'Add Buyer'}
           </Button>
         </div>
       </div>
 
+      {activeTab === 'sales' ? (
+        <div className="space-y-6">
+          {/* Sales Matching - Buyer Criteria */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {buyerCriteria.map((buyer) => (
+              <div 
+                key={buyer.id}
+                onClick={() => setSelectedCriteria(selectedCriteria === buyer.id ? null : buyer.id)}
+                className={cn(
+                  "p-5 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md",
+                  selectedCriteria === buyer.id 
+                    ? "border-lime-400 bg-lime-50" 
+                    : "border-charcoal-100 hover:border-lime-300"
+                )}
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 bg-lime-100 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-lime-600" />
+                  </div>
+                  <Badge className={cn(
+                    "text-xs",
+                    buyer.preApproved ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"
+                  )}>
+                    {buyer.preApproved ? 'Pre-approved' : 'Pending'}
+                  </Badge>
+                </div>
+                <h3 className="font-semibold text-charcoal-900 mb-1">{buyer.purchaseType}</h3>
+                <p className="text-sm text-charcoal-500 mb-3">{buyer.location}</p>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium text-charcoal-900">{buyer.budget}</span>
+                  <span className="text-lime-600 font-medium">{buyer.matchCount} matches</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Add buyer lead card */}
+          <div className="bg-gradient-to-r from-lime-50 to-sky-50 rounded-xl p-6 border-2 border-lime-100">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-lime-100 rounded-xl flex items-center justify-center">
+                <Building className="w-6 h-6 text-lime-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-charcoal-900 mb-1">Capture Buyer Leads</h3>
+                <p className="text-sm text-charcoal-500 mb-4">
+                  Add buyers looking for properties. Match them with your sales inventory.
+                </p>
+                <Button className="bg-lime-400 text-charcoal-900 hover:bg-lime-500">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Buyer Lead
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+      <>
       {/* KZN Location Selector */}
       <div className="mb-8 p-5 bg-white border-2 border-charcoal-100 rounded-2xl">
         <h3 className="text-sm font-medium text-charcoal-500 mb-3">Search locations in KZN</h3>
@@ -261,12 +391,15 @@ export default function MatchingPage() {
         <div>
           <h4 className="font-medium text-lg mb-1">POPIA Protected Matching</h4>
           <p className="text-charcoal-500 text-sm leading-relaxed">
-            Criteria-only matching ensures no client personal data ever touches our servers. 
-            Client requirements are anonymized and matched property-to-property. 
-            Agent contact details are kept internal. FFC verification required for all agents.
+            {activeTab === 'sales' 
+              ? 'Buyer criteria is anonymized and matched against sales properties. No personal data stored.'
+              : 'Criteria-only matching ensures no client personal data ever touches our servers. Client requirements are anonymized and matched property-to-property.'
+            }
           </p>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

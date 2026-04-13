@@ -8,7 +8,8 @@ import { PropertyFilters } from '@/components/properties/PropertyFilters';
 import { PropertyCard } from '@/components/properties/PropertyCard';
 import { PropertyFilters as PropertyFiltersType } from '@/types/property';
 import { Button, Card } from '@/components/ui';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 
 const ITEMS_PER_PAGE = 9;
 

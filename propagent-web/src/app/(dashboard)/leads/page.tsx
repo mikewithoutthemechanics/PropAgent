@@ -4,7 +4,9 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { Users, Plus, Home, Building2, Phone, Mail, Search, Filter, TrendingUp, Target, Globe, Share2, Handshake, X } from 'lucide-react';
 import { Card, Button, Badge, Input } from '@/components/ui';
 import { Lead, sampleLeads, leadSourceConfig, getLeadStats } from '@/lib/leads';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { exportToCSV } from '@/lib/export';
 
 function AnimatedBackground() {
   return (
@@ -164,6 +166,8 @@ export default function LeadsPage() {
 
   return (
     <div ref={pageRef} className="space-y-6 relative">
+      <Breadcrumbs />
+      
       {/* Animated Gradient Header */}
       <div className="gradient-header relative rounded-2xl p-6 overflow-hidden">
         <AnimatedBackground />

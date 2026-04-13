@@ -1,5 +1,34 @@
 // Property Matching Algorithm for AgentPing
 // POPIA-compliant: criteria-only matching, no client data stored on servers
+// Supports both RENTAL (tenants) and SALES (buyers)
+
+export interface BuyerCriteria {
+  id: string;
+  agentId: string;
+  budget: {
+    min: number;
+    max: number;
+  };
+  location: {
+    suburb?: string;
+    city?: string;
+    province?: string;
+  };
+  bedrooms: number;
+  propertyTypes: ('house' | 'apartment' | 'townhouse' | 'flat' | 'vacant_land')[];
+  purchaseType: 'primary' | 'investment' | 'upgrade';
+  hasBond: boolean;
+  preApproval: boolean;
+  requiredFeatures: ('pool' | 'garage' | 'garden' | 'security' | 'ocean_view')[];
+  dateCreated: string;
+}
+
+export interface SalePropertyMatch {
+  propertyId: string;
+  propertyTitle: string;
+  matchScore: number;
+  matchReasons: string[];
+}
 
 export interface TenantCriteria {
   id: string;
@@ -201,4 +230,106 @@ export function hashCriteria(criteria: TenantCriteria): string {
     hash = hash & hash;
   }
   return Math.abs(hash).toString(16);
+}
+
+// SALES MATCHING ALGORITHM
+
+const PURCHASE_TYPE_WEIGHTS = {
+  'primary': 100,
+  'investment': 85,
+  'upgrade': 75,
+};
+
+const FEATURE_WEIGHTS = {
+  'pool': 15,
+  'garage': 10,
+  'garden': 8,
+  'security': 12,
+  'ocean_view': 20,
+};
+
+function calculateBuyerBudgetScore(criteria: BuyerCriteria, propertyPrice: number): number {
+  const { min, max } = criteria.budget;
+  if (propertyPrice >= min && propertyPrice <= max) return 100;
+  if (propertyPrice < min) return Math.max(0, 100 - ((min - propertyPrice) / min) * 100 * 1.5);
+  return Math.max(0, 100 - ((propertyPrice - max) / max) * 100);
+}
+
+function calculateBedroomScore(criteria: BuyerCriteria, propertyBedrooms: number): number {
+  if (propertyBedrooms >= criteria.bedrooms) return 100;
+  const diff = criteria.bedrooms - propertyBedrooms;
+  return Math.max(0, 100 - diff * 25);
+}
+
+function calculateLocationScore(criteria: BuyerCriteria, propertyCity: string, propertySuburb: string): number {
+  if (!criteria.location?.city && !criteria.location?.suburb) return 100;
+  if (criteria.location.city === propertyCity) return 100;
+  if (criteria.location.suburb === propertySuburb) return 90;
+  return 50;
+}
+
+function calculateFeaturesScore(criteria: BuyerCriteria, propertyFeatures: string[]): number {
+  if (!criteria.requiredFeatures?.length) return 100;
+  const matched = criteria.requiredFeatures.filter(f => propertyFeatures.includes(f)).length;
+  return (matched / criteria.requiredFeatures.length) * 100;
+}
+
+export function matchBuyersToProperties(
+  properties: { id: string; title: string; price: number; bedrooms: number; city: string; suburb: string; features: string[] }[],
+  criteria: BuyerCriteria
+): SalePropertyMatch[] {
+  const purchaseWeight = PURCHASE_TYPE_WEIGHTS[criteria.purchaseType] || 75;
+  const preApprovalBonus = criteria.preApproval ? 10 : 0;
+  const hasBondBonus = criteria.hasBond ? 5 : 0;
+  
+  const matches = properties.map(property => {
+    const budgetScore = calculateBuyerBudgetScore(criteria, property.price);
+    const bedroomScore = calculateBedroomScore(criteria, property.bedrooms);
+    const locationScore = calculateLocationScore(criteria, property.city, property.suburb);
+    const featuresScore = calculateFeaturesScore(criteria, property.features || []);
+    
+    const reasons: string[] = [];
+    if (budgetScore >= 85) reasons.push('Within budget');
+    if (bedroomScore >= 75) reasons.push('Correct bedrooms');
+    if (locationScore >= 90) reasons.push('Preferred area');
+    if (featuresScore >= 60) reasons.push('Key features');
+    if (preApprovalBonus) reasons.push('Pre-approved');
+    if (criteria.hasBond) reasons.push('Bond confirmed');
+    
+    const baseScore = (
+      budgetScore * 0.35 +
+      bedroomScore * 0.25 +
+      locationScore * 0.25 +
+      featuresScore * 0.15
+    );
+    
+    const finalScore = Math.min(100, baseScore + purchaseWeight * 0.1 + preApprovalBonus + hasBondBonus);
+    
+    return {
+      propertyId: property.id,
+      propertyTitle: property.title,
+      matchScore: Math.round(finalScore),
+      matchReasons: reasons,
+    };
+  });
+  
+  return matches
+    .filter(m => m.matchScore >= 50)
+    .sort((a, b) => b.matchScore - a.matchScore);
+}
+
+export function calculateBuyerMatchScore(criteria: BuyerCriteria, property: {
+  price: number;
+  bedrooms: number;
+  city: string;
+  suburb: string;
+  features: string[];
+}): number {
+  const score = (
+    calculateBuyerBudgetScore(criteria, property.price) * 0.35 +
+    calculateBedroomScore(criteria, property.bedrooms) * 0.25 +
+    calculateLocationScore(criteria, property.city, property.suburb) * 0.25 +
+    calculateFeaturesScore(criteria, property.features || []) * 0.15
+  );
+  return Math.round(score);
 }

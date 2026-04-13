@@ -5,6 +5,7 @@
  */
 
 export { useImageUpload } from './useImageUpload';
+export { useTheme } from './useTheme';
 
 // Re-export types
 export type {
