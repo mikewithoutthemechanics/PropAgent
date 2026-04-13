@@ -171,7 +171,7 @@ export default function MatchingPage() {
                   </div>
                   <Badge className={cn(
                     "text-xs",
-                    buyer.preApproved ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"
+                    buyer.preApproved ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
                   )}>
                     {buyer.preApproved ? 'Pre-approved' : 'Pending'}
                   </Badge>

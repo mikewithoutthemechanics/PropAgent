@@ -185,7 +185,7 @@ export default function PropertyDetailPage() {
                 onClick={() => setCurrentImageIndex(idx)}
                 className={cn(
                   "relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all duration-300 cursor-pointer",
-                  idx === currentImageIndex ? "border-navy-500" : "border-transparent hover:border-charcoal-300"
+                  idx === currentImageIndex ? "border-charcoal-500" : "border-transparent hover:border-charcoal-300"
                 )}
               >
                 <Image
@@ -207,7 +207,7 @@ export default function PropertyDetailPage() {
           {/* Title & Price */}
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <span className="px-2.5 py-1 rounded-full bg-charcoal-100 text-navy-700 text-xs font-medium uppercase">
+              <span className="px-2.5 py-1 rounded-full bg-charcoal-100 text-charcoal-700 text-xs font-medium uppercase">
                 For {property.listingType}
               </span>
               <span className="flex items-center gap-1 text-sm text-charcoal-500">
@@ -224,7 +224,7 @@ export default function PropertyDetailPage() {
             </p>
             
             <div className="mt-4 flex items-baseline gap-3">
-              <span className="text-3xl md:text-4xl font-bold text-navy-600">
+              <span className="text-3xl md:text-4xl font-bold text-charcoal-600">
                 {formatCurrency(property.pricing.price)}
               </span>
               {property.listingType === 'rent' && (
@@ -240,7 +240,7 @@ export default function PropertyDetailPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
               <div className="p-2 bg-lime-100 rounded-lg">
-                <Bed className="w-5 h-5 text-navy-600" />
+                <Bed className="w-5 h-5 text-charcoal-600" />
               </div>
               <div>
                 <p className="text-lg font-semibold text-charcoal-900">{property.specs.bedrooms}</p>
@@ -249,7 +249,7 @@ export default function PropertyDetailPage() {
             </div>
             <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
               <div className="p-2 bg-lime-100 rounded-lg">
-                <Bath className="w-5 h-5 text-navy-600" />
+                <Bath className="w-5 h-5 text-charcoal-600" />
               </div>
               <div>
                 <p className="text-lg font-semibold text-charcoal-900">{property.specs.bathrooms}</p>
@@ -258,7 +258,7 @@ export default function PropertyDetailPage() {
             </div>
             <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
               <div className="p-2 bg-lime-100 rounded-lg">
-                <Car className="w-5 h-5 text-navy-600" />
+                <Car className="w-5 h-5 text-charcoal-600" />
               </div>
               <div>
                 <p className="text-lg font-semibold text-charcoal-900">{property.specs.garages}</p>
@@ -268,7 +268,7 @@ export default function PropertyDetailPage() {
             {property.specs.floorSize && (
               <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
                 <div className="p-2 bg-lime-100 rounded-lg">
-                  <Maximize className="w-5 h-5 text-navy-600" />
+                  <Maximize className="w-5 h-5 text-charcoal-600" />
                 </div>
                 <div>
                   <p className="text-lg font-semibold text-charcoal-900">{property.specs.floorSize}</p>
@@ -393,14 +393,14 @@ export default function PropertyDetailPage() {
                 href={`tel:${property.agent.phone}`}
                 className="flex items-center gap-2 p-3 bg-charcoal-50 rounded-lg hover:bg-charcoal-100 transition-all duration-300 cursor-pointer"
               >
-                <Phone className="w-4 h-4 text-navy-500" />
+                <Phone className="w-4 h-4 text-charcoal-500" />
                 <span className="text-sm font-medium text-charcoal-700">{property.agent.phone}</span>
               </a>
               <a 
                 href={`mailto:${property.agent.email}`}
                 className="flex items-center gap-2 p-3 bg-charcoal-50 rounded-lg hover:bg-charcoal-100 transition-all duration-300 cursor-pointer"
               >
-                <Mail className="w-4 h-4 text-navy-500" />
+                <Mail className="w-4 h-4 text-charcoal-500" />
                 <span className="text-sm font-medium text-charcoal-700">{property.agent.email}</span>
               </a>
             </div>

@@ -325,7 +325,7 @@ export default function NotificationsPage() {
   const getPriorityBadge = (priority: NotificationPriority) => {
     const badgeClasses = {
       urgent: "bg-white border-2 border-charcoal-100 rounded-2xl bg-red-500/20 text-red-300 border-red-500/30",
-      high: "bg-white border-2 border-charcoal-100 rounded-2xl bg-orange-500/20 text-orange-300 border-orange-500/30",
+      high: "bg-white border-2 border-charcoal-100 rounded-2xl bg-rose-500/20 text-rose-300 border-rose-500/30",
       medium: "bg-white border-2 border-charcoal-100 rounded-2xl bg-blue-500/20 text-blue-300 border-blue-500/30",
       low: "bg-white border-2 border-charcoal-100 rounded-2xl bg-charcoal-500/20 text-charcoal-500 border-charcoal-500/30",
     };

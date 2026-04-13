@@ -26,7 +26,7 @@ const platformIcons: Record<SyndicationPlatform, React.ReactNode> = {
 };
 
 const platformColors: Record<SyndicationPlatform, string> = {
-  property24: 'bg-orange-500 text-white',
+  property24: 'bg-rose-500 text-white',
   private_property: 'bg-emerald-500 text-white',
   facebook: 'bg-blue-600 text-white',
   instagram: 'bg-pink-600 text-white',

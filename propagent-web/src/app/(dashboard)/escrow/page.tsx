@@ -158,7 +158,7 @@ function AnimatedProgressBar({ progress, status }: { progress: number; status: E
     deposited: 'from-sky-400 to-cyan-400',
     in_verification: 'from-purple-500 to-pink-500',
     released: 'from-lime-500 to-green-500',
-    disputed: 'from-red-500 to-orange-500',
+    disputed: 'from-red-500 to-rose-500',
     forfeited: 'from-charcoal-400 to-charcoal-500',
   };
 

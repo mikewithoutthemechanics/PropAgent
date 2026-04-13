@@ -261,7 +261,7 @@ export default function RentAIPage() {
             <Badge className="bg-[#D8F053] text-black rounded-full">
               {seasonalInfo.currentSeason}
             </Badge>
-            <Badge className={dataSourceType === 'api' ? 'bg-green-500 text-white rounded-full' : 'bg-orange-500 text-white rounded-full'}>
+            <Badge className={dataSourceType === 'api' ? 'bg-emerald-500 text-white rounded-full' : 'bg-rose-500 text-white rounded-full'}>
               {dataSourceName}
             </Badge>
             

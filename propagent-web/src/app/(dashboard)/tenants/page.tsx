@@ -277,7 +277,7 @@ function FloatingActionButton({ onClick }: { onClick: () => void }) {
 function ParallaxBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-      <div className="absolute top-20 left-10 w-64 h-64 bg-amber-200/10 rounded-full blur-3xl animate-float" style={{ animationDuration: '8s' }} />
+      <div className="absolute top-20 left-10 w-64 h-64 bg-rose-200/10 rounded-full blur-3xl animate-float" style={{ animationDuration: '8s' }} />
       <div className="absolute top-40 right-20 w-48 h-48 bg-rose-200/10 rounded-full blur-3xl animate-float" style={{ animationDuration: '10s', animationDelay: '2s' }} />
       <div className="absolute bottom-40 left-1/3 w-40 h-40 bg-sky-200/10 rounded-full blur-3xl animate-float" style={{ animationDuration: '12s', animationDelay: '1s' }} />
     </div>

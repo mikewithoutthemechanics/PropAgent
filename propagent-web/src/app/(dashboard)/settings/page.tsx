@@ -533,12 +533,12 @@ export default function SettingsPage() {
                 ))}
               </div>
 
-              <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+              <div className="p-4 bg-rose-50 rounded-xl border border-rose-200">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5" />
+                  <AlertTriangle className="w-5 h-5 text-rose-500 mt-0.5" />
                   <div>
-                    <p className="font-medium text-amber-700">Keep your API keys secure</p>
-                    <p className="text-sm text-amber-600 mt-1">
+                    <p className="font-medium text-rose-700">Keep your API keys secure</p>
+                    <p className="text-sm text-rose-600 mt-1">
                       Never share your API keys in public repositories or client-side code. 
                       Use environment variables for production.
                     </p>

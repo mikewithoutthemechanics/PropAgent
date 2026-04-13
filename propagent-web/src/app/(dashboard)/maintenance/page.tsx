@@ -205,7 +205,7 @@ export default function MaintenancePage() {
     const priorityStyles = {
       low: 'bg-charcoal-100 text-charcoal-700 border-charcoal-300',
       medium: 'bg-primary/10 text-primary border-charcoal-300',
-      high: 'bg-orange-100 text-orange-800 border-orange-300',
+      high: 'bg-rose-100 text-rose-800 border-rose-300',
       emergency: 'bg-red-100 text-red-800 border-red-300',
       urgent: 'bg-red-100 text-red-800 border-red-300',
     };
