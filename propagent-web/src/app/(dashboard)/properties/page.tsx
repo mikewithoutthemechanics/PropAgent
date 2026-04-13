@@ -122,7 +122,7 @@ const Pagination = ({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="group p-2 rounded-xl border border-[var(--charcoal-200)] hover:border-[var(--lime-400)] hover:bg-[var(--lime-50)] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
+          className="group p-2 rounded-xl border border-[var(--charcoal-200)] hover:border-[var(--lime-400)] hover:bg-[var(--lime-50)] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4 text-[var(--charcoal-500)] group-hover:text-[var(--charcoal-900)] transition-colors" />
         </button>
@@ -131,7 +131,7 @@ const Pagination = ({
             key={page}
             onClick={() => onPageChange(page)}
             className={cn(
-              "w-10 h-10 rounded-full text-sm font-medium transition-all duration-300",
+              "w-10 h-10 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer",
               currentPage === page
                 ? "bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-lg shadow-[var(--lime-400)]/25"
                 : "border border-[var(--charcoal-200)] hover:border-[var(--lime-400)] text-[var(--charcoal-500)] hover:text-[var(--charcoal-900)]"
@@ -143,7 +143,7 @@ const Pagination = ({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="group p-2 rounded-xl border border-[var(--charcoal-200)] hover:border-[var(--lime-400)] hover:bg-[var(--lime-50)] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
+          className="group p-2 rounded-xl border border-[var(--charcoal-200)] hover:border-[var(--lime-400)] hover:bg-[var(--lime-50)] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 cursor-pointer"
         >
           <ChevronRight className="w-4 h-4 text-[var(--charcoal-500)] group-hover:text-[var(--charcoal-900)] transition-colors" />
         </button>
@@ -284,7 +284,7 @@ export default function PropertiesPage() {
               <button
                 onClick={() => setViewMode('grid')}
                 className={cn(
-                  "p-2.5 rounded-lg transition-all duration-300",
+                  "p-2.5 rounded-lg transition-all duration-300 cursor-pointer",
                   viewMode === 'grid' 
                     ? "bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-lg shadow-[var(--lime-400)]/25" 
                     : "text-[var(--charcoal-500)] hover:text-[var(--charcoal-900)] hover:bg-[var(--charcoal-100)]"
@@ -296,7 +296,7 @@ export default function PropertiesPage() {
               <button
                 onClick={() => setViewMode('list')}
                 className={cn(
-                  "p-2.5 rounded-lg transition-all duration-300",
+                  "p-2.5 rounded-lg transition-all duration-300 cursor-pointer",
                   viewMode === 'list' 
                     ? "bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-lg shadow-[var(--lime-400)]/25" 
                     : "text-[var(--charcoal-500)] hover:text-[var(--charcoal-900)] hover:bg-[var(--charcoal-100)]"
@@ -309,7 +309,7 @@ export default function PropertiesPage() {
           </div>
           <Button 
             onClick={handleAddProperty}
-            className="bg-[var(--lime-400)] hover:bg-[var(--lime-500)] shadow-lg shadow-[var(--lime-400)]/25 text-[var(--charcoal-900)]"
+            className="bg-[var(--lime-400)] hover:bg-[var(--lime-500)] shadow-lg shadow-[var(--lime-400)]/25 text-[var(--charcoal-900)] transition-all duration-300 cursor-pointer"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Add Property
@@ -376,7 +376,7 @@ export default function PropertiesPage() {
                 </div>
                 <h3 className="text-lg font-medium text-[var(--charcoal-900)]">No properties found</h3>
                 <p className="text-[var(--charcoal-500)] mt-1 mb-4">Try adjusting your filters or add a new property.</p>
-                <Button variant="outline" onClick={handleResetFilters} className="border-[var(--charcoal-200)] hover:border-[var(--lime-400)] text-[var(--charcoal-700)] hover:text-[var(--charcoal-900)]">
+                <Button variant="outline" onClick={handleResetFilters} className="border-[var(--charcoal-200)] hover:border-[var(--lime-400)] text-[var(--charcoal-700)] hover:text-[var(--charcoal-900)] cursor-pointer">
                   Clear Filters
                 </Button>
               </div>

@@ -270,10 +270,10 @@ export default function RentAIPage() {
               <button
                 onClick={toggleVoice}
                 className={cn(
-                  "w-12 h-12 rounded-full flex items-center justify-center transition-all",
+                  "w-12 h-12 rounded-full flex items-center justify-center transition-all cursor-pointer",
                   isListening 
                     ? "bg-red-500 animate-pulse" 
-                    : "bg-[#D8F053] hover:bg-[#C2DC34]"
+                    : "bg-[#D8F053] hover:bg-[#C2DC34] transition-all duration-300"
                 )}
                 title={isListening ? "Stop voice input" : "Start voice input"}
               >
@@ -301,7 +301,7 @@ export default function RentAIPage() {
               <div className="flex items-center gap-2 text-red-400 text-sm">
                 <MicOff className="w-4 h-4" />
                 <span>{voiceError}</span>
-                <button onClick={() => setVoiceError(null)} className="ml-2 text-white/60 hover:text-white">×</button>
+                <button onClick={() => setVoiceError(null)} className="ml-2 text-white/60 hover:text-white transition-all duration-300">×</button>
               </div>
             ) : isListening ? (
               <div className="flex items-center gap-3">

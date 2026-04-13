@@ -193,10 +193,10 @@ export default function MaintenancePage() {
 
   const getStatusBadge = (status: string) => {
     const statusStyles = {
-      pending: 'bg-lime-100 text-lime-800 border-charcoal-300',
-      'in-progress': 'bg-sky-100 text-sky-800 border-charcoal-300',
-      completed: 'bg-lime-100 text-lime-800 border-lime-300',
-      cancelled: 'bg-gray-100 text-charcoal-600 border-gray-300',
+      pending: 'bg-primary/10 text-primary border-charcoal-300',
+      'in-progress': 'bg-accent/10 text-accent border-charcoal-300',
+      completed: 'bg-primary/10 text-primary border-primary/30',
+      cancelled: 'bg-charcoal-100 text-charcoal-600 border-charcoal-300',
     };
     return statusStyles[status as keyof typeof statusStyles] || statusStyles.pending;
   };
@@ -204,7 +204,7 @@ export default function MaintenancePage() {
   const getPriorityBadge = (priority: string) => {
     const priorityStyles = {
       low: 'bg-charcoal-100 text-charcoal-700 border-charcoal-300',
-      medium: 'bg-lime-100 text-lime-800 border-charcoal-300',
+      medium: 'bg-primary/10 text-primary border-charcoal-300',
       high: 'bg-orange-100 text-orange-800 border-orange-300',
       emergency: 'bg-red-100 text-red-800 border-red-300',
       urgent: 'bg-red-100 text-red-800 border-red-300',
@@ -219,17 +219,17 @@ export default function MaintenancePage() {
           <h1 className="text-2xl font-bold text-charcoal-900">Maintenance</h1>
           <p className="text-charcoal-500 mt-1">Track and manage maintenance requests</p>
         </div>
-        <Button onClick={() => setShowAddModal(true)}>
+        <Button onClick={() => setShowAddModal(true)} className="transition-all duration-300 cursor-pointer">
           <Plus className="w-4 h-4" />
           New Request
         </Button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4 bg-white border-2 border-charcoal-100 rounded-2xl">
+        <Card className="p-4 bg-white border-2 border-charcoal-100 rounded-2xl transition-all duration-300">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-lime-100 rounded-lg flex items-center justify-center">
-              <Clock className="w-5 h-5 text-lime-600" />
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+              <Clock className="w-5 h-5 text-primary" />
             </div>
             <div>
               <p className="text-sm text-charcoal-500">Pending</p>
@@ -239,10 +239,10 @@ export default function MaintenancePage() {
             </div>
           </div>
         </Card>
-        <Card className="p-4 bg-white border-2 border-charcoal-100 rounded-2xl">
+        <Card className="p-4 bg-white border-2 border-charcoal-100 rounded-2xl transition-all duration-300">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-sky-600" />
+            <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center">
+              <AlertTriangle className="w-5 h-5 text-accent" />
             </div>
             <div>
               <p className="text-sm text-charcoal-500">In Progress</p>
@@ -252,10 +252,10 @@ export default function MaintenancePage() {
             </div>
           </div>
         </Card>
-        <Card className="p-4 bg-white border-2 border-charcoal-100 rounded-2xl">
+        <Card className="p-4 bg-white border-2 border-charcoal-100 rounded-2xl transition-all duration-300">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-lime-100 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-5 h-5 text-lime-600" />
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+              <CheckCircle className="w-5 h-5 text-primary" />
             </div>
             <div>
               <p className="text-sm text-charcoal-500">Completed</p>
@@ -265,7 +265,7 @@ export default function MaintenancePage() {
             </div>
           </div>
         </Card>
-        <Card className="p-4 bg-white border-2 border-charcoal-100 rounded-2xl">
+        <Card className="p-4 bg-white border-2 border-charcoal-100 rounded-2xl transition-all duration-300">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
               <AlertTriangle className="w-5 h-5 text-red-600" />
@@ -290,7 +290,7 @@ export default function MaintenancePage() {
                 placeholder="Search maintenance requests..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-charcoal-50 border border-charcoal-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-lime-500/20 focus:border-lime-500 transition-all duration-200"
+                className="w-full pl-10 pr-4 py-2 bg-charcoal-50 border border-charcoal-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 cursor-pointer"
               />
             </div>
           </div>
@@ -298,7 +298,7 @@ export default function MaintenancePage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-2 bg-white border border-charcoal-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-lime-500/20 cursor-pointer"
+              className="px-3 py-2 bg-white border border-charcoal-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer transition-all duration-300"
             >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
@@ -309,7 +309,7 @@ export default function MaintenancePage() {
             <select
               value={filterPriority}
               onChange={(e) => setFilterPriority(e.target.value)}
-              className="px-3 py-2 bg-white border border-charcoal-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-lime-500/20 cursor-pointer"
+              className="px-3 py-2 bg-white border border-charcoal-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer transition-all duration-300"
             >
               <option value="all">All Priority</option>
               <option value="low">Low</option>
@@ -322,7 +322,7 @@ export default function MaintenancePage() {
 
         <div className="divide-y divide-charcoal-100">
           {filteredRequests.map((request) => (
-            <div key={request.id} className="p-4 hover:bg-charcoal-50 transition-colors duration-200 cursor-pointer">
+            <div key={request.id} className="p-4 hover:bg-charcoal-50 transition-all duration-300 cursor-pointer">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
@@ -371,7 +371,7 @@ export default function MaintenancePage() {
               <h2 className="text-xl font-semibold text-charcoal-900">New Maintenance Request</h2>
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="p-2 hover:bg-charcoal-50 rounded-lg transition-colors cursor-pointer"
+                className="p-2 hover:bg-charcoal-50 rounded-lg transition-all duration-300 cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5 text-charcoal-900/60" />
@@ -385,7 +385,7 @@ export default function MaintenancePage() {
                   type="text" 
                   value={newRequest.title}
                   onChange={(e) => setNewRequest({...newRequest, title: e.target.value})}
-                  className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+                  className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 cursor-pointer"
                   placeholder="e.g., Leaking tap in kitchen"
                 />
               </div>
@@ -400,14 +400,14 @@ export default function MaintenancePage() {
                     rows={3}
                     value={newRequest.description + (voiceTranscript && isRecording ? ' ' + voiceTranscript : '')}
                     onChange={(e) => setNewRequest({...newRequest, description: e.target.value})}
-                    className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500"
+                    className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 cursor-pointer"
                     placeholder="Describe the issue in detail... (or use voice input)"
                   />
                   <button
                     type="button"
                     onClick={toggleVoiceRecording}
                     className={cn(
-                      "absolute right-3 top-3 p-2 rounded-full transition-all",
+                      "absolute right-3 top-3 p-2 rounded-full transition-all duration-300 cursor-pointer",
                       isRecording && !prefersReducedMotion ? "bg-red-500 text-white animate-pulse" : "bg-charcoal-200 text-charcoal-600 hover:bg-charcoal-300"
                     )}
                     title={isRecording ? "Stop recording" : "Record voice note"}
@@ -425,7 +425,7 @@ export default function MaintenancePage() {
                 <select 
                   value={newRequest.propertyId}
                   onChange={(e) => setNewRequest({...newRequest, propertyId: e.target.value})}
-                  className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500 cursor-pointer"
+                  className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer transition-all duration-300"
                 >
                   <option value="">Select a property...</option>
                   {mockProperties.map(prop => (
@@ -440,7 +440,7 @@ export default function MaintenancePage() {
                   <select 
                     value={newRequest.priority}
                     onChange={(e) => setNewRequest({...newRequest, priority: e.target.value})}
-                    className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer transition-all duration-300"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -453,7 +453,7 @@ export default function MaintenancePage() {
                   <select 
                     value={newRequest.category}
                     onChange={(e) => setNewRequest({...newRequest, category: e.target.value})}
-                    className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-lime-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer transition-all duration-300"
                   >
                     <option value="general">General</option>
                     <option value="plumbing">Plumbing</option>
@@ -469,13 +469,13 @@ export default function MaintenancePage() {
             <div className="flex items-center justify-end gap-3 mt-6">
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="px-4 py-2.5 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm hover:bg-charcoal-200 transition-all cursor-pointer"
+                className="px-4 py-2.5 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm hover:bg-charcoal-200 transition-all duration-300 cursor-pointer"
               >
                 Cancel
               </button>
               <button 
                 onClick={handleAddRequest}
-                className="px-6 py-2.5 bg-lime-400 rounded-full text-charcoal-900 text-sm font-medium hover:shadow-lg hover:shadow-lime-500/25 transition-all cursor-pointer"
+                className="px-6 py-2.5 bg-primary rounded-full text-charcoal-900 text-sm font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 cursor-pointer"
               >
                 <Plus className="w-4 h-4 inline mr-1.5" />
                 Create Request

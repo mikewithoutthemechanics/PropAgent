@@ -94,17 +94,17 @@ function ViewingCard({ viewing }: { viewing: PropertyViewing }) {
         
         {viewing.status === 'pending' && (
           <div className="flex items-center gap-1.5">
-            <button className="p-1.5 rounded-lg bg-[var(--emerald-500)]/20 hover:bg-[var(--emerald-500)]/30 text-[var(--emerald-500)] transition-all">
+            <button className="p-1.5 rounded-lg bg-[var(--emerald-500)]/20 hover:bg-[var(--emerald-500)]/30 text-[var(--emerald-500)] transition-all duration-300">
               <Check className="w-3 h-3" />
             </button>
-            <button className="p-1.5 rounded-lg bg-[var(--rose-500)]/20 hover:bg-[var(--rose-500)]/30 text-[var(--rose-500)] transition-all">
+            <button className="p-1.5 rounded-lg bg-[var(--rose-500)]/20 hover:bg-[var(--rose-500)]/30 text-[var(--rose-500)] transition-all duration-300">
               <X className="w-3 h-3" />
             </button>
           </div>
         )}
         
         {viewing.status === 'confirmed' && (
-          <button className="p-1.5 rounded-lg bg-[var(--sky-400)]/20 hover:bg-[var(--sky-400)]/30 text-[var(--sky-400)] transition-all">
+          <button className="p-1.5 rounded-lg bg-[var(--sky-400)]/20 hover:bg-[var(--sky-400)]/30 text-[var(--sky-400)] transition-all duration-300">
             <Bell className="w-3 h-3" />
           </button>
         )}
@@ -133,7 +133,7 @@ function StatusFilter({
         "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
         active 
           ? "bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-lg" 
-          : "bg-white border border-[var(--charcoal-200)] text-[var(--charcoal-700)] hover:bg-[var(--charcoal-50)]"
+          : "bg-white border border-[var(--charcoal-200)] text-[var(--charcoal-700)] hover:bg-[var(--charcoal-50)] transition-all duration-300"
       )}
     >
       {label}
@@ -290,21 +290,21 @@ export default function CalendarPage() {
       
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white border border-[var(--charcoal-100)] p-4 rounded-2xl hover:border-[var(--lime-400)]/50 hover:shadow-lg transition-all">
-          <p className="text-xs text-[var(--charcoal-500)] font-medium">Total Viewings</p>
-          <p className="text-2xl font-semibold text-[var(--charcoal-900)] mt-1">{stats.total}</p>
+        <div className="bg-white border border-charcoal-100 p-4 rounded-2xl hover:border-lime-400/50 hover:shadow-lg transition-all duration-300">
+          <p className="text-xs text-charcoal-500 font-medium">Total Viewings</p>
+          <p className="text-2xl font-semibold text-charcoal-900 mt-1">{stats.total}</p>
         </div>
-        <div className="bg-white border border-[var(--charcoal-100)] p-4 rounded-2xl hover:border-[var(--lime-400)]/50 hover:shadow-lg transition-all">
-          <p className="text-xs text-[var(--charcoal-500)] font-medium">Upcoming</p>
-          <p className="text-2xl font-semibold text-[var(--charcoal-900)] mt-1">{stats.upcoming}</p>
+        <div className="bg-white border border-charcoal-100 p-4 rounded-2xl hover:border-lime-400/50 hover:shadow-lg transition-all duration-300">
+          <p className="text-xs text-charcoal-500 font-medium">Upcoming</p>
+          <p className="text-2xl font-semibold text-charcoal-900 mt-1">{stats.upcoming}</p>
         </div>
-        <div className="bg-white border border-[var(--charcoal-100)] p-4 rounded-2xl hover:border-[var(--lime-400)]/50 hover:shadow-lg transition-all">
-          <p className="text-xs text-[var(--charcoal-500)] font-medium">Confirmed</p>
-          <p className="text-2xl font-semibold text-[var(--emerald-500)] mt-1">{stats.confirmed}</p>
+        <div className="bg-white border border-charcoal-100 p-4 rounded-2xl hover:border-lime-400/50 hover:shadow-lg transition-all duration-300">
+          <p className="text-xs text-charcoal-500 font-medium">Confirmed</p>
+          <p className="text-2xl font-semibold text-emerald-500 mt-1">{stats.confirmed}</p>
         </div>
-        <div className="bg-white border border-[var(--charcoal-100)] p-4 rounded-2xl hover:border-[var(--lime-400)]/50 hover:shadow-lg transition-all">
-          <p className="text-xs text-[var(--charcoal-500)] font-medium">Pending</p>
-          <p className="text-2xl font-semibold text-[var(--lime-500)] mt-1">{stats.pending}</p>
+        <div className="bg-white border border-charcoal-100 p-4 rounded-2xl hover:border-lime-400/50 hover:shadow-lg transition-all duration-300">
+          <p className="text-xs text-charcoal-500 font-medium">Pending</p>
+          <p className="text-2xl font-semibold text-lime-500 mt-1">{stats.pending}</p>
         </div>
       </div>
       
@@ -360,13 +360,13 @@ export default function CalendarPage() {
             <div className="flex items-center gap-1">
               <button 
                 onClick={() => navigateMonth(-1)}
-                className="p-2 rounded-lg hover:bg-[var(--charcoal-50)] transition-colors"
+                className="p-2 rounded-lg hover:bg-[var(--charcoal-50)] transition-all duration-300"
               >
                 <ChevronLeft className="w-5 h-5 text-[var(--charcoal-600)]" />
               </button>
               <button 
                 onClick={() => navigateMonth(1)}
-                className="p-2 rounded-lg hover:bg-[var(--charcoal-50)] transition-colors"
+                className="p-2 rounded-lg hover:bg-[var(--charcoal-50)] transition-all duration-300"
               >
                 <ChevronRight className="w-5 h-5 text-[var(--charcoal-600)]" />
               </button>
@@ -406,7 +406,7 @@ export default function CalendarPage() {
                   key={day}
                   onClick={() => handleDateClick(day)}
                   className={cn(
-                    "p-3 min-h-[90px] text-left border-b border-r border-[var(--charcoal-100)] hover:bg-[var(--charcoal-50)] transition-all",
+                    "p-3 min-h-[90px] text-left border-b border-r border-[var(--charcoal-100)] hover:bg-[var(--charcoal-50)] transition-all duration-300",
                     isSelected && "bg-[var(--lime-100)] border-[var(--lime-400)]/30",
                     isToday && !isSelected && "bg-[var(--lime-50)]"
                   )}

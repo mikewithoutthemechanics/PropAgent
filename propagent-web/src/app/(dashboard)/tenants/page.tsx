@@ -163,7 +163,7 @@ function TableRow({ tenant }: { tenant: typeof mockTenants[0] }) {
   const propertyAddress = getPropertyAddress(tenant.propertyId);
   
   return (
-    <tr className="hover:bg-[var(--lime-50)]/50 transition-colors">
+    <tr className="hover:bg-[var(--lime-50)]/50 transition-all duration-300">
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -214,18 +214,18 @@ function TableRow({ tenant }: { tenant: typeof mockTenants[0] }) {
       </td>
       <td className="px-6 py-4">
         <div className="space-y-1.5">
-          <a href={`mailto:${tenant.email}`} className="flex items-center gap-2 text-sm text-[var(--charcoal-600)] hover:text-[var(--lime-600)] transition-colors">
+          <a href={`mailto:${tenant.email}`} className="flex items-center gap-2 text-sm text-charcoal-600 hover:text-lime-600 transition-all duration-300">
             <Mail className="w-4 h-4" />
             <span className="truncate max-w-[200px]">{tenant.email}</span>
           </a>
-          <a href={`tel:${tenant.phone}`} className="flex items-center gap-2 text-sm text-[var(--charcoal-600)] hover:text-[var(--lime-600)] transition-colors">
+          <a href={`tel:${tenant.phone}`} className="flex items-center gap-2 text-sm text-charcoal-600 hover:text-lime-600 transition-all duration-300">
             <Phone className="w-4 h-4" />
             {tenant.phone}
           </a>
         </div>
       </td>
       <td className="px-6 py-4 text-right">
-        <button className="p-2 hover:bg-[var(--charcoal-50)] rounded-lg transition-all duration-200">
+        <button className="p-2 hover:bg-[var(--charcoal-50)] rounded-lg transition-all duration-200 cursor-pointer">
           <MoreVertical className="w-4 h-4 text-[var(--charcoal-400)]" />
         </button>
       </td>
@@ -266,7 +266,7 @@ function AnimatedEmptyState({ searchQuery, filterStatus }: { searchQuery: string
 
 function FloatingActionButton({ onClick }: { onClick: () => void }) {
   return (
-    <button onClick={onClick} className="fixed bottom-6 right-6 z-50" aria-label="Add new tenant">
+    <button onClick={onClick} className="fixed bottom-6 right-6 z-50 cursor-pointer" aria-label="Add new tenant">
       <div className="w-14 h-14 bg-[var(--lime-400)] rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300">
         <Plus className="w-6 h-6 text-[var(--charcoal-900)]" />
       </div>
@@ -289,13 +289,13 @@ function ViewToggle({ view, setView }: { view: 'table' | 'cards'; setView: (v: '
     <div className="flex items-center gap-1 p-1 bg-[var(--charcoal-50)] rounded-lg">
       <button
         onClick={() => setView('table')}
-        className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${view === 'table' ? 'bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-sm' : 'text-[var(--charcoal-500)] hover:text-[var(--charcoal-700)]'}`}
+        className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 cursor-pointer ${view === 'table' ? 'bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-sm' : 'text-[var(--charcoal-500)] hover:text-[var(--charcoal-700)]'}`}
       >
         Table
       </button>
       <button
         onClick={() => setView('cards')}
-        className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${view === 'cards' ? 'bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-sm' : 'text-[var(--charcoal-500)] hover:text-[var(--charcoal-700)]'}`}
+        className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 cursor-pointer ${view === 'cards' ? 'bg-[var(--lime-400)] text-[var(--charcoal-900)] shadow-sm' : 'text-[var(--charcoal-500)] hover:text-[var(--charcoal-700)]'}`}
       >
         Cards
       </button>
@@ -432,7 +432,7 @@ export default function TenantsPage() {
                 <h2 className="text-xl font-semibold text-[var(--charcoal-900)]">Add New Tenant</h2>
                 <button 
                   onClick={() => setShowAddModal(false)}
-                  className="p-2 hover:bg-[var(--charcoal-50)] rounded-lg transition-colors"
+                  className="p-2 hover:bg-[var(--charcoal-50)] rounded-lg transition-all duration-300 cursor-pointer"
                   aria-label="Close modal"
                 >
                   <X className="w-5 h-5 text-[var(--charcoal-500)]" />
@@ -535,13 +535,13 @@ export default function TenantsPage() {
               <div className="flex items-center justify-end gap-3 mt-6">
                 <button 
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2.5 bg-[var(--charcoal-50)] border border-[var(--charcoal-200)] rounded-xl text-[var(--charcoal-700)] text-sm hover:bg-[var(--charcoal-100)] transition-all"
+                  className="px-4 py-2.5 bg-[var(--charcoal-50)] border border-[var(--charcoal-200)] rounded-xl text-[var(--charcoal-700)] text-sm hover:bg-[var(--charcoal-100)] transition-all duration-300 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={handleAddTenant}
-                  className="px-6 py-2.5 bg-[var(--lime-400)] rounded-xl text-[var(--charcoal-900)] text-sm font-medium hover:shadow-lg hover:shadow-[var(--lime-400)]/25 transition-all"
+                  className="px-6 py-2.5 bg-[var(--lime-400)] rounded-xl text-[var(--charcoal-900)] text-sm font-medium hover:shadow-lg hover:shadow-[var(--lime-400)]/25 transition-all duration-300 cursor-pointer"
                 >
                   <Plus className="w-4 h-4 inline mr-1.5" />
                   Add Tenant

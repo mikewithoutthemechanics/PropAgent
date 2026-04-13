@@ -48,8 +48,14 @@
   --card-border: var(--charcoal-100);
   --primary: var(--lime-400);
   --primary-foreground: var(--charcoal-900);
+  --primary-600: var(--lime-600);
   --accent: var(--sky-400);
   --accent-foreground: var(--white);
+  --accent-600: var(--sky-600);
+  --accent-700: var(--sky-700);
+  --expense: var(--rose-500);
+  --expense-600: var(--rose-600);
+  --expense-700: var(--rose-600);
 
   /* Status Colors */
   --emerald-500: #10B981;

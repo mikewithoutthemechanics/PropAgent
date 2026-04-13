@@ -208,8 +208,8 @@ function FilterButton({ active, onClick, label, count }: { active: boolean; onCl
         "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
         active 
           ? "bg-lime-400 text-charcoal-900 shadow-lg shadow-lime-400/25"
-          : "bg-white border-2 border-charcoal-100 text-charcoal-500 hover:bg-lime-50 hover:border-lime-400/30 hover:text-lime-400",
-        isHovered && !active && "transform -translate-y-0.5"
+          : "bg-white border-2 border-charcoal-100 text-charcoal-500 hover:bg-lime-50 hover:border-lime-400/30 hover:text-lime-400 transition-all duration-300",
+        isHovered && !active && "transform -translate-y-0.5 transition-all duration-300"
       )}
     >
       {label} ({count})

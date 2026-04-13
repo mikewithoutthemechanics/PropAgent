@@ -11,9 +11,9 @@ import { exportToCSV } from '@/lib/export';
 function AnimatedBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-navy-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-navy-500/5 to-transparent rounded-full" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-charcoal-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-lime-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-charcoal-500/5 to-transparent rounded-full" />
     </div>
   );
 }
@@ -33,7 +33,7 @@ function FloatingParticles() {
       {particles.map((p) => (
         <div
           key={p.id}
-          className="absolute rounded-full bg-gradient-to-r from-navy-400 to-yellow-400"
+          className="absolute rounded-full bg-gradient-to-r from-charcoal-400 to-lime-400"
           style={{
             width: p.size,
             height: p.size,
@@ -135,11 +135,11 @@ export default function LeadsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'new': return <Badge className="glass glass-card bg-navy-500/20 text-navy-300 border-navy-500/30">New</Badge>;
-      case 'contacted': return <Badge className="glass glass-card bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Contacted</Badge>;
-      case 'qualified': return <Badge className="glass glass-card bg-gold-500/20 text-gold-300 border-gold-500/30">Qualified</Badge>;
+      case 'new': return <Badge className="glass glass-card bg-charcoal-500/20 text-charcoal-300 border-charcoal-500/30">New</Badge>;
+      case 'contacted': return <Badge className="glass glass-card bg-lime-500/20 text-lime-300 border-lime-500/30">Contacted</Badge>;
+      case 'qualified': return <Badge className="glass glass-card bg-lime-500/20 text-lime-300 border-lime-500/30">Qualified</Badge>;
       case 'converted': return <Badge className="glass glass-card bg-blue-500/20 text-blue-300 border-blue-500/30">Converted</Badge>;
-      case 'lost': return <Badge className="glass glass-card bg-slate-500/20 text-slate-500 border-slate-500/30">Lost</Badge>;
+      case 'lost': return <Badge className="glass glass-card bg-slate-500/20 text-slate-300 border-slate-500/30">Lost</Badge>;
       default: return <Badge className="glass glass-card">{status}</Badge>;
     }
   };
@@ -175,12 +175,12 @@ export default function LeadsPage() {
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 text-gradient-gold">Lead Generation</h1>
-              <p className="text-slate-500 mt-1">
+              <h1 className="text-3xl font-bold text-charcoal-900 text-gradient-lime">Lead Generation</h1>
+              <p className="text-charcoal-500 mt-1">
                 Tenant & landlord leads from Property24, Facebook, Website
               </p>
             </div>
-            <Button onClick={() => setShowAddModal(true)} className="glow-gold hover:scale-105 transition-transform duration-300">
+            <Button onClick={() => setShowAddModal(true)} className="glow-lime hover:scale-105 transition-all duration-300 cursor-pointer">
               <Plus className="w-4 h-4 mr-1.5" />
               Add Lead
             </Button>
@@ -194,7 +194,7 @@ export default function LeadsPage() {
           <div 
             key={source} 
             className={cn(
-              "glass-card hover-3d-card rounded-xl p-4 border border-navy-500/20",
+              "glass-card hover-3d-card rounded-xl p-4 border border-charcoal-500/20",
               isVisible && "animate-on-scroll"
             )}
             style={{ animationDelay: `${idx * 100}ms` }}
@@ -204,8 +204,8 @@ export default function LeadsPage() {
                 <span style={{ color: config.color }}>{config.icon}</span>
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">{stats.bySource[source as keyof typeof stats.bySource]}</p>
-                <p className="text-xs text-slate-500">{config.label}</p>
+                <p className="text-2xl font-bold text-charcoal-900">{stats.bySource[source as keyof typeof stats.bySource]}</p>
+                <p className="text-xs text-charcoal-500">{config.label}</p>
               </div>
             </div>
           </div>
@@ -213,17 +213,17 @@ export default function LeadsPage() {
       </div>
 
       {/* Filters */}
-      <div className={cn("glass-card rounded-xl p-4 border border-navy-500/20", isVisible && "animate-on-scroll visible delay-200")}>
+      <div className={cn("glass-card rounded-xl p-4 border border-charcoal-500/20", isVisible && "animate-on-scroll visible delay-200")}>
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-navy-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-400" />
               <input
                 type="text"
                 placeholder="Search leads..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-navy-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 text-slate-900 placeholder-slate-400"
+                className="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-charcoal-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-charcoal-500 text-charcoal-900 placeholder-charcoal-400 cursor-pointer transition-all duration-300"
               />
             </div>
           </div>
@@ -231,7 +231,7 @@ export default function LeadsPage() {
             <select
               value={filterSource}
               onChange={(e) => setFilterSource(e.target.value)}
-              className="px-3 py-2 bg-slate-100/50 border border-navy-500/30 rounded-lg text-sm text-slate-900"
+              className="px-3 py-2 bg-slate-100/50 border border-charcoal-500/30 rounded-lg text-sm text-charcoal-900 cursor-pointer transition-all duration-300"
             >
               <option value="all">All Sources</option>
               <option value="property24">Property24</option>
@@ -242,7 +242,7 @@ export default function LeadsPage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-2 bg-slate-100/50 border border-navy-500/30 rounded-lg text-sm text-slate-900"
+              className="px-3 py-2 bg-slate-100/50 border border-charcoal-500/30 rounded-lg text-sm text-charcoal-900 cursor-pointer transition-all duration-300"
             >
               <option value="all">All Status</option>
               <option value="new">New</option>
@@ -256,32 +256,32 @@ export default function LeadsPage() {
       </div>
 
       {/* Leads List */}
-      <div className={cn("glass-card rounded-xl overflow-hidden border border-navy-500/20", isVisible && "animate-on-scroll visible delay-300")}>
+      <div className={cn("glass-card rounded-xl overflow-hidden border border-charcoal-500/20", isVisible && "animate-on-scroll visible delay-300")}>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-100/50 border-b border-navy-500/20">
+            <thead className="bg-slate-100/50 border-b border-charcoal-500/20">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Lead</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Source</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Type</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Requirements</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-navy-400 uppercase">Captured</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-charcoal-400 uppercase">Lead</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-charcoal-400 uppercase">Source</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-charcoal-400 uppercase">Type</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-charcoal-400 uppercase">Requirements</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-charcoal-400 uppercase">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-charcoal-400 uppercase">Captured</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-navy-500/10">
+            <tbody className="divide-y divide-charcoal-500/10">
               {filteredLeads.map((lead) => {
                 const sourceConfig = leadSourceConfig[lead.source];
                 return (
                   <tr key={lead.id} className="hover:bg-slate-100/30 transition-colors">
                     <td className="px-4 py-3">
                       <div>
-                        <p className="font-medium text-slate-900">{lead.name}</p>
-                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                        <p className="font-medium text-charcoal-900">{lead.name}</p>
+                        <div className="flex items-center gap-2 text-xs text-charcoal-500">
                           <Mail className="w-3 h-3" />
                           {lead.email}
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                        <div className="flex items-center gap-2 text-xs text-charcoal-500">
                           <Phone className="w-3 h-3" />
                           {lead.phone}
                         </div>
@@ -289,25 +289,25 @@ export default function LeadsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-navy-400">{sourceConfig.icon}</span>
-                        <span className="text-sm text-slate-500">{sourceConfig.label}</span>
+                        <span className="text-charcoal-400">{sourceConfig.icon}</span>
+                        <span className="text-sm text-charcoal-500">{sourceConfig.label}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <Badge className={lead.type === 'tenant' ? "glass glass-card bg-blue-500/20 text-blue-300 border-blue-500/30" : lead.type === 'landlord' ? "glass glass-card bg-gold-500/20 text-gold-300 border-gold-500/30" : "glass glass-card bg-navy-500/20 text-navy-300 border-navy-500/30"}>
+                      <Badge className={lead.type === 'tenant' ? "glass glass-card bg-blue-500/20 text-blue-300 border-blue-500/30" : lead.type === 'landlord' ? "glass glass-card bg-lime-500/20 text-lime-300 border-lime-500/30" : "glass glass-card bg-charcoal-500/20 text-charcoal-300 border-charcoal-500/30"}>
                         {lead.type}
                       </Badge>
                     </td>
                     <td className="px-4 py-3">
                       {lead.type === 'tenant' && (
-                        <div className="text-sm text-slate-500">
+                        <div className="text-sm text-charcoal-500">
                           {lead.bedrooms && <span>{lead.bedrooms} bed • </span>}
                           {lead.budgetMin && <span>R{lead.budgetMin.toLocaleString()} - R{lead.budgetMax?.toLocaleString()}</span>}
                           {lead.preferredSuburb && <span> • {lead.preferredSuburb}</span>}
                         </div>
                       )}
                       {lead.type === 'landlord' && (
-                        <div className="text-sm text-slate-500">
+                        <div className="text-sm text-charcoal-500">
                           {lead.propertyAddress && <span>{lead.propertyAddress}</span>}
                           {lead.askingRent && <span> • R{lead.askingRent.toLocaleString()}/mo</span>}
                         </div>
@@ -317,7 +317,7 @@ export default function LeadsPage() {
                       {getStatusBadge(lead.status)}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-sm text-slate-500">
+                      <span className="text-sm text-charcoal-500">
                         {new Date(lead.capturedAt).toLocaleDateString()}
                       </span>
                     </td>
@@ -331,18 +331,18 @@ export default function LeadsPage() {
         {filteredLeads.length === 0 && (
           <div className="py-12 text-center">
             <Users className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-500">No leads found</p>
+            <p className="text-charcoal-500">No leads found</p>
           </div>
         )}
       </div>
 
       {/* Integration Info */}
-      <div className={cn("glass p-4 rounded-xl border border-navy-500/20", isVisible && "animate-on-scroll visible delay-400")}>
+      <div className={cn("glass p-4 rounded-xl border border-charcoal-500/20", isVisible && "animate-on-scroll visible delay-400")}>
         <div className="flex items-start gap-3">
-          <Target className="w-5 h-5 text-navy-400 flex-shrink-0 mt-0.5" />
+          <Target className="w-5 h-5 text-charcoal-400 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-slate-900">Lead Sources</p>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="font-medium text-charcoal-900">Lead Sources</p>
+            <p className="text-sm text-charcoal-500 mt-1">
               Connect Property24, Facebook Lead Ads, and your website to automatically capture tenant and landlord leads.
               Referral tracking included. Integration setup available via n8n automation.
             </p>
@@ -355,46 +355,46 @@ export default function LeadsPage() {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-slate-100 rounded-2xl max-w-md w-full p-6 border border-slate-200 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-semibold text-slate-900">Add New Lead</h2>
+              <h2 className="text-xl font-semibold text-charcoal-900">Add New Lead</h2>
               <button 
                 onClick={() => setShowAddModal(false)}
                 className="p-2 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
-                <X className="w-5 h-5 text-slate-900/60" />
+                <X className="w-5 h-5 text-charcoal-900/60" />
               </button>
             </div>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Name</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Name</label>
                 <input 
                   type="text" 
                   value={newLead.name}
                   onChange={(e) => setNewLead({...newLead, name: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer transition-all duration-300"
                   placeholder="John Doe"
                 />
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Email</label>
                   <input 
                     type="email" 
                     value={newLead.email}
                     onChange={(e) => setNewLead({...newLead, email: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer transition-all duration-300"
                     placeholder="email@example.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Phone</label>
                   <input 
                     type="tel" 
                     value={newLead.phone}
                     onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer transition-all duration-300"
                     placeholder="+27831234567"
                   />
                 </div>
@@ -402,22 +402,22 @@ export default function LeadsPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Type</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Type</label>
                   <select 
                     value={newLead.type}
                     onChange={(e) => setNewLead({...newLead, type: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer"
                   >
                     <option value="tenant">Tenant</option>
                     <option value="landlord">Landlord</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-500 mb-2">Source</label>
+                  <label className="block text-sm font-medium text-charcoal-500 mb-2">Source</label>
                   <select 
                     value={newLead.source}
                     onChange={(e) => setNewLead({...newLead, source: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer"
                   >
                     <option value="website">Website</option>
                     <option value="property24">Property24</option>
@@ -431,11 +431,11 @@ export default function LeadsPage() {
               {newLead.type === 'tenant' && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-slate-500 mb-2">Bedrooms</label>
+                    <label className="block text-sm font-medium text-charcoal-500 mb-2">Bedrooms</label>
                     <select 
                       value={newLead.bedrooms}
                       onChange={(e) => setNewLead({...newLead, bedrooms: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
+                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer"
                     >
                       <option value="">Any</option>
                       <option value="1">1 Bedroom</option>
@@ -446,33 +446,33 @@ export default function LeadsPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-500 mb-2">Min Budget (ZAR)</label>
+                      <label className="block text-sm font-medium text-charcoal-500 mb-2">Min Budget (ZAR)</label>
                       <input 
                         type="number" 
                         value={newLead.budgetMin}
                         onChange={(e) => setNewLead({...newLead, budgetMin: e.target.value})}
-                        className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                        className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer transition-all duration-300"
                         placeholder="10000"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-500 mb-2">Max Budget (ZAR)</label>
+                      <label className="block text-sm font-medium text-charcoal-500 mb-2">Max Budget (ZAR)</label>
                       <input 
                         type="number" 
                         value={newLead.budgetMax}
                         onChange={(e) => setNewLead({...newLead, budgetMax: e.target.value})}
-                        className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                        className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer transition-all duration-300"
                         placeholder="20000"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-500 mb-2">Preferred Suburb</label>
+                    <label className="block text-sm font-medium text-charcoal-500 mb-2">Preferred Suburb</label>
                     <input 
                       type="text" 
                       value={newLead.preferredSuburb}
                       onChange={(e) => setNewLead({...newLead, preferredSuburb: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer transition-all duration-300"
                       placeholder="Sandton"
                     />
                   </div>
@@ -482,22 +482,22 @@ export default function LeadsPage() {
               {newLead.type === 'landlord' && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-slate-500 mb-2">Property Address</label>
+                    <label className="block text-sm font-medium text-charcoal-500 mb-2">Property Address</label>
                     <input 
                       type="text" 
                       value={newLead.propertyAddress}
                       onChange={(e) => setNewLead({...newLead, propertyAddress: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer transition-all duration-300"
                       placeholder="123 Main Street, Suburb"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-500 mb-2">Asking Rent (ZAR/month)</label>
+                    <label className="block text-sm font-medium text-charcoal-500 mb-2">Asking Rent (ZAR/month)</label>
                     <input 
                       type="number" 
                       value={newLead.askingRent}
                       onChange={(e) => setNewLead({...newLead, askingRent: e.target.value})}
-                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                      className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer transition-all duration-300"
                       placeholder="15000"
                     />
                   </div>
@@ -505,12 +505,12 @@ export default function LeadsPage() {
               )}
               
               <div>
-                <label className="block text-sm font-medium text-slate-500 mb-2">Notes</label>
+                <label className="block text-sm font-medium text-charcoal-500 mb-2">Notes</label>
                 <textarea 
                   rows={3}
                   value={newLead.notes}
                   onChange={(e) => setNewLead({...newLead, notes: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500"
+                  className="w-full px-4 py-3 bg-slate-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-charcoal-500 cursor-pointer transition-all duration-300"
                   placeholder="Additional notes..."
                 />
               </div>
@@ -519,13 +519,13 @@ export default function LeadsPage() {
             <div className="flex items-center justify-end gap-3 mt-6">
               <button 
                 onClick={() => setShowAddModal(false)}
-                className="px-4 py-2.5 bg-slate-50 rounded-lg text-slate-900 text-sm hover:bg-slate-200 transition-all cursor-pointer"
+                className="px-4 py-2.5 bg-slate-50 rounded-lg text-charcoal-900 text-sm hover:bg-slate-200 transition-all cursor-pointer"
               >
                 Cancel
               </button>
               <button 
                 onClick={handleAddLead}
-                className="px-6 py-2.5 bg-gradient-to-r from-navy-500 to-navy-600 rounded-lg text-slate-900 text-sm font-medium hover:shadow-lg hover:shadow-navy-500/25 transition-all cursor-pointer"
+                className="px-6 py-2.5 bg-gradient-to-r from-charcoal-500 to-charcoal-600 rounded-lg text-charcoal-900 text-sm font-medium hover:shadow-lg hover:shadow-charcoal-500/25 transition-all cursor-pointer"
               >
                 <Plus className="w-4 h-4 inline mr-1.5" />
                 Add Lead

@@ -38,9 +38,9 @@ const mockUpcomingUnits = [
 ];
 
 const statusStyles = {
-  New: "bg-black text-white",
-  "In Progress": "bg-[#D8F053] text-black",
-  Pending: "bg-[#53B4F0] text-white",
+  New: "bg-charcoal-900 text-white",
+  "In Progress": "bg-lime-400 text-charcoal-900",
+  Pending: "bg-sky-400 text-white",
 };
 
 function PaymentsOverview() {
@@ -52,10 +52,10 @@ function PaymentsOverview() {
   ];
 
   return (
-    <div className="bg-black rounded-2xl p-6">
+    <div className="bg-charcoal-900 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-white text-lg font-semibold">Payments</h2>
-        <button className="bg-white/10 text-white text-sm px-4 py-2 rounded-full flex items-center gap-2 hover:bg-white/20 transition-colors">
+        <button className="bg-charcoal-800 text-white text-sm px-4 py-2 rounded-full flex items-center gap-2 hover:bg-charcoal-700 transition-colors cursor-pointer">
           This month <ChevronRight className="w-4 h-4 rotate-90" />
         </button>
       </div>
@@ -66,20 +66,20 @@ function PaymentsOverview() {
             key={payment.label}
             className={`${
               payment.isPrimary 
-                ? "bg-[#D8F053]" 
-                : "bg-[#1A1A1A]"
-            } rounded-2xl p-5 transition-transform hover:scale-[1.02]`}
+                ? "bg-lime-400" 
+                : "bg-charcoal-800"
+            } rounded-2xl p-5 transition-transform duration-200 hover:scale-[1.02] cursor-pointer`}
           >
             <div className="flex items-start justify-between">
-              <span className={`text-sm font-medium ${payment.isPrimary ? "text-black/70" : "text-white/70"}`}>
+              <span className={`text-sm font-medium ${payment.isPrimary ? "text-charcoal-900/70" : "text-white/70"}`}>
                 {payment.label}
               </span>
-              <ArrowUpRight className={`w-4 h-4 ${payment.isPrimary ? "text-black/50" : "text-white/50"}`} />
+              <ArrowUpRight className={`w-4 h-4 ${payment.isPrimary ? "text-charcoal-900/50" : "text-white/50"}`} />
             </div>
-            <p className={`text-2xl font-bold mt-3 ${payment.isPrimary ? "text-black" : "text-white"}`}>
+            <p className={`text-2xl font-bold mt-3 ${payment.isPrimary ? "text-charcoal-900" : "text-white"}`}>
               R{payment.value.toLocaleString()}.00
             </p>
-            <p className={`text-xs mt-2 ${payment.isPrimary ? "text-black/60" : "text-white/60"}`}>
+            <p className={`text-xs mt-2 ${payment.isPrimary ? "text-charcoal-900/60" : "text-white/60"}`}>
               {payment.change >= 0 ? "+" : ""}{payment.change}% vs last month
             </p>
           </div>
@@ -103,25 +103,25 @@ function PropertySpotlight() {
     .join(" ");
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-slate-200">
-      <div className="relative h-48 bg-slate-100">
+    <div className="bg-white rounded-2xl overflow-hidden border border-charcoal-100">
+      <div className="relative h-48 bg-charcoal-100">
         <img 
           src={mockPropertySpotlight.image} 
           alt={mockPropertySpotlight.title}
           className="w-full h-full object-cover"
         />
-        <button className="absolute top-3 right-3 w-11 h-11 bg-white rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors" aria-label="Close property spotlight">
-          <X className="w-4 h-4 text-slate-600" />
+        <button className="absolute top-3 right-3 w-11 h-11 bg-white rounded-full flex items-center justify-center hover:bg-charcoal-50 transition-colors cursor-pointer" aria-label="Close property spotlight">
+          <X className="w-4 h-4 text-charcoal-600" />
         </button>
       </div>
       
       <div className="p-5">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-slate-900">{mockPropertySpotlight.title}</h3>
-          <ArrowUpRight className="w-5 h-5 text-slate-400" />
+          <h3 className="text-lg font-semibold text-charcoal-900">{mockPropertySpotlight.title}</h3>
+          <ArrowUpRight className="w-5 h-5 text-charcoal-400" />
         </div>
         
-        <div className="grid grid-cols-4 gap-4 mt-4 py-4 border-y border-slate-100">
+        <div className="grid grid-cols-4 gap-4 mt-4 py-4 border-y border-charcoal-100">
           {[
             { label: "Residents", value: mockPropertySpotlight.stats.residents },
             { label: "Units", value: mockPropertySpotlight.stats.units },
@@ -129,16 +129,16 @@ function PropertySpotlight() {
             { label: "Upcoming", value: mockPropertySpotlight.stats.upcoming },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="text-xl font-bold text-slate-900">{stat.value}</p>
-              <p className="text-xs text-slate-500 mt-1">{stat.label}</p>
+              <p className="text-xl font-bold text-charcoal-900">{stat.value}</p>
+              <p className="text-xs text-charcoal-500 mt-1">{stat.label}</p>
             </div>
           ))}
         </div>
         
         <div className="mt-4">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-semibold text-slate-900">Price Trend</h4>
-            <button className="bg-slate-100 text-slate-600 text-xs px-3 py-1.5 rounded-full flex items-center gap-1 hover:bg-slate-200 transition-colors">
+            <h4 className="text-sm font-semibold text-charcoal-900">Price Trend</h4>
+            <button className="bg-charcoal-100 text-charcoal-600 text-xs px-3 py-1.5 rounded-full flex items-center gap-1 hover:bg-charcoal-200 transition-colors cursor-pointer">
               Last year <ChevronRight className="w-3 h-3 rotate-90" />
             </button>
           </div>
@@ -146,8 +146,8 @@ function PropertySpotlight() {
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
               <defs>
                 <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#53B4F0" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="#53B4F0" stopOpacity="0" />
+                  <stop offset="0%" stopColor="var(--sky-400)" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="var(--sky-400)" stopOpacity="0" />
                 </linearGradient>
               </defs>
               <polyline

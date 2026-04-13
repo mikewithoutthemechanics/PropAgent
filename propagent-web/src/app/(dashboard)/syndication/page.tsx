@@ -129,7 +129,7 @@ export default function SyndicationPage() {
                 "p-4 rounded-xl border-2 transition-all cursor-pointer",
                 selectedPlatforms.has(platform.id)
                   ? "border-lime-400 bg-lime-400/10"
-                  : "border-charcoal-100 hover:border-charcoal-200 bg-white"
+                  : "border-charcoal-100 hover:border-charcoal-200 bg-white transition-all duration-300"
               )}
               onClick={() => togglePlatform(platform.id)}
             >
@@ -168,7 +168,7 @@ export default function SyndicationPage() {
         <Button
           onClick={handlePost}
           disabled={selectedPlatforms.size === 0 || isPosting}
-          className="w-full py-4 text-base bg-lime-400 hover:bg-lime-500 text-charcoal-900 disabled:opacity-50 rounded-full font-medium"
+          className="w-full py-4 text-base bg-lime-400 hover:bg-lime-500 text-charcoal-900 disabled:opacity-50 rounded-full font-medium transition-all duration-300 cursor-pointer"
         >
           {isPosting ? (
             <>
@@ -200,7 +200,7 @@ export default function SyndicationPage() {
                 {result.success ? (
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-lime-500" />
-                    <a href={result.url} target="_blank" rel="noopener noreferrer" className="text-sm text-lime-600 hover:underline flex items-center gap-1">
+                    <a href={result.url} target="_blank" rel="noopener noreferrer" className="text-sm text-lime-600 hover:underline flex items-center gap-1 transition-all duration-300">
                       View Post <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>

@@ -367,7 +367,7 @@ export default function NotificationsPage() {
             </div>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
-                <Button variant="outline" size="sm" onClick={handleMarkAllAsRead} className="bg-white border-2 border-charcoal-100 rounded-2xl hover:bg-lime-400/20">
+                <Button variant="outline" size="sm" onClick={handleMarkAllAsRead} className="bg-white border-2 border-charcoal-100 rounded-2xl hover:bg-lime-400/20 transition-all duration-300">
                   <CheckCheck className="w-4 h-4 mr-2 text-lime-400" />
                   <span className="text-lime-400">Mark all read</span>
                 </Button>
@@ -376,7 +376,7 @@ export default function NotificationsPage() {
                 variant={showSettings ? 'primary' : 'outline'} 
                 size="sm" 
                 onClick={() => setShowSettings(!showSettings)}
-                className={showSettings ? "bg-lime-400 text-charcoal-900 rounded-full" : "bg-white border-2 border-charcoal-100 rounded-2xl hover:bg-lime-400/20"}
+                className={showSettings ? "bg-lime-400 text-charcoal-900 rounded-full transition-all duration-300" : "bg-white border-2 border-charcoal-100 rounded-2xl hover:bg-lime-400/20 transition-all duration-300"}
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
@@ -407,7 +407,7 @@ export default function NotificationsPage() {
                   { key: 'smsEnabled' as const, label: 'SMS Notifications', icon: MessageSquare, desc: 'Receive notifications via text message' },
                   { key: 'inAppEnabled' as const, label: 'In-App Notifications', icon: Bell, desc: 'Show notifications in the app' },
                 ].map(({ key, label, icon: Icon, desc }) => (
-                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-charcoal-100 hover:bg-charcoal-100/50 cursor-pointer bg-white border-2 border-charcoal-100 rounded-2xl">
+                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-charcoal-100 hover:bg-charcoal-100/50 cursor-pointer bg-white border-2 border-charcoal-100 rounded-2xl transition-all duration-300">
                     <div className="flex items-center gap-3">
                       <Icon className="w-5 h-5 text-lime-400" />
                       <div>
@@ -436,7 +436,7 @@ export default function NotificationsPage() {
                   { key: 'viewingInvites' as const, label: 'Viewing Invites', desc: 'Property viewing notifications' },
                   { key: 'marketingEmails' as const, label: 'Marketing Emails', desc: 'Tips and product updates' },
                 ].map(({ key, label, desc }) => (
-                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-charcoal-100 hover:bg-charcoal-100/50 cursor-pointer bg-white border-2 border-charcoal-100 rounded-2xl">
+                  <label key={key} className="flex items-center justify-between p-3 rounded-lg border border-charcoal-100 hover:bg-charcoal-100/50 cursor-pointer bg-white border-2 border-charcoal-100 rounded-2xl transition-all duration-300">
                     <div>
                       <p className="font-medium text-charcoal-900">{label}</p>
                       <p className="text-xs text-charcoal-500">{desc}</p>
@@ -528,8 +528,8 @@ export default function NotificationsPage() {
                     className={cn(
                       "px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-300",
                       filter === f 
-                        ? "bg-gradient-to-r from-lime-400 to-sky-400 text-charcoal-900 shadow-lg" 
-                        : "bg-charcoal-100/50 text-charcoal-500 hover:bg-charcoal-50/50 border border-charcoal-100"
+                        ? "bg-gradient-to-r from-lime-400 to-sky-400 text-charcoal-900 shadow-lg transition-all duration-300" 
+                        : "bg-charcoal-100/50 text-charcoal-500 hover:bg-charcoal-50/50 border border-charcoal-100 transition-all duration-300"
                     )}
                   >
                     {f === 'all' ? 'All' : f === 'unread' ? 'Unread' : NOTIFICATION_TYPE_LABELS[f as NotificationType]}
@@ -613,7 +613,7 @@ export default function NotificationsPage() {
                   </div>
                   <button
                     onClick={() => handleDelete(selectedNotification.id)}
-                    className="p-2 text-charcoal-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                    className="p-2 text-charcoal-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all duration-300"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -672,7 +672,7 @@ export default function NotificationsPage() {
           <div 
             key={stat.label} 
             className={cn(
-              "bg-white border-2 border-charcoal-100 rounded-2xl hover:scale-105 p-4",
+              "bg-white border-2 border-charcoal-100 rounded-2xl hover:scale-105 p-4 transition-all duration-300",
               isVisible && "animate-on-scroll"
             )}
             style={{ animationDelay: `${idx * 100}ms` }}

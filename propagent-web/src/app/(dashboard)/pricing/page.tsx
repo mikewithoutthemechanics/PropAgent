@@ -132,7 +132,7 @@ function AddPlanModal({
           <h2 className="text-lg font-semibold text-charcoal-900">Add New Pricing Plan</h2>
           <button
             onClick={onClose}
-            className="p-1.5 text-charcoal-500 hover:text-charcoal-900 hover:bg-charcoal-100 rounded-lg transition-colors"
+            className="p-1.5 text-charcoal-500 hover:text-charcoal-900 hover:bg-charcoal-100 rounded-lg transition-all duration-300"
             aria-label="Close modal"
           >
             <XIcon className="w-5 h-5" />
@@ -246,14 +246,14 @@ function AddPlanModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 border-2 border-charcoal-100 text-charcoal-500 rounded-xl hover:bg-charcoal-100 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="flex-1 px-4 py-2.5 bg-lime-400 hover:bg-lime-500 text-charcoal-900 font-medium rounded-full transition-colors"
-            >
+            className="flex-1 px-4 py-2.5 border-2 border-charcoal-100 text-charcoal-500 rounded-xl hover:bg-charcoal-100 transition-all duration-300"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="flex-1 px-4 py-2.5 bg-lime-400 hover:bg-lime-500 text-charcoal-900 font-medium rounded-full transition-all duration-300"
+          >
               Add Plan
             </button>
           </div>
@@ -278,7 +278,7 @@ export default function PricingPage() {
           <div />
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-lime-400 hover:bg-lime-500 text-charcoal-900 font-medium rounded-full transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-lime-400 hover:bg-lime-500 text-charcoal-900 font-medium rounded-full transition-all duration-300"
           >
             <Plus className="w-4 h-4" />
             Add Plan
@@ -294,8 +294,8 @@ export default function PricingPage() {
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`relative bg-white rounded-2xl border-2 ${
-              plan.popular ? 'border-lime-400 shadow-lg shadow-lime-400/20' : 'border-charcoal-100'
+            className={`relative bg-white rounded-2xl border-2 transition-all duration-300 ${
+              plan.popular ? 'border-lime-400 shadow-lg shadow-lime-400/20' : 'border-charcoal-100 hover:border-lime-400/30 hover:shadow-lg hover:shadow-lime-400/10'
             }`}
           >
             {plan.popular && (
@@ -317,7 +317,7 @@ export default function PricingPage() {
 
               <Link
                 href="/register"
-                className={`mt-6 block w-full py-3 px-4 rounded-full font-medium text-center transition-colors cursor-pointer ${
+                className={`mt-6 block w-full py-3 px-4 rounded-full font-medium text-center transition-all duration-300 cursor-pointer ${
                   plan.popular
                     ? 'bg-lime-400 hover:bg-lime-500 text-charcoal-900'
                     : 'bg-white border-2 border-charcoal-100 hover:bg-charcoal-100 text-charcoal-900'
