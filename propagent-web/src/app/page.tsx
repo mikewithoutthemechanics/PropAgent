@@ -46,6 +46,8 @@ export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [activeFeature, setActiveFeature] = useState<number | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const parallaxOffset = useRef(0);
@@ -57,6 +59,15 @@ export default function LandingPage() {
     const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  // Mouse position for spotlight effect
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   // Scroll handler with parallax
@@ -211,6 +222,13 @@ export default function LandingPage() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-amber-500/5' : 'bg-white/50 backdrop-blur-sm'
       }`}>
+        {/* Scroll Progress Indicator */}
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-100/50">
+          <div 
+            className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-150"
+            style={{ width: scrolled ? '100%' : '0%' }}
+          />
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link href="/" className="flex items-center gap-2.5">
@@ -283,27 +301,44 @@ export default function LandingPage() {
         className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-amber-50/40"
         aria-labelledby="hero-title"
       >
+        {/* Mouse-following Spotlight */}
+        {!prefersReducedMotion && (
+          <div 
+            className="absolute inset-0 pointer-events-none z-0"
+            aria-hidden="true"
+            style={{
+              background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(251, 146, 60, 0.08), transparent 40%)`
+            }}
+          />
+        )}
+        
         {/* Parallax Background Elements */}
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+          {/* Floating orbs with animation */}
           <div 
-            className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-amber-300/30 via-orange-200/20 to-transparent rounded-full blur-3xl transition-transform duration-75 ease-out"
-            style={{ transform: `translateY(${parallaxOffset.current * 0.2}px)` }}
+            className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-amber-400/20 to-orange-300/10 rounded-full blur-2xl animate-pulse"
+            style={{ transform: `translateY(${parallaxOffset.current * 0.15}px)` }}
           />
           <div 
-            className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-lime-200/20 via-emerald-100/15 to-transparent rounded-full blur-3xl transition-transform duration-75 ease-out"
-            style={{ transform: `translateY(${-parallaxOffset.current * 0.15}px)` }}
+            className="absolute bottom-40 left-10 w-48 h-48 bg-gradient-to-br from-orange-400/15 to-amber-300/10 rounded-full blur-2xl animate-pulse"
+            style={{ transform: `translateY(${-parallaxOffset.current * 0.1}px)`, animationDelay: '1s' }}
           />
+          <div 
+            className="absolute top-1/2 left-1/2 w-96 h-96 bg-gradient-to-br from-lime-200/10 via-emerald-100/5 to-transparent rounded-full blur-3xl"
+            style={{ transform: `translateY(${parallaxOffset.current * 0.05}px)` }}
+          />
+          {/* Grid pattern */}
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, rgb(0 0 0 / 4%) 1px, transparent 0)`,
             backgroundSize: '40px 40px'
           }} />
-          {/* Decorative elements */}
+          {/* Diagonal lines */}
           <div 
-            className="absolute inset-0 opacity-40"
+            className="absolute inset-0 opacity-30"
             style={{
-              backgroundImage: `linear-gradient(rgb(245 158 11 / 8%) 1px, transparent 1px), linear-gradient(90deg, rgb(245 158 11 / 8%) 1px, transparent 1px)`,
-              backgroundSize: '100px 100px',
-              transform: `translateY(${parallaxOffset.current * 0.05}px)`
+              backgroundImage: `linear-gradient(rgb(245 158 11 / 6%) 1px, transparent 1px), linear-gradient(90deg, rgb(245 158 11 / 6%) 1px, transparent 1px)`,
+              backgroundSize: '80px 80px',
+              transform: `translateY(${parallaxOffset.current * 0.03}px)`
             }}
           />
         </div>
@@ -379,9 +414,12 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
-              <div key={i} className="text-center">
-                <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">{stat.value}</p>
-                <p className="text-sm text-charcoal-500 mt-1 font-medium">{stat.label}</p>
+              <div 
+                key={i} 
+                className="text-center group"
+              >
+                <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">{stat.value}</p>
+                <p className="text-sm text-charcoal-500 mt-1 font-medium group-hover:text-amber-600 transition-colors">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -492,23 +530,25 @@ export default function LandingPage() {
             {testimonials.map((testimonial, i) => (
               <div 
                 key={i} 
-                className={`bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-amber-400/30 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-amber-500/10 focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-charcoal-900 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                className={`relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-amber-400/40 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-amber-500/10 group focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-charcoal-900 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${i * 150}ms` }}
               >
+                {/* Gradient border effect */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400/20 to-orange-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl" />
                 <div className="flex gap-1 mb-6" aria-label="5-star rating">
                   {[1,2,3,4,5].map((_, j) => (
                     <Star key={j} className="w-4 h-4 text-amber-400 fill-amber-400" aria-hidden="true" />
                   ))}
                 </div>
-                <blockquote className="text-white/80 leading-relaxed mb-6">
+                <blockquote className="text-white/80 leading-relaxed mb-6 group-hover:text-white transition-colors">
                   "{testimonial.quote}"
                 </blockquote>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-400 rounded-full flex items-center justify-center font-bold text-charcoal-900" aria-hidden="true">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-400 rounded-full flex items-center justify-center font-bold text-charcoal-900 shadow-lg shadow-amber-400/30 group-hover:shadow-xl group-hover:shadow-amber-400/50 transition-all">
                     {testimonial.author.charAt(0)}
                   </div>
                   <div>
-                    <p className="font-semibold">{testimonial.author}</p>
+                    <p className="font-semibold group-hover:text-amber-400 transition-colors">{testimonial.author}</p>
                     <p className="text-sm text-white/50">{testimonial.role}, {testimonial.company}</p>
                   </div>
                 </div>
