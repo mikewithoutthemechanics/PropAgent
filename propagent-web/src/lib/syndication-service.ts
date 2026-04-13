@@ -54,46 +54,21 @@ class SyndicationService {
     return results;
   }
 
-  // Platform-specific implementations
+  // Platform-specific implementations using n8n workflows
   private async postToProperty24(property: PropertyListing, formatted: ReturnType<typeof formatPropertyForPlatform>): Promise<SyndicationResult> {
     const apiKey = this.apiKeys['property24'];
-    
-    if (!apiKey) {
-      return { 
-        platform: 'property24', 
-        success: false, 
-        error: 'Property24 API key not configured. Contact support to get API access.' 
-      };
+    const agencyId = this.apiKeys['property24_agencY_id'];
+
+    if (!apiKey || !agencyId) {
+      throw new Error('Property24 API key or Agency ID not configured');
     }
 
-    // Property24 API integration
-    const response = await fetch('https://api.property24.co.za/listings', {
+    const webhookUrl = process.env.NEXT_PUBLIC_N8N_PROPERTY24_WEBHOOK || 'http://localhost:5678/webhook/property24-syndicate';
+    
+    const response = await fetch(webhookUrl, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        listing_type: property.listingType,
-        property_type: 'residential',
-        address: {
-          street: property.location.streetAddress,
-          suburb: property.location.suburb,
-          city: property.location.city,
-          province: property.location.province,
-        },
-        price: property.price,
-        bedrooms: property.specs.bedrooms,
-        bathrooms: property.specs.bathrooms,
-        garages: property.specs.garages,
-        description: formatted.description,
-        images: property.images,
-        contact: {
-          name: property.agent.name,
-          phone: property.agent.phone,
-          email: property.agent.email,
-        },
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ property, platform: 'property24' }),
     });
 
     if (!response.ok) {
@@ -104,40 +79,24 @@ class SyndicationService {
     return {
       platform: 'property24',
       success: true,
-      postUrl: `https://www.property24.co.za/p${data.listing_id}`,
+      postUrl: data.postUrl || `https://www.property24.co.za/p${data.listing_id}`,
     };
   }
 
   private async postToPrivateProperty(property: PropertyListing, formatted: ReturnType<typeof formatPropertyForPlatform>): Promise<SyndicationResult> {
-    const apiKey = this.apiKeys['private_property'];
-    
-    if (!apiKey) {
-      return { 
-        platform: 'private_property', 
-        success: false, 
-        error: 'Private Property API key not configured.' 
-      };
+    const apiKey = this.apiKeys['private_property_api_key'];
+    const apiSecret = this.apiKeys['private_property_api_secret'];
+
+    if (!apiKey || !apiSecret) {
+      throw new Error('Private Property API key or Secret not configured');
     }
 
-    const response = await fetch('https://api.privateproperty.co.za/v2/listings', {
+    const webhookUrl = process.env.NEXT_PUBLIC_N8N_PRIVATE_PROPERTY_WEBHOOK || 'http://localhost:5678/webhook/private-property-syndicate';
+    
+    const response = await fetch(webhookUrl, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        listing: {
-          title: formatted.title,
-          description: formatted.description,
-          price: property.price,
-          listing_type: property.listingType,
-          location: property.location,
-          specs: property.specs,
-          images: property.images,
-          features: property.features,
-        },
-        contact: property.agent,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ property, platform: 'private_property' }),
     });
 
     if (!response.ok) {
@@ -148,135 +107,80 @@ class SyndicationService {
     return {
       platform: 'private_property',
       success: true,
-      postUrl: `https://www.privateproperty.co.za/listing/${data.id}`,
+      postUrl: data.postUrl,
     };
   }
 
   private async postToFacebook(property: PropertyListing, formatted: ReturnType<typeof formatPropertyForPlatform>): Promise<SyndicationResult> {
-    const accessToken = this.accessTokens['facebook'];
-    const pageId = this.apiKeys['facebook']; // Use as page ID
-    
-    if (!accessToken || !pageId) {
-      return { 
-        platform: 'facebook', 
-        success: false, 
-        error: 'Facebook Page ID or Access Token not configured.' 
-      };
+    const pageId = this.apiKeys['facebook_page_id'];
+    const accessToken = this.apiKeys['facebook_access_token'];
+
+    if (!pageId || !accessToken) {
+      throw new Error('Facebook Page ID or Access Token not configured');
     }
 
-    const mediaUrl = property.images[0];
+    const webhookUrl = process.env.NEXT_PUBLIC_N8N_FACEBOOK_WEBHOOK || 'http://localhost:5678/webhook/facebook-syndicate';
     
-    // First upload the image
-    const mediaResponse = await fetch(`https://graph.facebook.com/v18.0/${pageId}/photos`, {
+    const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        url: mediaUrl,
-        caption: formatted.description,
-        access_token: accessToken,
-      }),
+      body: JSON.stringify({ property, platform: 'facebook' }),
     });
 
-    if (!mediaResponse.ok) {
-      // Fallback: just post text if image fails
-      const textResponse = await fetch(`https://graph.facebook.com/v18.0/${pageId}/feed`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: formatted.description,
-          access_token: accessToken,
-        }),
-      });
-
-      if (!textResponse.ok) {
-        throw new Error('Failed to post to Facebook');
-      }
-      
-      const postData = await textResponse.json();
-      return {
-        platform: 'facebook',
-        success: true,
-        postUrl: `https://facebook.com/${pageId}/posts/${postData.id}`,
-      };
+    if (!response.ok) {
+      throw new Error('Failed to post to Facebook');
     }
 
-    const mediaData = await mediaResponse.json();
+    const data = await response.json();
     return {
       platform: 'facebook',
       success: true,
-      postUrl: `https://facebook.com/${mediaData.id}`,
+      postUrl: data.postUrl,
     };
   }
 
   private async postToInstagram(property: PropertyListing, formatted: ReturnType<typeof formatPropertyForPlatform>): Promise<SyndicationResult> {
-    const accessToken = this.accessTokens['instagram'];
-    const businessId = this.apiKeys['instagram'];
-    
-    if (!accessToken || !businessId) {
-      return { 
-        platform: 'instagram', 
-        success: false, 
-        error: 'Instagram Business Account or Access Token not configured.' 
-      };
+    const businessId = this.apiKeys['instagram_business_id'];
+    const accessToken = this.apiKeys['instagram_access_token'];
+
+    if (!businessId || !accessToken) {
+      throw new Error('Instagram Business ID or Access Token not configured');
     }
 
-    // Instagram Basic Display API
-    const mediaResponse = await fetch(`https://graph.facebook.com/v18.0/${businessId}/media`, {
+    const webhookUrl = process.env.NEXT_PUBLIC_N8N_INSTAGRAM_WEBHOOK || 'http://localhost:5678/webhook/instagram-syndicate';
+    
+    const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        image_url: property.images[0],
-        caption: formatted.description,
-        access_token: accessToken,
-      }),
+      body: JSON.stringify({ property, platform: 'instagram' }),
     });
 
-    if (!mediaResponse.ok) {
-      throw new Error('Failed to create Instagram media');
+    if (!response.ok) {
+      throw new Error('Failed to post to Instagram');
     }
 
-    const mediaData = await mediaResponse.json();
-    
-    // Publish the media
-    await fetch(`https://graph.facebook.com/v18.0/${businessId}/media_publish`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        creation_id: mediaData.id,
-        access_token: accessToken,
-      }),
-    });
-
+    const data = await response.json();
     return {
       platform: 'instagram',
       success: true,
-      postUrl: `https://instagram.com/p/${mediaData.id}`,
+      postUrl: data.postUrl,
     };
   }
 
   private async postToTwitter(property: PropertyListing, formatted: ReturnType<typeof formatPropertyForPlatform>): Promise<SyndicationResult> {
-    const apiKey = this.apiKeys['twitter'];
-    const apiSecret = this.accessTokens['twitter'];
-    
+    const apiKey = this.apiKeys['twitter_api_key'];
+    const apiSecret = this.apiKeys['twitter_api_secret'];
+
     if (!apiKey || !apiSecret) {
-      return { 
-        platform: 'twitter', 
-        success: false, 
-        error: 'Twitter API credentials not configured.' 
-      };
+      throw new Error('Twitter API Key or Secret not configured');
     }
 
-    // Note: Twitter API v2 requires OAuth 2.0 or OAuth 1.0a
-    // This is a placeholder - actual implementation would require proper OAuth
-    const tweetText = `${formatted.description.substring(0, 250)} ${formatted.hashtags.join(' ')}`;
-
-    const response = await fetch('https://api.twitter.com/2/tweets', {
+    const webhookUrl = process.env.NEXT_PUBLIC_N8N_TWITTER_WEBHOOK || 'http://localhost:5678/webhook/twitter-syndicate';
+    
+    const response = await fetch(webhookUrl, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: tweetText }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ property, platform: 'twitter' }),
     });
 
     if (!response.ok) {
@@ -287,48 +191,24 @@ class SyndicationService {
     return {
       platform: 'twitter',
       success: true,
-      postUrl: `https://twitter.com/i/status/${data.data.id}`,
+      postUrl: data.postUrl,
     };
   }
 
   private async postToLinkedIn(property: PropertyListing, formatted: ReturnType<typeof formatPropertyForPlatform>): Promise<SyndicationResult> {
-    const accessToken = this.accessTokens['linkedin'];
-    const personId = this.apiKeys['linkedin'];
-    
+    const accessToken = this.apiKeys['linkedin_access_token'];
+    const personId = this.apiKeys['linkedin_person_id'];
+
     if (!accessToken || !personId) {
-      return { 
-        platform: 'linkedin', 
-        success: false, 
-        error: 'LinkedIn Access Token or Person ID not configured.' 
-      };
+      throw new Error('LinkedIn Access Token or Person ID not configured');
     }
 
-    const response = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+    const webhookUrl = process.env.NEXT_PUBLIC_N8N_LINKEDIN_WEBHOOK || 'http://localhost:5678/webhook/linkedin-syndicate';
+    
+    const response = await fetch(webhookUrl, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-        'X-Restli-Protocol-Version': '2.0.0',
-      },
-      body: JSON.stringify({
-        author: `urn:li:person:${personId}`,
-        lifecycleState: 'PUBLISHED',
-        specificContent: {
-          'com.linkedin.ugc.ShareContent': {
-            shareCommentary: {
-              text: formatted.description,
-            },
-            shareMediaCategory: 'IMAGE',
-            media: property.images.slice(0, 4).map(url => ({
-              status: 'READY',
-              originalUrl: url,
-            })),
-          },
-        },
-        visibility: {
-          'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
-        },
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ property, platform: 'linkedin' }),
     });
 
     if (!response.ok) {
@@ -339,7 +219,7 @@ class SyndicationService {
     return {
       platform: 'linkedin',
       success: true,
-      postUrl: `https://linkedin.com/feed/update/urn:li:ugcPost:${data.id}`,
+      postUrl: data.postUrl,
     };
   }
 }

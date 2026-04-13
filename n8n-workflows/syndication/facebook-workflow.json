@@ -1,0 +1,68 @@
+{
+  "name": "Facebook Syndication",
+  "webhookId": "facebook-syndicate",
+  "nodes": [
+    {
+      "parameters": {
+        "event": "app",
+        "channel": "webhook",
+        "appId": "webhook"
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": { "x": 240, "y": 220 }
+    },
+    {
+      "parameters": {
+        "functionCode": "const property = items[0].json;\nconst formatted = {\n  title: property.title,\n  description: property.description,\n  price: property.price,\n  location: property.location,\n  specs: property.specs,\n  images: property.images,\n  features: property.features,\n  listingType: property.listingType,\n  agent: property.agent,\n};\n\nitems.json = [{ formatted }];\nreturn items;"
+      },
+      "id": "format-property",
+      "name": "Format Property",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": { "x": 460, "y": 220 }
+    },
+    {
+      "parameters": {
+        "functionCode": "const formatted = items.json[0];\nconst pageId = $const('FACEBOOK_PAGE_ID');\nconst accessToken = $const('FACEBOOK_ACCESS_TOKEN');\n\nif (!pageId || !accessToken) {\n  throw new Error('Facebook Page ID or Access Token not configured');\n}\n\nconst mediaUrl = formatted.images[0];\n\nconst mediaResponse = await fetch(`https://graph.facebook.com/v18.0/${pageId}/photos`, {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    url: mediaUrl,\n    caption: formatted.description,\n    access_token: accessToken,\n  }),\n});\n\nif (!mediaResponse.ok) {\n  throw new Error('Failed to upload image to Facebook');\n}\n\nconst mediaData = await mediaResponse.json();\n\nconst postResponse = await fetch(`https://graph.facebook.com/v18.0/${pageId}/feed`, {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    message: formatted.description,\n    access_token: accessToken,\n  }),\n});\n\nif (!postResponse.ok) {\n  throw new Error('Failed to post to Facebook');\n}\n\nconst postData = await postResponse.json();\nitems.json = [{ postUrl: `https://facebook.com/${pageId}/posts/${postData.id}` }];\nreturn items;",
+        "functionCodeType": "text"
+      },
+      "id": "post-to-facebook",
+      "name": "Post to Facebook",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": { "x": 680, "y": 220 }
+    },
+    {
+      "parameters": {
+        "functionCode": "const result = {\n  platform: 'facebook',\n  success: true,\n  postUrl: items.json[0].postUrl,\n};\nitems.json = [result];\nreturn items;",
+        "functionCodeType": "text"
+      },
+      "id": "format-result",
+      "name": "Format Result",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": { "x": 900, "y": 220 }
+    },
+    {
+      "parameters": {
+        "functionCode": "const result = items.json[0];\nconst webhookUrl = $const('WEBHOOK_URL');\n\nif (webhookUrl) {\n  await fetch(webhookUrl, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ result, platform: 'facebook' }),\n  });\n}\n\nreturn items;",
+        "functionCodeType": "text"
+      },
+      "id": "notify-result",
+      "name": "Notify Result",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": { "x": 1120, "y": 220 }
+    }
+  ],
+  "connections": {
+    "webhook-trigger": { "main": [{ "node": "format-property", "type": "main" }] },
+    "format-property": { "main": [{ "node": "post-to-facebook", "type": "main" }] },
+    "post-to-facebook": { "main": [{ "node": "format-result", "type": "main" }] },
+    "format-result": { "main": [{ "node": "notify-result", "type": "main" }] }
+  }
+}
+EOF
