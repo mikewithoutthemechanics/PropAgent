@@ -100,7 +100,7 @@ export default function PropertyDetailPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Link 
           href="/properties"
-          className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+          className="flex items-center gap-2 text-charcoal-600 hover:text-charcoal-900 transition-all duration-300"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Properties
@@ -127,7 +127,7 @@ export default function PropertyDetailPage() {
       </div>
 
       {/* Image Gallery */}
-      <div className="relative rounded-2xl overflow-hidden bg-slate-100">
+      <div className="relative rounded-2xl overflow-hidden bg-charcoal-100">
         <div className="aspect-[16/9] md:aspect-[21/9] relative">
           {currentImage ? (
             <Image
@@ -135,11 +135,11 @@ export default function PropertyDetailPage() {
               alt={property.title}
               fill
               priority
-              className="object-cover cursor-pointer"
+              className="object-cover cursor-pointer transition-all duration-300"
               onClick={() => setIsLightboxOpen(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-slate-300">
+            <div className="w-full h-full flex items-center justify-center text-charcoal-300 transition-all duration-300">
               <Home className="w-24 h-24" />
             </div>
           )}
@@ -157,15 +157,15 @@ export default function PropertyDetailPage() {
             <>
               <button
                 onClick={handlePrevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-lg"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-300 shadow-lg cursor-pointer"
               >
-                <ChevronLeft className="w-5 h-5 text-slate-700" />
+                <ChevronLeft className="w-5 h-5 text-charcoal-700" />
               </button>
               <button
                 onClick={handleNextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-lg"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-300 shadow-lg cursor-pointer"
               >
-                <ChevronRight className="w-5 h-5 text-slate-700" />
+                <ChevronRight className="w-5 h-5 text-charcoal-700" />
               </button>
               
               {/* Image Counter */}
@@ -178,14 +178,14 @@ export default function PropertyDetailPage() {
         
         {/* Thumbnail Strip */}
         {property.images.length > 1 && (
-          <div className="flex gap-2 p-4 bg-white border-t border-slate-200 overflow-x-auto">
+          <div className="flex gap-2 p-4 bg-white border-t border-charcoal-200 overflow-x-auto">
             {property.images.map((img, idx) => (
               <button
                 key={img.id}
                 onClick={() => setCurrentImageIndex(idx)}
                 className={cn(
-                  "relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors",
-                  idx === currentImageIndex ? "border-navy-500" : "border-transparent hover:border-slate-300"
+                  "relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all duration-300 cursor-pointer",
+                  idx === currentImageIndex ? "border-navy-500" : "border-transparent hover:border-charcoal-300"
                 )}
               >
                 <Image
@@ -207,18 +207,18 @@ export default function PropertyDetailPage() {
           {/* Title & Price */}
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <span className="px-2.5 py-1 rounded-full bg-slate-100 text-navy-700 text-xs font-medium uppercase">
+              <span className="px-2.5 py-1 rounded-full bg-charcoal-100 text-navy-700 text-xs font-medium uppercase">
                 For {property.listingType}
               </span>
-              <span className="flex items-center gap-1 text-sm text-slate-500">
+              <span className="flex items-center gap-1 text-sm text-charcoal-500">
                 <Eye className="w-4 h-4" />
                 {property.viewCount.toLocaleString()} views
               </span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-charcoal-900 mb-2">
               {property.title}
             </h1>
-            <p className="text-slate-500 flex items-center gap-1.5">
+            <p className="text-charcoal-500 flex items-center gap-1.5">
               <MapPin className="w-4 h-4" />
               {property.location.streetAddress}, {property.location.suburb}, {property.location.city}
             </p>
@@ -228,7 +228,7 @@ export default function PropertyDetailPage() {
                 {formatCurrency(property.pricing.price)}
               </span>
               {property.listingType === 'rent' && (
-                <span className="text-slate-400">/month</span>
+                <span className="text-charcoal-400">/month</span>
               )}
               {property.pricing.negotiable && (
                 <span className="text-green-600 text-sm font-medium">Price Negotiable</span>
@@ -239,40 +239,40 @@ export default function PropertyDetailPage() {
           {/* Key Specs */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
-              <div className="p-2 bg-gold-100 rounded-lg">
+              <div className="p-2 bg-lime-100 rounded-lg">
                 <Bed className="w-5 h-5 text-navy-600" />
               </div>
               <div>
-                <p className="text-lg font-semibold text-slate-900">{property.specs.bedrooms}</p>
-                <p className="text-xs text-slate-500">Bedrooms</p>
+                <p className="text-lg font-semibold text-charcoal-900">{property.specs.bedrooms}</p>
+                <p className="text-xs text-charcoal-500">Bedrooms</p>
               </div>
             </div>
             <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
-              <div className="p-2 bg-gold-100 rounded-lg">
+              <div className="p-2 bg-lime-100 rounded-lg">
                 <Bath className="w-5 h-5 text-navy-600" />
               </div>
               <div>
-                <p className="text-lg font-semibold text-slate-900">{property.specs.bathrooms}</p>
-                <p className="text-xs text-slate-500">Bathrooms</p>
+                <p className="text-lg font-semibold text-charcoal-900">{property.specs.bathrooms}</p>
+                <p className="text-xs text-charcoal-500">Bathrooms</p>
               </div>
             </div>
             <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
-              <div className="p-2 bg-gold-100 rounded-lg">
+              <div className="p-2 bg-lime-100 rounded-lg">
                 <Car className="w-5 h-5 text-navy-600" />
               </div>
               <div>
-                <p className="text-lg font-semibold text-slate-900">{property.specs.garages}</p>
-                <p className="text-xs text-slate-500">Garages</p>
+                <p className="text-lg font-semibold text-charcoal-900">{property.specs.garages}</p>
+                <p className="text-xs text-charcoal-500">Garages</p>
               </div>
             </div>
             {property.specs.floorSize && (
               <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl">
-                <div className="p-2 bg-gold-100 rounded-lg">
+                <div className="p-2 bg-lime-100 rounded-lg">
                   <Maximize className="w-5 h-5 text-navy-600" />
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-slate-900">{property.specs.floorSize}</p>
-                  <p className="text-xs text-slate-500">m² Floor</p>
+                  <p className="text-lg font-semibold text-charcoal-900">{property.specs.floorSize}</p>
+                  <p className="text-xs text-charcoal-500">m² Floor</p>
                 </div>
               </div>
             )}
@@ -280,42 +280,42 @@ export default function PropertyDetailPage() {
 
           {/* Description */}
           <div>
-            <h2 className="text-lg font-semibold text-slate-900 mb-3">Description</h2>
-            <p className="text-slate-600 leading-relaxed whitespace-pre-line">
+            <h2 className="text-lg font-semibold text-charcoal-900 mb-3">Description</h2>
+            <p className="text-charcoal-600 leading-relaxed whitespace-pre-line">
               {property.description}
             </p>
           </div>
 
           {/* Property Details */}
           <div>
-            <h2 className="text-lg font-semibold text-slate-900 mb-3">Property Details</h2>
+            <h2 className="text-lg font-semibold text-charcoal-900 mb-3">Property Details</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="text-slate-500">Property Type</span>
-                <span className="font-medium text-slate-900 capitalize">{property.type}</span>
+              <div className="flex justify-between py-2 border-b border-charcoal-100">
+                <span className="text-charcoal-500">Property Type</span>
+                <span className="font-medium text-charcoal-900 capitalize">{property.type}</span>
               </div>
               {property.specs.yearBuilt && (
-                <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Year Built</span>
-                  <span className="font-medium text-slate-900">{property.specs.yearBuilt}</span>
+                <div className="flex justify-between py-2 border-b border-charcoal-100">
+                  <span className="text-charcoal-500">Year Built</span>
+                  <span className="font-medium text-charcoal-900">{property.specs.yearBuilt}</span>
                 </div>
               )}
               {property.specs.erfSize && (
-                <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Erf Size</span>
-                  <span className="font-medium text-slate-900">{property.specs.erfSize} m²</span>
+                <div className="flex justify-between py-2 border-b border-charcoal-100">
+                  <span className="text-charcoal-500">Erf Size</span>
+                  <span className="font-medium text-charcoal-900">{property.specs.erfSize} m²</span>
                 </div>
               )}
               {property.pricing.levies !== undefined && (
-                <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Levies</span>
-                  <span className="font-medium text-slate-900">{formatCurrency(property.pricing.levies || 0)}/month</span>
+                <div className="flex justify-between py-2 border-b border-charcoal-100">
+                  <span className="text-charcoal-500">Levies</span>
+                  <span className="font-medium text-charcoal-900">{formatCurrency(property.pricing.levies || 0)}/month</span>
                 </div>
               )}
               {property.pricing.ratesAndTaxes !== undefined && (
-                <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Rates & Taxes</span>
-                  <span className="font-medium text-slate-900">{formatCurrency(property.pricing.ratesAndTaxes || 0)}/month</span>
+                <div className="flex justify-between py-2 border-b border-charcoal-100">
+                  <span className="text-charcoal-500">Rates & Taxes</span>
+                  <span className="font-medium text-charcoal-900">{formatCurrency(property.pricing.ratesAndTaxes || 0)}/month</span>
                 </div>
               )}
             </div>
@@ -323,7 +323,7 @@ export default function PropertyDetailPage() {
 
           {/* Features */}
           <div>
-            <h2 className="text-lg font-semibold text-slate-900 mb-3">Features & Amenities</h2>
+            <h2 className="text-lg font-semibold text-charcoal-900 mb-3">Features & Amenities</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {featureCategories.map((category) => {
                 const activeFeatures = category.features.filter(
@@ -333,10 +333,10 @@ export default function PropertyDetailPage() {
                 
                 return (
                   <div key={category.title}>
-                    <h3 className="text-sm font-medium text-slate-500 mb-2">{category.title}</h3>
+                    <h3 className="text-sm font-medium text-charcoal-500 mb-2">{category.title}</h3>
                     <ul className="space-y-2">
                       {activeFeatures.map(feature => (
-                        <li key={feature.key} className="flex items-center gap-2 text-slate-700">
+                        <li key={feature.key} className="flex items-center gap-2 text-charcoal-700">
                           <Check className="w-4 h-4 text-green-500" />
                           {feature.label}
                         </li>
@@ -351,7 +351,7 @@ export default function PropertyDetailPage() {
           {/* Similar Properties */}
           {similarProperties.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">Similar Properties</h2>
+              <h2 className="text-lg font-semibold text-charcoal-900 mb-4">Similar Properties</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {similarProperties.map(p => (
                   <PropertyCard key={p.id} property={p} variant="compact" />
@@ -365,9 +365,9 @@ export default function PropertyDetailPage() {
         <div className="space-y-6">
           {/* Agent Card */}
           <Card className="p-6">
-            <h3 className="font-semibold text-slate-900 mb-4">Listed By</h3>
+            <h3 className="font-semibold text-charcoal-900 mb-4">Listed By</h3>
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 rounded-full bg-slate-200 overflow-hidden">
+              <div className="w-16 h-16 rounded-full bg-charcoal-200 overflow-hidden">
                 {property.agent.avatarUrl ? (
                   <Image
                     src={property.agent.avatarUrl}
@@ -377,39 +377,39 @@ export default function PropertyDetailPage() {
                     className="object-cover w-full h-full"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-400">
+                  <div className="w-full h-full flex items-center justify-center text-charcoal-400">
                     <Home className="w-8 h-8" />
                   </div>
                 )}
               </div>
               <div>
-                <p className="font-semibold text-slate-900">{property.agent.name}</p>
-                <p className="text-sm text-slate-500">{property.agent.agencyName}</p>
+                <p className="font-semibold text-charcoal-900">{property.agent.name}</p>
+                <p className="text-sm text-charcoal-500">{property.agent.agencyName}</p>
               </div>
             </div>
             
             <div className="space-y-2">
               <a 
                 href={`tel:${property.agent.phone}`}
-                className="flex items-center gap-2 p-3 bg-charcoal-50 rounded-lg hover:bg-charcoal-100 transition-colors"
+                className="flex items-center gap-2 p-3 bg-charcoal-50 rounded-lg hover:bg-charcoal-100 transition-all duration-300 cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-navy-500" />
-                <span className="text-sm font-medium text-slate-700">{property.agent.phone}</span>
+                <span className="text-sm font-medium text-charcoal-700">{property.agent.phone}</span>
               </a>
               <a 
                 href={`mailto:${property.agent.email}`}
-                className="flex items-center gap-2 p-3 bg-charcoal-50 rounded-lg hover:bg-charcoal-100 transition-colors"
+                className="flex items-center gap-2 p-3 bg-charcoal-50 rounded-lg hover:bg-charcoal-100 transition-all duration-300 cursor-pointer"
               >
                 <Mail className="w-4 h-4 text-navy-500" />
-                <span className="text-sm font-medium text-slate-700">{property.agent.email}</span>
+                <span className="text-sm font-medium text-charcoal-700">{property.agent.email}</span>
               </a>
             </div>
           </Card>
 
           {/* Schedule Viewing Card */}
-          <Card className="p-6 bg-gold-50 border-gold-200">
-            <h3 className="font-semibold text-slate-900 mb-2">Interested in this property?</h3>
-            <p className="text-sm text-slate-600 mb-4">
+          <Card className="p-6 bg-lime-50 border-lime-200">
+            <h3 className="font-semibold text-charcoal-900 mb-2">Interested in this property?</h3>
+            <p className="text-sm text-charcoal-600 mb-4">
               Schedule a viewing or request more information from the agent.
             </p>
             <div className="space-y-2">
@@ -426,7 +426,7 @@ export default function PropertyDetailPage() {
 
           {/* Syndication Status */}
           <Card className="p-6">
-            <h3 className="font-semibold text-slate-900 mb-3">Syndicated To</h3>
+            <h3 className="font-semibold text-charcoal-900 mb-3">Syndicated To</h3>
             <div className="flex flex-wrap gap-2">
               {property.syndicatedTo.map(platform => (
                 <span 
@@ -442,23 +442,23 @@ export default function PropertyDetailPage() {
 
           {/* Property Stats */}
           <Card className="p-6">
-            <h3 className="font-semibold text-slate-900 mb-3">Listing Statistics</h3>
+            <h3 className="font-semibold text-charcoal-900 mb-3">Listing Statistics</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-slate-500 text-sm">Total Views</span>
-                <span className="font-medium text-slate-900">{property.viewCount.toLocaleString()}</span>
+                <span className="text-charcoal-500 text-sm">Total Views</span>
+                <span className="font-medium text-charcoal-900">{property.viewCount.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 text-sm">Inquiries</span>
-                <span className="font-medium text-slate-900">{property.inquiryCount}</span>
+                <span className="text-charcoal-500 text-sm">Inquiries</span>
+                <span className="font-medium text-charcoal-900">{property.inquiryCount}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 text-sm">Favorites</span>
-                <span className="font-medium text-slate-900">{property.favoriteCount}</span>
+                <span className="text-charcoal-500 text-sm">Favorites</span>
+                <span className="font-medium text-charcoal-900">{property.favoriteCount}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 text-sm">Listed On</span>
-                <span className="font-medium text-slate-900">
+                <span className="text-charcoal-500 text-sm">Listed On</span>
+                <span className="font-medium text-charcoal-900">
                   {new Date(property.publishedAt || property.createdAt).toLocaleDateString()}
                 </span>
               </div>
