@@ -532,8 +532,8 @@ export default function LandingPage() {
                     {testimonial.author.charAt(0)}
                   </div>
                   <div>
-                    <p className="font-semibold group-hover:text-lime-400 transition-colors">{testimonial.author}</p>
-                    <p className="text-sm text-white/70">{testimonial.role}, {testimonial.company}</p>
+                    <p className="font-semibold text-white group-hover:text-lime-400 transition-colors">{testimonial.author}</p>
+                    <p className="text-sm text-white">{testimonial.role}, {testimonial.company}</p>
                   </div>
                 </div>
               </div>
@@ -576,15 +576,15 @@ export default function LandingPage() {
                 <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mb-2">
                   <span className="text-4xl font-bold">{plan.price}</span>
-                  {plan.period && <span className={plan.popular ? 'text-white/50' : 'text-charcoal-400'}>{plan.period}</span>}
+                  {plan.period && <span className={plan.popular ? 'text-white/70' : 'text-charcoal-400'}>{plan.period}</span>}
                 </div>
-                <p className={plan.popular ? 'text-white/60 text-sm mb-6' : 'text-charcoal-500 text-sm mb-6'}>{plan.desc}</p>
+                <p className={plan.popular ? 'text-white text-sm mb-6 font-medium' : 'text-charcoal-600 text-sm mb-6'}>{plan.desc}</p>
                 
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((f, j) => (
                     <li key={j} className="flex items-center gap-3 text-sm">
                       <Check className={`w-4 h-4 flex-shrink-0 ${plan.accent}`} aria-hidden="true" />
-                      <span className={plan.popular ? 'text-white/80' : 'text-charcoal-700'}>{f}</span>
+                      <span className={plan.popular ? 'text-white' : 'text-charcoal-700'}>{f}</span>
                     </li>
                   ))}
                 </ul>
