@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
@@ -9,7 +10,12 @@ import {
   Building2, Target, Wallet, FileText, Trophy,
   UserCheck, Sparkles, Bell, Search, ChevronRight, X
 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/lib/auth';
+import { Property, Tenant, MaintenanceTicket } from '@/lib/types';
+import { mockProperties, mockTenants, mockMaintenanceRequests } from '@/lib/data';
 
+// Fallback mock data in case DB is empty
 const mockPaymentData = {
   rent: { value: 102054, change: 5 },
   additionalServices: { value: 28450, change: 12 },
@@ -17,30 +23,21 @@ const mockPaymentData = {
   debt: { value: 4200, change: -15 },
 };
 
-const mockPropertySpotlight = {
-  title: "Modern Residential Complex",
+const defaultSpotlight = {
+  title: "Property Portfolio Overview",
   image: "https://images.unsplash.com/photo-1545324418-cc1a3fa84830?w=800&q=80",
-  stats: { residents: 1054, units: 512, vacant: 102, upcoming: 54 },
+  stats: { residents: 0, units: 0, vacant: 0, upcoming: 0 },
   priceHistory: [3200, 3350, 3280, 3420, 3500, 3450, 3600, 3580, 3720, 3800, 3750, 3900],
 };
 
-const mockRequests = [
-  { id: 1, name: "Sarah Mitchell", unit: "Unit 204", status: "New", avatar: "S" },
-  { id: 2, name: "James Wilson", unit: "Unit 512", status: "In Progress", avatar: "J" },
-  { id: 3, name: "Maria Garcia", unit: "Unit 108", status: "Pending", avatar: "M" },
-  { id: 4, name: "David Chen", unit: "Unit 356", status: "New", avatar: "D" },
-  { id: 5, name: "Emma Thompson", unit: "Unit 421", status: "In Progress", avatar: "E" },
-];
-
-const mockUpcomingUnits = [
-  { id: 1, unitNumber: "Unit 618", price: 2450, availableDate: "May 1, 2026", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&q=80" },
-  { id: 2, unitNumber: "Unit 302", price: 3200, availableDate: "June 15, 2026", image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=80" },
-];
-
 const statusStyles = {
-  New: "bg-charcoal-900 text-white",
-  "In Progress": "bg-lime-400 text-charcoal-900",
-  Pending: "bg-sky-400 text-white",
+  new: "bg-charcoal-900 text-white",
+  in_progress: "bg-lime-400 text-charcoal-900",
+  pending: "bg-sky-400 text-white",
+  ai_classified: "bg-purple-400 text-white",
+  assigned: "bg-blue-400 text-white",
+  completed: "bg-green-400 text-white",
+  cancelled: "bg-red-400 text-white",
 };
 
 function PaymentsOverview() {
@@ -60,7 +57,7 @@ function PaymentsOverview() {
         </button>
       </div>
       
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {payments.map((payment, index) => (
           <div
             key={payment.label}
@@ -89,14 +86,34 @@ function PaymentsOverview() {
   );
 }
 
-function PropertySpotlight() {
-  const maxPrice = Math.max(...mockPropertySpotlight.priceHistory);
-  const minPrice = Math.min(...mockPropertySpotlight.priceHistory);
+function PropertySpotlight({ properties, tenants }: { properties: Property[], tenants: Tenant[] }) {
+  const spotlight = properties.length > 0 ? {
+    title: properties[0].address,
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa84830?w=800&q=80",
+    stats: {
+      residents: tenants.filter(t => t.property_id === properties[0].id).length,
+      units: 1,
+      vacant: properties[0].status === 'available' ? 1 : 0,
+      upcoming: 0
+    },
+    priceHistory: defaultSpotlight.priceHistory,
+  } : {
+    ...defaultSpotlight,
+    stats: {
+      residents: tenants.length,
+      units: properties.length,
+      vacant: properties.filter(p => p.status === 'available').length,
+      upcoming: 0
+    }
+  };
+
+  const maxPrice = Math.max(...spotlight.priceHistory);
+  const minPrice = Math.min(...spotlight.priceHistory);
   const range = maxPrice - minPrice;
   
-  const points = mockPropertySpotlight.priceHistory
+  const points = spotlight.priceHistory
     .map((price, i) => {
-      const x = (i / (mockPropertySpotlight.priceHistory.length - 1)) * 100;
+      const x = (i / (spotlight.priceHistory.length - 1)) * 100;
       const y = 100 - ((price - minPrice) / range) * 100;
       return `${x},${y}`;
     })
@@ -106,8 +123,8 @@ function PropertySpotlight() {
     <div className="bg-white rounded-2xl overflow-hidden border border-charcoal-100">
       <div className="relative h-48 bg-charcoal-100">
         <img 
-          src={mockPropertySpotlight.image} 
-          alt={mockPropertySpotlight.title}
+          src={spotlight.image}
+          alt={spotlight.title}
           className="w-full h-full object-cover"
         />
         <button className="absolute top-3 right-3 w-11 h-11 bg-white rounded-full flex items-center justify-center hover:bg-charcoal-50 transition-colors cursor-pointer" aria-label="Close property spotlight">
@@ -117,16 +134,16 @@ function PropertySpotlight() {
       
       <div className="p-5">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-charcoal-900">{mockPropertySpotlight.title}</h3>
+          <h3 className="text-lg font-semibold text-charcoal-900">{spotlight.title}</h3>
           <ArrowUpRight className="w-5 h-5 text-charcoal-400" />
         </div>
         
         <div className="grid grid-cols-4 gap-4 mt-4 py-4 border-y border-charcoal-100">
           {[
-            { label: "Residents", value: mockPropertySpotlight.stats.residents },
-            { label: "Units", value: mockPropertySpotlight.stats.units },
-            { label: "Vacant", value: mockPropertySpotlight.stats.vacant },
-            { label: "Upcoming", value: mockPropertySpotlight.stats.upcoming },
+            { label: "Residents", value: spotlight.stats.residents },
+            { label: "Units", value: spotlight.stats.units },
+            { label: "Vacant", value: spotlight.stats.vacant },
+            { label: "Upcoming", value: spotlight.stats.upcoming },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="text-xl font-bold text-charcoal-900">{stat.value}</p>
@@ -146,8 +163,8 @@ function PropertySpotlight() {
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
               <defs>
                 <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--sky-400)" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="var(--sky-400)" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#53B4F0" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#53B4F0" stopOpacity="0" />
                 </linearGradient>
               </defs>
               <polyline
@@ -169,7 +186,13 @@ function PropertySpotlight() {
   );
 }
 
-function RequestsList() {
+function RequestsList({ tickets, tenants }: { tickets: MaintenanceTicket[], tenants: Tenant[] }) {
+  const getTenantName = (id: string | null) => {
+    if (!id) return "Unknown";
+    const tenant = tenants.find(t => t.id === id);
+    return tenant ? `${tenant.first_name} ${tenant.last_name}` : "Unknown";
+  };
+
   return (
     <div className="bg-white rounded-2xl p-5 border border-slate-200 h-full">
       <div className="flex items-center justify-between mb-5">
@@ -177,37 +200,43 @@ function RequestsList() {
           <h3 className="text-lg font-semibold text-slate-900">Requests</h3>
           <ArrowUpRight className="w-4 h-4 text-slate-400" />
         </div>
-        <Link href="/requests" className="text-xs text-slate-500 hover:text-slate-700 transition-colors">
+        <Link href="/maintenance" className="text-xs text-slate-500 hover:text-slate-700 transition-colors">
           View all →
         </Link>
       </div>
       
       <div className="space-y-3">
-        {mockRequests.map((request) => (
+        {tickets.length > 0 ? tickets.slice(0, 5).map((ticket) => (
           <div 
-            key={request.id}
+            key={ticket.id}
             className="flex items-center justify-between p-3 rounded-xl hover:bg-charcoal-50 transition-colors"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-medium">
-                {request.avatar}
+                {getTenantName(ticket.tenant_id).charAt(0)}
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-900">{request.name}</p>
-                <p className="text-xs text-slate-500">{request.unit}</p>
+                <p className="text-sm font-medium text-slate-900 truncate max-w-[120px]">{getTenantName(ticket.tenant_id)}</p>
+                <p className="text-xs text-slate-500">{ticket.issue_category || 'General'}</p>
               </div>
             </div>
-            <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${statusStyles[request.status as keyof typeof statusStyles]}`}>
-              {request.status}
+            <span className={`px-3 py-1.5 rounded-full text-[10px] font-medium uppercase tracking-wider ${statusStyles[ticket.status as keyof typeof statusStyles] || statusStyles.new}`}>
+              {ticket.status.replace('_', ' ')}
             </span>
           </div>
-        ))}
+        )) : (
+          <div className="text-center py-8">
+            <p className="text-sm text-slate-400">No active requests</p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function UpcomingUnits() {
+function UpcomingUnits({ properties }: { properties: Property[] }) {
+  const upcoming = properties.filter(p => p.status === 'available').slice(0, 2);
+
   return (
     <div className="bg-white rounded-2xl p-5 border border-slate-200">
       <div className="flex items-center justify-between mb-5">
@@ -218,57 +247,105 @@ function UpcomingUnits() {
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {mockUpcomingUnits.map((unit) => (
+        {upcoming.length > 0 ? upcoming.map((unit) => (
           <div 
             key={unit.id}
             className="border border-slate-200 rounded-xl overflow-hidden hover:border-slate-300 transition-colors"
           >
             <div className="h-20 bg-slate-100">
               <img 
-                src={unit.image} 
-                alt={unit.unitNumber}
+                src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&q=80"
+                alt={unit.address}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="p-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-slate-900">{unit.unitNumber}</span>
-                <span className="text-sm font-bold text-slate-900">${unit.price}/mo</span>
+                <span className="text-sm font-medium text-slate-900 truncate">{unit.address}</span>
+                <span className="text-sm font-bold text-slate-900">R{unit.monthly_rerent?.toLocaleString()}/mo</span>
               </div>
-              <p className="text-xs text-slate-500 mt-1">Available {unit.availableDate}</p>
+              <p className="text-xs text-slate-500 mt-1">{unit.suburb}, {unit.city}</p>
             </div>
           </div>
-        ))}
+        )) : (
+          <div className="col-span-2 text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+            <p className="text-sm text-slate-400">No available units at the moment</p>
+            <Link href="/properties/new" className="text-xs text-lime-600 font-medium hover:text-lime-700 mt-2 inline-block">
+              + Add new property
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 export default function DashboardPage() {
+  const { isDemoMode } = useAuth();
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [tenants, setTenants] = useState<Tenant[]>([]);
+  const [tickets, setTickets] = useState<MaintenanceTicket[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchDashboardData() {
+      if (isDemoMode) {
+        setProperties(mockProperties);
+        setTenants(mockTenants);
+        setTickets(mockMaintenanceRequests);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const [propRes, tenantRes, ticketRes] = await Promise.all([
+          supabase.from('properties').select('*').order('created_at', { ascending: false }),
+          supabase.from('tenants').select('*').order('created_at', { ascending: false }),
+          supabase.from('maintenance_tickets').select('*').order('created_at', { ascending: false })
+        ]);
+
+        if (propRes.data) setProperties(propRes.data as Property[]);
+        if (tenantRes.data) setTenants(tenantRes.data as Tenant[]);
+        if (ticketRes.data) setTickets(ticketRes.data as MaintenanceTicket[]);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDashboardData();
+  }, [isDemoMode]);
+
+  if (loading) {
+    return (
+      <div className="min-h-[400px] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-lime-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Dashboard</h1>
-          <p className="text-sm text-slate-500 mt-1">Welcome back! Here&apos;s an overview of your properties.</p>
+          <p className="text-sm text-slate-500 mt-1">Welcome back! You have {properties.length} properties under management.</p>
         </div>
       </div>
 
-      {/* A. Payments Overview */}
       <PaymentsOverview />
 
-      {/* B. Property Spotlight & C. Requests List */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <PropertySpotlight />
+          <PropertySpotlight properties={properties} tenants={tenants} />
         </div>
         <div className="lg:col-span-1">
-          <RequestsList />
+          <RequestsList tickets={tickets} tenants={tenants} />
         </div>
       </div>
 
-      {/* D. Upcoming Units */}
-      <UpcomingUnits />
+      <UpcomingUnits properties={properties} />
     </div>
   );
 }
