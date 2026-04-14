@@ -11,7 +11,9 @@ import {
   UserCheck, Sparkles, Bell, Search, ChevronRight, X
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/lib/auth';
 import { Property, Tenant, MaintenanceTicket } from '@/lib/types';
+import { mockProperties, mockTenants, mockMaintenanceRequests } from '@/lib/data';
 
 // Fallback mock data in case DB is empty
 const mockPaymentData = {
@@ -279,6 +281,7 @@ function UpcomingUnits({ properties }: { properties: Property[] }) {
 }
 
 export default function DashboardPage() {
+  const { isDemoMode } = useAuth();
   const [properties, setProperties] = useState<Property[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [tickets, setTickets] = useState<MaintenanceTicket[]>([]);
@@ -286,6 +289,14 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function fetchDashboardData() {
+      if (isDemoMode) {
+        setProperties(mockProperties);
+        setTenants(mockTenants);
+        setTickets(mockMaintenanceRequests);
+        setLoading(false);
+        return;
+      }
+
       try {
         const [propRes, tenantRes, ticketRes] = await Promise.all([
           supabase.from('properties').select('*').order('created_at', { ascending: false }),
@@ -304,7 +315,7 @@ export default function DashboardPage() {
     }
 
     fetchDashboardData();
-  }, []);
+  }, [isDemoMode]);
 
   if (loading) {
     return (
