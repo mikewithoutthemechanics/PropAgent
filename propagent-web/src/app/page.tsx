@@ -576,15 +576,15 @@ export default function LandingPage() {
                 <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mb-2">
                   <span className="text-4xl font-bold">{plan.price}</span>
-                  {plan.period && <span className={plan.popular ? 'text-white/70' : 'text-charcoal-400'}>{plan.period}</span>}
+                  {plan.period && <span className={plan.popular ? 'text-white/70' : 'text-charcoal-600'}>{plan.period}</span>}
                 </div>
-                <p className={plan.popular ? 'text-white text-sm mb-6 font-medium' : 'text-charcoal-600 text-sm mb-6'}>{plan.desc}</p>
+                <p className={plan.popular ? 'text-white text-sm mb-6 font-medium' : 'text-charcoal-800 text-sm mb-6 font-medium'}>{plan.desc}</p>
                 
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((f, j) => (
                     <li key={j} className="flex items-center gap-3 text-sm">
                       <Check className={`w-4 h-4 flex-shrink-0 ${plan.accent}`} aria-hidden="true" />
-                      <span className={plan.popular ? 'text-white' : 'text-charcoal-700'}>{f}</span>
+                      <span className={plan.popular ? 'text-white' : 'text-charcoal-800'}>{f}</span>
                     </li>
                   ))}
                 </ul>
