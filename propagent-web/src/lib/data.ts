@@ -1,4 +1,5 @@
-import { Property, Tenant, MaintenanceRequest, Payment, Conversation, DashboardStats, RecentActivity } from './types';
+import { supabase } from './supabase';
+import { Property, Tenant, MaintenanceTicket, Payment, Conversation } from './types';
 
 export const mockProperties: Property[] = [
   {
@@ -7,17 +8,14 @@ export const mockProperties: Property[] = [
     suburb: 'Sandton',
     city: 'Johannesburg',
     province: 'Gauteng',
-    type: 'apartment',
     bedrooms: 2,
     bathrooms: 1,
-    parking: 1,
-    rent: 15000,
-    status: 'occupied',
-    tenantId: 'tenant-1',
-    imageUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800',
-    features: ['Balcony', 'Pool Access', 'Security Gate'],
-    createdAt: '2024-01-15',
-    updatedAt: '2024-06-01',
+    garages: 1,
+    monthly_rerent: 15000,
+    deposit_amount: 15000,
+    status: 'rented',
+    created_at: '2024-01-15',
+    updated_at: '2024-06-01',
   },
   {
     id: 'prop-2',
@@ -25,350 +23,74 @@ export const mockProperties: Property[] = [
     suburb: 'Muizenberg',
     city: 'Cape Town',
     province: 'Western Cape',
-    type: 'house',
     bedrooms: 3,
     bathrooms: 2,
-    parking: 2,
-    rent: 28000,
-    status: 'occupied',
-    tenantId: 'tenant-2',
-    imageUrl: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
-    features: ['Ocean View', 'Garden', 'Garage'],
-    createdAt: '2024-02-20',
-    updatedAt: '2024-05-15',
-  },
-  {
-    id: 'prop-3',
-    address: '15 Garden Avenue',
-    suburb: 'Sea Point',
-    city: 'Cape Town',
-    province: 'Western Cape',
-    type: 'flat',
-    bedrooms: 1,
-    bathrooms: 1,
-    parking: 1,
-    rent: 12000,
-    status: 'available',
-    imageUrl: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
-    features: ['Mountain View', 'Modern Finishes'],
-    createdAt: '2024-03-10',
-    updatedAt: '2024-04-20',
-  },
-  {
-    id: 'prop-4',
-    address: '203 Durban Road',
-    suburb: 'Bellville',
-    city: 'Cape Town',
-    province: 'Western Cape',
-    type: 'townhouse',
-    bedrooms: 3,
-    bathrooms: 2,
-    parking: 2,
-    rent: 18500,
-    status: 'maintenance',
-    imageUrl: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800',
-    features: ['Secure Complex', 'Backyard'],
-    createdAt: '2024-04-05',
-    updatedAt: '2024-06-10',
-  },
-  {
-    id: 'prop-5',
-    address: '9 Riverside Drive',
-    suburb: 'Umhlanga',
-    city: 'Durban',
-    province: 'KwaZulu-Natal',
-    type: 'apartment',
-    bedrooms: 2,
-    bathrooms: 2,
-    parking: 2,
-    rent: 22000,
-    status: 'occupied',
-    tenantId: 'tenant-3',
-    imageUrl: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
-    features: ['Sea View', '健身房', '24/7 Security'],
-    createdAt: '2024-05-12',
-    updatedAt: '2024-06-01',
+    garages: 2,
+    monthly_rerent: 28000,
+    deposit_amount: 28000,
+    status: 'rented',
+    created_at: '2024-02-20',
+    updated_at: '2024-05-15',
   },
 ];
 
 export const mockTenants: Tenant[] = [
   {
     id: 'tenant-1',
-    firstName: 'Sarah',
-    lastName: 'Mitchell',
+    first_name: 'Sarah',
+    last_name: 'Mitchell',
     email: 'sarah.mitchell@email.com',
     phone: '+27 82 456 7890',
-    propertyId: 'prop-1',
-    leaseStart: '2024-01-01',
-    leaseEnd: '2025-12-31',
-    rentAmount: 15000,
+    property_id: 'prop-1',
+    lease_start_date: '2024-01-01',
+    lease_end_date: '2025-12-31',
+    monthly_rent: 15000,
     status: 'active',
-    avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200',
-    createdAt: '2024-01-01',
-  },
-  {
-    id: 'tenant-2',
-    firstName: 'David',
-    lastName: 'Chen',
-    email: 'david.chen@email.com',
-    phone: '+27 83 789 1234',
-    propertyId: 'prop-2',
-    leaseStart: '2024-02-15',
-    leaseEnd: '2025-02-14',
-    rentAmount: 28000,
-    status: 'active',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200',
-    createdAt: '2024-02-15',
-  },
-  {
-    id: 'tenant-3',
-    firstName: 'Emma',
-    lastName: 'Williams',
-    email: 'emma.williams@email.com',
-    phone: '+27 84 321 5678',
-    propertyId: 'prop-5',
-    leaseStart: '2024-05-01',
-    leaseEnd: '2025-04-30',
-    rentAmount: 22000,
-    status: 'active',
-    avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d40?w=200',
-    createdAt: '2024-05-01',
+    created_at: '2024-01-01',
+    updated_at: '2024-01-01'
   },
 ];
 
-export const mockMaintenanceRequests: MaintenanceRequest[] = [
-  {
-    id: 'maint-1',
-    propertyId: 'prop-4',
-    tenantId: 'tenant-2',
-    title: 'Leaking Tap in Kitchen',
-    description: 'The kitchen tap has been dripping for 2 days. Water pressure seems reduced.',
-    category: 'plumbing',
-    priority: 'medium',
-    status: 'in-progress',
-    scheduledDate: '2024-06-15',
-    estimatedCost: 500,
-    createdAt: '2024-06-10',
-    updatedAt: '2024-06-12',
-  },
-  {
-    id: 'maint-2',
-    propertyId: 'prop-1',
-    tenantId: 'tenant-1',
-    title: 'AC Not Cooling',
-    description: 'Air conditioning unit is running but not producing cold air.',
-    category: 'hvac',
-    priority: 'high',
-    status: 'pending',
-    estimatedCost: 2500,
-    createdAt: '2024-06-12',
-    updatedAt: '2024-06-12',
-  },
-  {
-    id: 'maint-3',
-    propertyId: 'prop-2',
-    tenantId: 'tenant-2',
-    title: 'Broken Gate Lock',
-    description: 'The automatic gate lock stopped working yesterday.',
-    category: 'other',
-    priority: 'low',
-    status: 'completed',
-    scheduledDate: '2024-06-08',
-    completedDate: '2024-06-09',
-    estimatedCost: 800,
-    actualCost: 750,
-    createdAt: '2024-06-08',
-    updatedAt: '2024-06-09',
-  },
-];
+export const mockMaintenanceRequests: MaintenanceTicket[] = [];
+export const mockPayments: Payment[] = [];
+export const mockConversations: Conversation[] = [];
 
-export const mockPayments: Payment[] = [
-  {
-    id: 'pay-1',
-    tenantId: 'tenant-1',
-    propertyId: 'prop-1',
-    amount: 15000,
-    type: 'rent',
-    status: 'paid',
-    dueDate: '2024-06-01',
-    paidDate: '2024-05-30',
-    reference: 'RENT/JUN/2024/001',
-    createdAt: '2024-05-25',
-  },
-  {
-    id: 'pay-2',
-    tenantId: 'tenant-2',
-    propertyId: 'prop-2',
-    amount: 28000,
-    type: 'rent',
-    status: 'late',
-    dueDate: '2024-06-01',
-    reference: 'RENT/JUN/2024/002',
-    createdAt: '2024-05-25',
-  },
-  {
-    id: 'pay-3',
-    tenantId: 'tenant-3',
-    propertyId: 'prop-5',
-    amount: 22000,
-    type: 'rent',
-    status: 'pending',
-    dueDate: '2024-06-01',
-    reference: 'RENT/JUN/2024/003',
-    createdAt: '2024-05-25',
-  },
-  {
-    id: 'pay-4',
-    tenantId: 'tenant-1',
-    propertyId: 'prop-1',
-    amount: 3000,
-    type: 'utility',
-    status: 'paid',
-    dueDate: '2024-06-15',
-    paidDate: '2024-06-10',
-    reference: 'UTIL/JUN/2024/001',
-    createdAt: '2024-06-01',
-  },
-];
+export async function fetchProperties(): Promise<Property[]> {
+  const { data, error } = await supabase
+    .from('properties')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-export const mockConversations: Conversation[] = [
-  {
-    id: 'conv-1',
-    tenantId: 'tenant-1',
-    tenantName: 'Sarah Mitchell',
-    propertyId: 'prop-1',
-    propertyAddress: '42 Oak Street, Sandton',
-    lastMessage: 'Hi, I wanted to ask about the maintenance request I submitted.',
-    lastMessageTime: '2024-06-12T14:30:00',
-    unreadCount: 1,
-    messages: [
-      {
-        id: 'msg-1',
-        senderId: 'tenant-1',
-        senderType: 'tenant',
-        content: 'Hi, I wanted to ask about the maintenance request I submitted.',
-        timestamp: '2024-06-12T14:30:00',
-        read: false,
-      },
-      {
-        id: 'msg-2',
-        senderId: 'ai',
-        senderType: 'ai',
-        content: 'Hello Sarah! I see you submitted a maintenance request for the AC unit. I\'ve escalated this to our maintenance team. They should contact you within 24 hours to schedule a repair visit. Is there anything else I can help you with?',
-        timestamp: '2024-06-12T14:35:00',
-        read: true,
-      },
-    ],
-  },
-  {
-    id: 'conv-2',
-    tenantId: 'tenant-2',
-    tenantName: 'David Chen',
-    propertyId: 'prop-2',
-    propertyAddress: '78 Beach Road, Muizenberg',
-    lastMessage: 'Can I get a receipt for last month\'s rent?',
-    lastMessageTime: '2024-06-11T09:15:00',
-    unreadCount: 0,
-    messages: [
-      {
-        id: 'msg-3',
-        senderId: 'tenant-2',
-        senderType: 'tenant',
-        content: 'Can I get a receipt for last month\'s rent?',
-        timestamp: '2024-06-11T09:15:00',
-        read: true,
-      },
-      {
-        id: 'msg-4',
-        senderId: 'ai',
-        senderType: 'ai',
-        content: 'Of course! I\'ve attached the receipt for May 2024 rent payment. You can also find all your payment receipts in the tenant portal. Let me know if you need anything else!',
-        timestamp: '2024-06-11T09:20:00',
-        read: true,
-      },
-    ],
-  },
-  {
-    id: 'conv-3',
-    tenantId: 'tenant-3',
-    tenantName: 'Emma Williams',
-    propertyId: 'prop-5',
-    propertyAddress: '9 Riverside Drive, Umhlanga',
-    lastMessage: 'Is it possible to get a parking spot added to my lease?',
-    lastMessageTime: '2024-06-10T16:45:00',
-    unreadCount: 1,
-    messages: [
-      {
-        id: 'msg-5',
-        senderId: 'tenant-3',
-        senderType: 'tenant',
-        content: 'Is it possible to get a parking spot added to my lease?',
-        timestamp: '2024-06-10T16:45:00',
-        read: false,
-      },
-      {
-        id: 'msg-6',
-        senderId: 'ai',
-        senderType: 'ai',
-        content: 'Hi Emma! Yes, we can add an additional parking spot to your lease. This would be R500 per month. I\'ve sent this request to the property manager. They\'ll confirm the availability and get back to you within 24-48 hours with the updated lease agreement.',
-        timestamp: '2024-06-10T16:50:00',
-        read: true,
-      },
-    ],
-  },
-];
+  if (error) throw error;
+  return data as Property[];
+}
 
-export const mockDashboardStats: DashboardStats = {
-  totalProperties: 5,
-  occupiedProperties: 3,
-  vacantProperties: 1,
-  totalTenants: 3,
-  activeLeases: 3,
-  pendingMaintenance: 2,
-  monthlyRevenue: 85500,
-  pendingPayments: 1,
-  occupancyRate: 80,
-};
+export async function fetchTenants(): Promise<Tenant[]> {
+  const { data, error } = await supabase
+    .from('tenants')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-export const mockRecentActivity: RecentActivity[] = [
-  {
-    id: 'act-1',
-    type: 'maintenance',
-    title: 'New Maintenance Request',
-    description: 'AC not cooling at 42 Oak Street',
-    timestamp: '2024-06-12T14:30:00',
-    icon: 'wrench',
-  },
-  {
-    id: 'act-2',
-    type: 'payment',
-    title: 'Payment Received',
-    description: 'R15,000 from Sarah Mitchell',
-    timestamp: '2024-06-11T10:15:00',
-    icon: 'payment',
-  },
-  {
-    id: 'act-3',
-    type: 'tenant',
-    title: 'Tenant Inquiry',
-    description: 'David Chen requested rent receipt',
-    timestamp: '2024-06-11T09:15:00',
-    icon: 'user',
-  },
-  {
-    id: 'act-4',
-    type: 'lease',
-    title: 'Lease Renewal',
-    description: 'Lease renewed for 42 Oak Street',
-    timestamp: '2024-06-10T15:00:00',
-    icon: 'document',
-  },
-  {
-    id: 'act-5',
-    type: 'property',
-    title: 'Property Listed',
-    description: '15 Garden Avenue now available',
-    timestamp: '2024-06-09T12:00:00',
-    icon: 'home',
-  },
-];
+  if (error) throw error;
+  return data as Tenant[];
+}
+
+export async function fetchMaintenanceTickets(): Promise<MaintenanceTicket[]> {
+  const { data, error } = await supabase
+    .from('maintenance_tickets')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data as MaintenanceTicket[];
+}
+
+export async function fetchPayments(): Promise<Payment[]> {
+  const { data, error } = await supabase
+    .from('payments')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data as Payment[];
+}
