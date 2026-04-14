@@ -515,7 +515,7 @@ export default function LandingPage() {
             {testimonials.map((testimonial, i) => (
               <div 
                 key={i} 
-                className={`relative bg-white/20 backdrop-blur-sm rounded-2xl p-8 border border-white/30 hover:border-lime-400/40 hover:bg-white/30 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-lime-500/10 group focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-charcoal-900 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                className={`relative bg-gray-800 rounded-2xl p-8 border border-gray-700 hover:border-lime-400/40 hover:bg-gray-750 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-lime-500/10 group focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-charcoal-900 ${prefersReducedMotion ? '' : visibleSections.has('testimonials') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 style={{ transitionDelay: `${i * 150}ms` }}
               >
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-lime-400/20 to-sky-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl" />
