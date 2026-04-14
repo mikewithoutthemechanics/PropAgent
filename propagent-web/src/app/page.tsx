@@ -524,7 +524,7 @@ export default function LandingPage() {
                     <Star key={j} className="w-4 h-4 text-lime-400 fill-lime-400" aria-hidden="true" />
                   ))}
                 </div>
-                <blockquote className="text-white/80 leading-relaxed mb-6 group-hover:text-white transition-colors">
+                <blockquote className="text-white leading-relaxed mb-6 group-hover:text-white transition-colors font-medium">
                   "{testimonial.quote}"
                 </blockquote>
                 <div className="flex items-center gap-3">
@@ -533,7 +533,7 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <p className="font-semibold group-hover:text-lime-400 transition-colors">{testimonial.author}</p>
-                    <p className="text-sm text-white/50">{testimonial.role}, {testimonial.company}</p>
+                    <p className="text-sm text-white/70">{testimonial.role}, {testimonial.company}</p>
                   </div>
                 </div>
               </div>
