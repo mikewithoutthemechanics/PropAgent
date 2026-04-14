@@ -41,6 +41,15 @@
   --sky-600: #0284C7;
   --sky-700: #0369A1;
 
+  /* Brand Colors - Purple */
+  --purple-50: #FAF5FF;
+  --purple-100: #F3E8FF;
+  --purple-200: #E9D5FF;
+  --purple-300: #D8B4FE;
+  --purple-400: #C084FC;
+  --purple-500: #A855F7;
+  --purple-600: #9333EA;
+
   /* Semantic Colors */
   --background: var(--white);
   --foreground: var(--charcoal-900);
@@ -57,7 +66,7 @@
   --expense-600: var(--rose-600);
   --expense-700: var(--rose-600);
 
-  /* Status Colors */
+/* Status Colors */
   --emerald-500: #10B981;
   --emerald-600: #059669;
   --amber-500: #F59E0B;
@@ -66,7 +75,23 @@
   --rose-600: #E11D48;
   --blue-500: #3B82F6;
   --blue-600: #2563EB;
-}
+
+  /* Maintenance Ticket Status Colors */
+  --status-new-bg: var(--charcoal-900);
+  --status-new-text: var(--white);
+  --status-in-progress-bg: var(--lime-400);
+  --status-in-progress-text: var(--charcoal-900);
+  --status-pending-bg: var(--sky-400);
+  --status-pending-text: var(--white);
+  --status-ai-classified-bg: var(--purple-400);
+  --status-ai-classified-text: var(--white);
+  --status-assigned-bg: var(--blue-500);
+  --status-assigned-text: var(--white);
+  --status-completed-bg: var(--emerald-500);
+  --status-completed-text: var(--white);
+  --status-cancelled-bg: var(--rose-500);
+  --status-cancelled-text: var(--white);
+ }
 
 * {
   box-sizing: border-box;

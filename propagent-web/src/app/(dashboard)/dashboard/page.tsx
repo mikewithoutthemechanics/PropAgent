@@ -31,14 +31,102 @@ const defaultSpotlight = {
 };
 
 const statusStyles = {
-  new: "bg-charcoal-900 text-white",
-  in_progress: "bg-lime-400 text-charcoal-900",
-  pending: "bg-sky-400 text-white",
-  ai_classified: "bg-purple-400 text-white",
-  assigned: "bg-blue-400 text-white",
-  completed: "bg-green-400 text-white",
-  cancelled: "bg-red-400 text-white",
+  new: "bg-[var(--status-new-bg)] text-[var(--status-new-text)]",
+  in_progress: "bg-[var(--status-in-progress-bg)] text-[var(--status-in-progress-text)]",
+  pending: "bg-[var(--status-pending-bg)] text-[var(--status-pending-text)]",
+  ai_classified: "bg-[var(--status-ai-classified-bg)] text-[var(--status-ai-classified-text)]",
+  assigned: "bg-[var(--status-assigned-bg)] text-[var(--status-assigned-text)]",
+  completed: "bg-[var(--status-completed-bg)] text-[var(--status-completed-text)]",
+  cancelled: "bg-[var(--status-cancelled-bg)] text-[var(--status-cancelled-text)]",
 };
+
+function PaymentsSkeleton() {
+  return (
+    <div className="bg-charcoal-900 rounded-2xl p-6 animate-pulse">
+      <div className="flex items-center justify-between mb-6">
+        <div className="h-6 w-24 bg-charcoal-800 rounded"></div>
+        <div className="h-8 w-28 bg-charcoal-800 rounded-full"></div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="bg-charcoal-800 rounded-2xl p-5">
+            <div className="h-4 w-16 bg-charcoal-700 rounded"></div>
+            <div className="h-8 w-24 bg-charcoal-700 rounded mt-3"></div>
+            <div className="h-3 w-20 bg-charcoal-700 rounded mt-2"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PropertySpotlightSkeleton() {
+  return (
+    <div className="bg-white rounded-2xl overflow-hidden border border-charcoal-100 animate-pulse">
+      <div className="h-48 bg-charcoal-200"></div>
+      <div className="p-5">
+        <div className="h-6 w-48 bg-charcoal-200 rounded"></div>
+        <div className="grid grid-cols-4 gap-4 mt-4 py-4 border-y border-charcoal-100">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="text-center">
+              <div className="h-6 w-8 bg-charcoal-200 rounded mx-auto"></div>
+              <div className="h-3 w-12 bg-charcoal-200 rounded mt-1 mx-auto"></div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4">
+          <div className="h-4 w-20 bg-charcoal-200 rounded mb-3"></div>
+          <div className="h-24 bg-charcoal-200 rounded"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RequestsListSkeleton() {
+  return (
+    <div className="bg-white rounded-2xl p-5 border border-slate-200 h-full animate-pulse">
+      <div className="flex items-center justify-between mb-5">
+        <div className="h-6 w-24 bg-charcoal-200 rounded"></div>
+      </div>
+      <div className="space-y-3">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="flex items-center justify-between p-3 rounded-xl">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-charcoal-200"></div>
+              <div>
+                <div className="h-4 w-24 bg-charcoal-200 rounded"></div>
+                <div className="h-3 w-16 bg-charcoal-200 rounded mt-1"></div>
+              </div>
+            </div>
+            <div className="h-6 w-16 bg-charcoal-200 rounded-full"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function UpcomingUnitsSkeleton() {
+  return (
+    <div className="bg-white rounded-2xl p-5 border border-slate-200 animate-pulse">
+      <div className="flex items-center justify-between mb-5">
+        <div className="h-6 w-28 bg-charcoal-200 rounded"></div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {[1, 2].map((i) => (
+          <div key={i} className="border border-slate-200 rounded-xl overflow-hidden">
+            <div className="h-20 bg-charcoal-200"></div>
+            <div className="p-3">
+              <div className="h-4 w-32 bg-charcoal-200 rounded"></div>
+              <div className="h-3 w-24 bg-charcoal-200 rounded mt-1"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function PaymentsOverview() {
   const payments = [
@@ -319,8 +407,23 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-[400px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-lime-500"></div>
+      <div className="space-y-6 animate-fade-in">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="h-8 w-32 bg-charcoal-200 rounded animate-pulse"></div>
+            <div className="h-4 w-56 bg-charcoal-200 rounded mt-2 animate-pulse"></div>
+          </div>
+        </div>
+        <PaymentsSkeleton />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <PropertySpotlightSkeleton />
+          </div>
+          <div className="lg:col-span-1">
+            <RequestsListSkeleton />
+          </div>
+        </div>
+        <UpcomingUnitsSkeleton />
       </div>
     );
   }
