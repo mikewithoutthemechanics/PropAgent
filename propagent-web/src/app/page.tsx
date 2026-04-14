@@ -573,10 +573,10 @@ export default function LandingPage() {
                     Most Popular
                   </div>
                 )}
-                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                <h3 className={`text-xl font-semibold mb-2 ${plan.popular ? 'text-white' : 'text-charcoal-900'}`}>{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  {plan.period && <span className={plan.popular ? 'text-white/70' : 'text-charcoal-600'}>{plan.period}</span>}
+                  <span className={`text-4xl font-bold ${plan.popular ? 'text-white' : 'text-charcoal-900'}`}>{plan.price}</span>
+                  {plan.period && <span className={plan.popular ? 'text-white' : 'text-charcoal-600'}>{plan.period}</span>}
                 </div>
                 <p className={plan.popular ? 'text-white text-sm mb-6 font-medium' : 'text-charcoal-800 text-sm mb-6 font-medium'}>{plan.desc}</p>
                 
