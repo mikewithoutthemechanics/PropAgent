@@ -2,9 +2,9 @@ name: Deploy to Vercel
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, 006-communication-platform ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, 006-communication-platform ]
 
 defaults:
   run:
