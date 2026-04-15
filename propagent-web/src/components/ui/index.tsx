@@ -255,3 +255,5 @@ export function Skeleton({ className }: { className?: string }) {
     <div className={cn("skeleton", className)} />
   );
 }
+
+export { FadeInUp, AnimatedCard, AnimatedButton, PageTransition } from './animations';

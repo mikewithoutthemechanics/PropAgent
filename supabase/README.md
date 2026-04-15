@@ -86,4 +86,4 @@ The Supabase credential is already configured in n8n:
 - **Host**: `https://sehweutpfftnrcbqshsn.supabase.co`
 - **Service Role Secret**: (imported via credential file)
 
-All 3 active workflows (04, 05, 06) can now read/write to these tables.
+All 21 n8n workflows can read/write to these tables. See `n8n-workflows/supabase-credential.json`.

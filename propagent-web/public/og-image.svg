@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0F0F0F"/>
+  <rect x="40" y="40" width="1120" height="550" rx="24" fill="#1A1A1A"/>
+  <circle cx="200" cy="315" r="80" fill="#D8F053"/>
+  <path d="M155 370V245L200 195L245 245V370" stroke="#0F0F0F" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M155 330H245" stroke="#0F0F0F" stroke-width="12" stroke-linecap="round"/>
+  <rect x="175" y="250" width="50" height="80" rx="4" fill="#0F0F0F"/>
+  <circle cx="200" cy="210" r="16" fill="#0F0F0F"/>
+  <text x="420" y="280" font-family="system-ui, sans-serif" font-size="64" font-weight="700" fill="#FFFFFF">
+    PropAgent
+  </text>
+  <text x="420" y="360" font-family="system-ui, sans-serif" font-size="28" fill="#A0A0A0">
+    South Africa's Property Operating System
+  </text>
+  <text x="420" y="420" font-family="system-ui, sans-serif" font-size="24" fill="#53B4F0">
+    AI-powered property management
+  </text>
+  <text x="420" y="450" font-family="system-ui, sans-serif" font-size="24" fill="#53B4F0">
+    Trust accounting • Rent collection • Tenant screening
+  </text>
+</svg>

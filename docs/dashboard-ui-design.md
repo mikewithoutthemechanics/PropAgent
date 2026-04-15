@@ -1,430 +1,197 @@
-# PropAgent Dashboard UI Design Specification
+# PropAgent UI/UX Design Specification
 
-## Executive Professional Style — Property Management Platform
+## Actual Implementation - Modern SaaS Style
 
 ---
 
 ## 1. Design Philosophy
 
-The PropAgent dashboard embodies **Executive Professional**: authoritative, trustworthy, and distinctly South African. The design leverages the brand's premium color palette to create a workspace that feels like a command center for property professionals.
-
-**Guiding Principles:**
-- **Information Density:** High-level metrics visible at a glance, drill-down available on demand
-- **Color as Meaning:** Navy establishes hierarchy, gold rewards attention, blue enables action
-- **Professional Breathing:** Generous whitespace prevents cognitive overload
-- **Trust Through Clarity:** Every element communicates competence and reliability
+The PropAgent UI follows a **Modern SaaS** aesthetic with lime green primary accents, sky blue secondary, and charcoal text. The design emphasizes:
+- Clean, professional appearance with generous whitespace
+- Micro-interactions and smooth animations
+- Card-based layouts with subtle shadows
+- Fully rounded elements (9999px border-radius)
+- Dark mode ready color system
 
 ---
 
-## 2. Color Application
+## 2. Implemented Color Palette
+
+### Brand Colors (Actual CSS Variables in globals.css)
 
 | Role | Color | Hex | Usage |
 |------|-------|-----|-------|
-| Primary Background | Deep Navy | `#1E3A5F` | Sidebar, headers, hero sections |
-| Accent/Highlight | Muted Gold | `#C9A227` | KPI values, premium badges, key metrics |
-| Interactive | Bright Blue | `#2D9CDB` | Buttons, links, hover states |
-| Surface | Off-White | `#F8FAFC` | Card backgrounds, content areas |
-| Surface Alt | White | `#FFFFFF` | Input fields, table rows |
-| Text Primary | Charcoal | `#2C3E50` | Headlines, body text |
-| Text Secondary | Slate | `#64748B` | Captions, supporting text |
-| Success | Emerald | `#10B981` | Positive status, paid rent |
-| Warning | Amber | `#F59E0B` | Pending items, overdue alerts |
-| Danger | Rose | `#EF4444` | Critical alerts, urgent maintenance |
+| Primary | Lime Green | `#D8F053` | CTAs, active states, highlights |
+| Primary Dark | Deep Lime | `#C2DC34` | Hover states |
+| Accent | Sky Blue | `#53B4F0` | Secondary actions, links |
+| Accent Dark | Deep Sky | `#0EA5E9` | Hover states |
+| AI/Automation | Purple | `#C084FC` | AI features, automation |
+| Background | White | `#FFFFFF` | Main background |
+| Surface | Off-White | `#FAFAFA` | Card backgrounds |
+| Text Primary | Charcoal | `#1A1A1A` | Headlines, body |
+| Text Secondary | Slate | `#6B6B6B` | Captions, metadata |
+
+### Status Colors
+
+| Status | Color | Hex |
+|--------|-------|-----|
+| Success | Emerald | `#10B981` |
+| Warning | Amber | `#F59E0B` |
+| Danger | Rose | `#F43F5E` |
+| Info | Blue | `#3B82F6` |
+
+### Maintenance Ticket Status
+
+| Status | Background | Text |
+|--------|------------|-------|
+| New | Charcoal `#1A1A1A` | White |
+| In Progress | Lime `#D8F053` | Charcoal |
+| Pending | Sky `#53B4F0` | White |
+| AI Classified | Purple `#C084FC` | White |
+| Assigned | Blue `#3B82F6` | White |
+| Completed | Emerald `#10B981` | White |
+| Cancelled | Rose `#F43F5E` | White |
 
 ---
 
-## 3. Layout Structure
+## 3. Typography
 
-### 3.1 Overall Grid
-
-```
-+------------------+----------------------------------------+
-|                  |           TOP BAR (64px)               |
-|    SIDEBAR       |  [Search] [Notifications] [Profile]    |
-|    (260px)       +----------------------------------------+
-|                  |                                        |
-|  [Logo]          |           MAIN CONTENT                 |
-|                  |                                        |
-|  - Dashboard     |  +----------------------------------+  |
-|  - Properties    |  |       HERO METRICS (4 cards)      |  |
-|  - Tenants       |  +----------------------------------+  |
-|  - Rent          |                                        |
-|  - Maintenance   |  +------------------+-----------------+ |
-|  - Leads         |  |  PROPERTY MAP    |  ACTIVITY FEED  | |
-|  - Reports      |  |                  |                 | |
-|                  |  +------------------+-----------------+ |
-|  [Settings]      |                                        |
-|  [Help]         |  +------------------+-----------------+ |
-|                  |  |  RENT TRENDS    |  MAINTENANCE    | |
-|                  |  |  CHART          |  TICKETS        | |
-+------------------+----------------------------------------+
-```
-
-### 3.2 Responsive Breakpoints
-
-| Breakpoint | Width | Sidebar Behavior |
-|------------|-------|-------------------|
-| Desktop XL | ≥1440px | Full 260px, expanded labels |
-| Desktop | 1200-1439px | Full 260px, icon-only labels |
-| Tablet | 768-1199px | Collapsed 72px, hamburger menu |
-| Mobile | <768px | Hidden, bottom navigation |
+**Font Family:** Urbanist (Google Fonts)
+- Weights: 300, 400, 500, 600, 700
+- Headings: 600 weight, -0.02em letter-spacing
+- Body: 400 weight
 
 ---
 
-## 4. Component Hierarchy
+## 4. Component Styles
 
-### 4.1 Sidebar Navigation
+### Cards
+- Border radius: 20px (large), 24px (extra-large), 16px (small)
+- Border: 1px solid `--charcoal-100`
+- Shadow: `0 1px 2px rgba(0,0,0,0.05)`
+- Hover: translateY(-2px), shadow increase
+- 3D card effect available with layered shadows
 
-**Structure:**
-```
-[PropAgent Logo - 48px]
-━━━━━━━━━━━━━━━━━━━━
+### Buttons
+- Border radius: 9999px (fully rounded)
+- Primary: Lime background, charcoal text, lime shadow
+- Secondary: Transparent with charcoal border
+- Ghost: Transparent with slate text
+- Accent: Sky blue background, white text
 
-DASHBOARD        [icon + label]
-PROPERTIES       [icon + label + count badge]
-TENANTS          [icon + label + count badge]
-RENT             [icon + label + alert dot]
-MAINTENANCE      [icon + label + urgent count]
-LEADS            [icon + label + hot count]
-REPORTS          [icon + label]
+### Inputs
+- Border radius: 9999px
+- Border: 1px `--charcoal-200`
+- Focus: Sky blue border, 3px sky glow
+- Inset shadow for depth
 
-━━━━━━━━━━━━━━━━━━━━
-[Settings]       [icon]
-[Help & Support] [icon]
-```
+### Badges/Pills
+- Border radius: 9999px
+- Fully rounded pills with background color at 15% opacity
+- Status variants: success, warning, danger, info, neutral
 
-**Styling:**
-- Background: Deep Navy `#1E3A5F`
-- Active item: Navy with 10% white overlay
-- Active indicator: 4px Gold left border
-- Hover: 5% white overlay
-- Icon color (inactive): Slate `#64748B`
-- Icon color (active): Gold `#C9A227`
-- Text (inactive): White 70% opacity
-- Text (active): White
+### Sidebar
+- Light theme: White background, charcoal border
+- Active indicator: 3px lime left border
+- Hover: Charcoal-50 background
 
-### 4.2 Top Bar
+---
 
-**Height:** 64px  
-**Background:** White with 1px bottom border `#E2E8F0`
+## 5. Animations & Micro-interactions
 
-**Elements:**
-- **Search Bar:** 400px wide, rounded 8px, placeholder "Search properties, tenants..."
-- **Notifications:** Bell icon with red dot for unread count
-- **Quick Actions:** "+ Add Property" primary button (Blue)
-- **Profile Menu:** Avatar 40px, dropdown on click
+### Base Animations
+- `fadeIn` - 0.3s ease
+- `slideUp` - 0.3s ease  
+- `scaleIn` - 0.3s ease
+- `pulse` - 2s infinite
+- `bounce` - 0.6s infinite
+- `shimmer` - Loading skeleton
+- `glow` - Lime glow effect
+- `float` - 3s infinite float
 
-### 4.3 Metric Cards (Hero Section)
+### Scroll Animations
+- `scroll-animate` - Fade up on scroll
+- `scroll-animate-left` / `scroll-animate-right` - Slide in from sides
+- `scroll-animate-scale` - Scale up on scroll
 
-**Layout:** 4 cards in a row, 24px gap
+### Parallax Effects
+- Hero blob backgrounds with scroll-linked movement
+- Dot pattern overlay
 
-**Card Structure:**
-```
-┌─────────────────────────────────┐
-│ [Icon - 24px, Slate]            │
-│ "Total Properties"    [? Help]  │
-│                                 │
-│ "127"                 ▲ 12%     │
-│                                 │
-│ vs last month                  │
-└─────────────────────────────────┘
-```
+### Card Effects
+- Hover: Lift up 2-4px with shadow increase
+- Shine sweep animation on hover
 
-**Card Variations:**
+### Button Effects
+- Ripple effect on click
+- Scale to 0.97 on press
 
-| Metric | Value Color | Trend Color | Icon |
-|--------|-------------|-------------|------|
-| Total Properties | Navy `#1E3A5F` | Green/Red | Building |
-| Occupied Units | Navy | Green | Users |
-| Monthly Revenue | Gold `#C9A227` | Green | Rand sign |
-| Pending Actions | Navy | Amber | Alert circle |
+---
 
-**Styling:**
-- Card size: Flexible, min 200px
-- Background: White `#FFFFFF`
-- Border: 1px `#E2E8F0`
-- Border radius: 12px
-- Padding: 24px
-- Shadow: `0 1px 3px rgba(0,0,0,0.1)`
-- Value font: Playfair Display, 36px, 700 weight
-- Label font: Inter, 14px, Slate color
+## 6. Layout Structure
 
-### 4.4 Property Map Card
+### Main Layout
+- Sidebar: 260px fixed left (collapsible on mobile)
+- Top bar: 64px height, white background
+- Main content: Flexible, with 24px padding
 
-**Size:** 60% of content width  
-**Height:** 400px
+### Responsive Breakpoints
+- Desktop XL: ≥1440px
+- Desktop: 1200-1439px  
+- Tablet: 768-1199px
+- Mobile: <768px
 
-**Content:**
-- Interactive map showing property locations
-- Cluster markers for dense areas
-- Property pins in Navy with Gold active state
-- Side panel listing visible properties
-- Filter dropdown: "All", "Available", "Occupied", "Maintenance"
+---
 
-### 4.5 Activity Feed Card
+## 7. Implementation Files
 
-**Size:** 40% of content width  
-**Height:** 400px
+| File | Purpose |
+|------|---------|
+| `src/app/globals.css` | All CSS variables, animations, component styles |
+| `src/app/layout.tsx` | Root layout with fonts |
+| `src/app/page.tsx` | Landing page (666 lines) |
 
-**Content:**
-- Scrollable list of recent activities
-- Activity types: Rent paid, lease signed, maintenance completed, inquiry received
-- Each item shows: Icon, description, timestamp, property reference
-- "View All" link at bottom
+---
 
-**Activity Item Styling:**
-```
-[Icon - 20px]  John Doe paid R12,500 rent    2h ago
-              Unit 4B, Sandton Heights
-```
+## 8. Key Classes
 
-### 4.6 Rent Collection Chart
+| Class | Effect |
+|-------|--------|
+| `.card` | Standard card with hover lift |
+| `.card-elevated` | Higher shadow card |
+| `.card-3d` | Layered 3D shadow effect |
+| `.btn-primary` | Lime green CTA |
+| `.btn-accent` | Sky blue secondary |
+| `.btn-ghost` | Text-only button |
+| `.badge-*` | Status pill badges |
+| `.glass` | Glassmorphism effect |
+| `.animate-*` | Animation utilities |
+| `.scroll-animate` | Scroll-triggered animations |
 
-**Type:** Area chart with gradient fill  
-**Data:** Monthly rent collected over 12 months
+---
 
-**Styling:**
-- Line color: Gold `#C9A227`
-- Fill: Gold 20% opacity to 0%
-- Grid lines: Slate 10% opacity
-- Axis labels: Inter 12px, Slate
-- Tooltip: White card with shadow
+## 9. Status Badge Variants
 
-### 4.7 Maintenance Tickets Panel
-
-**Content:**
-- Table with columns: Property, Issue, Priority, Status, Created
-- Priority badges: High (Rose), Medium (Amber), Low (Blue)
-- Status chips: New, In Progress, Scheduled, Completed
-- Sort by: Date, Priority, Property
-- Quick actions: Assign, Update status
-
-### 4.8 Lead Pipeline
-
-**Type:** Kanban-style horizontal columns  
-**Columns:** New, Contacted, Viewing, Negotiating, Closed
-
-**Lead Card:**
-```
-┌────────────────────────────┐
-│ [Property Thumbnail]      │
-│ 3 Bed Flat • R15,000/mo   │
-│ Parklands, Cape Town      │
-│                            │
-│ ●●○○○ Lead Score: 72      │
-│                            │
-│ [View Profile] [Schedule]│
-└────────────────────────────┘
+```css
+.badge-success  /* Green - paid, completed */
+.badge-warning   /* Amber - pending, due soon */
+.badge-danger   /* Red - overdue, urgent */
+.badge-info     /* Blue - in progress */
+.badge-neutral  /* Gray - draft, inactive */
+.badge-lime     /* Lime - featured, new */
+.badge-sky      /* Sky - info links */
 ```
 
 ---
 
-## 5. UI Patterns
+## 10. Current State
 
-### 5.1 Data Tables
+The UI is **already implemented** with this design system in:
+- `globals.css` - 1368 lines of CSS variables and utilities
+- Landing page with animations
+- Card components with hover effects
+- Button variants (primary, secondary, accent, ghost)
+- Badge/status components
+- Sidebar navigation styling
 
-**Features:**
-- Sticky header row
-- Alternating row colors (White / Off-White)
-- Row hover: Navy 5% overlay
-- Checkbox selection column
-- Column sorting indicators
-- Pagination: 25/50/100 per page
-
-**Cell Types:**
-- Text: Charcoal
-- Currency: Gold, right-aligned
-- Status: Colored chip/pill
-- Date: Slate, relative format ("2 days ago")
-- Action: Blue link/button
-
-### 5.2 Form Inputs
-
-**Standard Input:**
-```
-┌─────────────────────────────┐
-│ Label                       │
-│ [Input field content    ]   │
-│ Supporting text             │
-└─────────────────────────────┘
-```
-
-- Background: White
-- Border: 1px `#CBD5E1`
-- Focus border: 2px Blue `#2D9CDB`
-- Border radius: 8px
-- Padding: 12px 16px
-- Label: Inter 14px, Charcoal, 500 weight
-
-**Dropdown:**
-- Chevron icon in Slate
-- Selected item in Charcoal
-- Options list: White with shadow
-
-### 5.3 Buttons
-
-| Type | Background | Text | Border | Usage |
-|------|------------|------|--------|-------|
-| Primary | Blue `#2D9CDB` | White | None | Main actions |
-| Secondary | White | Navy | 1px Navy | Secondary actions |
-| Ghost | Transparent | Slate | None | Tertiary actions |
-| Danger | Rose `#EF4444` | White | None | Destructive |
-| Success | Emerald `#10B981` | White | None | Confirmations |
-
-**Button Sizes:**
-- Large: 48px height, 24px padding
-- Medium: 40px height, 16px padding
-- Small: 32px height, 12px padding
-
-### 5.4 Cards (Generic)
-
-**Structure:**
-```
-┌───────────────────────────────────┐
-│ [Header - Optional]               │
-│ Title           [Action button]  │
-├───────────────────────────────────┤
-│ Content area                      │
-│                                   │
-├───────────────────────────────────┤
-│ [Footer - Optional]              │
-│ Footer content    [Link]         │
-└───────────────────────────────────┘
-```
-
-**Styling:**
-- Background: White
-- Border: 1px `#E2E8F0`
-- Border radius: 12px
-- Padding: 24px
-- Shadow: `0 1px 3px rgba(0,0,0,0.1)`
-- Hover shadow: `0 4px 12px rgba(0,0,0,0.15)`
-
-### 5.5 Status Badges
-
-| Status | Background | Text Color | Border |
-|--------|------------|------------|--------|
-| Available | Blue 10% | Blue | Blue |
-| Occupied | Emerald 10% | Emerald | Emerald |
-| Overdue | Rose 10% | Rose | Rose |
-| Pending | Amber 10% | Amber | Amber |
-| New | Navy 10% | Navy | Navy |
-
-### 5.6 Data Visualization Guidelines
-
-**Charts should use:**
-- Gold for primary data series
-- Blue for secondary series
-- Navy for tertiary (if needed)
-- Slate for grid lines and labels
-- Consistent 8px grid for alignment
-
-**Chart Types by Data:**
-- **Trends over time:** Area chart (rent collection, occupancy)
-- **Comparisons:** Horizontal bar chart (property performance)
-- **Distributions:** Donut chart (property types, status)
-- **Part-to-whole:** Stacked bar (revenue by property)
-
----
-
-## 6. Navigation & Interaction
-
-### 6.1 Primary Navigation Flow
-
-```
-Dashboard (Home)
-    ├── Quick Stats
-    ├── Property Map
-    ├── Activity Feed
-    └── Recent Actions
-
-Properties
-    ├── Property List (table)
-    ├── Add Property (form)
-    └── Property Detail → Tabs: Overview, Units, Tenants, Financials
-
-Tenants
-    ├── Tenant List
-    ├── Add Tenant
-    └── Tenant Detail → Profile, Lease, Payments, Communication
-
-Rent
-    ├── Rent Roll (overview)
-    ├── Payment History
-    ├── Outstanding
-    └── Rent Collection (chart)
-
-Maintenance
-    ├── Ticket List
-    ├── Add Ticket
-    ├── Contractors
-    └── Scheduled Maintenance
-
-Leads
-    ├── Pipeline (Kanban)
-    ├── Lead List
-    ├── Lead Detail
-    └── Lead Sources
-
-Reports
-    ├── Occupancy Report
-    ├── Financial Summary
-    ├── Maintenance Summary
-    └── Custom Report Builder
-```
-
-### 6.2 Micro-Interactions
-
-- **Hover states:** 150ms ease transition
-- **Card hover:** Subtle shadow increase
-- **Button press:** Scale 98%
-- **Modal open:** Fade in + scale from 95%
-- **Toast notifications:** Slide in from top-right
-- **Loading states:** Skeleton screens with pulse animation
-- **Empty states:** Illustration + "Get Started" CTA
-
----
-
-## 7. Accessibility Considerations
-
-- **Contrast ratios:** Minimum 4.5:1 for text
-- **Focus indicators:** 2px Blue outline on keyboard navigation
-- **Screen reader:** Proper ARIA labels on all interactive elements
-- **Touch targets:** Minimum 44x44px
-- **Motion:** Respect `prefers-reduced-motion`
-
----
-
-## 8. Implementation Notes
-
-### 8.1 Component Priority
-
-| Priority | Components |
-|----------|------------|
-| P0 (MVP) | Sidebar, Top Bar, Metric Cards, Property Table, Rent Overview |
-| P1 | Property Map, Activity Feed, Maintenance List, Lead Pipeline |
-| P2 | Charts, Advanced Filters, Bulk Actions, Reports |
-
-### 8.2 Responsive Strategy
-
-- **Desktop-first:** Design for 1440px, then scale down
-- **Mobile conversion:** Stack cards vertically, convert table to cards
-- **Touch optimization:** Increase tap targets on tablet/mobile
-
-### 8.3 Performance Targets
-
-- **Initial load:** < 2 seconds to meaningful content
-- **Interaction response:** < 100ms for user actions
-- **Data refresh:** Optimistic UI updates with background sync
-
----
-
-## 9. Wireframe Summary
-
-The PropAgent dashboard presents a **command-center aesthetic**: deep navy sidebar anchoring the experience, gold accents drawing attention to key metrics, and generous white space enabling focused work. The layout balances high-level oversight (hero metrics, map, activity feed) with operational depth (tables, forms, pipeline).
-
-Every element communicates professionalism and trustworthiness — essential for a platform managing South African property assets worth millions.
-
----
-
-*Design specification for PropAgent executive dashboard. Refer to brand-identity-guidelines.md for foundational color and typography rules.*
+This documentation reflects the **actual implementation**, not a spec to be built.

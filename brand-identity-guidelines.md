@@ -1,6 +1,8 @@
 # PropAgent Brand Identity Guidelines
 
-## Executive Professional Style — Premium, Trustworthy, Modern
+## Modern SaaS Style — Fresh, Innovative, Property Tech
+
+> **Note**: This document reflects the **actual implementation** as of 2026-04-15. The original brand guidelines (Executive Professional style) are preserved in `docs/dashboard-ui-design.md` for reference.
 
 ---
 
@@ -8,66 +10,67 @@
 
 **Company:** PropAgent  
 **Industry:** Real Estate / Property Management (South Africa)  
-**Market Position:** Premium property platform for discerning homeowners, investors, and property professionals  
-**Brand Personality:** Authority, Trust, Sophistication, Innovation
+**Market Position:** AI-powered property platform for modern agents and property professionals  
+**Brand Personality:** Fresh, Innovative, Tech-Forward, Approachable
 
 ---
 
-## 2. Color Palette
+## 2. Color Palette (Actual Implementation)
 
 ### Primary Colors
 
 | Name | Hex | Usage |
 |------|-----|-------|
-| Deep Navy | `#1E3A5F` | Primary brand color, headers, hero sections, CTAs |
-| Muted Gold | `#C9A227` | Accents, highlights, premium indicators, icons |
-| Bright Blue | `#2D9CDB` | Interactive elements, links, secondary CTAs |
+| Lime Green | `#D8F053` | Primary brand color, CTAs, accents |
+| Sky Blue | `#53B4F0` | Interactive elements, links, secondary CTAs |
+| Dark Background | `#0F172A` | Headers, dark sections, footer |
 
 ### Extended Palette
 
 | Name | Hex | Usage |
 |------|-----|-------|
-| Charcoal | `#2C3E50` | Body text, subheadings |
-| Slate | `#64748B` | Supporting text, captions |
-| Off-White | `#F8FAFC` | Backgrounds, cards |
-| Pure White | `#FFFFFF` | White space, overlays |
+| Slate | `#334155` | Body text, subheadings |
+| Gray | `#64748B` | Supporting text, captions |
+| White | `#FFFFFF` | Backgrounds, overlays |
+| Light Gray | `#F1F5F9` | Card backgrounds, input fields |
 
 ### Color Ratios
 
-- **Primary (Navy):** 60% of brand presence
-- **Secondary (Gold):** 15% — use sparingly for premium feel
-- **Accent (Blue):** 25% — interactive moments
+- **Lime Green**: 40% — primary brand moments, CTAs
+- **Sky Blue**: 30% — interactive elements, links  
+- **Dark Background**: 20% — headers, contrast sections
+- **White/Gray**: 10% — backgrounds, whitespace
+
+> See `propagent-web/src/app/globals.css` for complete implementation (lines 1-100)
 
 ---
 
-## 3. Typography
+## 3. Typography (Actual Implementation)
 
-### Primary Typeface — Headlines & Display
+### Primary Typeface — Headlines & UI
 
-**Recommendation:** *Playfair Display* or *Cormorant Garamond*
+**Implementation:** *Urbanist* (Google Fonts)
 
-- Elegant, authoritative serif for hero headlines
-- Conveys heritage and trust
-- Use for: Logo taglines, main headlines, feature headings
+- Modern, geometric sans-serif for all UI
+- Fresh, tech-forward appearance
+- Used for: Headlines, buttons, navigation, body text
 
-### Secondary Typeface — Body & UI
+### Secondary Typeface — Fallback
 
-**Recommendation:** *Inter* or *DM Sans*
+**System:** *system-ui*, sans-serif
 
-- Clean, modern sans-serif for readability
-- Professional, accessible
-- Use for: Body text, UI elements, navigation, buttons
-
-### Type Scale
+### Actual Type Scale
 
 | Element | Font | Size | Weight |
 |---------|------|------|--------|
-| Hero Headline | Playfair Display | 56px / 48px mobile | 700 |
-| Section Headline | Playfair Display | 36px | 600 |
-| Subheadline | Inter | 24px | 500 |
-| Body | Inter | 16px | 400 |
-| Caption | Inter | 14px | 400 |
-| Button | Inter | 15px | 600 |
+| Hero Headline | Urbanist | 56px / 48px mobile | 700 |
+| Section Headline | Urbanist | 36px | 600 |
+| Subheadline | Urbanist | 24px | 500 |
+| Body | Urbanist | 16px | 400 |
+| Caption | Urbanist | 14px | 400 |
+| Button | Urbanist | 15px | 600 |
+
+> See `propagent-web/src/app/globals.css` for complete typography implementation
 
 ---
 
@@ -150,37 +153,31 @@
 
 ---
 
-## 6. Visual Hierarchy
+## 6. Visual Hierarchy & Animations
 
 ### Layout Principles
 
-1. **Golden Ratio Spacing** — Use 8px baseline grid
-2. **Visual Breathing** — 2:1 ratio between content blocks
-3. **Clear Focal Points** — Navy headlines, gold accents as rewards
+1. **Spacing Grid** — 4px baseline grid system
+2. **Visual Breathing** — Generous padding for modern feel
+3. **Card Effects** — Subtle borders, hover states, scale transforms
 
-### Component Hierarchy
+### Animation System (Implemented)
 
+The actual CSS includes extensive micro-animations:
+
+```css
+--transition-fast: 150ms ease
+--transition-normal: 300ms ease
+--transition-slow: 500ms ease
 ```
-LEVEL 1 — HERO
-  Deep Navy background + white text
-  Gold accent line or icon
-  Playfair Display headline
 
-LEVEL 2 — SECTIONS
-  White/off-white background
-  Navy section headers
-  Blue interactive elements
+- **Hover Effects**: Scale (1.02), border color changes, shadow
+- **Page Transitions**: Fade-in with slight upward motion
+- **Interactive States**: Smooth color transitions on buttons
+- **Loading States**: Pulse animations for skeleton loaders
+- **Card Hover**: translateY(-4px) with shadow enhancement
 
-LEVEL 3 — CARDS
-  Off-white card backgrounds
-  Navy titles, slate body text
-  Gold badge/highlight for premium features
-
-LEVEL 4 — UI ELEMENTS
-  White inputs with Navy borders
-  Blue primary buttons
-  Gold success states / premium indicators
-```
+> See `propagent-web/src/app/globals.css` for complete animation keyframes (lines 200-400)
 
 ---
 
@@ -211,23 +208,23 @@ LEVEL 4 — UI ELEMENTS
 
 ---
 
-## 8. Brand Do's & Don'ts
+## 8. Brand Do's & Don'ts (Actual)
 
 ### Do
 
-✅ Use Deep Navy as dominant brand color  
-✅ Pair Playfair Display headlines with Inter body text  
-✅ Use Gold for premium indicators, awards, VIP elements  
-✅ Keep designs clean, spacious, and professional  
-✅ Use Bright Blue for all interactive elements  
+✅ Use Lime Green as primary accent color  
+✅ Use Urbanist font family throughout  
+✅ Include micro-animations on interactive elements  
+✅ Apply card hover effects and transitions  
+✅ Use Sky Blue for interactive states  
 
 ### Don't
 
-❌ Use more than 20% Gold in any composition  
-❌ Combine with overly playful or casual typefaces  
-❌ Use gradients on primary brand elements  
-❌ Place Navy text on dark backgrounds (use white)  
-❌ Mix with clashing colors outside the defined palette  
+❌ Use more than 30% Lime Green in any composition  
+❌ Place lime text on light backgrounds (use dark instead)  
+❌ Skip animation transitions on buttons/cards  
+❌ Use serif fonts (breaks the modern SaaS feel)  
+❌ Mix with colors outside the defined palette  
 
 ---
 
@@ -253,4 +250,17 @@ LEVEL 4 — UI ELEMENTS
 
 ---
 
-*Document prepared for PropAgent brand development. Colors and specifications locked for consistency across all touchpoints.*
+## 10. Design Files
+
+### Source Files
+
+| File | Location |
+|------|----------|
+| CSS Variables | `propagent-web/src/app/globals.css` (lines 1-100) |
+| Animation Keyframes | `propagent-web/src/app/globals.css` (lines 200-400) |
+| Font | Urbanist (Google Fonts) - imported in `layout.tsx` |
+| Color Implementation | `propagent-web/src/app/globals.css` |
+
+---
+
+*Document updated 2026-04-15 to reflect actual implementation. See `docs/dashboard-ui-design.md` for original Executive Professional style reference.*

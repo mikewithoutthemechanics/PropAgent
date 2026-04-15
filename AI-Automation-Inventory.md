@@ -1,22 +1,38 @@
 # PropAgent AI Automation Inventory
 ## What We Have vs. What We Can't Automate
 
-**Last Updated**: 2026-03-23  
+**Last Updated**: 2026-04-15  
 **Total Features**: 372 | **AI Automations**: 42 | **Cannot Automate**: 23
 
 ---
 
-## ✅ AI AUTOMATIONS WE HAVE (Ready + Planned)
+## ✅ AI AUTOMATIONS WE HAVE (Ready + Built)
 
-### READY TO USE NOW (3 Workflows)
+### n8n WORKFLOWS READY (21 Workflows)
 
-| # | Workflow | File | Purpose | AI Model | Cost/Month |
-|---|----------|------|---------|----------|------------|
-| 1 | **Tenant Inquiry Auto-Responder** | `01-tenant-inquiry-autoresponder.json` | Classify & respond to WhatsApp messages | GPT-3.5-turbo | $25 |
-| 2 | **Rent Reminder Sequence** | `02-rent-reminder-sequence.json` | Generate personalized rent reminders | GPT-3.5-turbo | $30 |
-| 3 | **Property Description Generator** | `03-property-description-generator.json` | Create listing descriptions | GPT-3.5-turbo | $10 |
+| # | Workflow File | Purpose |
+|---|-------------|---------|
+| 1-21 | See `n8n-workflows/README.md` for full list |
 
-**Total Ready**: 3 workflows | **Monthly Cost**: $65
+**Total Ready**: 21 workflows | **Monthly Cost**: $0 (using Groq free tier)
+
+### FRONTEND AI TOOLS READY (11 Tools)
+
+| # | Tool | Location | Purpose |
+|---|------|---------|---------|
+| 1 | Property Valuation AI | `/tools/valuation/page.tsx` | AI-powered property valuation |
+| 2 | Bond Calculator AI | `/tools/bond-calculator/page.tsx` | AI-assisted bond calculations |
+| 3 | Property Matcher AI | `/tools/property-matcher/page.tsx` | AI property matching |
+| 4 | Listing Description Generator | `/tools/description-generator/page.tsx` | AI listing descriptions |
+| 5 | Lead Qualifier AI | `/tools/lead-qualifier/page.tsx` | AI lead scoring |
+| 6 | Email Responder AI | `/tools/email-responder/page.tsx` | AI email responses |
+| 7 | Market Analyzer AI | `/tools/market-analyzer/page.tsx` | Market analysis |
+| 8 | Area Report Generator | `/tools/area-report/page.tsx` | AI area reports |
+| 9 | Tenant Screener AI | `/tools/tenant-screener/page.tsx` | Tenant screening |
+| 10 | Document Parser AI | `/tools/document-parser/page.tsx` | Document OCR |
+| 11 | Chat Assistant AI | `/tools/chat-assistant/page.tsx` | AI chat assistant |
+
+**Total Ready**: 11 AI tools in frontend | **Monthly Cost**: $0 (using Groq free tier)
 
 ---
 
@@ -221,31 +237,24 @@ These features use AI for assistance but require human approval:
 
 | Category | AI Automations | Monthly AI Cost | Monthly Op Cost | Total |
 |----------|----------------|-----------------|-----------------|-------|
-| Communication | 10 | **$0** (Groq free) | $200 (SMS/WhatsApp) | $200 |
-| Property Management | 6 | **$0** (Groq free) | $50 | $50 |
-| CRM & Leads | 8 | **$0** (Groq free) | $0 | $0 |
-| Trust Accounting | 3 | **$0** (Groq free) | $0 | $0 |
-| Documents | 5 | **$0** (Groq free) | $20 (OCR) | $20 |
-| Marketing | 7 | **$0** (Groq free) | $0 | $0 |
-| Maintenance | 3 | **$0** (Groq free) | $0 | $0 |
-| **TOTAL** | **42** | **$0** | **$270** | **$270** |
+| n8n Workflows (21) | 21 | **$0** (Groq free) | $0 | $0 |
+| Frontend AI Tools (11) | 11 | **$0** (Groq free) | $0 | $0 |
+| SMS/WhatsApp | - | **$0** (trial) | $50 (future) | $50 |
+| **TOTAL** | **32** | **$0** | **$50** | **$50** |
 
 **Groq Free Tier**: 1,000,000 tokens/day (~30M/month)  
 **Supabase Free Tier**: 500MB DB + 2GB bandwidth  
 **Twilio**: Trial credits for testing
 
-### Option B: OpenAI Stack
+### Option B: OpenAI Stack (Premium)
 
 | Category | AI Automations | Monthly AI Cost | Monthly Op Cost | Total |
 |----------|----------------|-----------------|-----------------|-------|
-| Communication | 10 | $100 | $200 (SMS/WhatsApp) | $300 |
-| Property Management | 6 | $50 | $50 | $100 |
-| CRM & Leads | 8 | $80 | $0 | $80 |
-| Trust Accounting | 3 | $30 | $0 | $30 |
-| Documents | 5 | $60 | $20 (OCR) | $80 |
-| Marketing | 7 | $100 | $0 | $100 |
-| Maintenance | 3 | $30 | $0 | $30 |
-| **TOTAL** | **42** | **$450** | **$270** | **$720** |
+| n8n Workflows (21) | 21 | $200 | $50 | $250 |
+| Frontend AI Tools (11) | 11 | $150 | $0 | $150 |
+| **TOTAL** | **32** | **$350** | **$50** | **$400** |
+
+> Note: Currently using Groq free tier ($0/month). OpenAI upgrade would add ~$350/month for higher quality.
 
 ### What We Cannot Automate
 
@@ -257,35 +266,28 @@ These features use AI for assistance but require human approval:
 | Relationship | 3 | $10,000 (agent time) |
 | **TOTAL** | **23** | **$38,000/month** |
 
-### The Math
+### The Math (Current Implementation)
 
-- **AI Automations**: $720/month → Handle 189 features (62%)
-- **Manual Processes**: $38,000/month → Handle 114 features (38%)
-- **Net Savings**: AI reduces costs by ~$25,000/month (40% overall)
+- **AI Automations**: $0/month (Groq free) → Handle 32 automations (21 workflows + 11 tools)
+- **AI Automations (OpenAI)**: $400/month → Handle 42 automations 
+- **Manual Processes**: $38,000/month → Handle remaining features (38%)
+- **Net Savings**: Using Groq free tier = $38,000/month saved vs. manual processes
 
 ---
 
 ## 🎯 RECOMMENDATION
 
-### Deploy in This Order
+### Currently Deployed (All 21 n8n workflows + 11 frontend AI tools)
 
-**Phase 1 (Week 1-2)**: High-Impact, Low-Risk
-1. ✅ Tenant Inquiry Auto-Responder
-2. ✅ Rent Reminder Sequence
-3. ✅ Property Description Generator
-4. Email Intent Classification
+All workflows and AI tools are ready to use:
+- 21 n8n workflows for backend automation
+- 11 AI tools in the frontend dashboard
 
-**Phase 2 (Week 3-4)**: Medium Complexity
-5. Lead Scoring
-6. Property Matching Engine
-7. FICA Document OCR
-8. Maintenance Ticket Classification
-
-**Phase 3 (Week 5-8)**: Advanced Features
-9. Market Report Generation
-10. Price Recommendation
-11. Bank Reconciliation Matching
-12. Social Media Content Generation
+### Next Steps (Enhancement Roadmap)
+1. Add more n8n workflow integrations
+2. Improve AI tool accuracy with human feedback
+3. Add more sophisticated matching algorithms
+4. Build custom AVM (Automated Valuation Model)
 
 ### Always Keep Human-in-the-Loop
 
@@ -304,8 +306,9 @@ These features use AI for assistance but require human approval:
 | Metric | Number |
 |--------|--------|
 | **Total Features** | 372 |
-| **AI Automations Ready** | 3 |
-| **AI Automations Planned** | 39 |
+| **AI Workflows Ready** | 21 (n8n) |
+| **AI Tools Built** | 11 (frontend) |
+| **AI Automations Planned** | 10 |
 | **Cannot Automate** | 23 |
 | **Partial Automation** | 15 |
 | **Automation Coverage** | 62% |

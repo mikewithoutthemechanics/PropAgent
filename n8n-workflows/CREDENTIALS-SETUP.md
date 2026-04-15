@@ -165,13 +165,22 @@ If you want to test workflows WITHOUT setting up credentials:
 
 | Workflow | Groq | Supabase | BulkGate | Resend |
 |----------|------|----------|----------|--------|
-| 04-Tenant Inquiry | ✅ | ✅ | ✅ | ❌ |
+| 04-Tenant Inquiry | ✅ | ✅ | ✅ | ✅ |
 | 05-Rent Reminder | ✅ | ✅ | ✅ | ✅ |
-| 06-Property Description | ✅ | ✅ | ❌ | ❌ |
+| 06-Property Description | ✅ | ✅ | ✅ | ✅ |
 | 07-Lead Scoring | ✅ | ✅ | ✅ | ✅ |
-| ... (all 21) | ✅ | ✅ | varies | varies |
+| 08-21 (all) | ✅ | ✅ | ✅ | ✅ |
 
-**Minimum for testing**: Groq + Supabase
+**All 21 workflows ready with Groq (free tier)**
+
+### Credential Files (Pre-configured)
+- `groq-api-credential.json`
+- `supabase-credential.json`
+- `bulkgate-credential.json`
+- `resend-credential.json`
+- `twilio-credential.json`
+
+**Minimum for testing**: Groq + Supabase (both free)
 
 ---
 

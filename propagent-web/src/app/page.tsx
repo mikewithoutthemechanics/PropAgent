@@ -223,9 +223,9 @@ export default function LandingPage() {
 
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-lime-500/5' : 'bg-white/50 backdrop-blur-sm'
+        scrolled ? 'bg-charcoal-900/95 backdrop-blur-xl shadow-lg shadow-lime-500/5' : 'bg-charcoal-900/50 backdrop-blur-sm'
       }`}>
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-lime-100/50">
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-lime-500/20">
           <div 
             className="h-full bg-gradient-to-r from-lime-500 to-sky-500 transition-all duration-150"
             style={{ width: scrolled ? '100%' : '0%' }}
@@ -234,10 +234,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 bg-gradient-to-br from-lime-500 to-sky-500 rounded-xl flex items-center justify-center shadow-lg shadow-lime-500/25">
-                <Home className="w-5 h-5 text-white" />
+              <div className="w-9 h-9 bg-gradient-to-br from-lime-400 to-sky-400 rounded-xl flex items-center justify-center shadow-lg shadow-lime-500/25">
+                <Home className="w-5 h-5 text-charcoal-900" />
               </div>
-              <span className="text-lg font-semibold tracking-tight">PropAgent</span>
+              <span className="text-lg font-semibold tracking-tight text-white">PropAgent</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
@@ -249,7 +249,7 @@ export default function LandingPage() {
                 <a 
                   key={item.label} 
                   href={item.href} 
-                  className="text-sm text-charcoal-600 hover:text-sky-600 transition-colors relative font-medium"
+                  className="text-sm text-white/70 hover:text-lime-400 transition-colors relative font-medium"
                 >
                   {item.label}
                 </a>
@@ -257,14 +257,14 @@ export default function LandingPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <Link href="/login" className="hidden sm:block text-sm text-charcoal-500 hover:text-sky-600 transition-colors font-medium">
+              <Link href="/login" className="hidden sm:block text-sm text-white/60 hover:text-lime-400 transition-colors font-medium">
                 Sign in
               </Link>
-              <Link href="/register" className="px-4 py-2.5 bg-gradient-to-r from-lime-500 to-sky-500 text-white text-sm font-semibold rounded-full hover:from-lime-400 hover:to-sky-400 transition-all duration-300 shadow-lg shadow-lime-500/25 hover:shadow-xl">
+              <Link href="/register" className="px-4 py-2.5 bg-gradient-to-r from-lime-400 to-sky-400 text-charcoal-900 text-sm font-semibold rounded-full hover:from-lime-300 hover:to-sky-300 transition-all duration-300 shadow-lg shadow-lime-500/25 hover:shadow-xl">
                 Get Started
               </Link>
               <button 
-                className="md:hidden p-2 text-charcoal-900"
+                className="md:hidden p-2 text-white"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -275,19 +275,19 @@ export default function LandingPage() {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-white z-40 pt-24 px-6 md:hidden">
+        <div className="fixed inset-0 bg-charcoal-900 z-40 pt-24 px-6 md:hidden">
           <div className="flex flex-col gap-6">
             {['Features', 'Pricing', 'Testimonials'].map((item) => (
               <a 
                 key={item} 
                 href={`#${item.toLowerCase()}`} 
-                className="text-2xl font-medium text-charcoal-900"
+                className="text-2xl font-medium text-white"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item}
               </a>
             ))}
-            <Link href="/login" className="text-2xl font-medium text-charcoal-900">
+            <Link href="/login" className="text-2xl font-medium text-white">
               Sign in
             </Link>
           </div>
@@ -297,63 +297,46 @@ export default function LandingPage() {
       <section 
         id="hero"
         ref={heroRef as React.RefObject<HTMLElement>}
-        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-gradient-to-b from-white via-lime-50/20 to-lime-50/40"
+        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-charcoal-900"
         aria-labelledby="hero-title"
       >
-        <div 
-          className="absolute inset-0 pointer-events-none z-0"
-          aria-hidden="true"
-          style={{
-            background: `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(190, 242, 100, 0.25), transparent 50%)`
-          }}
-        />
-        
-        <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-          <div 
-            className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-lime-400/50 to-sky-300/30 rounded-full blur-3xl animate-pulse"
-            style={{ transform: `translateY(${parallaxOffset.current * 0.15}px)` }}
-          />
-          <div 
-            className="absolute bottom-20 left-10 w-80 h-80 bg-gradient-to-br from-sky-400/50 to-lime-300/30 rounded-full blur-3xl animate-pulse"
-            style={{ transform: `translateY(${-parallaxOffset.current * 0.1}px)`, animationDelay: '1s' }}
-          />
-          <div 
-            className="absolute top-1/2 left-1/2 w-96 h-96 bg-gradient-to-br from-lime-200/10 via-emerald-100/5 to-transparent rounded-full blur-3xl"
-            style={{ transform: `translateY(${parallaxOffset.current * 0.05}px)` }}
-          />
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgb(0 0 0 / 4%) 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-          }} />
-          <div 
-            className="absolute inset-0 opacity-30"
-            style={{
-              backgroundImage: `linear-gradient(rgb(190 242 100 / 6%) 1px, transparent 1px), linear-gradient(90deg, rgb(190 242 100 / 6%) 1px, transparent 1px)`,
-              backgroundSize: '80px 80px',
-              transform: `translateY(${parallaxOffset.current * 0.03}px)`
-            }}
-          />
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover opacity-60"
+            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%231a1a1a' width='1920' height='1080'/%3E%3C/svg%3E"
+          >
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-modern-office-building-exterior-at-sunset-4416-large.mp4" type="video/mp4" />
+          </video>
+          {/* Gradient Overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/70 to-charcoal-900/30" />
+          {/* Animated gradient accent */}
+          <div className="absolute inset-0 bg-gradient-to-r from-lime-500/10 via-transparent to-sky-500/10 animate-pulse" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`max-w-3xl transition-all duration-1000 ease-out ${prefersReducedMotion ? 'opacity-100' : visibleSections.has('hero') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-lime-400 to-sky-400 text-charcoal-900 text-sm font-semibold rounded-full mb-6 shadow-lg shadow-lime-400/25">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-lime-500/20 backdrop-blur-sm border border-lime-500/30 text-lime-400 text-sm font-semibold rounded-full mb-6">
               <Zap className="w-4 h-4" aria-hidden="true" />
               <span>South Africa's #1 Property Platform</span>
             </div>
             
             <h1 
               id="hero-title"
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6 text-white"
             >
               Property management{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-500 to-sky-500 relative">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-sky-400 relative">
                 <span className="relative z-10">reimagined</span>
                 <span className="absolute inset-0 bg-gradient-to-r from-lime-400/30 to-sky-400/30 blur-2xl rounded-full" aria-hidden="true" />
               </span>
             </h1>
             
-            <p className="text-lg md:text-xl text-charcoal-600 max-w-xl leading-relaxed mb-8">
+            <p className="text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-8">
               The complete platform for South African property professionals. 
               Streamline operations, delight tenants, and grow your portfolio with confidence.
             </p>
@@ -361,26 +344,26 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link 
                 href="/register" 
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-lime-500 to-sky-500 text-charcoal-900 font-semibold rounded-full hover:from-lime-400 hover:to-sky-400 transition-all duration-300 hover:shadow-xl hover:shadow-lime-500/25 group focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-lime-400 to-sky-400 text-charcoal-900 font-semibold rounded-full hover:from-lime-300 hover:to-sky-300 transition-all duration-300 hover:shadow-xl hover:shadow-lime-400/25 group focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 focus:ring-offset-charcoal-900"
               >
                 Start Free Trial
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </Link>
               <Link 
                 href="#features" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-4 border-2 border-charcoal-200 text-charcoal-700 font-medium rounded-full hover:bg-charcoal-50 hover:border-charcoal-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-charcoal-900 focus:ring-offset-2"
+                className="inline-flex items-center justify-center gap-2 px-6 py-4 border-2 border-white/30 text-white font-medium rounded-full hover:bg-white/10 hover:border-white/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-charcoal-900"
               >
                 <Play className="w-4 h-4" aria-hidden="true" />
                 See How It Works
               </Link>
             </div>
 
-            <div className="flex items-center gap-6 mt-10 pt-10 border-t border-charcoal-200/50">
+            <div className="flex items-center gap-6 mt-10 pt-10 border-t border-white/20">
               <div className="flex -space-x-3" aria-label="Trusted by property professionals">
                 {[1,2,3,4,5].map((i) => (
                   <div 
                     key={i} 
-                    className="w-10 h-10 rounded-full bg-gradient-to-br from-lime-100 to-sky-100 border-2 border-white flex items-center justify-center text-xs font-medium text-charcoal-700"
+                    className="w-10 h-10 rounded-full bg-gradient-to-br from-lime-400/30 to-sky-400/30 border-2 border-charcoal-900 flex items-center justify-center text-xs font-medium text-white"
                   >
                     {String.fromCharCode(64 + i)}
                   </div>
@@ -389,10 +372,10 @@ export default function LandingPage() {
               <div>
                 <div className="flex items-center gap-1" aria-label="5-star rating">
                   {[1,2,3,4,5].map((i) => (
-                    <Star key={i} className="w-4 h-4 text-lime-500 fill-lime-500" aria-hidden="true" />
+                    <Star key={i} className="w-4 h-4 text-lime-400 fill-lime-400" aria-hidden="true" />
                   ))}
                 </div>
-                <p className="text-sm text-charcoal-500 font-medium">Trusted by 500+ property professionals</p>
+                <p className="text-sm text-white/60 font-medium">Trusted by 500+ property professionals</p>
               </div>
             </div>
           </div>

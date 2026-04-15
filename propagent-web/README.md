@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PropAgent Web Frontend
+
+Next.js 16 frontend for PropAgent real estate platform - South Africa.
+
+## Tech Stack
+
+- **Framework**: Next.js 16.2.1 (App Router)
+- **UI**: React 19 + Tailwind CSS 4
+- **Language**: TypeScript
+- **Database**: Supabase (connected)
+- **AI Services**: Groq API (ready to configure)
+
+## Project Structure
+
+```
+propagent-web/
+├── src/
+│   ├── app/                    # App router pages (18 pages)
+│   │   ├── page.tsx            # Landing page
+│   │   └── layout.tsx         # Root layout
+│   ├── components/
+│   │   ├── ui/                # Reusable UI components
+│   │   ├── tools/              # AI tool components (11 tools)
+│   │   └── index.ts           # Component exports
+│   ├── hooks/                  # Custom React hooks
+│   │   ├── useTheme.ts        # Theme switching
+│   │   └── index.ts
+│   ├── lib/
+│   │   ├── supabase.ts        # Database client
+│   │   ├── auth.tsx            # Authentication
+│   │   ├── valuations.ts       # Property valuations
+│   │   ├── matching.ts        # Tenant matching
+│   │   ├── leads.ts           # Lead management
+│   │   ├── financials.ts       # Financial calculations
+│   │   ├── syndication.ts     # Property syndication
+│   │   └── *.ts               # Various utilities
+│   └── types/
+│       ├── property.ts
+│       └── images.ts
+├── public/                     # Static assets
+├── package.json
+├── next.config.ts
+├── tsconfig.json
+├── CLAUDE.md                   # Agent rules
+└── AGENTS.md                   # Agent configuration
+```
+
+## Features Implemented
+
+- Dashboard with KPIs
+- Property listings management
+- Tenant database (CRM)
+- Lead pipeline
+- AI-powered tools (11 integrated)
+- Property valuations
+- Tenant screening
+- Viewing scheduler
+- Financial calculations
+- Document management
+- Communication platform
+- Trust accounting (UI ready)
+- Market reports
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+cd propagent-web
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Access: http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create `.env.local`:
 
-## Learn More
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Already deployed on Vercel - see main project README for status.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Status (Updated: 2026-04-15)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **18 pages** implemented
+- **11 AI tools** integrated
+- **Supabase** connected
+- **Live** on Vercel
