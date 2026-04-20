@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocalStorageState } from '@/lib/persistence';
 import { 
   Building2, 
   Home, 
@@ -39,7 +40,7 @@ export default function SyndicationPage() {
   const [isPosting, setIsPosting] = useState(false);
   const [postResults, setPostResults] = useState<Record<SyndicationPlatform, { success: boolean; url?: string; error?: string }>>({});
   const [configMode, setConfigMode] = useState<SyndicationPlatform | null>(null);
-  const [apiKeys, setApiKeys] = useState<Record<SyndicationPlatform, string>>({});
+  const [apiKeys, setApiKeys] = useLocalStorageState<Record<SyndicationPlatform, string>>('syndication_api_keys', {} as Record<SyndicationPlatform, string>);
 
   // Use a sample property for demo
   const sampleProperty = {

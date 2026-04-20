@@ -269,30 +269,70 @@ export const mockPayments: UIPayment[] = [
   },
 ];
 
-export const mockConversations: Array<{
+export interface UIChatMessage {
+  id: string;
+  senderId: string;
+  senderType: 'agent' | 'tenant' | 'ai';
+  content: string;
+  timestamp: string;
+  read: boolean;
+}
+
+export interface UIConversation {
   id: string;
   tenantId: string;
-  subject: string;
+  tenantName: string;
+  propertyId: string;
+  propertyAddress: string;
+  subject?: string;
   lastMessage: string;
-  timestamp: string;
-  unread: boolean;
-}> = [
+  lastMessageTime: string;
+  unreadCount: number;
+  messages: UIChatMessage[];
+}
+
+export const mockConversations: UIConversation[] = [
   {
     id: 'conv-1',
     tenantId: 'tenant-1',
+    tenantName: 'Sarah Johnson',
+    propertyId: 'prop-1',
+    propertyAddress: '15 Bree Street, Cape Town CBD, Cape Town',
     subject: 'Lease renewal inquiry',
-    lastMessage:
-      'Hi, would love to discuss renewing the lease for another year.',
-    timestamp: '2024-06-14T09:30:00Z',
-    unread: true,
+    lastMessage: 'Hi, would love to discuss renewing the lease for another year.',
+    lastMessageTime: '2024-06-14T09:30:00Z',
+    unreadCount: 1,
+    messages: [
+      {
+        id: 'msg-1',
+        senderId: 'tenant-1',
+        senderType: 'tenant',
+        content: 'Hi, would love to discuss renewing the lease for another year.',
+        timestamp: '2024-06-14T09:30:00Z',
+        read: false,
+      },
+    ],
   },
   {
     id: 'conv-2',
     tenantId: 'tenant-2',
+    tenantName: 'Michael Dlamini',
+    propertyId: 'prop-2',
+    propertyAddress: '42 Oak Avenue, Sandton, Johannesburg',
     subject: 'Maintenance update',
     lastMessage: 'Thanks for sending the electrician so quickly!',
-    timestamp: '2024-05-25T16:45:00Z',
-    unread: false,
+    lastMessageTime: '2024-05-25T16:45:00Z',
+    unreadCount: 0,
+    messages: [
+      {
+        id: 'msg-2',
+        senderId: 'tenant-2',
+        senderType: 'tenant',
+        content: 'Thanks for sending the electrician so quickly!',
+        timestamp: '2024-05-25T16:45:00Z',
+        read: true,
+      },
+    ],
   },
 ];
 

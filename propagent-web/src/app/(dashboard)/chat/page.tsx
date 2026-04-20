@@ -3,12 +3,18 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Building2, MessageSquare, Plus, X } from 'lucide-react';
 import { Card, CardHeader, Button, Avatar } from '@/components/ui';
-import { mockConversations, mockProperties } from '@/lib/data';
+import { mockConversations, mockProperties, UIConversation, UIChatMessage } from '@/lib/data';
+import { useCollection, newId } from '@/lib/persistence';
 import { formatDateTime } from '@/lib/utils';
 
 export default function ChatPage() {
-  const [conversations, setConversations] = useState(mockConversations);
-  const [activeConversationId, setActiveConversationId] = useState(conversations[0]?.id);
+  const {
+    items: conversations,
+    setItems: setConversations,
+    update: updateConversation,
+    add: addConversation,
+  } = useCollection<UIConversation>('conversations', mockConversations);
+  const [activeConversationId, setActiveConversationId] = useState<string | undefined>(conversations[0]?.id);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showNewChatModal, setShowNewChatModal] = useState(false);
@@ -24,45 +30,45 @@ export default function ChatPage() {
   const handleSendMessage = () => {
     if (!newMessage.trim() || !activeConversation) return;
 
-    const userMessage = {
-      id: `msg-${Date.now()}`,
+    const now = new Date().toISOString();
+    const userMessage: UIChatMessage = {
+      id: newId('msg'),
       senderId: 'agent',
-      senderType: 'agent' as const,
+      senderType: 'agent',
       content: newMessage,
-      timestamp: new Date().toISOString(),
+      timestamp: now,
       read: true,
     };
 
-    setConversations(prev => prev.map(conv => 
-      conv.id === activeConversationId 
-        ? { 
-            ...conv, 
-            messages: [...conv.messages, userMessage],
-            lastMessage: newMessage,
-            lastMessageTime: new Date().toISOString()
-          }
-        : conv
-    ));
+    const currentConv = conversations.find(c => c.id === activeConversationId);
+    if (!currentConv) return;
+    updateConversation(activeConversationId!, {
+      messages: [...currentConv.messages, userMessage],
+      lastMessage: newMessage,
+      lastMessageTime: now,
+    });
     setNewMessage('');
     setIsTyping(true);
 
+    const messageCopy = newMessage;
     setTimeout(() => {
-      const aiResponse = {
-        id: `msg-${Date.now() + 1}`,
+      const aiResponseTime = new Date().toISOString();
+      const aiResponse: UIChatMessage = {
+        id: newId('msg'),
         senderId: 'ai',
-        senderType: 'ai' as const,
-        content: generateAIResponse(newMessage),
-        timestamp: new Date().toISOString(),
+        senderType: 'ai',
+        content: generateAIResponse(messageCopy),
+        timestamp: aiResponseTime,
         read: true,
       };
 
-      setConversations(prev => prev.map(conv => 
-        conv.id === activeConversationId 
-          ? { 
-              ...conv, 
+      setConversations(prev => prev.map(conv =>
+        conv.id === activeConversationId
+          ? {
+              ...conv,
               messages: [...conv.messages, aiResponse],
               lastMessage: aiResponse.content,
-              lastMessageTime: aiResponse.timestamp
+              lastMessageTime: aiResponse.timestamp,
             }
           : conv
       ));
@@ -74,27 +80,29 @@ export default function ChatPage() {
     if (!newChat.tenantName.trim() || !newChat.propertyId) return;
 
     const selectedProperty = mockProperties.find(p => p.id === newChat.propertyId);
-    
-    const newConversation = {
-      id: `conv-${Date.now()}`,
-      tenantId: `tenant-${Date.now()}`,
+    const now = new Date().toISOString();
+    const newConversation: UIConversation = {
+      id: newId('conv'),
+      tenantId: newId('tenant'),
       tenantName: newChat.tenantName,
       propertyId: newChat.propertyId,
       propertyAddress: selectedProperty ? `${selectedProperty.address}, ${selectedProperty.suburb}` : '',
       lastMessage: newChat.initialMessage || 'New conversation started',
-      lastMessageTime: new Date().toISOString(),
+      lastMessageTime: now,
       unreadCount: 0,
-      messages: newChat.initialMessage.trim() ? [{
-        id: `msg-${Date.now()}`,
-        senderId: 'agent',
-        senderType: 'agent' as const,
-        content: newChat.initialMessage,
-        timestamp: new Date().toISOString(),
-        read: true,
-      }] : [],
+      messages: newChat.initialMessage.trim()
+        ? [{
+            id: newId('msg'),
+            senderId: 'agent',
+            senderType: 'agent',
+            content: newChat.initialMessage,
+            timestamp: now,
+            read: true,
+          }]
+        : [],
     };
 
-    setConversations(prev => [newConversation, ...prev]);
+    addConversation(newConversation);
     setActiveConversationId(newConversation.id);
     setNewChat({ tenantName: '', propertyId: '', initialMessage: '' });
     setShowNewChatModal(false);

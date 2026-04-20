@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useCollection, newId } from '@/lib/persistence';
 import { 
   Calculator, 
   TrendingUp, 
@@ -76,7 +77,11 @@ export default function ValuationsPage() {
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Comparable sales management
-  const [customComparables, setCustomComparables] = useState<ComparableSale[]>([]);
+  const {
+    items: customComparables,
+    add: addComparable,
+    remove: removeComparable,
+  } = useCollection<ComparableSale>('valuation_comparables', []);
   const [showAddComparable, setShowAddComparable] = useState(false);
   const [newComparable, setNewComparable] = useState({
     address: '',
@@ -88,7 +93,10 @@ export default function ValuationsPage() {
   });
 
   // Valuation history
-  const [valuationHistory, setValuationHistory] = useState<PropertyValuation[]>([]);
+  const {
+    items: valuationHistory,
+    add: addValuationHistory,
+  } = useCollection<PropertyValuation>('valuation_history', []);
   const [showHistory, setShowHistory] = useState(false);
 
   // Property autocomplete
@@ -145,7 +153,7 @@ export default function ValuationsPage() {
     if (!newComparable.address || !newComparable.salePrice) return;
     
     const comp: ComparableSale = {
-      id: `custom_${Date.now()}`,
+      id: newId('custom'),
       address: newComparable.address,
       salePrice: newComparable.salePrice,
       saleDate: newComparable.saleDate,
@@ -158,7 +166,7 @@ export default function ValuationsPage() {
       source: 'internal',
     };
     
-    setCustomComparables(prev => [...prev, comp]);
+    addComparable(comp);
     setShowAddComparable(false);
     setNewComparable({
       address: '',
@@ -172,7 +180,7 @@ export default function ValuationsPage() {
 
   // Remove custom comparable
   const handleRemoveComparable = (id: string) => {
-    setCustomComparables(prev => prev.filter(c => c.id !== id));
+    removeComparable(id);
   };
 
   // Calculate valuation
@@ -210,11 +218,11 @@ export default function ValuationsPage() {
     
     const savedValuation = {
       ...valuation,
-      id: `history_${Date.now()}`,
+      id: newId('history'),
       valuationDate: new Date().toISOString(),
     };
-    
-    setValuationHistory(prev => [savedValuation, ...prev]);
+
+    addValuationHistory(savedValuation);
     alert('Valuation saved to history!');
   };
 
