@@ -4,13 +4,12 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Building2, MessageSquare, Plus, X } from 'lucide-react';
 import { Card, CardHeader, Button, Avatar } from '@/components/ui';
 import { mockConversations, mockProperties, UIConversation, UIChatMessage } from '@/lib/data';
-import { useCollection, newId } from '@/lib/persistence';
+import { useCollection, newId, readLocal } from '@/lib/persistence';
 import { formatDateTime } from '@/lib/utils';
 
 export default function ChatPage() {
   const {
     items: conversations,
-    setItems: setConversations,
     update: updateConversation,
     add: addConversation,
   } = useCollection<UIConversation>('conversations', mockConversations);
@@ -62,16 +61,15 @@ export default function ChatPage() {
         read: true,
       };
 
-      setConversations(prev => prev.map(conv =>
-        conv.id === activeConversationId
-          ? {
-              ...conv,
-              messages: [...conv.messages, aiResponse],
-              lastMessage: aiResponse.content,
-              lastMessageTime: aiResponse.timestamp,
-            }
-          : conv
-      ));
+      const latestConv = readLocal<UIConversation[]>('conversations', conversations)
+        .find(c => c.id === activeConversationId);
+      if (latestConv) {
+        updateConversation(activeConversationId!, {
+          messages: [...latestConv.messages, aiResponse],
+          lastMessage: aiResponse.content,
+          lastMessageTime: aiResponse.timestamp,
+        });
+      }
       setIsTyping(false);
     }, 1500);
   };
