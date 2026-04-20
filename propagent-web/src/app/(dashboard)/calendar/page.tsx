@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useCollection, newId } from '@/lib/persistence';
 import { 
   Calendar as CalendarIcon, 
   Clock, 
@@ -151,7 +152,7 @@ export default function CalendarPage() {
   const [statusFilter, setStatusFilter] = useState<ViewingStatus | 'all'>('all');
   const [showNewViewing, setShowNewViewing] = useState(false);
   const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
-  const [viewings, setViewings] = useState(samplePropertyViewings);
+  const { items: viewings, add: addViewing } = useCollection<PropertyViewing>('viewings', samplePropertyViewings);
   const [newViewingForm, setNewViewingForm] = useState({
     property: '',
     clientName: '',
@@ -167,21 +168,28 @@ export default function CalendarPage() {
       return;
     }
     
-    const newViewing = {
-      id: `viewing-${Date.now()}`,
+    const scheduledTime = `${newViewingForm.date}T${newViewingForm.time || '09:00'}:00`;
+    const now = new Date().toISOString();
+    const newViewing: PropertyViewing = {
+      id: newId('viewing'),
+      slotId: newId('slot'),
       propertyId: '1',
-      propertyAddress: newViewingForm.property,
+      agentId: 'agent_demo',
+      clientId: newId('client'),
       clientName: newViewingForm.clientName,
       clientEmail: newViewingForm.email,
       clientPhone: newViewingForm.phone,
-      date: newViewingForm.date,
-      time: newViewingForm.time,
-      status: 'pending' as ViewingStatus,
+      propertyAddress: newViewingForm.property,
+      scheduledTime,
+      duration: 30,
+      status: 'pending',
+      reminderSent: false,
       notes: newViewingForm.notes,
-      createdAt: new Date().toISOString()
+      createdAt: now,
+      updatedAt: now,
     };
-    
-    setViewings([...viewings, newViewing]);
+
+    addViewing(newViewing);
     setShowNewViewing(false);
     setNewViewingForm({ property: '', clientName: '', date: '', time: '', email: '', phone: '', notes: '' });
   };

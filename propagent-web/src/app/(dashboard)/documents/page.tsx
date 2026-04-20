@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { useCollection, newId } from '@/lib/persistence';
 import { 
   FileText, 
   Search, 
@@ -94,7 +95,11 @@ function FloatingParticles() {
 }
 
 export default function DocumentsPage() {
-  const [documents, setDocuments] = useState<PropertyDocument[]>(sampleDocuments);
+  const {
+    items: documents,
+    add: addDocument,
+    remove: removeDocument,
+  } = useCollection<PropertyDocument>('documents', sampleDocuments);
   const [selectedCategory, setSelectedCategory] = useState<DocumentCategory | 'all'>('all');
   const [selectedStatus, setSelectedStatus] = useState<DocumentStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -162,7 +167,7 @@ export default function DocumentsPage() {
     
     const property = mockProperties.find(p => p.id === newDocument.propertyId);
     const doc: PropertyDocument = {
-      id: `doc_${Date.now()}`,
+      id: newId('doc'),
       title: newDocument.title,
       fileName: `${newDocument.title.toLowerCase().replace(/\s+/g, '_')}.pdf`,
       fileSize: Math.floor(Math.random() * 1000000) + 50000,
@@ -184,7 +189,7 @@ export default function DocumentsPage() {
       versions: [{ version: 1, uploadedAt: new Date().toISOString(), uploadedBy: 'Current User' }]
     };
     
-    setDocuments(prev => [doc, ...prev]);
+    addDocument(doc);
     alert(`Document "${doc.title}" uploaded successfully!`);
     setShowUploadModal(false);
     setNewDocument({
@@ -217,7 +222,7 @@ export default function DocumentsPage() {
 
   const handleDeleteDocument = () => {
     if (!deletingDocId) return;
-    setDocuments(prev => prev.filter(d => d.id !== deletingDocId));
+    removeDocument(deletingDocId);
     if (selectedDoc === deletingDocId) {
       setSelectedDoc(null);
     }

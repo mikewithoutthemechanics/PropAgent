@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { useCollection, useLocalStorageState } from '@/lib/persistence';
 import { 
   Bell, 
   Mail, 
@@ -233,8 +234,13 @@ const samplePreferences: NotificationPreferences = {
 
 export default function NotificationsPage() {
   const { user } = useAuth();
-  const [notifications, setNotifications] = useState<Notification[]>(sampleNotifications);
-  const [preferences, setPreferences] = useState<NotificationPreferences>(samplePreferences);
+  const {
+    items: notifications,
+    setItems: setNotifications,
+    update: updateNotification,
+    remove: removeNotification,
+  } = useCollection<Notification>('notifications', sampleNotifications);
+  const [preferences, setPreferences] = useLocalStorageState<NotificationPreferences>('notification_preferences', samplePreferences);
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
@@ -286,31 +292,36 @@ export default function NotificationsPage() {
   }, [notifications, filter, searchQuery]);
 
   const handleMarkAsRead = async (notificationId: string) => {
-    await markNotificationAsRead(notificationId);
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === notificationId 
-          ? { ...n, read: true, readAt: new Date().toISOString() }
-          : n
-      )
-    );
+    updateNotification(notificationId, { read: true, readAt: new Date().toISOString() });
     if (selectedNotification?.id === notificationId) {
       setSelectedNotification(prev => prev ? { ...prev, read: true } : null);
+    }
+    try {
+      await markNotificationAsRead(notificationId);
+    } catch (e) {
+      console.warn('Supabase mark-read failed (demo mode):', e);
     }
   };
 
   const handleMarkAllAsRead = async () => {
-    await markAllNotificationsAsRead(user?.id || 'user1');
-    setNotifications(prev => 
-      prev.map(n => ({ ...n, read: true, readAt: new Date().toISOString() }))
-    );
+    const now = new Date().toISOString();
+    setNotifications(prev => prev.map(n => ({ ...n, read: true, readAt: now })));
+    try {
+      await markAllNotificationsAsRead(user?.id || 'user1');
+    } catch (e) {
+      console.warn('Supabase mark-all-read failed (demo mode):', e);
+    }
   };
 
   const handleDelete = async (notificationId: string) => {
-    await deleteNotification(notificationId);
-    setNotifications(prev => prev.filter(n => n.id !== notificationId));
+    removeNotification(notificationId);
     if (selectedNotification?.id === notificationId) {
       setSelectedNotification(null);
+    }
+    try {
+      await deleteNotification(notificationId);
+    } catch (e) {
+      console.warn('Supabase delete failed (demo mode):', e);
     }
   };
 
