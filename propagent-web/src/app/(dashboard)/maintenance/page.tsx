@@ -3,7 +3,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { Plus, Search, AlertTriangle, Clock, CheckCircle, XCircle, Calendar, X, Mic, MicOff } from 'lucide-react';
 import { Card, Button, Badge } from '@/components/ui';
-import { mockMaintenanceRequests, mockProperties, mockTenants } from '@/lib/data';
+import {
+  mockMaintenanceRequests,
+  mockProperties,
+  mockTenants,
+  UIMaintenanceRequest,
+  UIProperty,
+  UITenant,
+} from '@/lib/data';
+import { useCollection, newId } from '@/lib/persistence';
 import { formatDate, getStatusColor } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
@@ -12,7 +20,19 @@ export default function MaintenancePage() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [requests, setRequests] = useState(mockMaintenanceRequests);
+  const {
+    items: requests,
+    add: addRequest,
+    update: updateRequest,
+  } = useCollection<UIMaintenanceRequest>(
+    'maintenance_requests',
+    mockMaintenanceRequests,
+  );
+  const { items: properties } = useCollection<UIProperty>(
+    'properties',
+    mockProperties,
+  );
+  const { items: tenants } = useCollection<UITenant>('tenants', mockTenants);
   const [newRequest, setNewRequest] = useState({
     title: '',
     description: '',
@@ -110,23 +130,23 @@ export default function MaintenancePage() {
     const autoPriority = detectUrgency(newRequest.title, newRequest.description);
     const priority = autoPriority || newRequest.priority;
     
-    const request = {
-      id: `maint_${Date.now()}`,
+    const request: UIMaintenanceRequest = {
+      id: newId('maint'),
       title: newRequest.title,
       description: newRequest.description || 'No description provided',
       propertyId: newRequest.propertyId,
       tenantId: newRequest.tenantId || null,
       priority: priority as 'low' | 'medium' | 'high' | 'emergency',
       category: newRequest.category,
-      status: 'pending' as const,
+      status: 'pending',
       createdAt: new Date().toISOString(),
       dueDate: newRequest.dueDate || null,
       estimatedCost: newRequest.estimatedCost ? parseFloat(newRequest.estimatedCost) : null,
       assignedContractor: newRequest.assignedContractor || null,
       notes: newRequest.notes || null,
     };
-    
-    setRequests([request, ...requests]);
+
+    addRequest(request);
     setShowAddModal(false);
     setNewRequest({
       title: '',
@@ -159,12 +179,13 @@ export default function MaintenancePage() {
   };
 
   const getPropertyAddress = (propertyId: string) => {
-    const property = mockProperties.find(p => p.id === propertyId);
+    const property = properties.find(p => p.id === propertyId);
     return property ? `${property.address}, ${property.suburb}` : 'Unknown';
   };
 
-  const getTenantName = (tenantId: string) => {
-    const tenant = mockTenants.find(t => t.id === tenantId);
+  const getTenantName = (tenantId: string | null) => {
+    if (!tenantId) return 'Unassigned';
+    const tenant = tenants.find(t => t.id === tenantId);
     return tenant ? `${tenant.firstName} ${tenant.lastName}` : 'Unknown';
   };
 
@@ -234,7 +255,7 @@ export default function MaintenancePage() {
             <div>
               <p className="text-sm text-charcoal-500">Pending</p>
               <p className="text-xl font-bold text-charcoal-900">
-                {mockMaintenanceRequests.filter(r => r.status === 'pending').length}
+                {requests.filter(r => r.status === 'pending').length}
               </p>
             </div>
           </div>
@@ -247,7 +268,7 @@ export default function MaintenancePage() {
             <div>
               <p className="text-sm text-charcoal-500">In Progress</p>
               <p className="text-xl font-bold text-charcoal-900">
-                {mockMaintenanceRequests.filter(r => r.status === 'in-progress').length}
+                {requests.filter(r => r.status === 'in-progress').length}
               </p>
             </div>
           </div>
@@ -260,7 +281,7 @@ export default function MaintenancePage() {
             <div>
               <p className="text-sm text-charcoal-500">Completed</p>
               <p className="text-xl font-bold text-charcoal-900">
-                {mockMaintenanceRequests.filter(r => r.status === 'completed').length}
+                {requests.filter(r => r.status === 'completed').length}
               </p>
             </div>
           </div>
@@ -273,7 +294,7 @@ export default function MaintenancePage() {
             <div>
               <p className="text-sm text-charcoal-500">Emergency</p>
               <p className="text-xl font-bold text-charcoal-900">
-                {mockMaintenanceRequests.filter(r => r.priority === 'emergency').length}
+                {requests.filter(r => r.priority === 'emergency').length}
               </p>
             </div>
           </div>
@@ -322,7 +343,7 @@ export default function MaintenancePage() {
 
         <div className="divide-y divide-charcoal-100">
           {filteredRequests.map((request) => (
-            <div key={request.id} className="p-4 hover:bg-charcoal-50 transition-all duration-300 cursor-pointer">
+            <div key={request.id} className="p-4 hover:bg-charcoal-50 transition-all duration-300">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
@@ -347,9 +368,24 @@ export default function MaintenancePage() {
                     )}
                   </div>
                 </div>
-                <div className="text-right flex-shrink-0">
+                <div className="text-right flex-shrink-0 flex flex-col items-end gap-2">
                   <p className="text-xs text-charcoal-500">Created</p>
-                  <p className="text-sm text-charcoal-600">{formatDate(request.createdAt)}</p>
+                  <p className="text-sm text-charcoal-600">{formatDate(new Date(request.createdAt))}</p>
+                  <select
+                    value={request.status}
+                    onChange={(e) =>
+                      updateRequest(request.id, {
+                        status: e.target.value as UIMaintenanceRequest['status'],
+                      })
+                    }
+                    className="px-2 py-1 text-xs bg-white border border-charcoal-200 rounded-md cursor-pointer"
+                    aria-label={`Change status for ${request.title}`}
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -428,7 +464,7 @@ export default function MaintenancePage() {
                   className="w-full px-4 py-3 bg-charcoal-50 rounded-lg text-charcoal-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer transition-all duration-300"
                 >
                   <option value="">Select a property...</option>
-                  {mockProperties.map(prop => (
+                  {properties.map(prop => (
                     <option key={prop.id} value={prop.id}>{prop.address}, {prop.suburb}</option>
                   ))}
                 </select>

@@ -3,7 +3,8 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { Users, Plus, Home, Building2, Phone, Mail, Search, Filter, TrendingUp, Target, Globe, Share2, Handshake, X } from 'lucide-react';
 import { Card, Button, Badge, Input } from '@/components/ui';
-import { Lead, sampleLeads, leadSourceConfig, getLeadStats } from '@/lib/leads';
+import { Lead, LeadSource, LeadStatus, LeadType, sampleLeads, leadSourceConfig, getLeadStats } from '@/lib/leads';
+import { useCollection, newId } from '@/lib/persistence';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { exportToCSV } from '@/lib/export';
@@ -97,10 +98,16 @@ export default function LeadsPage() {
     return () => observer.disconnect();
   }, []);
 
-  const stats = useMemo(() => getLeadStats(sampleLeads), []);
+  const {
+    items: leads,
+    add: addLead,
+    remove: removeLead,
+  } = useCollection<Lead>('leads', sampleLeads);
+
+  const stats = useMemo(() => getLeadStats(leads), [leads]);
 
   const filteredLeads = useMemo(() => {
-    let result = [...sampleLeads];
+    let result = [...leads];
     
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
@@ -121,7 +128,7 @@ export default function LeadsPage() {
     }
     
     return result;
-  }, [searchTerm, filterSource, filterStatus]);
+  }, [leads, searchTerm, filterSource, filterStatus]);
 
   const getSourceIcon = (source: string) => {
     switch (source) {
@@ -145,7 +152,27 @@ export default function LeadsPage() {
   };
 
   const handleAddLead = () => {
-    alert('Lead added successfully! (Demo mode - data not persisted)');
+    if (!newLead.name || !newLead.email) {
+      alert('Please fill in required fields (Name, Email).');
+      return;
+    }
+    const lead: Lead = {
+      id: newId('lead'),
+      source: newLead.source as LeadSource,
+      type: newLead.type as LeadType,
+      status: newLead.status as LeadStatus,
+      name: newLead.name,
+      email: newLead.email,
+      phone: newLead.phone,
+      bedrooms: newLead.bedrooms ? parseInt(newLead.bedrooms, 10) : undefined,
+      budgetMin: newLead.budgetMin ? parseFloat(newLead.budgetMin) : undefined,
+      budgetMax: newLead.budgetMax ? parseFloat(newLead.budgetMax) : undefined,
+      preferredSuburb: newLead.preferredSuburb || undefined,
+      propertyAddress: newLead.propertyAddress || undefined,
+      askingRent: newLead.askingRent ? parseFloat(newLead.askingRent) : undefined,
+      capturedAt: new Date().toISOString(),
+    };
+    addLead(lead);
     setShowAddModal(false);
     setNewLead({
       name: '',
@@ -267,6 +294,7 @@ export default function LeadsPage() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-charcoal-400 uppercase">Requirements</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-charcoal-400 uppercase">Status</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-charcoal-400 uppercase">Captured</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-charcoal-400 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-charcoal-500/10">
@@ -320,6 +348,18 @@ export default function LeadsPage() {
                       <span className="text-sm text-charcoal-500">
                         {new Date(lead.capturedAt).toLocaleDateString()}
                       </span>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={() => {
+                          if (window.confirm(`Delete lead ${lead.name}?`)) {
+                            removeLead(lead.id);
+                          }
+                        }}
+                        className="text-xs text-charcoal-400 hover:text-red-500 transition-colors cursor-pointer"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 );

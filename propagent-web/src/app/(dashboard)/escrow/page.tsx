@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { useCollection, newId } from '@/lib/persistence';
 import { Wallet, Clock, CheckCircle, AlertTriangle, XCircle, Search, ArrowRightLeft, Shield, DollarSign, TrendingUp, Activity, Plus, X } from 'lucide-react';
 import { Card, Button, Badge } from '@/components/ui';
 import { EscrowTransaction, EscrowStatus, sampleEscrowTransactions, calculateEscrow, canReleaseFunds } from '@/lib/escrow';
@@ -192,6 +193,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 }
 
 export default function EscrowManagementPage() {
+  const { items: escrowTransactions, add: addEscrowTransaction } = useCollection<EscrowTransaction>('escrow_transactions', sampleEscrowTransactions);
   const [filter, setFilter] = useState<'all' | EscrowStatus>('all');
   const [selectedEscrow, setSelectedEscrow] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -216,9 +218,9 @@ export default function EscrowManagementPage() {
     const share = totalCommission / 2;
     
     const newEscrowEntry: EscrowTransaction = {
-      id: `escrow_${Date.now()}`,
-      matchId: `match_${Date.now()}`,
-      propertyId: `prop_${Date.now()}`,
+      id: newId('escrow'),
+      matchId: newId('match'),
+      propertyId: newId('prop'),
       propertyTitle: newEscrow.property,
       agent1Id: `agent_${Date.now()}_1`,
       agent1Name: newEscrow.agent1Name,
@@ -242,20 +244,20 @@ export default function EscrowManagementPage() {
       status: newEscrow.status,
     };
     
-    sampleEscrowTransactions.push(newEscrowEntry);
+    addEscrowTransaction(newEscrowEntry);
     setNewEscrow({ property: '', price: '', agent1Name: '', agent2Name: '', commission: '', deposit: '', status: 'pending_deposit' });
     setShowAddModal(false);
   };
   
   // Filter escrow
   const filteredEscrow = useMemo(() => {
-    if (filter === 'all') return sampleEscrowTransactions;
-    return sampleEscrowTransactions.filter(e => e.status === filter);
-  }, [filter]);
+    if (filter === 'all') return escrowTransactions;
+    return escrowTransactions.filter(e => e.status === filter);
+  }, [filter, escrowTransactions]);
   
   // Stats
   const stats = useMemo(() => {
-    const total = sampleEscrowTransactions;
+    const total = escrowTransactions;
     const pending = total.filter(e => e.status === 'pending_deposit');
     const deposited = total.filter(e => e.status === 'deposited' || e.status === 'in_verification');
     const released = total.filter(e => e.status === 'released');
@@ -267,7 +269,7 @@ export default function EscrowManagementPage() {
       released: released.length,
       totalValue,
     };
-  }, []);
+  }, [escrowTransactions]);
   
   // Status badge helper
   const getStatusBadge = (status: EscrowStatus) => {
@@ -289,7 +291,7 @@ export default function EscrowManagementPage() {
     }
   };
 
-  const selectedEscrowData = sampleEscrowTransactions.find(e => e.id === selectedEscrow);
+  const selectedEscrowData = escrowTransactions.find(e => e.id === selectedEscrow);
 
   return (
     <div className="space-y-6 min-h-screen bg-white text-charcoal-900 p-6">

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { useCollection, newId } from '@/lib/persistence';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -48,6 +49,7 @@ import {
   sampleCommissions,
   ReportPeriod,
   ExpenseCategory,
+  Expense,
   RentRollSummary,
   ExpenseSummary,
   CommissionBreakdown,
@@ -82,7 +84,11 @@ export default function FinancialsPage() {
 
   // Invoice modal state
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const {
+    items: invoices,
+    add: addInvoice,
+    update: updateInvoice,
+  } = useCollection<Invoice>('invoices', []);
   const [invoiceNumber, setInvoiceNumber] = useState(() => `INV-${Date.now().toString().slice(-8)}`);
   const [selectedProperty, setSelectedProperty] = useState('');
   const [selectedTenant, setSelectedTenant] = useState('');
@@ -115,8 +121,13 @@ export default function FinancialsPage() {
     setIsVisible(true);
   }, []);
 
+  const {
+    items: expenses,
+    add: addExpenseRecord,
+  } = useCollection<Expense>('expenses', sampleExpenses);
+
   const rentRoll = useMemo(() => getRentRollSummary(), []);
-  const expenseSummary = useMemo(() => getExpenseSummary(sampleExpenses), []);
+  const expenseSummary = useMemo(() => getExpenseSummary(expenses), [expenses]);
   const commissions = useMemo(() => getCommissionBreakdown(sampleCommissions), []);
   const report = useMemo(() => generateFinancialReport(reportPeriod), [reportPeriod]);
 
@@ -166,8 +177,8 @@ export default function FinancialsPage() {
       return;
     }
     
-    const expense = {
-      id: `exp_${Date.now()}`,
+    const expense: Expense = {
+      id: newId('exp'),
       propertyId: newExpense.propertyId,
       propertyAddress: mockProperties.find(p => p.id === newExpense.propertyId)?.address || 'Unknown',
       category: newExpense.category,
@@ -175,12 +186,10 @@ export default function FinancialsPage() {
       amount: parseFloat(newExpense.amount),
       vendor: newExpense.vendor || undefined,
       date: newExpense.date,
-      status: newExpense.status
+      status: newExpense.status,
     };
-    
-    // In a real app, this would save to the database
-    console.log('Adding expense:', expense);
-    alert(`Expense added: ${formatCurrency(expense.amount)} for ${expense.propertyAddress}`);
+
+    addExpenseRecord(expense);
     setShowAddExpense(false);
     setNewExpense({
       propertyId: '',
@@ -513,7 +522,7 @@ export default function FinancialsPage() {
                         <div className="flex items-center gap-2">
                           {invoice.status === 'draft' && (
 <button 
-                              onClick={() => setInvoices(invoices.map(i => i.id === invoice.id ? { ...i, status: 'sent' as const } : i))}
+                              onClick={() => updateInvoice(invoice.id, { status: 'sent' })}
                               className="text-accent hover:text-accent-700 text-sm cursor-pointer transition-all duration-300"
                             >
                               Send
@@ -521,7 +530,7 @@ export default function FinancialsPage() {
                           )}
                           {invoice.status === 'sent' && (
                             <button 
-                              onClick={() => setInvoices(invoices.map(i => i.id === invoice.id ? { ...i, status: 'paid' as const } : i))}
+                              onClick={() => updateInvoice(invoice.id, { status: 'paid' })}
                               className="text-primary-600 hover:text-primary-700 text-sm cursor-pointer transition-all duration-300"
                             >
                               Mark Paid
@@ -1046,21 +1055,21 @@ export default function FinancialsPage() {
                     const subtotal = lineItems.reduce((sum, item) => sum + (item.amount || 0), 0);
                     const tax = subtotal * taxRate / 100;
                     const total = subtotal + tax;
-                    const newInvoice = {
-                      id: Date.now(),
+                    const newInvoice: Invoice = {
+                      id: newId('inv'),
                       invoiceNumber: `INV-${Date.now().toString().slice(-8)}`,
                       property: selectedProperty || 'N/A',
                       tenant: selectedTenant || 'N/A',
                       date: invoiceDate,
                       dueDate: dueDate,
-                      items: lineItems,
+                      lineItems,
                       subtotal,
                       tax,
                       total,
-                      status: invoiceStatus,
-                      notes
+                      status: 'draft',
+                      notes,
                     };
-                    setInvoices([...invoices, newInvoice]);
+                    addInvoice(newInvoice);
                     setShowInvoiceModal(false);
                     setSelectedProperty('');
                     setSelectedTenant('');
@@ -1077,52 +1086,21 @@ export default function FinancialsPage() {
                     const subtotal = lineItems.reduce((sum, item) => sum + (item.amount || 0), 0);
                     const tax = subtotal * taxRate / 100;
                     const total = subtotal + tax;
-                    const newInvoice = {
-                      id: Date.now(),
+                    const newInvoice: Invoice = {
+                      id: newId('inv'),
                       invoiceNumber: `INV-${Date.now().toString().slice(-8)}`,
                       property: selectedProperty || 'N/A',
                       tenant: selectedTenant || 'N/A',
                       date: invoiceDate,
                       dueDate: dueDate,
-                      items: lineItems,
+                      lineItems,
                       subtotal,
                       tax,
                       total,
-                      status: invoiceStatus,
-                      notes
+                      status: 'sent',
+                      notes,
                     };
-                    setInvoices([...invoices, newInvoice]);
-                    setShowInvoiceModal(false);
-                    setSelectedProperty('');
-                    setSelectedTenant('');
-                    setLineItems([{ description: 'Monthly Rent', amount: 0, type: 'rent' }]);
-                    setNotes('');
-                  }}
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Draft
-                </Button>
-                <Button 
-                  className="bg-primary text-charcoal-900 rounded-full hover:bg-primary-600 cursor-pointer transition-all duration-300"
-                  onClick={() => {
-                    const subtotal = lineItems.reduce((sum, item) => sum + (item.amount || 0), 0);
-                    const tax = subtotal * taxRate / 100;
-                    const total = subtotal + tax;
-                    const newInvoice = {
-                      id: Date.now(),
-                      invoiceNumber: `INV-${Date.now().toString().slice(-8)}`,
-                      property: selectedProperty || 'N/A',
-                      tenant: selectedTenant || 'N/A',
-                      date: invoiceDate,
-                      dueDate: dueDate,
-                      items: lineItems,
-                      subtotal,
-                      tax,
-                      total,
-                      status: 'sent' as const,
-                      notes
-                    };
-                    setInvoices([...invoices, newInvoice]);
+                    addInvoice(newInvoice);
                     setShowInvoiceModal(false);
                     setSelectedProperty('');
                     setSelectedTenant('');

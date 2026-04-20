@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocalStorageState } from '@/lib/persistence';
 import { 
   User, 
   Lock, 
@@ -62,7 +63,7 @@ export default function SettingsPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
 
-  const [profile, setProfile] = useState<ProfileForm>({
+  const [profile, setProfile] = useLocalStorageState<ProfileForm>('settings_profile', {
     firstName: 'Dean',
     lastName: 'Hodgson',
     email: 'dean@propagent.co.za',
@@ -71,7 +72,7 @@ export default function SettingsPage() {
     ffcNumber: 'FFC-2024-001234',
   });
 
-  const [notifications, setNotifications] = useState<NotificationSettings>({
+  const [notifications, setNotifications] = useLocalStorageState<NotificationSettings>('settings_notifications', {
     emailRent: true,
     emailMaintenance: true,
     emailLeads: true,

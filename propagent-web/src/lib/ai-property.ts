@@ -205,7 +205,7 @@ export function generateAIFeatureHighlights(property: PropertyDetails): string[]
   }
   
   if (property.erfSize && property.erfSize > 500) {
-    highlights.push(`Generous ${property.erfSize}sqm erf`));
+    highlights.push(`Generous ${property.erfSize}sqm erf`);
   }
   
   if (property.floorArea && property.floorArea > 150) {
