@@ -6,10 +6,11 @@ import { Plus, Grid3X3, List, ChevronLeft, ChevronRight, Sparkles, Search, Slide
 import { sampleProperties, samplePropertyStats } from '@/lib/sample-data';
 import { PropertyFilters } from '@/components/properties/PropertyFilters';
 import { PropertyCard } from '@/components/properties/PropertyCard';
-import { PropertyFilters as PropertyFiltersType } from '@/types/property';
+import { Property, PropertyFilters as PropertyFiltersType } from '@/types/property';
 import { Button, Card } from '@/components/ui';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { useLocalStorageState, useCollection } from '@/lib/persistence';
 
 const ITEMS_PER_PAGE = 9;
 
@@ -159,7 +160,15 @@ export default function PropertiesPage() {
   const [filters, setFilters] = useState<PropertyFiltersType>({
     sortBy: 'featured',
   });
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [favoriteIds, setFavoriteIds] = useLocalStorageState<string[]>(
+    'property_favorites',
+    [],
+  );
+  const favorites = useMemo(() => new Set(favoriteIds), [favoriteIds]);
+  const { items: userProperties } = useCollection<Property>(
+    'user_properties',
+    [],
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -169,8 +178,13 @@ export default function PropertiesPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  const allProperties = useMemo(
+    () => [...userProperties, ...sampleProperties],
+    [userProperties],
+  );
+
   const filteredProperties = useMemo(() => {
-    let result = [...sampleProperties];
+    let result = [...allProperties];
 
     if (filters.location) {
       const searchTerm = filters.location.toLowerCase();
@@ -227,7 +241,7 @@ export default function PropertiesPage() {
     }
 
     return result;
-  }, [filters]);
+  }, [allProperties, filters]);
 
   const totalPages = Math.ceil(filteredProperties.length / ITEMS_PER_PAGE);
   const paginatedProperties = useMemo(() => {
@@ -245,17 +259,14 @@ export default function PropertiesPage() {
     setCurrentPage(1);
   }, []);
 
-  const handleFavoriteToggle = useCallback((id: string) => {
-    setFavorites(prev => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(id)) {
-        newFavorites.delete(id);
-      } else {
-        newFavorites.add(id);
-      }
-      return newFavorites;
-    });
-  }, []);
+  const handleFavoriteToggle = useCallback(
+    (id: string) => {
+      setFavoriteIds((prev) =>
+        prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+      );
+    },
+    [setFavoriteIds],
+  );
 
   const handleAddProperty = () => {
     router.push('/properties/new');

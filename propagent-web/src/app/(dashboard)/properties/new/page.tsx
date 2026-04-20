@@ -5,50 +5,71 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { PropertyForm } from '@/components/properties/PropertyForm';
-import { PropertyFormData } from '@/types/property';
+import { Property, PropertyFormData } from '@/types/property';
 import { Button } from '@/components/ui';
+import { useCollection, newId, writeLocal } from '@/lib/persistence';
 
 export default function NewPropertyPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const { add: addProperty } = useCollection<Property>('user_properties', []);
 
   const handleSubmit = useCallback(async (data: PropertyFormData) => {
     setIsSubmitting(true);
-    
+
     try {
-      // In a real app, this would be an API call
-      // await fetch('/api/properties', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data),
-      // });
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      const now = new Date().toISOString();
+      const property: Property = {
+        id: newId('prop'),
+        title: data.title,
+        description: data.description,
+        listingType: data.listingType,
+        type: data.type,
+        status: 'active',
+        location: data.location,
+        pricing: data.pricing,
+        specs: data.specs,
+        features: data.features,
+        images: [],
+        agent: {
+          id: 'agent_demo',
+          name: 'You',
+          email: 'you@propagent.co.za',
+          phone: '+27 00 000 0000',
+          agencyName: 'PropAgent',
+        },
+        createdAt: now,
+        updatedAt: now,
+        publishedAt: now,
+        viewCount: 0,
+        inquiryCount: 0,
+        favoriteCount: 0,
+        syndicatedTo: [],
+        slug: data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+        isDraft: false,
+      };
+
+      addProperty(property);
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       setShowSuccess(true);
-      
-      // Redirect after showing success
+
       setTimeout(() => {
         router.push('/properties');
-      }, 2000);
+      }, 1500);
     } catch (error) {
       console.error('Failed to create property:', error);
     } finally {
       setIsSubmitting(false);
     }
-  }, [router]);
+  }, [router, addProperty]);
 
   const handleSaveDraft = useCallback(async (data: PropertyFormData) => {
-    // In a real app, this would save to localStorage or a drafts API
-    console.log('Saving draft:', data);
-    
-    // Store in localStorage for demo
-    localStorage.setItem('property_draft', JSON.stringify({
+    writeLocal('property_draft', {
       data,
       savedAt: new Date().toISOString(),
-    }));
+    });
   }, []);
 
   if (showSuccess) {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { useCollection, newId } from '@/lib/persistence';
 import { Users, Shield, ShieldCheck, AlertTriangle, Search, Star, TrendingUp, Crown, Sparkles, Plus, X } from 'lucide-react';
 import { AgentProfile, sampleAgents } from '@/lib/agents';
 import { cn } from '@/lib/utils';
@@ -218,6 +219,7 @@ function FilterButton({ active, onClick, label, count }: { active: boolean; onCl
 }
 
 export default function AgentManagementPage() {
+  const { items: agents, add: addAgent } = useCollection<AgentProfile>('agents', sampleAgents);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterFFC, setFilterFFC] = useState<'all' | 'verified' | 'pending'>('all');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -232,7 +234,7 @@ export default function AgentManagementPage() {
   });
   
   const filteredAgents = useMemo(() => {
-    let result = [...sampleAgents];
+    let result = [...agents];
     
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
@@ -252,27 +254,33 @@ export default function AgentManagementPage() {
     }
     
     return result;
-  }, [searchTerm, filterFFC]);
+  }, [agents, searchTerm, filterFFC]);
   
   const stats = useMemo(() => {
-    const verified = sampleAgents.filter(a => a.ffcVerified);
-    const pending = sampleAgents.filter(a => !a.ffcVerified);
-    const avgNps = verified.reduce((sum, a) => sum + (a.npsScore || 0), 0) / verified.length;
+    const verified = agents.filter(a => a.ffcVerified);
+    const pending = agents.filter(a => !a.ffcVerified);
+    const avgNps = verified.length
+      ? verified.reduce((sum, a) => sum + (a.npsScore || 0), 0) / verified.length
+      : 0;
     const totalDeals = verified.reduce((sum, a) => sum + a.closedDeals, 0);
     
     return {
-      total: sampleAgents.length,
+      total: agents.length,
       verified: verified.length,
       pending: pending.length,
       avgNps: Math.round(avgNps),
       totalDeals,
     };
-  }, []);
+  }, [agents]);
 
   const handleAddAgent = () => {
+    if (!newAgent.firstName || !newAgent.lastName || !newAgent.email) {
+      alert('Please fill in required fields (First name, Last name, Email).');
+      return;
+    }
     const newAgentProfile: AgentProfile = {
-      id: `agent${Date.now()}`,
-      userId: `user${Date.now()}`,
+      id: newId('agent'),
+      userId: newId('user'),
       firstName: newAgent.firstName,
       lastName: newAgent.lastName,
       email: newAgent.email,
@@ -290,9 +298,8 @@ export default function AgentManagementPage() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    
-    sampleAgents.push(newAgentProfile);
-    alert('Agent added successfully! (Demo mode)');
+
+    addAgent(newAgentProfile);
     setShowAddModal(false);
     setNewAgent({
       firstName: '',

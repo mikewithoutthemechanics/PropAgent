@@ -10,10 +10,16 @@ import {
   Building2, Target, Wallet, FileText, Trophy,
   UserCheck, Sparkles, Bell, Search, ChevronRight, X
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';
-import { Property, Tenant, MaintenanceTicket } from '@/lib/types';
-import { mockProperties, mockTenants, mockMaintenanceRequests } from '@/lib/data';
+import {
+  mockProperties,
+  mockTenants,
+  mockMaintenanceRequests,
+  UIProperty,
+  UITenant,
+  UIMaintenanceRequest,
+} from '@/lib/data';
+import { useCollection } from '@/lib/persistence';
 
 // Fallback mock data in case DB is empty
 const mockPaymentData = {
@@ -174,12 +180,12 @@ function PaymentsOverview() {
   );
 }
 
-function PropertySpotlight({ properties, tenants }: { properties: Property[], tenants: Tenant[] }) {
+function PropertySpotlight({ properties, tenants }: { properties: UIProperty[], tenants: UITenant[] }) {
   const spotlight = properties.length > 0 ? {
     title: properties[0].address,
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa84830?w=800&q=80",
+    image: properties[0].imageUrl || "https://images.unsplash.com/photo-1545324418-cc1a3fa84830?w=800&q=80",
     stats: {
-      residents: tenants.filter(t => t.property_id === properties[0].id).length,
+      residents: tenants.filter(t => t.propertyId === properties[0].id).length,
       units: 1,
       vacant: properties[0].status === 'available' ? 1 : 0,
       upcoming: 0
@@ -274,11 +280,11 @@ function PropertySpotlight({ properties, tenants }: { properties: Property[], te
   );
 }
 
-function RequestsList({ tickets, tenants }: { tickets: MaintenanceTicket[], tenants: Tenant[] }) {
+function RequestsList({ tickets, tenants }: { tickets: UIMaintenanceRequest[], tenants: UITenant[] }) {
   const getTenantName = (id: string | null) => {
-    if (!id) return "Unknown";
+    if (!id) return "Unassigned";
     const tenant = tenants.find(t => t.id === id);
-    return tenant ? `${tenant.first_name} ${tenant.last_name}` : "Unknown";
+    return tenant ? `${tenant.firstName} ${tenant.lastName}` : "Unknown";
   };
 
   return (
@@ -301,15 +307,15 @@ function RequestsList({ tickets, tenants }: { tickets: MaintenanceTicket[], tena
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-medium">
-                {getTenantName(ticket.tenant_id).charAt(0)}
+                {getTenantName(ticket.tenantId).charAt(0)}
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-900 truncate max-w-[120px]">{getTenantName(ticket.tenant_id)}</p>
-                <p className="text-xs text-slate-500">{ticket.issue_category || 'General'}</p>
+                <p className="text-sm font-medium text-slate-900 truncate max-w-[120px]">{getTenantName(ticket.tenantId)}</p>
+                <p className="text-xs text-slate-500">{ticket.category || 'General'}</p>
               </div>
             </div>
             <span className={`px-3 py-1.5 rounded-full text-[10px] font-medium uppercase tracking-wider ${statusStyles[ticket.status as keyof typeof statusStyles] || statusStyles.new}`}>
-              {ticket.status.replace('_', ' ')}
+              {ticket.status.replace('-', ' ').replace('_', ' ')}
             </span>
           </div>
         )) : (
@@ -322,7 +328,7 @@ function RequestsList({ tickets, tenants }: { tickets: MaintenanceTicket[], tena
   );
 }
 
-function UpcomingUnits({ properties }: { properties: Property[] }) {
+function UpcomingUnits({ properties }: { properties: UIProperty[] }) {
   const upcoming = properties.filter(p => p.status === 'available').slice(0, 2);
 
   return (
@@ -350,7 +356,7 @@ function UpcomingUnits({ properties }: { properties: Property[] }) {
             <div className="p-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-slate-900 truncate">{unit.address}</span>
-                <span className="text-sm font-bold text-slate-900">R{unit.monthly_rerent?.toLocaleString()}/mo</span>
+                <span className="text-sm font-bold text-slate-900">R{unit.monthlyRent?.toLocaleString()}/mo</span>
               </div>
               <p className="text-xs text-slate-500 mt-1">{unit.suburb}, {unit.city}</p>
             </div>
@@ -369,41 +375,19 @@ function UpcomingUnits({ properties }: { properties: Property[] }) {
 }
 
 export default function DashboardPage() {
-  const { isDemoMode } = useAuth();
-  const [properties, setProperties] = useState<Property[]>([]);
-  const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [tickets, setTickets] = useState<MaintenanceTicket[]>([]);
-  const [loading, setLoading] = useState(true);
-
+  // useAuth is kept for future use but we now source data from the persistent
+  // client store so the dashboard works identically online or offline.
+  useAuth();
+  const { items: properties } = useCollection<UIProperty>('properties', mockProperties);
+  const { items: tenants } = useCollection<UITenant>('tenants', mockTenants);
+  const { items: tickets } = useCollection<UIMaintenanceRequest>('maintenance_requests', mockMaintenanceRequests);
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    async function fetchDashboardData() {
-      if (isDemoMode) {
-        setProperties(mockProperties);
-        setTenants(mockTenants);
-        setTickets(mockMaintenanceRequests);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const [propRes, tenantRes, ticketRes] = await Promise.all([
-          supabase.from('properties').select('*').order('created_at', { ascending: false }),
-          supabase.from('tenants').select('*').order('created_at', { ascending: false }),
-          supabase.from('maintenance_tickets').select('*').order('created_at', { ascending: false })
-        ]);
-
-        if (propRes.data) setProperties(propRes.data as Property[]);
-        if (tenantRes.data) setTenants(tenantRes.data as Tenant[]);
-        if (ticketRes.data) setTickets(ticketRes.data as MaintenanceTicket[]);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchDashboardData();
-  }, [isDemoMode]);
+    // Wait one tick so hydration finishes before showing live data.
+    const t = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(t);
+  }, []);
+  const loading = !mounted;
 
   if (loading) {
     return (

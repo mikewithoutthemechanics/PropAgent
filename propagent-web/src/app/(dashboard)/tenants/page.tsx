@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Search, Mail, Phone, MapPin, Calendar, MoreVertical, Building, User, Filter, Sparkles, X } from 'lucide-react';
-import { mockTenants, mockProperties } from '@/lib/data';
+import {
+  mockTenants,
+  mockProperties,
+  UITenant,
+  UIProperty,
+} from '@/lib/data';
+import { useCollection, newId } from '@/lib/persistence';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 
@@ -18,13 +24,13 @@ const statusColors: Record<string, string> = {
   former: '#6B7280',
 };
 
-function getPropertyAddress(propertyId?: string) {
+function getPropertyAddress(propertyId: string | null | undefined, properties: UIProperty[]) {
   if (!propertyId) return null;
-  const property = mockProperties.find(p => p.id === propertyId);
+  const property = properties.find(p => p.id === propertyId);
   return property ? `${property.address}, ${property.suburb}` : null;
 }
 
-function AnimatedGradientHeader() {
+function AnimatedGradientHeader({ tenants }: { tenants: UITenant[] }) {
   return (
     <div className="relative overflow-hidden rounded-2xl mb-6 bg-white border border-[var(--charcoal-100)]">
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--lime-50)] via-white to-[var(--sky-50)]" />
@@ -41,11 +47,11 @@ function AnimatedGradientHeader() {
         <div className="flex items-center gap-4 mt-4 text-[var(--charcoal-500)] text-xs">
           <span className="flex items-center gap-1">
             <Calendar className="w-3.5 h-3.5" />
-            {mockTenants.length} total tenants
+            {tenants.length} total tenants
           </span>
           <span className="flex items-center gap-1">
             <Building className="w-3.5 h-3.5" />
-            {mockTenants.filter(t => t.propertyId).length} with properties
+            {tenants.filter(t => t.propertyId).length} with properties
           </span>
         </div>
       </div>
@@ -112,8 +118,8 @@ function PremiumStatusBadge({ status }: { status: string }) {
   );
 }
 
-function TenantCard({ tenant }: { tenant: typeof mockTenants[0] }) {
-  const propertyAddress = getPropertyAddress(tenant.propertyId);
+function TenantCard({ tenant, properties }: { tenant: UITenant; properties: UIProperty[] }) {
+  const propertyAddress = getPropertyAddress(tenant.propertyId, properties);
 
   return (
     <div className="bg-white border border-[var(--charcoal-100)] rounded-2xl p-4 hover:border-[var(--lime-400)]/50 hover:shadow-lg transition-all duration-300">
@@ -146,7 +152,7 @@ function TenantCard({ tenant }: { tenant: typeof mockTenants[0] }) {
         {tenant.leaseStart && tenant.leaseEnd && (
           <span className="flex items-center gap-1">
             <Calendar className="w-3 h-3" />
-            {formatDate(tenant.leaseStart)}
+            {formatDate(new Date(tenant.leaseStart))}
           </span>
         )}
         {tenant.rentAmount && (
@@ -159,8 +165,8 @@ function TenantCard({ tenant }: { tenant: typeof mockTenants[0] }) {
   );
 }
 
-function TableRow({ tenant }: { tenant: typeof mockTenants[0] }) {
-  const propertyAddress = getPropertyAddress(tenant.propertyId);
+function TableRow({ tenant, properties, onDelete }: { tenant: UITenant; properties: UIProperty[]; onDelete: (id: string) => void }) {
+  const propertyAddress = getPropertyAddress(tenant.propertyId, properties);
   
   return (
     <tr className="hover:bg-[var(--lime-50)]/50 transition-all duration-300">
@@ -196,7 +202,7 @@ function TableRow({ tenant }: { tenant: typeof mockTenants[0] }) {
         {tenant.leaseStart && tenant.leaseEnd ? (
           <div className="flex items-center gap-2 text-sm text-[var(--charcoal-600)]">
             <Calendar className="w-4 h-4 text-[var(--lime-500)]" />
-            <span>{formatDate(tenant.leaseStart)} - {formatDate(tenant.leaseEnd)}</span>
+            <span>{formatDate(new Date(tenant.leaseStart))} - {formatDate(new Date(tenant.leaseEnd))}</span>
           </div>
         ) : (
           <span className="text-sm text-[var(--charcoal-400)] italic">No lease</span>
@@ -225,7 +231,15 @@ function TableRow({ tenant }: { tenant: typeof mockTenants[0] }) {
         </div>
       </td>
       <td className="px-6 py-4 text-right">
-        <button className="p-2 hover:bg-[var(--charcoal-50)] rounded-lg transition-all duration-200 cursor-pointer">
+        <button
+          onClick={() => {
+            if (window.confirm(`Delete ${tenant.firstName} ${tenant.lastName}?`)) {
+              onDelete(tenant.id);
+            }
+          }}
+          className="p-2 hover:bg-[var(--charcoal-50)] rounded-lg transition-all duration-200 cursor-pointer"
+          aria-label={`Delete ${tenant.firstName} ${tenant.lastName}`}
+        >
           <MoreVertical className="w-4 h-4 text-[var(--charcoal-400)]" />
         </button>
       </td>
@@ -308,7 +322,15 @@ export default function TenantsPage() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [view, setView] = useState<'table' | 'cards'>('table');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [tenants, setTenants] = useState(mockTenants);
+  const {
+    items: tenants,
+    add: addTenant,
+    remove: removeTenant,
+  } = useCollection<UITenant>('tenants', mockTenants);
+  const { items: properties } = useCollection<UIProperty>(
+    'properties',
+    mockProperties,
+  );
   const [newTenant, setNewTenant] = useState({
     firstName: '',
     lastName: '',
@@ -326,8 +348,8 @@ export default function TenantsPage() {
       return;
     }
     
-    const tenant = {
-      id: `tenant_${Date.now()}`,
+    const tenant: UITenant = {
+      id: newId('tenant'),
       firstName: newTenant.firstName,
       lastName: newTenant.lastName,
       email: newTenant.email,
@@ -336,11 +358,11 @@ export default function TenantsPage() {
       leaseStart: newTenant.leaseStart || null,
       leaseEnd: newTenant.leaseEnd || null,
       rentAmount: newTenant.rentAmount ? parseFloat(newTenant.rentAmount) : null,
-      status: 'active' as const,
+      status: 'active',
       avatarUrl: null,
     };
-    
-    setTenants([tenant, ...tenants]);
+
+    addTenant(tenant);
     setShowAddModal(false);
     setNewTenant({
       firstName: '',
@@ -368,7 +390,7 @@ export default function TenantsPage() {
       <div className="fixed inset-0 bg-white" />
       
       <div className="max-w-7xl mx-auto relative">
-        <AnimatedGradientHeader />
+        <AnimatedGradientHeader tenants={tenants} />
         
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
           <GlassmorphismFilterPanel 
@@ -382,8 +404,8 @@ export default function TenantsPage() {
 
         {view === 'cards' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredTenants.map((tenant, index) => (
-              <TenantCard key={tenant.id} tenant={tenant} />
+            {filteredTenants.map((tenant) => (
+              <TenantCard key={tenant.id} tenant={tenant} properties={properties} />
             ))}
             {filteredTenants.length === 0 && (
               <div className="col-span-full">
@@ -408,7 +430,12 @@ export default function TenantsPage() {
                 </thead>
                 <tbody className="divide-y divide-[var(--charcoal-50)]">
                   {filteredTenants.map((tenant) => (
-                    <TableRow key={tenant.id} tenant={tenant} />
+                    <TableRow
+                      key={tenant.id}
+                      tenant={tenant}
+                      properties={properties}
+                      onDelete={removeTenant}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -493,7 +520,7 @@ export default function TenantsPage() {
                     className="w-full px-4 py-3 bg-[var(--charcoal-50)] border border-[var(--charcoal-200)] rounded-xl text-[var(--charcoal-900)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--lime-400)] cursor-pointer"
                   >
                     <option value="">Select a property...</option>
-                    {mockProperties.map(prop => (
+                    {properties.map(prop => (
                       <option key={prop.id} value={prop.id}>{prop.address}, {prop.suburb}</option>
                     ))}
                   </select>

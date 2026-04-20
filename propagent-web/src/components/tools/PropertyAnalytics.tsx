@@ -1,6 +1,6 @@
 'use client';
 
-import { TrendingUp, TrendingDown, Home, DollarSign, Calendar,-percent, ArrowUpRight, ArrowDownRight, BarChart3 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Home, DollarSign, Calendar, Percent, ArrowUpRight, ArrowDownRight, BarChart3 } from 'lucide-react';
 import { Card } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 
