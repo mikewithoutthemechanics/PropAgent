@@ -90,13 +90,20 @@ export async function checkLimit(
   if (!limiter) {
     return { success: true, limit: 0, remaining: 0, reset: 0 };
   }
-  const res = await limiter.limit(identifier);
-  return {
-    success: res.success,
-    limit: res.limit,
-    remaining: res.remaining,
-    reset: res.reset,
-  };
+  try {
+    const res = await limiter.limit(identifier);
+    return {
+      success: res.success,
+      limit: res.limit,
+      remaining: res.remaining,
+      reset: res.reset,
+    };
+  } catch (err) {
+    // Fail open if Redis is misconfigured or unreachable — better to serve a
+    // degraded experience than to 500 the whole endpoint.
+    console.warn('[redis] checkLimit failed, allowing request', err);
+    return { success: true, limit: 0, remaining: 0, reset: 0 };
+  }
 }
 
 // ----- Simple cache helpers -----
