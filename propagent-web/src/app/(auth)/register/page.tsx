@@ -29,18 +29,24 @@ export default function RegisterPage() {
   const handleGoogleLogin = async () => {
     setError("");
     setLoading(true);
-    
+
     try {
       const { supabase } = await import("@/lib/auth");
       const client = supabase;
-      
+
+      if (!client) {
+        setError("Supabase not configured");
+        setLoading(false);
+        return;
+      }
+
       const { error } = await client.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `https://propagent-auth.vercel.app`,
+          redirectTo: `${window.location.origin}/dashboard`,
         },
       });
-      
+
       if (error) {
         setError(error.message);
       }
