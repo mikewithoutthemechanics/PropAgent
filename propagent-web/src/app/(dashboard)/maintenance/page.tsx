@@ -12,6 +12,7 @@ import {
   UITenant,
 } from '@/lib/data';
 import { useCollection, newId } from '@/lib/persistence';
+import { useNotify } from '@/lib/useNotify';
 import { formatDate, getStatusColor } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
@@ -33,6 +34,7 @@ export default function MaintenancePage() {
     mockProperties,
   );
   const { items: tenants } = useCollection<UITenant>('tenants', mockTenants);
+  const notify = useNotify();
   const [newRequest, setNewRequest] = useState({
     title: '',
     description: '',
@@ -147,6 +149,23 @@ export default function MaintenancePage() {
     };
 
     addRequest(request);
+    const tenant = tenants.find((t) => t.id === request.tenantId);
+    notify({
+      type: 'maintenance_update',
+      priority: priority === 'emergency' ? 'urgent' : priority === 'high' ? 'high' : 'medium',
+      title: `New maintenance ticket: ${request.title}`,
+      message: `A ${priority} priority maintenance request has been created${
+        request.assignedContractor ? ` and assigned to ${request.assignedContractor}` : ''
+      }.`,
+      actionUrl: '/maintenance',
+      email: tenant?.email
+        ? {
+            to: tenant.email,
+            recipientName: `${tenant.firstName} ${tenant.lastName}`,
+            actionLabel: 'View ticket',
+          }
+        : undefined,
+    });
     setShowAddModal(false);
     setNewRequest({
       title: '',

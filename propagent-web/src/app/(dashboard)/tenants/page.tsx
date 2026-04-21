@@ -11,6 +11,7 @@ import {
 import { useCollection, newId } from '@/lib/persistence';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { sendWelcomeEmail } from '@/lib/email-client';
+import { useNotify } from '@/lib/useNotify';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 
 const statusConfig = {
@@ -332,6 +333,7 @@ export default function TenantsPage() {
     'properties',
     mockProperties,
   );
+  const notify = useNotify();
   const [newTenant, setNewTenant] = useState({
     firstName: '',
     lastName: '',
@@ -368,6 +370,13 @@ export default function TenantsPage() {
       to: tenant.email,
       recipientName: `${tenant.firstName} ${tenant.lastName}`,
       role: 'tenant',
+    });
+    notify({
+      type: 'tenant_application',
+      priority: 'medium',
+      title: 'New tenant added',
+      message: `${tenant.firstName} ${tenant.lastName} has been added to your tenants.`,
+      actionUrl: '/tenants',
     });
     setShowAddModal(false);
     setNewTenant({

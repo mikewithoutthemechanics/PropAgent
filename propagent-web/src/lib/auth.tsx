@@ -218,19 +218,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) return { error };
 
-      // Create profile record
-      const {
-        data: { user },
-      } = await client.auth.getUser();
-      if (user) {
-        await client.from("profiles").insert({
-          id: user.id,
-          email: user.email,
-          first_name: firstName,
-          last_name: lastName,
-          role: "agent",
-        });
-      }
+      // Profile row is created automatically by the on_auth_user_created
+      // database trigger (see 20260420180000_enable_profiles_rls.sql). No
+      // client-side insert needed — and with RLS enabled on profiles a
+      // client insert would fail anyway until the email is confirmed and
+      // a session exists.
 
       return { error: null };
     } catch (error) {
