@@ -83,23 +83,35 @@ export async function POST(req: Request) {
     console.warn('[payfast/itn] subscription lookup failed', selectErr);
   }
 
-  // Amount sanity check — ignore non-complete states since PayFast sends
-  // different amount fields for those.
-  if (
-    existing &&
-    paymentStatus === 'COMPLETE' &&
-    Math.abs(amountGross - Number(existing.price_zar)) > 0.01
-  ) {
-    console.warn('[payfast/itn] amount mismatch', {
-      expected: existing.price_zar,
-      got: amountGross,
-    });
-    return NextResponse.json({ ok: false, reason: 'amount_mismatch' });
-  }
-
   const newStatus = statusFromPaymentStatus(paymentStatus);
   const userId = existing?.user_id ?? userIdFromCustom;
   const planId = existing?.plan_id ?? planIdFromCustom;
+
+  // Amount verification — only meaningful for COMPLETE (PayFast uses different
+  // amount fields for CANCELLED / FAILED). The expected price comes from our
+  // server-side plan catalog, NOT from anything the caller sent. This holds
+  // even in the fallback path where we don't yet have a staged row: we look
+  // the plan up and reject if amount_gross doesn't match. That way a forged
+  // ITN that somehow slipped past the signature check can't create a
+  // bargain-basement subscription.
+  if (paymentStatus === 'COMPLETE') {
+    const expectedPlan = planId ? getPlan(planId) : undefined;
+    const expectedAmount = existing
+      ? Number(existing.price_zar)
+      : expectedPlan?.priceZar;
+    if (expectedAmount == null || !expectedPlan) {
+      console.warn('[payfast/itn] unknown plan, refusing', { planId });
+      return NextResponse.json({ ok: false, reason: 'unknown_plan' });
+    }
+    if (Math.abs(amountGross - expectedAmount) > 0.01) {
+      console.warn('[payfast/itn] amount mismatch', {
+        expected: expectedAmount,
+        got: amountGross,
+        planId,
+      });
+      return NextResponse.json({ ok: false, reason: 'amount_mismatch' });
+    }
+  }
 
   try {
     if (existing) {
