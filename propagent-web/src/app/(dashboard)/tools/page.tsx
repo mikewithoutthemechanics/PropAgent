@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { toolsCatalog } from '@/lib/toolsCatalog';
@@ -14,10 +15,14 @@ const categoryOrder: Array<string> = [
 ];
 
 export default function ToolsIndexPage() {
-  const grouped = categoryOrder.map((category) => ({
-    category,
-    tools: toolsCatalog.filter((t) => t.category === category),
-  }));
+  const grouped = useMemo(
+    () =>
+      categoryOrder.map((category) => ({
+        category,
+        tools: toolsCatalog.filter((t) => t.category === category),
+      })),
+    []
+  );
 
   return (
     <div className="min-h-screen bg-white text-charcoal-900 p-4 md:p-6 lg:p-8">
