@@ -38,6 +38,7 @@ import {
   Award,
   Heart
 } from 'lucide-react';
+import CircularCarousel from '@/components/ui/CircularCarousel';
 
 export default function LandingPage() {
   const { user, loading, isDemoMode } = useAuth();
@@ -419,62 +420,15 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div 
-              className={`md:col-span-2 lg:row-span-2 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-charcoal-900 rounded-3xl p-8 text-white relative overflow-hidden group transition-all duration-700 delay-200 hover:shadow-2xl hover:shadow-lime-500/10 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-            >
-              <div 
-                className="absolute top-0 right-0 w-80 h-80 bg-lime-400/10 rounded-full blur-3xl group-hover:bg-lime-400/20 transition-all duration-500" 
-                aria-hidden="true"
-              />
-              <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-lime-400/5 rounded-full blur-3xl" aria-hidden="true" />
-              <div className="relative z-10">
-                <div className="w-14 h-14 bg-gradient-to-br from-lime-400 to-sky-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-lime-400/20">
-                  <Target className="w-7 h-7 text-charcoal-900" aria-hidden="true" />
-                </div>
-                <h3 className="text-2xl font-semibold mb-3">AI Matching Engine</h3>
-                <p className="text-white/70 mb-6">The right buyer for every property, the right property for every buyer — scored and ranked in real time across your entire pipeline.</p>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                    <p className="text-2xl font-bold text-lime-400">3.1×</p>
-                    <p className="text-xs text-white/50">More Qualified Leads</p>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                    <p className="text-2xl font-bold text-sky-400">42%</p>
-                    <p className="text-xs text-white/50">Faster to Offer</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {features.slice(0, 4).map((feature, i) => (
-              <div 
-                key={i} 
-                className={`bg-white rounded-3xl p-6 hover:bg-gradient-to-br hover:from-lime-50 hover:to-sky-50 transition-all duration-300 group hover:shadow-xl hover:shadow-lime-500/10 hover:-translate-y-1 border border-lime-100/50 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                style={{ transitionDelay: `${300 + i * 100}ms` }}
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-lime-400 to-sky-400 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-lime-400/20 group-hover:shadow-xl group-hover:shadow-lime-400/30 transition-all">
-                  <feature.icon className="w-6 h-6 text-charcoal-900" aria-hidden="true" />
-                </div>
-                <h3 className="font-semibold mb-2 text-charcoal-800">{feature.title}</h3>
-                <p className="text-sm text-charcoal-500">{feature.desc}</p>
-              </div>
-            ))}
-
-            {features.slice(4, 7).map((feature, i) => (
-              <div 
-                key={i + 4} 
-                className={`bg-white rounded-3xl p-6 hover:bg-gradient-to-br hover:from-lime-50 hover:to-sky-50 transition-all duration-300 group hover:shadow-xl hover:shadow-lime-500/10 hover:-translate-y-1 border border-lime-100/50 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                style={{ transitionDelay: `${600 + i * 100}ms` }}
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-lime-400 to-sky-400 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-lime-400/20 group-hover:shadow-xl group-hover:shadow-lime-400/30 transition-all">
-                  <feature.icon className="w-6 h-6 text-charcoal-900" aria-hidden="true" />
-                </div>
-                <h3 className="font-semibold mb-2 text-charcoal-800">{feature.title}</h3>
-                <p className="text-sm text-charcoal-500">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
+          <CircularCarousel
+            items={features}
+            radius={380}
+            itemWidth={280}
+            itemHeight={200}
+            perspective={1200}
+            autoRotateSpeed={0.12}
+            tiltAngle={-10}
+          />
 
           <div className="mt-10 flex justify-center">
             <Link href="#pricing" className="inline-flex items-center gap-2 text-sky-600 font-medium hover:text-sky-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-600 focus:ring-offset-2 rounded-lg px-4 py-2">
