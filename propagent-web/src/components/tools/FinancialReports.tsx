@@ -38,7 +38,7 @@ export function FinancialReports({ period = 'month' }: FinancialReportProps) {
 
   const exportCsv = () => {
     const rows: string[][] = [];
-    rows.push(['Financial report — PropAgent', `Period: ${period}`]);
+    rows.push(['Financial report — Agent Loop', `Period: ${period}`]);
     rows.push([]);
     rows.push(['Summary']);
     rows.push(['Metric', 'Amount (ZAR)']);

@@ -36,7 +36,7 @@
           "name": "Expense Email IMAP"
         }
       },
-      "notes": "Monitor receipts@propagent.co.za for forwarded receipts"
+      "notes": "Monitor receipts@agentloop.co.za for forwarded receipts"
     },
     {
       "parameters": {
@@ -621,7 +621,7 @@ return [{
     },
     message: `${flagEmoji} EXPENSE FLAGGED: ${category.flag_status.toUpperCase()}`,
     details: `Vendor: ${category.vendor_name}\\nAmount: R${amount}\\nCategory: ${category.expense_category}\\nFlags: ${category.flags.join(', ')}`,
-    review_url: `https://propagent.co.za/admin/expenses/${data.saved_id || 'review'}`
+    review_url: `https://agentloop.co.za/admin/expenses/${data.saved_id || 'review'}`
   }
 }];"
       },
@@ -652,7 +652,7 @@ return [{
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [2450, 250],
-      "notes": "Connect to Slack, Email, or SMS node to notify finance team of flagged expenses.\\n\\nRecommended integrations:\\n- Slack: Post to #finance-alerts channel\\n- Email: Send to finance@propagent.co.za\\n- SMS: Critical high-value expenses (>R50k)"
+      "notes": "Connect to Slack, Email, or SMS node to notify finance team of flagged expenses.\\n\\nRecommended integrations:\\n- Slack: Post to #finance-alerts channel\\n- Email: Send to finance@agentloop.co.za\\n- SMS: Critical high-value expenses (>R50k)"
     },
     {
       "parameters": {
@@ -790,8 +790,8 @@ return [{
   "staticData": null,
   "tags": [
     {
-      "name": "PropAgent",
-      "id": "tag-propagent",
+      "name": "Agent Loop",
+      "id": "tag-agent loop",
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },

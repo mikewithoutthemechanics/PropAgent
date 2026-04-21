@@ -131,7 +131,7 @@
           "messages": [
             {
               "role": "system",
-              "content": "You are a rent collection assistant for PropAgent property management. Write personalized, polite but firm rent reminders. Keep under 160 characters for SMS."
+              "content": "You are a rent collection assistant for Agent Loop property management. Write personalized, polite but firm rent reminders. Keep under 160 characters for SMS."
             },
             {
               "role": "user",

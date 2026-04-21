@@ -1,4 +1,4 @@
-# PropAgent n8n Automation Strategy
+# Agent Loop n8n Automation Strategy
 ## AI-Powered Workflow Automation for Property Management
 
 **Approach**: Use n8n as the automation engine + Free/Cheap AI to reduce backend development by ~60%
@@ -9,7 +9,7 @@
 
 ## 💡 AUTOMATION-FIRST ARCHITECTURE
 
-### Why n8n + AI for PropAgent?
+### Why n8n + AI for Agent Loop?
 
 | Traditional Approach | n8n + AI Approach | Savings |
 |---------------------|-------------------|---------|

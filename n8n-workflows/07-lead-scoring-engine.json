@@ -30,7 +30,7 @@
           "messages": [
             {
               "role": "system",
-              "content": "You are a real estate lead scoring expert for PropAgent, a South African property platform. Analyze leads and score them 0-100 based on: inquiry details (property type, budget, timeline), communication quality (grammar, detail level), source quality (website, referral, portal), and response patterns. Return only valid JSON."
+              "content": "You are a real estate lead scoring expert for Agent Loop, a South African property platform. Analyze leads and score them 0-100 based on: inquiry details (property type, budget, timeline), communication quality (grammar, detail level), source quality (website, referral, portal), and response patterns. Return only valid JSON."
             },
             {
               "role": "user",

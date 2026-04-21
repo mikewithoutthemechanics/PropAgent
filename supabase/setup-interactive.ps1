@@ -1,9 +1,9 @@
-# PropAgent Supabase Interactive Setup
+# Agent Loop Supabase Interactive Setup
 # Run this to get copy-paste SQL commands
 
 Write-Host @"
 ╔════════════════════════════════════════════════════════════════╗
-║         PropAgent Supabase Database Setup                      ║
+║         Agent Loop Supabase Database Setup                      ║
 ╚════════════════════════════════════════════════════════════════╝
 
 "@ -ForegroundColor Cyan

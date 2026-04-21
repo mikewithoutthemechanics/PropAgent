@@ -215,7 +215,7 @@ export default function ChatPage() {
                           <div className="w-6 h-6 bg-lime-400 rounded-full flex items-center justify-center">
                             <Bot className="w-3 h-3 text-charcoal-900" />
                           </div>
-                          <span className="text-xs font-medium text-lime-600">AgentPing AI</span>
+                          <span className="text-xs font-medium text-lime-600">Agent Loop AI</span>
                         </div>
                       )}
                       {message.senderType === 'tenant' && (

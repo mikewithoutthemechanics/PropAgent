@@ -1,6 +1,6 @@
-# AgentPing Web Frontend
+# Agent Loop Web Frontend
 
-Next.js 16 frontend for AgentPing real estate platform - South Africa.
+Next.js 16 frontend for Agent Loop real estate platform - South Africa.
 
 ## Tech Stack
 
@@ -13,7 +13,7 @@ Next.js 16 frontend for AgentPing real estate platform - South Africa.
 ## Project Structure
 
 ```
-propagent-web/
+agentloop-web/
 ├── src/
 │   ├── app/                    # App router pages (18 pages)
 │   │   ├── page.tsx            # Landing page
@@ -64,7 +64,7 @@ propagent-web/
 ## Getting Started
 
 ```bash
-cd propagent-web
+cd agentloop-web
 npm install
 npm run dev
 ```

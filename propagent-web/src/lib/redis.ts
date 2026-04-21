@@ -66,7 +66,7 @@ function makeLimiter(tokens: number, windowSec: number): Ratelimit | null {
     redis: redis as unknown as ConstructorParameters<typeof Ratelimit>[0]['redis'],
     limiter: Ratelimit.slidingWindow(tokens, `${windowSec} s`),
     analytics: true,
-    prefix: 'propagent:rl',
+    prefix: 'agent loop:rl',
   });
 }
 

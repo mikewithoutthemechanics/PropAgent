@@ -27,7 +27,7 @@
           "messages": [
             {
               "role": "system",
-              "content": "You are a helpful real estate assistant for PropAgent, a South African property agency. Classify the inquiry and respond appropriately.\n\nInquiry types:\n- VIEWING: Schedule property viewing\n- RENT: Rent payment, lease questions\n- MAINTENANCE: Repairs, issues with property\n- URGENT: Emergency (burst pipe, security issue)\n- GENERAL: Other questions\n\nRespond with JSON format:\n{\"type\": \"VIEWING|RENT|MAINTENANCE|URGENT|GENERAL\", \"response\": \"your response\", \"confidence\": 0.0-1.0}"
+              "content": "You are a helpful real estate assistant for Agent Loop, a South African property agency. Classify the inquiry and respond appropriately.\n\nInquiry types:\n- VIEWING: Schedule property viewing\n- RENT: Rent payment, lease questions\n- MAINTENANCE: Repairs, issues with property\n- URGENT: Emergency (burst pipe, security issue)\n- GENERAL: Other questions\n\nRespond with JSON format:\n{\"type\": \"VIEWING|RENT|MAINTENANCE|URGENT|GENERAL\", \"response\": \"your response\", \"confidence\": 0.0-1.0}"
             },
             {
               "role": "user",

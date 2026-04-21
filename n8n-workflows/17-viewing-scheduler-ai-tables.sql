@@ -1,5 +1,5 @@
 -- Viewing Scheduler AI - Supabase Database Schema
--- Project: PropAgent - South African Real Estate Platform
+-- Project: Agent Loop - South African Real Estate Platform
 
 -- ============================================================
 -- TABLE: viewing_requests

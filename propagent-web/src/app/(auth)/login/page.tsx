@@ -34,7 +34,7 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     
-    const { error } = await signIn("admin@agentping.com", "admin123");
+    const { error } = await signIn("admin@agent loop.com", "admin123");
     
     if (!error) {
       router.push("/");
@@ -89,7 +89,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 bg-gradient-to-br from-lime-500 to-lime-600 rounded-lg flex items-center justify-center shadow-lg shadow-lime-500/20 group-hover:shadow-lime-500/40 transition-all duration-300">
               <Building2 className="w-5 h-5 text-charcoal-900" />
             </div>
-            <span className="text-2xl font-serif font-semibold text-white">AgentPing</span>
+            <span className="text-2xl font-serif font-semibold text-white">Agent Loop</span>
           </Link>
         </div>
 

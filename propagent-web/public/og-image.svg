@@ -7,7 +7,7 @@
   <rect x="175" y="250" width="50" height="80" rx="4" fill="#0F0F0F"/>
   <circle cx="200" cy="210" r="16" fill="#0F0F0F"/>
   <text x="420" y="280" font-family="system-ui, sans-serif" font-size="64" font-weight="700" fill="#FFFFFF">
-    AgentPing
+    Agent Loop
   </text>
   <text x="420" y="360" font-family="system-ui, sans-serif" font-size="28" fill="#A0A0A0">
     South Africa's Property Operating System

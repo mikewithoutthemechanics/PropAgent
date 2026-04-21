@@ -1,4 +1,4 @@
-# PropAgent Supabase Database Setup
+# Agent Loop Supabase Database Setup
 
 ## Quick Setup
 

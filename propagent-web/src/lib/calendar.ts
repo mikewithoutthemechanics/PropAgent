@@ -1,4 +1,4 @@
-// AgentPing - Calendar Types and Functions
+// Agent Loop - Calendar Types and Functions
 // Property viewing scheduling and agent calendar management
 
 import { supabase } from './supabase';

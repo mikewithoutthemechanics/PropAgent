@@ -2,7 +2,7 @@ import { ClientProviders } from "@/components/providers/ClientProviders";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AgentPing - Authentication",
+  title: "Agent Loop - Authentication",
   description: "Sign in or create your account",
 };
 

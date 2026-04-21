@@ -1,4 +1,4 @@
-# PropAgent Supabase Database Setup Script
+# Agent Loop Supabase Database Setup Script
 # Execute migrations in order
 
 param(

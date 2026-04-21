@@ -42,6 +42,7 @@ const navItems: NavItem[] = [
   { href: '/tools', label: 'AI Tools', icon: Sparkles, tour: 'tools' },
   { href: '/properties', label: 'Properties', icon: Building2, tour: 'properties' },
   { href: '/leads', label: 'Leads', icon: TrendingUp, tour: 'leads' },
+  { href: '/integrations', label: 'Integrations', icon: Share2 },
   { href: '/syndication', label: 'Syndication', icon: Share2 },
   { href: '/rent-ai', label: 'Rent AI', icon: Sparkles },
   { href: '/calendar', label: 'Calendar', icon: Calendar },
@@ -79,7 +80,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             <span className="text-black font-bold text-lg">S</span>
           </div>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight text-black">AgentPing</h1>
+            <h1 className="text-lg font-semibold tracking-tight text-black">Agent Loop</h1>
             <p className="text-xs text-gray-500">Property Management</p>
           </div>
         </Link>

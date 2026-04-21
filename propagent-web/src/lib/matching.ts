@@ -1,4 +1,4 @@
-// Property Matching Algorithm for AgentPing
+// Property Matching Algorithm for Agent Loop
 // POPIA-compliant: criteria-only matching, no client data stored on servers
 // Supports both RENTAL (tenants) and SALES (buyers)
 
@@ -65,7 +65,7 @@ const URGENCY_WEIGHTS = {
   '90_days': 25,
 };
 
-// Budget overlap calculation
+// Budget overlap calculation (20% variance support)
 function calculateBudgetScore(criteria: TenantCriteria, propertyPrice: number): number {
   const { min, max } = criteria.budget;
   
@@ -76,15 +76,28 @@ function calculateBudgetScore(criteria: TenantCriteria, propertyPrice: number): 
   
   // Partial match - property below minimum (can afford)
   if (propertyPrice < min) {
+    const variance = min * 0.20;
+    if (propertyPrice >= min - variance) {
+      const gap = min - propertyPrice;
+      const percentageOfVariance = (gap / variance) * 100;
+      return Math.max(80, 100 - (percentageOfVariance / 5)); // Gentle drop within 20%
+    }
     const gap = min - propertyPrice;
     const percentageGap = (gap / min) * 100;
-    return Math.max(0, 100 - percentageGap * 2);
+    return Math.max(0, 80 - percentageGap * 2);
   }
   
-  // Property above max (stretch budget - less ideal)
+  // Property above max (stretch budget - support 20% over)
+  const variance = max * 0.20;
+  if (propertyPrice <= max + variance) {
+    const gap = propertyPrice - max;
+    const percentageOfVariance = (gap / variance) * 100;
+    return Math.max(70, 100 - percentageOfVariance); // Support up to 20% over
+  }
+
   const gap = propertyPrice - max;
   const percentageGap = (gap / max) * 100;
-  return Math.max(0, 100 - percentageGap);
+  return Math.max(0, 70 - percentageGap);
 }
 
 // Location matching
@@ -251,8 +264,19 @@ const FEATURE_WEIGHTS = {
 function calculateBuyerBudgetScore(criteria: BuyerCriteria, propertyPrice: number): number {
   const { min, max } = criteria.budget;
   if (propertyPrice >= min && propertyPrice <= max) return 100;
-  if (propertyPrice < min) return Math.max(0, 100 - ((min - propertyPrice) / min) * 100 * 1.5);
-  return Math.max(0, 100 - ((propertyPrice - max) / max) * 100);
+
+  const varianceDown = min * 0.20;
+  if (propertyPrice < min && propertyPrice >= min - varianceDown) {
+     return Math.max(85, 100 - ((min - propertyPrice) / varianceDown) * 15);
+  }
+
+  const varianceUp = max * 0.20;
+  if (propertyPrice > max && propertyPrice <= max + varianceUp) {
+    return Math.max(75, 100 - ((propertyPrice - max) / varianceUp) * 25);
+  }
+
+  if (propertyPrice < min) return Math.max(0, 85 - ((min - propertyPrice) / min) * 100 * 1.5);
+  return Math.max(0, 75 - ((propertyPrice - max) / max) * 100);
 }
 
 function calculateBedroomScore(criteria: BuyerCriteria, propertyBedrooms: number): number {

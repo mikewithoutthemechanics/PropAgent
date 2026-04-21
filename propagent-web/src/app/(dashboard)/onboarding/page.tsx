@@ -15,7 +15,7 @@ interface StepMeta {
 const steps: StepMeta[] = [
   {
     id: 1,
-    title: "Welcome to AgentPing",
+    title: "Welcome to Agent Loop",
     description: "Let's get your account set up — takes about 60 seconds.",
   },
   {
@@ -25,13 +25,13 @@ const steps: StepMeta[] = [
   },
   {
     id: 3,
-    title: "Your agency",
-    description: "Join an existing agency or spin up a new one.",
+    title: "Integrations",
+    description: "Connect your existing property databases (Postgres, MCP, or APIs).",
   },
   {
     id: 4,
-    title: "Your focus",
-    description: "Tell us what you work on so we surface the right tools.",
+    title: "FFC & PPRA Verification",
+    description: "Upload your FFC certificate and verify your registration with the PPRA.",
   },
 ];
 
@@ -54,6 +54,16 @@ interface FormData {
   role: string;
   specializations: string[];
   city: string;
+  // Integrations
+  dbType: string;
+  dbUrl: string;
+  // PPRA Verification
+  practitionerName: string;
+  ffcNumber: string;
+  capacity: string;
+  firm: string;
+  category: string;
+  ffcFile: File | null;
 }
 
 function OnboardingContent() {
@@ -70,6 +80,14 @@ function OnboardingContent() {
     role: "agent",
     specializations: [],
     city: "",
+    dbType: "postgres",
+    dbUrl: "",
+    practitionerName: "",
+    ffcNumber: "",
+    capacity: "",
+    firm: "",
+    category: "",
+    ffcFile: null,
   });
   const { profile, updateProfile } = useAuth();
   const router = useRouter();
@@ -322,130 +340,133 @@ function OnboardingContent() {
 
         {currentStep === 3 && (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() =>
-                  setFormData((prev) => ({ ...prev, createAgency: false }))
-                }
-                className={`p-4 rounded-xl border-2 text-left transition-all cursor-pointer ${
-                  !formData.createAgency
-                    ? "border-lime-400 bg-lime-50"
-                    : "border-charcoal-100 hover:border-charcoal-200"
-                }`}
+            <p className="text-sm text-charcoal-600 mb-4">
+              Integrations are the heart of Agent Loop. Link your existing databases to start matching buyers automatically.
+            </p>
+            <div>
+              <label className="block text-sm font-medium text-charcoal-700 mb-1">
+                Database Type
+              </label>
+              <select
+                name="dbType"
+                value={formData.dbType}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none bg-white"
               >
-                <p className="font-medium text-charcoal-900">
-                  Join an agency
-                </p>
-                <p className="text-xs text-charcoal-500 mt-1">
-                  I have an invite code from my agency
-                </p>
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setFormData((prev) => ({ ...prev, createAgency: true }))
-                }
-                className={`p-4 rounded-xl border-2 text-left transition-all cursor-pointer ${
-                  formData.createAgency
-                    ? "border-lime-400 bg-lime-50"
-                    : "border-charcoal-100 hover:border-charcoal-200"
-                }`}
-              >
-                <p className="font-medium text-charcoal-900">Create one</p>
-                <p className="text-xs text-charcoal-500 mt-1">
-                  I&apos;m setting up my own agency
-                </p>
-              </button>
+                <option value="postgres">PostgreSQL</option>
+                <option value="mcp">MCP (Model Context Protocol)</option>
+                <option value="api">Rest API / Webhook</option>
+                <option value="propcontrol">PropControl (SA)</option>
+              </select>
             </div>
-            {formData.createAgency ? (
-              <div>
-                <label className="block text-sm font-medium text-charcoal-700 mb-1">
-                  Agency name
-                </label>
-                <input
-                  type="text"
-                  name="agencyName"
-                  value={formData.agencyName}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none"
-                  placeholder="My Property Agency"
-                />
-              </div>
-            ) : (
-              <div>
-                <label className="block text-sm font-medium text-charcoal-700 mb-1">
-                  Agency code
-                </label>
-                <input
-                  type="text"
-                  name="agencyCode"
-                  value={formData.agencyCode}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none uppercase tracking-wider"
-                  placeholder="ABCD1234"
-                />
-                <p className="text-xs text-charcoal-500 mt-1">
-                  Ask your agency admin for the invite code.
-                </p>
-              </div>
-            )}
+            <div>
+              <label className="block text-sm font-medium text-charcoal-700 mb-1">
+                Connection URL / API Key
+              </label>
+              <input
+                type="text"
+                name="dbUrl"
+                value={formData.dbUrl}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none"
+                placeholder="postgresql://user:pass@localhost:5432/db"
+              />
+            </div>
+            <div className="p-4 bg-lime-50 rounded-xl border border-lime-100">
+              <p className="text-xs text-lime-700">
+                <strong>Tip:</strong> You can skip this step and configure integrations later from your dashboard settings.
+              </p>
+            </div>
           </div>
         )}
 
         {currentStep === 4 && (
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-charcoal-700 mb-1">
-                Your role
-              </label>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none bg-white"
-              >
-                <option value="agent">Real Estate Agent</option>
-                <option value="agency_admin">Agency Admin</option>
-                <option value="property_manager">Property Manager</option>
-                <option value="landlord">Landlord</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-charcoal-700 mb-1">
-                City / region
-              </label>
-              <input
-                type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none"
-                placeholder="Cape Town"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-charcoal-700 mb-2">
-                What do you work on?
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {SPECIALIZATIONS.map((spec) => (
-                  <button
-                    key={spec}
-                    type="button"
-                    onClick={() => handleSpecializationToggle(spec)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer ${
-                      formData.specializations.includes(spec)
-                        ? "bg-lime-400 text-charcoal-900"
-                        : "bg-charcoal-100 text-charcoal-600 hover:bg-charcoal-200"
-                    }`}
-                  >
-                    {spec}
-                  </button>
-                ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-charcoal-700 mb-1">
+                  Practitioner Name
+                </label>
+                <input
+                  type="text"
+                  name="practitionerName"
+                  value={formData.practitionerName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none"
+                  placeholder="Full Name as per PPRA"
+                />
               </div>
-              <p className="text-xs text-charcoal-500 mt-2">
-                Pick as many as apply — we&apos;ll tune recommendations to match.
+              <div>
+                <label className="block text-sm font-medium text-charcoal-700 mb-1">
+                  FFC Number
+                </label>
+                <input
+                  type="text"
+                  name="ffcNumber"
+                  value={formData.ffcNumber}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none"
+                  placeholder="2024123456"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-charcoal-700 mb-1">
+                  Capacity
+                </label>
+                <select
+                  name="capacity"
+                  value={formData.capacity}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none bg-white"
+                >
+                  <option value="">Select Capacity</option>
+                  <option value="principal">Principal</option>
+                  <option value="full_status">Full Status Agent</option>
+                  <option value="intern">Intern / Candidate</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-charcoal-700 mb-1">
+                  Firm / Agency Name
+                </label>
+                <input
+                  type="text"
+                  name="firm"
+                  value={formData.firm}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none"
+                  placeholder="Firm Name"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-charcoal-700 mb-1">
+                FFC Certificate (PDF/Image)
+              </label>
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-charcoal-200 border-dashed rounded-lg">
+                <div className="space-y-1 text-center">
+                  <Sparkles className="mx-auto h-12 w-12 text-charcoal-400" />
+                  <div className="flex text-sm text-charcoal-600">
+                    <label className="relative cursor-pointer bg-white rounded-md font-medium text-lime-600 hover:text-lime-500 focus-within:outline-none">
+                      <span>Upload a file</span>
+                      <input type="file" className="sr-only" onChange={(e) => setFormData(prev => ({ ...prev, ffcFile: e.target.files ? e.target.files[0] : null }))} />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-charcoal-500">
+                    {formData.ffcFile ? formData.ffcFile.name : "PNG, JPG, PDF up to 10MB"}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 bg-sky-50 rounded-xl border border-sky-100 flex items-start gap-3">
+              <div className="mt-0.5">
+                <Check className="w-4 h-4 text-sky-600" />
+              </div>
+              <p className="text-xs text-sky-700">
+                We will cross-reference these details with the <strong>PPRA practitioner database</strong>. Verification typically takes 2-4 hours. You will have full access once verified.
               </p>
             </div>
           </div>
@@ -479,7 +500,7 @@ function OnboardingContent() {
             {loading
               ? "Saving..."
               : currentStep === steps.length
-              ? "Start tour"
+              ? "Submit for Verification"
               : "Next"}
             {!loading && <ArrowRight className="w-4 h-4" />}
           </button>

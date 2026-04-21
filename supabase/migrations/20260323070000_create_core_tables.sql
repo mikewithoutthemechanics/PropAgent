@@ -1,4 +1,4 @@
--- Migration: Create core PropAgent tables for Communication Platform
+-- Migration: Create core Agent Loop tables for Communication Platform
 -- Created: 2026-03-23
 -- Workflows: 04-tenant-inquiry, 05-rent-reminder, 06-property-description
 

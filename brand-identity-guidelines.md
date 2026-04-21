@@ -1,4 +1,4 @@
-# PropAgent Brand Identity Guidelines
+# Agent Loop Brand Identity Guidelines
 
 ## Modern SaaS Style — Fresh, Innovative, Property Tech
 
@@ -8,7 +8,7 @@
 
 ## 1. Brand Overview
 
-**Company:** PropAgent  
+**Company:** Agent Loop
 **Industry:** Real Estate / Property Management (South Africa)  
 **Market Position:** AI-powered property platform for modern agents and property professionals  
 **Brand Personality:** Fresh, Innovative, Tech-Forward, Approachable
@@ -41,7 +41,7 @@
 - **Dark Background**: 20% — headers, contrast sections
 - **White/Gray**: 10% — backgrounds, whitespace
 
-> See `propagent-web/src/app/globals.css` for complete implementation (lines 1-100)
+> See `agentloop-web/src/app/globals.css` for complete implementation (lines 1-100)
 
 ---
 
@@ -70,7 +70,7 @@
 | Caption | Urbanist | 14px | 400 |
 | Button | Urbanist | 15px | 600 |
 
-> See `propagent-web/src/app/globals.css` for complete typography implementation
+> See `agentloop-web/src/app/globals.css` for complete typography implementation
 
 ---
 
@@ -120,7 +120,7 @@
 
 ### Logo Lockup Options
 
-**Primary:** PropAgent wordmark + Concept A mark (horizontal)  
+**Primary:** Agent Loop wordmark + Concept A mark (horizontal)
 **Stacked:** Mark above wordmark (square formats)  
 **Wordmark Only:** For legal documents, footers
 
@@ -177,7 +177,7 @@ The actual CSS includes extensive micro-animations:
 - **Loading States**: Pulse animations for skeleton loaders
 - **Card Hover**: translateY(-4px) with shadow enhancement
 
-> See `propagent-web/src/app/globals.css` for complete animation keyframes (lines 200-400)
+> See `agentloop-web/src/app/globals.css` for complete animation keyframes (lines 200-400)
 
 ---
 
@@ -233,9 +233,9 @@ The actual CSS includes extensive micro-animations:
 ```
 /brand/
 ├── logo/
-│   ├── propagent-logo-primary.svg
-│   ├── propagent-logo-white.svg
-│   ├── propagent-mark.svg
+│   ├── agent loop-logo-primary.svg
+│   ├── agent loop-logo-white.svg
+│   ├── agent loop-mark.svg
 │   └── favicon.ico
 ├── icons/
 │   ├── system-icons.svg
@@ -256,10 +256,10 @@ The actual CSS includes extensive micro-animations:
 
 | File | Location |
 |------|----------|
-| CSS Variables | `propagent-web/src/app/globals.css` (lines 1-100) |
-| Animation Keyframes | `propagent-web/src/app/globals.css` (lines 200-400) |
+| CSS Variables | `agentloop-web/src/app/globals.css` (lines 1-100) |
+| Animation Keyframes | `agentloop-web/src/app/globals.css` (lines 200-400) |
 | Font | Urbanist (Google Fonts) - imported in `layout.tsx` |
-| Color Implementation | `propagent-web/src/app/globals.css` |
+| Color Implementation | `agentloop-web/src/app/globals.css` |
 
 ---
 

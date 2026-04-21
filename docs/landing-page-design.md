@@ -1,4 +1,4 @@
-# PropAgent Landing Page Design
+# Agent Loop Landing Page Design
 
 > **Note:** This document reflects the actual implementation design system - Modern SaaS with Urbanist font, lime green primary, sky blue accent.
 
@@ -57,7 +57,7 @@ CSS custom properties defined in `globals.css`:
 
 ## 3. Key Components (Code Reference)
 
-See `propagent-web/src/app/globals.css` for full implementation.
+See `agentloop-web/src/app/globals.css` for full implementation.
 
 ---
 

@@ -1,4 +1,4 @@
--- Migration: Seed sample data for PropAgent testing
+-- Migration: Seed sample data for Agent Loop testing
 -- Created: 2026-03-23
 
 -- ============================================

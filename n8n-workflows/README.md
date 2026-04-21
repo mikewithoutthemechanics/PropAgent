@@ -18,11 +18,11 @@ This directory contains n8n workflows for portal syndication to:
 
 1. **Import Workflows**: Go to your n8n instance and import each JSON file from this directory
 2. **Configure Credentials**: Set up environment variables for each workflow
-3. **Configure Webhook URLs**: Set the webhook URLs in your PropAgent application
+3. **Configure Webhook URLs**: Set the webhook URLs in your Agent Loop application
 
 ## Usage
 
-Once configured, the workflows will automatically post properties to the selected platforms when triggered from the PropAgent dashboard.
+Once configured, the workflows will automatically post properties to the selected platforms when triggered from the Agent Loop dashboard.
 
 ## Troubleshooting
 

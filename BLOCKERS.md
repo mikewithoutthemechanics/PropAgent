@@ -1,4 +1,4 @@
-# PropAgent Automation Blockers
+# Agent Loop Automation Blockers
 ## Why Certain Features Can't Use n8n/AI
 
 ---

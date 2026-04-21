@@ -1,4 +1,4 @@
-# PropAgent UI/UX Design Specification
+# Agent Loop UI/UX Design Specification
 
 ## Actual Implementation - Modern SaaS Style
 
@@ -6,7 +6,7 @@
 
 ## 1. Design Philosophy
 
-The PropAgent UI follows a **Modern SaaS** aesthetic with lime green primary accents, sky blue secondary, and charcoal text. The design emphasizes:
+The Agent Loop UI follows a **Modern SaaS** aesthetic with lime green primary accents, sky blue secondary, and charcoal text. The design emphasizes:
 - Clean, professional appearance with generous whitespace
 - Micro-interactions and smooth animations
 - Card-based layouts with subtle shadows

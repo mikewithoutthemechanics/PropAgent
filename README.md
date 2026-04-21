@@ -1,4 +1,4 @@
-# PropAgent
+# Agent Loop
 ## Enterprise Real Estate Platform - South Africa
 
 AI-powered real estate management platform leveraging n8n automation to reduce development time by 85 weeks and costs by $500K.
@@ -30,8 +30,8 @@ AI-powered real estate management platform leveraging n8n automation to reduce d
 |----------|---------|------|
 | `feature-inventory/` | Complete breakdown of 372 features by category | 18 files |
 | `specs/` | Technical specifications for P0 features (001-006) | 6 specs |
-| `PropAgent-n8n-Automation-Strategy.md` | Master automation strategy | 20K words |
-| `PropAgent-Product-Roadmap.md` | Phased implementation roadmap | 4 phases |
+| `Agent Loop-n8n-Automation-Strategy.md` | Master automation strategy | 20K words |
+| `Agent Loop-Product-Roadmap.md` | Phased implementation roadmap | 4 phases |
 | `AI-Automation-Inventory.md` | What can/can't be automated | 42 automations |
 | `BLOCKERS.md` | Blockers and workarounds | 10 major blockers |
 
@@ -154,15 +154,15 @@ Use the Groq-based workflows for **completely free** automation:
 ## 📁 Repository Structure
 
 ```
-PropAgent/
+Agent Loop/
 ├── README.md                           # This file
 ├── AI-Automation-Inventory.md          # What can/can't be automated
 ├── BLOCKERS.md                         # Blockers and workarounds
-├── PropAgent-n8n-Automation-Strategy.md # Master strategy document
-├── PropAgent-Roadmap.md                 # Phased roadmap (120 weeks)
+├── Agent Loop-n8n-Automation-Strategy.md # Master strategy document
+├── Agent Loop-Roadmap.md                 # Phased roadmap (120 weeks)
 │
 ├── specs/                              # Technical specifications (6 specs)
-│   ├── 001-propagent-platform/
+│   ├── 001-agent loop-platform/
 │   ├── 002-auth-rbac-system/
 │   ├── 003-property-listings/
 │   ├── 004-crm-contacts/
@@ -173,7 +173,7 @@ PropAgent/
 │
 ├── .kilocode/                         # Kilo CLI workflows
 │
-├── propagent-web/                      # Next.js frontend
+├── agentloop-web/                      # Next.js frontend
 │   ├── src/
 │   │   ├── app/                       # App router pages
 │   │   ├── components/                # React components
@@ -202,7 +202,7 @@ PropAgent/
 ### 1. Frontend Already Running ✅
 
 ```bash
-cd propagent-web
+cd agentloop-web
 npm run dev
 
 # Access: http://localhost:3000
@@ -325,7 +325,7 @@ Due to South African legal and compliance requirements, these features **cannot*
 |----------|------------------|
 | `AI-Automation-Inventory.md` | Complete list of what can/can't be automated |
 | `BLOCKERS.md` | Specific blockers and workarounds |
-| `PropAgent-n8n-Automation-Strategy.md` | Full automation strategy (20K words) |
+| `Agent Loop-n8n-Automation-Strategy.md` | Full automation strategy (20K words) |
 | `specs/001-006` | Technical specs for first 6 features |
 | `n8n-workflows/README.md` | How to use the workflows |
 
@@ -409,14 +409,14 @@ To fully integrate with South African real estate ecosystem:
 
 ## 📄 License
 
-This is a specification and strategy document set for PropAgent real estate platform.
+This is a specification and strategy document set for Agent Loop real estate platform.
 
 ---
 
-**Project**: PropAgent  
+**Project**: Agent Loop
 **Market**: South Africa Real Estate  
 **Status**: Strategy Complete, Development Ready  
-**Repository**: https://github.com/mikewithoutthemechanics/PropAgent.git  
+**Repository**: https://github.com/mikewithoutthemechanics/Agent Loop.git
 **Last Updated**: 2026-04-15
 
 *Built with n8n + OpenAI + PostgreSQL + React*

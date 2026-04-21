@@ -1,4 +1,4 @@
-# PropAgent End-to-End Test Results
+# Agent Loop End-to-End Test Results
 
 **Date:** 2026-03-23  
 **Branch:** 006-communication-platform

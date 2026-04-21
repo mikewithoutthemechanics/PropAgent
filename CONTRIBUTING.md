@@ -1,6 +1,6 @@
-# Contributing to PropAgent
+# Contributing to Agent Loop
 
-Thank you for considering contributing to PropAgent! Please read this guide to understand our development workflow and how to contribute effectively.
+Thank you for considering contributing to Agent Loop! Please read this guide to understand our development workflow and how to contribute effectively.
 
 ## Development Workflow
 

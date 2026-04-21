@@ -35,6 +35,7 @@ export interface Profile {
   phone?: string;
   avatar_url?: string;
   onboarded_at?: string | null;
+  verified_at?: string | null;
   created_at: string;
   updated_at?: string;
 }
@@ -45,12 +46,13 @@ const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 // Demo user profile for testing
 const DEMO_PROFILE: Profile = {
   id: 'demo-user-id',
-  email: 'demo@agentping.co.za',
+  email: 'demo@agentloop.co.za',
   first_name: 'Demo',
   last_name: 'User',
   role: 'agent',
   agency_id: 'demo-agency',
   phone: '+27 82 123 4567',
+  verified_at: new Date().toISOString(),
   created_at: new Date().toISOString(),
 };
 
@@ -82,16 +84,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (!DEMO_MODE) {
-      localStorage.removeItem('propagent-demo-mode');
+      localStorage.removeItem('agent loop-demo-mode');
       return;
     }
     const params = new URLSearchParams(window.location.search);
     const urlDemo = params.get('demo') === 'true';
-    const storedDemo = localStorage.getItem('propagent-demo-mode') === 'true';
+    const storedDemo = localStorage.getItem('agent loop-demo-mode') === 'true';
     if (urlDemo || storedDemo) {
       setIsDemoMode(true);
       if (urlDemo) {
-        localStorage.setItem('propagent-demo-mode', 'true');
+        localStorage.setItem('agent loop-demo-mode', 'true');
       }
     }
   }, []);
@@ -234,7 +236,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     if (isDemoMode) {
       setIsDemoMode(false);
-      localStorage.removeItem('propagent-demo-mode');
+      localStorage.removeItem('agent loop-demo-mode');
       setUser(null);
       setProfile(null);
       setSession(null);
