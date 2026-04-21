@@ -1,4 +1,4 @@
-# PropAgent — Persistence Test Plan
+# AgentPing — Persistence Test Plan
 
 **Scope:** Prove that CRUD mutations made from the dashboard UI survive a hard page reload (simulating a closed tab / new session). Focus on pages wired in PR #6 and PR #7. Adversarial cases are designed so a broken persistence layer produces visibly different results.
 
@@ -20,13 +20,13 @@
 **Steps:**
 1. Note current tenant count on the "Tenants" header (e.g. "N total tenants").
 2. Click the floating "+" button.
-3. Fill: First Name = `Devin`, Last Name = `Tester`, Email = `devin.tester@propagent.test`. Click **Add Tenant**.
+3. Fill: First Name = `Devin`, Last Name = `Tester`, Email = `devin.tester@agentping.test`. Click **Add Tenant**.
 4. Observe the new tenant appears in the list; header count increments to **N+1**.
 5. Hard reload (`Ctrl+Shift+R`).
 
 **Pass criteria:**
 - After reload, the header count is **N+1** (not N).
-- A row for "Devin Tester" / `devin.tester@propagent.test` is visible in the table/cards.
+- A row for "Devin Tester" / `devin.tester@agentping.test` is visible in the table/cards.
 
 **Adversarial fail signals:**
 - Count reverts to N → persistence write didn't happen.

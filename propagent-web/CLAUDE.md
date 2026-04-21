@@ -1,4 +1,4 @@
-# PropAgent Web - Development Guide
+# AgentPing Web - Development Guide
 
 ## Project Overview
 

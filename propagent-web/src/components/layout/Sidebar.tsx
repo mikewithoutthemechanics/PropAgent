@@ -72,7 +72,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             <span className="text-black font-bold text-lg">S</span>
           </div>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight text-black">PropAgent</h1>
+            <h1 className="text-lg font-semibold tracking-tight text-black">AgentPing</h1>
             <p className="text-xs text-gray-500">Property Management</p>
           </div>
         </Link>

@@ -1,6 +1,6 @@
-# PropAgent Web Frontend
+# AgentPing Web Frontend
 
-Next.js 16 frontend for PropAgent real estate platform - South Africa.
+Next.js 16 frontend for AgentPing real estate platform - South Africa.
 
 ## Tech Stack
 

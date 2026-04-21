@@ -1,4 +1,4 @@
-// KZN, South Africa locations for PropAgent
+// KZN, South Africa locations for AgentPing
 // Focused on North Coast: Ballito, Salt Rock, Sheffield, Umhlanga, Midlands
 
 export const kznLocations = {

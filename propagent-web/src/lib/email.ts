@@ -2,7 +2,7 @@
 //
 // Configure via env:
 //   RESEND_API_KEY
-//   RESEND_FROM_EMAIL   (e.g. "PropAgent <notifications@yourdomain.com>")
+//   RESEND_FROM_EMAIL   (e.g. "AgentPing <notifications@yourdomain.com>")
 //
 // Templates are inline React-free HTML so we don't need @react-email/components
 // yet; we can swap to <Email /> components later without touching call sites.
@@ -12,7 +12,7 @@ import 'server-only';
 import { Resend } from 'resend';
 
 const apiKey = process.env.RESEND_API_KEY;
-const fromEmail = process.env.RESEND_FROM_EMAIL || 'PropAgent <onboarding@resend.dev>';
+const fromEmail = process.env.RESEND_FROM_EMAIL || 'AgentPing <onboarding@resend.dev>';
 
 export const emailConfigured = Boolean(apiKey);
 
@@ -85,7 +85,7 @@ function layout(title: string, bodyHtml: string, ctaHref?: string, ctaLabel?: st
         ${cta}
       </div>
       <p style="text-align:center;color:${muted};font-size:12px;margin-top:16px;">
-        Sent by PropAgent · <a href="https://propagent-web-one.vercel.app" style="color:${muted};">propagent.ai</a>
+        Sent by AgentPing · <a href="https://propagent-web-one.vercel.app" style="color:${muted};">agentping.ai</a>
       </p>
     </div>
   </body>
@@ -119,7 +119,7 @@ export function welcomeEmail({
   const body =
     role === 'agent'
       ? `<p>Hi ${escapeHtml(recipientName)},</p>
-         <p>Welcome to PropAgent. Your agent workspace is live — you can now manage properties, tenants, leads, and everything in between from one dashboard.</p>
+         <p>Welcome to AgentPing. Your agent workspace is live — you can now manage properties, tenants, leads, and everything in between from one dashboard.</p>
          <p>Your next steps:</p>
          <ul>
            <li>Add your first property from the Properties tab</li>
@@ -131,16 +131,16 @@ export function welcomeEmail({
          <p>Sign in any time at the link below.</p>`;
   return {
     to,
-    subject: role === 'agent' ? 'Welcome to PropAgent' : 'Welcome to PropAgent — your tenant portal is ready',
+    subject: role === 'agent' ? 'Welcome to AgentPing' : 'Welcome to AgentPing — your tenant portal is ready',
     html: layout(
-      role === 'agent' ? 'Welcome to PropAgent' : 'Welcome, ' + escapeHtml(recipientName),
+      role === 'agent' ? 'Welcome to AgentPing' : 'Welcome, ' + escapeHtml(recipientName),
       body,
       dashboardUrl,
       'Open dashboard',
     ),
     text:
-      `Hi ${recipientName},\n\nWelcome to PropAgent.\n\n` +
-      `Open your dashboard: ${dashboardUrl}\n\n— PropAgent`,
+      `Hi ${recipientName},\n\nWelcome to AgentPing.\n\n` +
+      `Open your dashboard: ${dashboardUrl}\n\n— AgentPing`,
     tags: [
       { name: 'category', value: 'welcome' },
       { name: 'role', value: role },
@@ -172,7 +172,7 @@ export function notificationEmail({
   return {
     to,
     subject: notificationTitle,
-    html: layout(notificationTitle, body, actionUrl, actionLabel ?? 'View in PropAgent'),
+    html: layout(notificationTitle, body, actionUrl, actionLabel ?? 'View in AgentPing'),
     text: `${notificationTitle}\n\n${notificationBody}\n\n${actionUrl ?? ''}`,
     tags: [{ name: 'category', value: 'notification' }],
   };
@@ -210,7 +210,7 @@ export function leaseExpiryEmail({
     to,
     subject,
     html: layout(subject, body, renewalUrl, renewalUrl ? 'Review renewal' : undefined),
-    text: `${subject}\n\nLease end date: ${leaseEndDate}\n\n— PropAgent`,
+    text: `${subject}\n\nLease end date: ${leaseEndDate}\n\n— AgentPing`,
     tags: [
       { name: 'category', value: 'lease-expiry' },
       { name: 'days', value: String(daysUntilExpiry) },
@@ -278,7 +278,7 @@ export function newLeadEmail({
 }: NewLeadEmailInput): SendEmailInput {
   const subject = `New lead: ${leadName}${propertyAddress ? ` — ${propertyAddress}` : ''}`;
   const body = `<p>Hi ${escapeHtml(agentName)},</p>
-    <p>You have a new lead in PropAgent:</p>
+    <p>You have a new lead in AgentPing:</p>
     <p>
       <strong>${escapeHtml(leadName)}</strong><br/>
       ${leadEmail ? `Email: <a href="mailto:${escapeHtml(leadEmail)}">${escapeHtml(leadEmail)}</a><br/>` : ''}

@@ -77,7 +77,7 @@ export default function DashboardLayout({
               <div className="w-8 h-8 bg-[#D8F053] rounded-full flex items-center justify-center">
                 <span className="text-black font-semibold text-sm">S</span>
               </div>
-              <span className="font-medium text-black">PropAgent</span>
+              <span className="font-medium text-black">AgentPing</span>
             </div>
           </div>
 
@@ -86,7 +86,7 @@ export default function DashboardLayout({
             <div className="w-9 h-9 bg-[#D8F053] rounded-full flex items-center justify-center">
               <span className="text-black font-semibold text-sm">S</span>
             </div>
-            <span className="font-medium text-black">PropAgent</span>
+            <span className="font-medium text-black">AgentPing</span>
           </div>
 
           {/* Main Menu - Desktop Only */}

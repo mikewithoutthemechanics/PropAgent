@@ -1,4 +1,4 @@
-// Notification System for PropAgent
+// Notification System for AgentPing
 // POPIA-compliant: User consent for notifications, audit logging
 
 import { supabase } from './supabase';
@@ -93,7 +93,7 @@ This is a friendly reminder that your lease for {{property_address}} expires on 
 Please contact us if you'd like to discuss renewal options.
 
 Kind regards,
-PropAgent Team`,
+AgentPing Team`,
     variables: ['recipient_name', 'property_address', 'lease_end_date'],
   },
   viewing_invite: {
@@ -108,7 +108,7 @@ Time: {{viewing_time}}
 Please confirm your attendance by clicking the link below:
 {{confirmation_link}}
 
-PropAgent`,
+AgentPing`,
     variables: ['recipient_name', 'property_address', 'viewing_date', 'viewing_time', 'confirmation_link'],
   },
   payment_due: {
@@ -121,7 +121,7 @@ Please ensure payment is made by the due date to avoid late fees.
 
 Payment reference: {{reference}}
 
-PropAgent`,
+AgentPing`,
     variables: ['recipient_name', 'property_address', 'amount', 'due_date', 'reference'],
   },
   payment_received: {
@@ -134,7 +134,7 @@ Payment date: {{paid_date}}
 Reference: {{reference}}
 
 Thank you,
-PropAgent`,
+AgentPing`,
     variables: ['recipient_name', 'amount', 'property_address', 'paid_date', 'reference'],
   },
   maintenance_update: {
@@ -148,7 +148,7 @@ Status: {{status}}
 
 {{#if scheduled_date}}Scheduled: {{scheduled_date}}{{/if}}
 
-PropAgent`,
+AgentPing`,
     variables: ['recipient_name', 'request_title', 'status', 'notes', 'scheduled_date'],
   },
   new_lead: {
@@ -165,7 +165,7 @@ Urgency: {{urgency}}
 
 View details: {{lead_link}}
 
-PropAgent`,
+AgentPing`,
     variables: ['agent_name', 'tenant_name', 'budget_min', 'budget_max', 'location', 'property_types', 'urgency', 'lead_link'],
   },
   document_expiry: {
@@ -178,7 +178,7 @@ Please upload a new document to avoid service interruption.
 
 {{upload_link}}
 
-PropAgent`,
+AgentPing`,
     variables: ['recipient_name', 'document_type', 'expiry_date', 'upload_link'],
   },
   commission_update: {
@@ -189,7 +189,7 @@ Your commission of R{{amount}} has been {{status}}.
 
 {{#if details}}Details: {{details}}{{/if}}
 
-PropAgent`,
+AgentPing`,
     variables: ['agent_name', 'amount', 'status', 'details'],
   },
   lease_expiry: {
@@ -200,7 +200,7 @@ Your lease at {{property_address}} expires on {{lease_end_date}}.
 
 Please contact us to discuss renewal options.
 
-PropAgent`,
+AgentPing`,
     variables: ['recipient_name', 'property_address', 'lease_end_date'],
   },
   tenant_application: {
@@ -214,7 +214,7 @@ Application date: {{application_date}}
 
 Review: {{application_link}}
 
-PropAgent`,
+AgentPing`,
     variables: ['agent_name', 'tenant_name', 'property_address', 'application_date', 'application_link'],
   },
   property_match: {
@@ -230,7 +230,7 @@ Match Score: {{match_score}}%
 
 View property: {{property_link}}
 
-PropAgent`,
+AgentPing`,
     variables: ['recipient_name', 'property_title', 'location', 'price', 'match_score', 'property_link'],
   },
   system_alert: {
@@ -241,7 +241,7 @@ PropAgent`,
 
 {{#if action_required}}Action required: {{action_link}}{{/if}}
 
-PropAgent`,
+AgentPing`,
     variables: ['recipient_name', 'alert_title', 'alert_message', 'action_required', 'action_link'],
   },
 };
@@ -251,18 +251,18 @@ PropAgent`,
 // ============================================================================
 
 export const SMS_TEMPLATES: Record<NotificationType, string> = {
-  lease_reminder: 'PropAgent: Your lease at {{address}} expires on {{date}}. Contact us to renew.',
-  viewing_invite: 'PropAgent: Viewing invite for {{address}} on {{date}} at {{time}}. Confirm: {{link}}',
-  payment_due: 'PropAgent: Rent of R{{amount}} due on {{date}}. Ref: {{reference}}',
-  payment_received: 'PropAgent: Payment of R{{amount}} received. Thank you!',
-  maintenance_update: 'PropAgent: Maintenance request "{{title}}" status: {{status}}',
-  new_lead: 'PropAgent: New lead! {{name}} looking for {{beds}} bed in {{area}}. View: {{link}}',
-  document_expiry: 'PropAgent: Your {{doc}} expires {{date}}. Upload new: {{link}}',
-  commission_update: 'PropAgent: Commission R{{amount}} {{status}}. Details: {{link}}',
-  lease_expiry: 'PropAgent: Lease expiry reminder for {{address}}. Contact us to renew.',
-  tenant_application: 'PropAgent: New application from {{name}}. Review: {{link}}',
-  property_match: 'PropAgent: New match! {{title}} at R{{price}}. View: {{link}}',
-  system_alert: 'PropAgent Alert: {{message}}',
+  lease_reminder: 'AgentPing: Your lease at {{address}} expires on {{date}}. Contact us to renew.',
+  viewing_invite: 'AgentPing: Viewing invite for {{address}} on {{date}} at {{time}}. Confirm: {{link}}',
+  payment_due: 'AgentPing: Rent of R{{amount}} due on {{date}}. Ref: {{reference}}',
+  payment_received: 'AgentPing: Payment of R{{amount}} received. Thank you!',
+  maintenance_update: 'AgentPing: Maintenance request "{{title}}" status: {{status}}',
+  new_lead: 'AgentPing: New lead! {{name}} looking for {{beds}} bed in {{area}}. View: {{link}}',
+  document_expiry: 'AgentPing: Your {{doc}} expires {{date}}. Upload new: {{link}}',
+  commission_update: 'AgentPing: Commission R{{amount}} {{status}}. Details: {{link}}',
+  lease_expiry: 'AgentPing: Lease expiry reminder for {{address}}. Contact us to renew.',
+  tenant_application: 'AgentPing: New application from {{name}}. Review: {{link}}',
+  property_match: 'AgentPing: New match! {{title}} at R{{price}}. View: {{link}}',
+  system_alert: 'AgentPing Alert: {{message}}',
 };
 
 // ============================================================================

@@ -1,4 +1,4 @@
-// AI Rent Suggestion Engine for PropAgent
+// AI Rent Suggestion Engine for AgentPing
 // Supports both simulated data and real market data integration
 
 import { Property } from './types';
