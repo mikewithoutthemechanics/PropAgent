@@ -17,6 +17,7 @@ export default function EditPropertyPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const { items, update } = useCollection<Property>('user_properties', []);
 
   const property = useMemo(() => {
@@ -45,6 +46,7 @@ export default function EditPropertyPage() {
     async (data: PropertyFormData) => {
       if (!property) return;
       setIsSubmitting(true);
+      setSaveError(null);
       try {
         update(property.id, {
           title: data.title,
@@ -68,6 +70,11 @@ export default function EditPropertyPage() {
         }, 1200);
       } catch (error) {
         console.error('Failed to update property:', error);
+        setSaveError(
+          error instanceof Error
+            ? error.message
+            : 'Failed to save changes. Please try again.',
+        );
       } finally {
         setIsSubmitting(false);
       }
@@ -125,6 +132,12 @@ export default function EditPropertyPage() {
           <p className="text-slate-500 text-sm">{property.title}</p>
         </div>
       </div>
+
+      {saveError && (
+        <div className="mb-4 p-3 rounded-lg border border-red-200 bg-red-50 text-sm text-red-700">
+          {saveError}
+        </div>
+      )}
 
       <PropertyForm
         initialData={initialData}
