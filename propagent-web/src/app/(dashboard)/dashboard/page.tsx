@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { 
   Home, Users, Wrench, DollarSign, TrendingUp, Eye, 
@@ -20,6 +20,53 @@ import {
   UIMaintenanceRequest,
 } from '@/lib/data';
 import { useCollection } from '@/lib/persistence';
+import { ProductTour, TourStep } from '@/components/onboarding/ProductTour';
+import { useOnboardingState, setTourDone } from '@/lib/onboarding';
+
+const TOUR_STEPS: TourStep[] = [
+  {
+    target: '[data-tour="dashboard"]',
+    title: 'This is your dashboard',
+    description:
+      "At a glance — payments, properties, requests, and upcoming units. Everything streams live from your data.",
+    placement: 'right',
+  },
+  {
+    target: '[data-tour="payments"]',
+    title: 'Payments overview',
+    description:
+      'Track rent, additional services, maintenance and debt in one card. Tap any tile to drill into the details.',
+    placement: 'bottom',
+  },
+  {
+    target: '[data-tour="tools"]',
+    title: 'AI Tools',
+    description:
+      'Valuations, tenant screening, market comparisons and more — all powered by the same AI engine.',
+    placement: 'right',
+  },
+  {
+    target: '[data-tour="properties"]',
+    title: 'Manage your properties',
+    description:
+      'Add listings, manage tenants, track occupancy and maintenance in one place.',
+    placement: 'right',
+  },
+  {
+    target: '[data-tour="leads"]',
+    title: 'Capture & score leads',
+    description:
+      'Inbound leads from your syndicated listings land here and get auto-prioritized.',
+    placement: 'right',
+  },
+  {
+    target: '[data-tour="valuations"]',
+    title: 'Instant property valuations',
+    description:
+      'Run AI-powered valuations in seconds to price listings or advise sellers with confidence.',
+    placement: 'right',
+  },
+];
 
 // Fallback mock data in case DB is empty
 const mockPaymentData = {
@@ -143,7 +190,7 @@ function PaymentsOverview() {
   ];
 
   return (
-    <div className="bg-charcoal-900 rounded-2xl p-6">
+    <div data-tour="payments" className="bg-charcoal-900 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-white text-lg font-semibold">Payments</h2>
         <button className="bg-charcoal-800 text-white text-sm px-4 py-2 rounded-full flex items-center gap-2 hover:bg-charcoal-700 transition-colors cursor-pointer">
@@ -374,7 +421,7 @@ function UpcomingUnits({ properties }: { properties: UIProperty[] }) {
   );
 }
 
-export default function DashboardPage() {
+function DashboardView() {
   // useAuth is kept for future use but we now source data from the persistent
   // client store so the dashboard works identically online or offline.
   useAuth();
@@ -382,12 +429,48 @@ export default function DashboardPage() {
   const { items: tenants } = useCollection<UITenant>('tenants', mockTenants);
   const { items: tickets } = useCollection<UIMaintenanceRequest>('maintenance_requests', mockMaintenanceRequests);
   const [mounted, setMounted] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { hydrated: onboardingHydrated, tourComplete } = useOnboardingState();
+  const [tourOpen, setTourOpen] = useState(false);
   useEffect(() => {
     // Wait one tick so hydration finishes before showing live data.
     const t = setTimeout(() => setMounted(true), 0);
     return () => clearTimeout(t);
   }, []);
   const loading = !mounted;
+
+  // Snapshot the ?tour=1 query param to a primitive string once per render.
+  // Using `searchParams` directly as a useEffect dep triggers unnecessary
+  // re-runs because Next.js may return a new URLSearchParams instance on
+  // every render, whereas the raw string compares stably.
+  const tourParam = searchParams?.get('tour') ?? null;
+
+  // Auto-open the tour when either:
+  //   1. The URL carries ?tour=1 (sent after finishing /onboarding), or
+  //   2. The user has never completed the tour on this device (first visit
+  //      post-onboarding, e.g. after a refresh before finishing).
+  useEffect(() => {
+    if (!onboardingHydrated || loading) return;
+    if (tourOpen) return;
+    if (tourParam === '1') {
+      setTourOpen(true);
+      return;
+    }
+    if (!tourComplete) {
+      setTourOpen(true);
+    }
+  }, [onboardingHydrated, loading, tourComplete, tourParam, tourOpen]);
+
+  const handleTourClose = (finished: boolean) => {
+    setTourOpen(false);
+    if (finished) {
+      setTourDone(true);
+    }
+    if (tourParam === '1') {
+      router.replace('/dashboard');
+    }
+  };
 
   if (loading) {
     return (
@@ -413,12 +496,22 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in" data-tour="dashboard">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Dashboard</h1>
           <p className="text-sm text-slate-500 mt-1">Welcome back! You have {properties.length} properties under management.</p>
         </div>
+        {onboardingHydrated && tourComplete && !tourOpen && (
+          <button
+            type="button"
+            onClick={() => setTourOpen(true)}
+            className="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-charcoal-700 bg-white border border-charcoal-100 rounded-full px-4 py-2 hover:bg-charcoal-50 cursor-pointer transition-colors"
+          >
+            <Sparkles className="w-4 h-4 text-lime-500" />
+            Replay tour
+          </button>
+        )}
       </div>
 
       <PaymentsOverview />
@@ -433,6 +526,20 @@ export default function DashboardPage() {
       </div>
 
       <UpcomingUnits properties={properties} />
+
+      <ProductTour
+        steps={TOUR_STEPS}
+        open={tourOpen}
+        onClose={handleTourClose}
+      />
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={null}>
+      <DashboardView />
+    </Suspense>
   );
 }

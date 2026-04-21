@@ -7,6 +7,7 @@ import { Sidebar, MobileSidebar } from '@/components/layout/Sidebar';
 import { VoiceAssistant } from '@/components/ai/VoiceAssistant';
 import { Bell, Settings, User, Menu } from 'lucide-react';
 import Link from 'next/link';
+import { useOnboardingState } from '@/lib/onboarding';
 
 const topNavItems = [
   { href: '/dashboard', label: 'Overview' },
@@ -21,16 +22,43 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading, isDemoMode } = useAuth();
+  const { user, profile, loading, isDemoMode } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { hydrated: onboardingHydrated, onboarded: onboardedLocal } = useOnboardingState();
 
   useEffect(() => {
     if (!loading && !user && !isDemoMode) {
       router.push('/login');
     }
   }, [user, loading, router, isDemoMode]);
+
+  // Route first-time users through the onboarding flow once auth resolves.
+  // Source of truth is `profile.onboarded_at` (server-authoritative, so the
+  // flag follows the user across devices). We fall back to the
+  // `agentping-onboarded` localStorage flag for two cases:
+  //   1. Supabase isn't configured in this environment (no profile ever
+  //      loads) — we still want the flow to work for local / preview
+  //      builds.
+  //   2. Hydration race — localStorage resolves before the profile fetch,
+  //      so we skip the redirect if the user *just* finished onboarding.
+  // Demo mode bypasses onboarding entirely so the sample experience stays
+  // frictionless.
+  useEffect(() => {
+    if (loading || !onboardingHydrated) return;
+    if (!user || isDemoMode) return;
+    if (pathname === '/onboarding') return;
+
+    // Profile hasn't loaded yet — wait instead of redirecting on a stale
+    // localStorage-only signal.
+    if (user && profile === null) return;
+
+    const onboardedServer = Boolean(profile?.onboarded_at);
+    if (onboardedServer || onboardedLocal) return;
+
+    router.push('/onboarding');
+  }, [loading, onboardingHydrated, user, profile, isDemoMode, onboardedLocal, pathname, router]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

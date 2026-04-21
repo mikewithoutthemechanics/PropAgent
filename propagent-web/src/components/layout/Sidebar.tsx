@@ -30,15 +30,22 @@ import {
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/auth';
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/tools', label: 'AI Tools', icon: Sparkles },
-  { href: '/properties', label: 'Properties', icon: Building2 },
-  { href: '/leads', label: 'Leads', icon: TrendingUp },
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  tour?: string;
+}
+
+const navItems: NavItem[] = [
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, tour: 'dashboard' },
+  { href: '/tools', label: 'AI Tools', icon: Sparkles, tour: 'tools' },
+  { href: '/properties', label: 'Properties', icon: Building2, tour: 'properties' },
+  { href: '/leads', label: 'Leads', icon: TrendingUp, tour: 'leads' },
   { href: '/syndication', label: 'Syndication', icon: Share2 },
   { href: '/rent-ai', label: 'Rent AI', icon: Sparkles },
   { href: '/calendar', label: 'Calendar', icon: Calendar },
-  { href: '/valuations', label: 'Valuations', icon: Calculator },
+  { href: '/valuations', label: 'Valuations', icon: Calculator, tour: 'valuations' },
   { href: '/matching', label: 'Tenant Match', icon: Target },
   { href: '/escrow', label: 'Escrow', icon: Wallet },
   { href: '/documents', label: 'Documents', icon: FileText },
@@ -89,6 +96,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               key={item.href}
               href={item.href}
               onClick={onClose}
+              data-tour={item.tour}
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-full transition-all duration-200 cursor-pointer text-sm font-medium',
                 isActive 
