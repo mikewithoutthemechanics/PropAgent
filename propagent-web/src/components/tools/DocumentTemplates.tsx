@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Download, Eye, Edit, Copy, Plus, Check } from 'lucide-react';
+import { FileText, Download, Eye, Copy, Plus, Check, Sparkles, X } from 'lucide-react';
 import { Card, Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import { aiDocument } from '@/lib/ai-client';
 
 interface DocumentTemplate {
   id: string;
@@ -76,10 +77,66 @@ const categoryColors = {
 export function DocumentTemplates() {
   const [filter, setFilter] = useState<string>('all');
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
+  const [generating, setGenerating] = useState(false);
+  const [docBody, setDocBody] = useState<string | null>(null);
+  const [docError, setDocError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  const filteredTemplates = templates.filter(t => 
+  const filteredTemplates = templates.filter(t =>
     filter === 'all' || t.category === filter
   );
+
+  const openTemplate = (t: DocumentTemplate) => {
+    setSelectedTemplate(t);
+    setFieldValues({});
+    setDocBody(null);
+    setDocError(null);
+  };
+
+  const generateDoc = async () => {
+    if (!selectedTemplate) return;
+    setGenerating(true);
+    setDocError(null);
+    const res = await aiDocument({
+      templateName: selectedTemplate.name,
+      category: selectedTemplate.category,
+      fields: fieldValues,
+    });
+    setGenerating(false);
+    if ('error' in res) {
+      setDocError(
+        res.error.message ||
+          'AI document generation unavailable. Check that GROQ_API_KEY is configured.',
+      );
+      return;
+    }
+    setDocBody(res.data.body);
+  };
+
+  const downloadDoc = () => {
+    if (!docBody || !selectedTemplate) return;
+    const blob = new Blob([docBody], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${selectedTemplate.name.replace(/\s+/g, '_')}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const copyDoc = async () => {
+    if (!docBody) return;
+    try {
+      await navigator.clipboard.writeText(docBody);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -124,10 +181,10 @@ export function DocumentTemplates() {
       {/* Template Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredTemplates.map(template => (
-          <Card 
-            key={template.id} 
-            className="p-5 hover:border-indigo-300 cursor-pointer transition-all"
-            onClick={() => setSelectedTemplate(template)}
+          <div
+            key={template.id}
+            onClick={() => openTemplate(template)}
+            className="card p-5 hover:border-indigo-300 cursor-pointer transition-all"
           >
             <div className="flex items-start justify-between mb-3">
               <div className={cn(
@@ -143,51 +200,110 @@ export function DocumentTemplates() {
             <div className="flex items-center gap-2">
               <span className="text-xs text-stone-400">{template.fields.length} fields</span>
             </div>
-          </Card>
+          </div>
         ))}
       </div>
 
-      {/* Template Detail Modal */}
       {selectedTemplate && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-lg p-6 m-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-auto p-6">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <span className={cn(
-                  "px-2.5 py-1 rounded-lg text-xs font-medium capitalize",
+                  'px-2.5 py-1 rounded-lg text-xs font-medium capitalize',
                   categoryColors[selectedTemplate.category]
                 )}>
                   {selectedTemplate.category}
                 </span>
-                <h3 className="text-lg font-semibold text-stone-900 mt-2">{selectedTemplate.name}</h3>
+                <h3 className="text-lg font-semibold text-stone-900 mt-2 flex items-center gap-2">
+                  {selectedTemplate.name}
+                  <Sparkles className="w-4 h-4 text-indigo-500" />
+                </h3>
+                <p className="text-sm text-stone-500">AI-generated via Groq</p>
               </div>
+              <button
+                onClick={() => setSelectedTemplate(null)}
+                className="text-stone-400 hover:text-stone-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
-            
+
             <p className="text-sm text-stone-600 mb-4">{selectedTemplate.description}</p>
-            
+
             <div className="mb-4">
-              <h4 className="text-sm font-medium text-stone-700 mb-2">Template Fields</h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedTemplate.fields.map(field => (
-                  <span 
-                    key={field}
-                    className="px-2 py-1 bg-stone-100 text-stone-600 text-xs rounded font-mono"
-                  >
-                    {`{{${field}}}`}
-                  </span>
+              <h4 className="text-sm font-medium text-stone-700 mb-2">Fill the fields</h4>
+              <div className="grid grid-cols-2 gap-3">
+                {selectedTemplate.fields.map((field) => (
+                  <div key={field}>
+                    <label className="block text-xs font-medium text-stone-600 mb-1 capitalize">
+                      {field.replace(/_/g, ' ')}
+                    </label>
+                    <input
+                      type="text"
+                      value={fieldValues[field] ?? ''}
+                      onChange={(e) =>
+                        setFieldValues((v) => ({ ...v, [field]: e.target.value }))
+                      }
+                      className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                    />
+                  </div>
                 ))}
               </div>
             </div>
 
+            {docError && <p className="text-sm text-red-600 mb-3">{docError}</p>}
+
+            {docBody && (
+              <div className="mb-4">
+                <h4 className="text-sm font-medium text-stone-700 mb-2">Generated document</h4>
+                <pre className="max-h-64 overflow-auto p-3 bg-stone-50 border border-stone-200 rounded-lg text-xs whitespace-pre-wrap text-stone-700">
+{docBody}
+                </pre>
+              </div>
+            )}
+
             <div className="flex gap-2 pt-4 border-t">
-              <Button variant="outline" className="flex-1">
-                <Eye className="w-4 h-4 mr-2" /> Preview
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setSelectedTemplate(null)}
+              >
+                Close
               </Button>
-              <Button variant="outline" className="flex-1">
-                <Edit className="w-4 h-4 mr-2" /> Edit
-              </Button>
-              <Button className="flex-1 bg-indigo-500">
-                <Download className="w-4 h-4 mr-2" /> Use
+              {docBody && (
+                <>
+                  <Button variant="outline" className="flex-1" onClick={copyDoc}>
+                    {copied ? (
+                      <>
+                        <Check className="w-4 h-4 mr-2" /> Copied
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4 mr-2" /> Copy
+                      </>
+                    )}
+                  </Button>
+                  <Button variant="outline" className="flex-1" onClick={downloadDoc}>
+                    <Download className="w-4 h-4 mr-2" /> Download
+                  </Button>
+                </>
+              )}
+              <Button
+                className="flex-1 bg-indigo-500 hover:bg-indigo-600"
+                onClick={generateDoc}
+                disabled={generating}
+              >
+                {generating ? (
+                  <>
+                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                    Generating…
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" /> {docBody ? 'Regenerate' : 'Generate'}
+                  </>
+                )}
               </Button>
             </div>
           </Card>

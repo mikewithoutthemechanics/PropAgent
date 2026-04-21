@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { PenTool, Send, Check, Clock, X, FileText, User, Mail, RefreshCw, AlertCircle } from 'lucide-react';
+import { PenTool, Send, Check, Clock, X, FileText, User, Mail, RefreshCw, AlertCircle, Plus, Sparkles } from 'lucide-react';
 import { Card, Button } from '@/components/ui';
-import { formatCurrency, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface SignatureRequest {
   id: string;
@@ -61,6 +61,59 @@ const initialRequests: SignatureRequest[] = [
 export function ESignatures() {
   const [requests, setRequests] = useState<SignatureRequest[]>(initialRequests);
   const [selectedRequest, setSelectedRequest] = useState<SignatureRequest | null>(null);
+  const [showNew, setShowNew] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const [remindingId, setRemindingId] = useState<string | null>(null);
+  const [newForm, setNewForm] = useState({
+    documentName: '',
+    documentType: 'lease' as SignatureRequest['documentType'],
+    property: '',
+    partyName: '',
+    partyEmail: '',
+    partyRole: 'tenant' as SignatureRequest['parties'][number]['role'],
+  });
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2500);
+  };
+
+  const createRequest = () => {
+    if (!newForm.documentName.trim() || !newForm.partyName.trim() || !newForm.partyEmail.trim()) {
+      return;
+    }
+    const today = new Date();
+    const expires = new Date(today);
+    expires.setDate(today.getDate() + 14);
+    const newReq: SignatureRequest = {
+      id: String(Date.now()),
+      documentName: newForm.documentName,
+      documentType: newForm.documentType,
+      parties: [
+        {
+          name: newForm.partyName,
+          email: newForm.partyEmail,
+          role: newForm.partyRole,
+          signed: false,
+        },
+      ],
+      status: 'pending',
+      createdAt: today.toISOString().slice(0, 10),
+      expiresAt: expires.toISOString().slice(0, 10),
+      property: newForm.property || undefined,
+    };
+    setRequests((r) => [newReq, ...r]);
+    setNewForm({
+      documentName: '',
+      documentType: 'lease',
+      property: '',
+      partyName: '',
+      partyEmail: '',
+      partyRole: 'tenant',
+    });
+    setShowNew(false);
+    showToast(`Sent "${newReq.documentName}" to ${newReq.parties[0].email}`);
+  };
 
   const statusColors = {
     pending: 'bg-stone-100 text-stone-600',
@@ -85,8 +138,21 @@ export function ESignatures() {
     }
   };
 
-  const sendReminder = (id: string) => {
-    alert('Reminder sent to pending parties!');
+  const sendReminder = async (id: string) => {
+    const request = requests.find((r) => r.id === id);
+    if (!request) return;
+    setRemindingId(id);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      const pending = request.parties.filter((p) => !p.signed).map((p) => p.email);
+      showToast(
+        pending.length > 0
+          ? `Reminder sent to ${pending.join(', ')}`
+          : 'All parties have already signed.',
+      );
+    } finally {
+      setRemindingId(null);
+    }
   };
 
   return (
@@ -157,8 +223,8 @@ export function ESignatures() {
               <p className="text-sm text-stone-500">Manage document signatures</p>
             </div>
           </div>
-          <Button className="bg-teal-500 hover:bg-teal-600">
-            <Send className="w-4 h-4 mr-2" /> Send for Signature
+          <Button className="bg-teal-500 hover:bg-teal-600" onClick={() => setShowNew(true)}>
+            <Plus className="w-4 h-4 mr-2" /> Send for Signature
           </Button>
         </div>
 
@@ -245,9 +311,10 @@ export function ESignatures() {
                         {party.signed ? 'Signed' : 'Pending'}
                       </span>
                       {!party.signed && selectedRequest.status !== 'completed' && (
-                        <button 
+                        <button
                           onClick={() => sendReminder(selectedRequest.id)}
-                          className="p-1 hover:bg-stone-200 rounded"
+                          disabled={remindingId === selectedRequest.id}
+                          className="p-1 hover:bg-stone-200 rounded disabled:opacity-50"
                         >
                           <RefreshCw className="w-3 h-3 text-stone-500" />
                         </button>
@@ -260,14 +327,131 @@ export function ESignatures() {
 
             <div className="flex gap-2 mt-6 pt-4 border-t">
               <Button variant="outline" onClick={() => setSelectedRequest(null)} className="flex-1">Close</Button>
-              <Button variant="outline" className="flex-1">
-                <FileText className="w-4 h-4 mr-2" /> View Document
-              </Button>
-              <Button className="flex-1 bg-teal-500">
-                <Send className="w-4 h-4 mr-2" /> Send
-              </Button>
+              {selectedRequest.status !== 'completed' && (
+                <Button
+                  className="flex-1 bg-teal-500 hover:bg-teal-600"
+                  onClick={() => sendReminder(selectedRequest.id)}
+                  disabled={remindingId === selectedRequest.id}
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  {remindingId === selectedRequest.id ? 'Sending…' : 'Remind all'}
+                </Button>
+              )}
             </div>
           </Card>
+        </div>
+      )}
+
+      {showNew && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <Card className="w-full max-w-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-stone-900">Send for Signature</h3>
+              <button
+                onClick={() => setShowNew(false)}
+                className="text-stone-400 hover:text-stone-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-stone-600 mb-1">Document name</label>
+                <input
+                  type="text"
+                  value={newForm.documentName}
+                  onChange={(e) => setNewForm((f) => ({ ...f, documentName: e.target.value }))}
+                  placeholder="e.g., Lease agreement — Unit 14B"
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-stone-600 mb-1">Type</label>
+                  <select
+                    value={newForm.documentType}
+                    onChange={(e) =>
+                      setNewForm((f) => ({
+                        ...f,
+                        documentType: e.target.value as SignatureRequest['documentType'],
+                      }))
+                    }
+                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  >
+                    <option value="lease">Lease</option>
+                    <option value="agreement">Agreement</option>
+                    <option value="addendum">Addendum</option>
+                    <option value="notice">Notice</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-stone-600 mb-1">Property (optional)</label>
+                  <input
+                    type="text"
+                    value={newForm.property}
+                    onChange={(e) => setNewForm((f) => ({ ...f, property: e.target.value }))}
+                    placeholder="e.g., 14 Oak Lane"
+                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  />
+                </div>
+              </div>
+              <div className="border-t border-stone-100 pt-3">
+                <p className="text-xs font-medium text-stone-700 mb-2">Signing party</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    value={newForm.partyName}
+                    onChange={(e) => setNewForm((f) => ({ ...f, partyName: e.target.value }))}
+                    placeholder="Full name"
+                    className="px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  />
+                  <input
+                    type="email"
+                    value={newForm.partyEmail}
+                    onChange={(e) => setNewForm((f) => ({ ...f, partyEmail: e.target.value }))}
+                    placeholder="email@example.com"
+                    className="px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  />
+                </div>
+                <select
+                  value={newForm.partyRole}
+                  onChange={(e) =>
+                    setNewForm((f) => ({
+                      ...f,
+                      partyRole: e.target.value as SignatureRequest['parties'][number]['role'],
+                    }))
+                  }
+                  className="mt-2 w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                >
+                  <option value="tenant">Tenant</option>
+                  <option value="landlord">Landlord</option>
+                  <option value="buyer">Buyer</option>
+                  <option value="seller">Seller</option>
+                </select>
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowNew(false)}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="flex-1 bg-teal-500 hover:bg-teal-600"
+                  onClick={createRequest}
+                >
+                  <Send className="w-4 h-4 mr-2" /> Send
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 px-4 py-3 bg-stone-900 text-white rounded-lg shadow-lg text-sm">
+          {toast}
         </div>
       )}
     </div>

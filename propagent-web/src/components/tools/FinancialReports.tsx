@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { TrendingUp, TrendingDown, DollarSign, CreditCard, Home, Receipt, ArrowUpRight, ArrowDownRight, Download, PieChart, BarChart3, Calendar } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Receipt, Download, PieChart } from 'lucide-react';
 import { Card } from '@/components/ui';
 import { formatCurrency, cn } from '@/lib/utils';
 
@@ -36,6 +35,49 @@ export function FinancialReports({ period = 'month' }: FinancialReportProps) {
   const totalExpenses = Object.values(sampleData.expenses).reduce((a, b) => a + b, 0);
   const netIncome = totalIncome - totalExpenses;
   const margin = (netIncome / totalIncome) * 100;
+
+  const exportCsv = () => {
+    const rows: string[][] = [];
+    rows.push(['Financial report — PropAgent', `Period: ${period}`]);
+    rows.push([]);
+    rows.push(['Summary']);
+    rows.push(['Metric', 'Amount (ZAR)']);
+    rows.push(['Total income', String(totalIncome)]);
+    rows.push(['Total expenses', String(totalExpenses)]);
+    rows.push(['Net income', String(netIncome)]);
+    rows.push(['Profit margin (%)', margin.toFixed(2)]);
+    rows.push([]);
+    rows.push(['Income breakdown']);
+    rows.push(['Category', 'Amount (ZAR)']);
+    for (const [k, v] of Object.entries(sampleData.income)) {
+      rows.push([k, String(v)]);
+    }
+    rows.push([]);
+    rows.push(['Expense breakdown']);
+    rows.push(['Category', 'Amount (ZAR)']);
+    for (const [k, v] of Object.entries(sampleData.expenses)) {
+      rows.push([k, String(v)]);
+    }
+    rows.push([]);
+    rows.push(['Property performance']);
+    rows.push(['Property', 'Income', 'Expenses', 'Net', 'Yield (%)']);
+    for (const p of sampleData.properties) {
+      const y = (p.profit / p.income) * 100;
+      rows.push([p.name, String(p.income), String(p.expenses), String(p.profit), y.toFixed(1)]);
+    }
+    const escape = (cell: string) =>
+      /[",\n]/.test(cell) ? `"${cell.replace(/"/g, '""')}"` : cell;
+    const csv = rows.map((r) => r.map(escape).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `financial-report-${period}-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="space-y-6">
@@ -91,8 +133,11 @@ export function FinancialReports({ period = 'month' }: FinancialReportProps) {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-stone-900">Income Breakdown</h3>
-          <button className="flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-700">
-            <Download className="w-4 h-4" />Export
+          <button
+            onClick={exportCsv}
+            className="flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-700"
+          >
+            <Download className="w-4 h-4" />Export CSV
           </button>
         </div>
         <div className="space-y-3">

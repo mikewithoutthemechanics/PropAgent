@@ -119,10 +119,12 @@ export default function PropertyDetailPage() {
             <Heart className={cn("w-4 h-4 mr-1.5", isFavorite && "fill-current")} />
             {isFavorite ? 'Saved' : 'Save'}
           </Button>
-          <Button variant="outline" size="sm" onClick={() => alert('Edit functionality coming soon!')}>
-            <Edit3 className="w-4 h-4 mr-1.5" />
-            Edit
-          </Button>
+          <Link href={`/properties/${property.id}/edit`}>
+            <Button variant="outline" size="sm">
+              <Edit3 className="w-4 h-4 mr-1.5" />
+              Edit
+            </Button>
+          </Link>
         </div>
       </div>
 

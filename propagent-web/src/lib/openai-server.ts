@@ -42,6 +42,44 @@ export async function chatComplete(
   return res.choices[0]?.message?.content?.trim() ?? '';
 }
 
+/**
+ * Ask the LLM for a strict JSON response. Uses Groq's JSON mode when available
+ * and always falls back to extracting the first `{...}` block on parse failure.
+ * Returns `null` if no JSON can be parsed or if the API is not configured.
+ */
+export async function chatJSON<T>(
+  messages: ChatMessage[],
+  opts: { model?: string; temperature?: number } = {},
+): Promise<T | null> {
+  if (!client) return null;
+  try {
+    const res = await client.chat.completions.create({
+      model: opts.model ?? DEFAULT_MODEL,
+      messages,
+      temperature: opts.temperature ?? 0.2,
+      response_format: { type: 'json_object' },
+    });
+    const raw = res.choices[0]?.message?.content?.trim() ?? '';
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as T;
+    } catch {
+      const match = raw.match(/\{[\s\S]*\}/);
+      if (match) {
+        try {
+          return JSON.parse(match[0]) as T;
+        } catch {
+          return null;
+        }
+      }
+      return null;
+    }
+  } catch (err) {
+    console.warn('[openai-server] chatJSON failed', err);
+    return null;
+  }
+}
+
 function mockReply(userMsg: string): string {
   const trimmed = userMsg.slice(0, 80);
   return `(demo mode — GROQ_API_KEY not set) I received: "${trimmed}". Configure GROQ_API_KEY at https://console.groq.com/keys to get real AI replies.`;
