@@ -158,6 +158,7 @@
 @theme {
   --font-sans: var(--font-family-primary);
 
+  /* New semantic tokens exposed as utilities */
   --color-surface-base: var(--surface-base);
   --color-surface-raised: var(--surface-raised);
   --color-surface-strong: var(--surface-strong);
@@ -173,6 +174,123 @@
   --duration-instant: var(--motion-duration-instant);
   --duration-fast: var(--motion-duration-fast);
   --duration-normal: var(--motion-duration-normal);
+
+  /* Re-map Tailwind's built-in "lime" palette to the brand cyan so every
+     bg-lime-*, text-lime-*, from-lime-*, to-lime-* utility across the app
+     renders in the new accent without per-component edits. Pale shades
+     (50/100/200) are pushed to deep cyan tints so they read correctly on
+     the dark base. */
+  --color-lime-50: #001a22;
+  --color-lime-100: #002b3a;
+  --color-lime-200: #00475e;
+  --color-lime-300: #007ea8;
+  --color-lime-400: #00beff;
+  --color-lime-500: #00a7e0;
+  --color-lime-600: #0090c2;
+  --color-lime-700: #006d94;
+
+  /* Same deal for Tailwind's "sky" palette — keep accent-adjacent usage
+     aligned with the cyan brand and tint the pale shades to dark. */
+  --color-sky-50: #001a22;
+  --color-sky-100: #002b3a;
+  --color-sky-200: #00475e;
+  --color-sky-300: #33cfff;
+  --color-sky-400: #00beff;
+  --color-sky-500: #00a7e0;
+  --color-sky-600: #0090c2;
+  --color-sky-700: #006d94;
+}
+
+/* ------------------------------------------------------------------
+   Cascade-layer overrides for Tailwind built-ins that were used as
+   light-theme assumptions in pre-existing components. We target only
+   the utilities where the same Tailwind CSS variable can't be safely
+   repurposed via @theme (i.e. `bg-white` must go dark, but `text-white`
+   must stay white — so they can't share --color-white).
+   ------------------------------------------------------------------ */
+@layer utilities {
+  .bg-white {
+    background-color: var(--surface-raised);
+  }
+  .bg-white\/80 {
+    background-color: color-mix(in srgb, var(--surface-raised) 80%, transparent);
+  }
+  .bg-white\/70 {
+    background-color: color-mix(in srgb, var(--surface-raised) 70%, transparent);
+  }
+  .bg-white\/50 {
+    background-color: color-mix(in srgb, var(--surface-raised) 50%, transparent);
+  }
+  .bg-white\/30 {
+    background-color: color-mix(in srgb, var(--surface-raised) 30%, transparent);
+  }
+  .bg-white\/10 {
+    background-color: color-mix(in srgb, #ffffff 10%, transparent);
+  }
+
+  /* from-white / to-white in gradients read as card-on-dark rather than a
+     page-dividing white slab. */
+  .from-white {
+    --tw-gradient-from: var(--surface-base);
+  }
+  .to-white {
+    --tw-gradient-to: var(--surface-base);
+  }
+  .via-white {
+    --tw-gradient-via: var(--surface-base);
+  }
+
+  /* Charcoal utilities never shipped in Tailwind's default palette, so
+     those 1,200+ class references in components were no-ops. Provide
+     dark-theme values here so they start rendering with sensible
+     contrast. Low indices = bright (text), high indices = deep surface. */
+  .bg-charcoal-950 { background-color: #000000; }
+  .bg-charcoal-900 { background-color: #0a0a0a; }
+  .bg-charcoal-800 { background-color: #1a1a1a; }
+  .bg-charcoal-700 { background-color: #2a2a2a; }
+  .bg-charcoal-600 { background-color: #3d3d3d; }
+  .bg-charcoal-500 { background-color: #525252; }
+  .bg-charcoal-400 { background-color: #6b6b6b; }
+  .bg-charcoal-300 { background-color: #8a8a8a; }
+  .bg-charcoal-200 { background-color: #b3b3b3; }
+  .bg-charcoal-100 { background-color: #1f1f1f; }
+  .bg-charcoal-50  { background-color: #141414; }
+
+  .text-charcoal-950 { color: #ffffff; }
+  .text-charcoal-900 { color: #ffffff; }
+  .text-charcoal-800 { color: #f2f2f2; }
+  .text-charcoal-700 { color: #e0e0e0; }
+  .text-charcoal-600 { color: #c8c8c8; }
+  .text-charcoal-500 { color: #86868b; }
+  .text-charcoal-400 { color: #6b6b6b; }
+  .text-charcoal-300 { color: #525252; }
+  .text-charcoal-200 { color: #3d3d3d; }
+  .text-charcoal-100 { color: #2a2a2a; }
+  .text-charcoal-50  { color: #1a1a1a; }
+
+  .border-charcoal-950 { border-color: #000000; }
+  .border-charcoal-900 { border-color: #1f1f1f; }
+  .border-charcoal-800 { border-color: #1f1f1f; }
+  .border-charcoal-700 { border-color: #2a2a2a; }
+  .border-charcoal-600 { border-color: #3d3d3d; }
+  .border-charcoal-500 { border-color: #525252; }
+  .border-charcoal-400 { border-color: #6b6b6b; }
+  .border-charcoal-300 { border-color: #3d3d3d; }
+  .border-charcoal-200 { border-color: #2a2a2a; }
+  .border-charcoal-100 { border-color: #1f1f1f; }
+  .border-charcoal-50  { border-color: #141414; }
+
+  .from-charcoal-950 { --tw-gradient-from: #000000; }
+  .from-charcoal-900 { --tw-gradient-from: #0a0a0a; }
+  .from-charcoal-800 { --tw-gradient-from: #141414; }
+  .to-charcoal-950   { --tw-gradient-to: #000000; }
+  .to-charcoal-900   { --tw-gradient-to: #0a0a0a; }
+  .to-charcoal-800   { --tw-gradient-to: #141414; }
+  .via-charcoal-900  { --tw-gradient-via: #0a0a0a; }
+  .via-charcoal-800  { --tw-gradient-via: #141414; }
+
+  /* Ring / focus offsets against the dark base. */
+  .ring-offset-charcoal-900 { --tw-ring-offset-color: #0a0a0a; }
 }
 
 * {
