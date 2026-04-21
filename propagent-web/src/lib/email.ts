@@ -59,7 +59,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
 
 // -------- Template helpers --------
 
-const brandColor = '#a3e635'; // lime-400 from theme
+const brandColor = '#00beff'; // cyan accent from design system
 const charcoal = '#111827';
 const muted = '#6b7280';
 

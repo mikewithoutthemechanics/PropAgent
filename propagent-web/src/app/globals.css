@@ -327,6 +327,79 @@ p, span, li, label, td, th, dd, dt, blockquote, figcaption {
 :where(.text-black) { color: #ffffff; }
 
 /* =============================================================
+   Arbitrary hex utility remaps.
+
+   Several pages predate the dark system and reach for concrete hex
+   values (e.g. `bg-[#D8F053]` for the old lime brand, `bg-[#F5F5F5]`
+   for light card surfaces). These classes compile to escaped
+   selectors and bypass the CSS-variable remap above, so they must
+   be re-pointed explicitly. Keep these keyed on the literal hex
+   so a grep still lands the reader here.
+   ============================================================= */
+
+/* Old lime brand → cyan accent */
+:where(.bg-\[\#D8F053\]) { background-color: var(--surface-strong); }
+:where(.hover\:bg-\[\#D8F053\]:hover) { background-color: var(--surface-strong); }
+:where(.bg-\[\#D8F053\]\/10) { background-color: color-mix(in srgb, var(--surface-strong) 10%, transparent); }
+:where(.bg-\[\#D8F053\]\/20) { background-color: color-mix(in srgb, var(--surface-strong) 20%, transparent); }
+:where(.bg-\[\#D8F053\]\/30) { background-color: color-mix(in srgb, var(--surface-strong) 30%, transparent); }
+:where(.hover\:bg-\[\#D8F053\]\/30:hover) { background-color: color-mix(in srgb, var(--surface-strong) 30%, transparent); }
+:where(.border-\[\#D8F053\]) { border-color: var(--surface-strong); }
+:where(.border-\[\#D8F053\]\/30) { border-color: color-mix(in srgb, var(--surface-strong) 30%, transparent); }
+:where(.hover\:border-\[\#D8F053\]:hover) { border-color: var(--surface-strong); }
+:where(.text-\[\#D8F053\]) { color: var(--surface-strong); }
+
+/* Old lime hover → darker cyan */
+:where(.bg-\[\#C2DC34\]) { background-color: #0090c2; }
+:where(.hover\:bg-\[\#C2DC34\]:hover) { background-color: #0090c2; }
+
+/* Light neutral surfaces → dark theme surfaces */
+:where(.bg-\[\#FFFFFF\]) { background-color: var(--surface-base); }
+:where(.bg-\[\#F5F5F5\]) { background-color: var(--surface-raised); }
+:where(.bg-\[\#F5F5F5\]\/50) { background-color: color-mix(in srgb, var(--surface-raised) 50%, transparent); }
+:where(.border-\[\#E5E5E5\]) { border-color: #3d3d3d; }
+
+/* Dim grey label text → readable tertiary text on dark */
+:where(.text-\[\#525252\]) { color: var(--text-tertiary); }
+
+/* =============================================================
+   Tailwind gray scale on dark surfaces.
+
+   `bg-gray-50/100/200` (header rail, hover states, chips) and
+   `border-gray-100/200` (sidebar dividers) were authored against a
+   light theme. Re-point the low end of the ramp so they read as
+   subtle dark surfaces/borders. Mid/high gray utilities already
+   read fine against dark so leave them alone.
+   ============================================================= */
+:where(.bg-gray-50)  { background-color: var(--surface-raised); }
+:where(.bg-gray-100) { background-color: #1f1f1f; }
+:where(.bg-gray-200) { background-color: #2a2a2a; }
+:where(.hover\:bg-gray-50:hover)  { background-color: #1f1f1f; }
+:where(.hover\:bg-gray-100:hover) { background-color: #1f1f1f; }
+
+:where(.border-gray-100) { border-color: #1f1f1f; }
+:where(.border-gray-200) { border-color: #2a2a2a; }
+:where(.border-gray-300) { border-color: #3d3d3d; }
+:where(.divide-gray-100 > :not([hidden]) ~ :not([hidden])) { border-color: #1f1f1f; }
+:where(.divide-gray-200 > :not([hidden]) ~ :not([hidden])) { border-color: #2a2a2a; }
+
+/* text-gray-500 / 600 renders as grey-on-grey body text on dark —
+   lift to the tertiary/secondary tokens. */
+:where(.text-gray-400) { color: var(--text-tertiary); }
+:where(.text-gray-500) { color: var(--text-tertiary); }
+:where(.text-gray-600) { color: var(--text-secondary); }
+
+/* Legacy lime-on-button text: old theme set text-black on lime chips.
+   On the new cyan chips the button surface is bright, so black text
+   still reads — leave .text-black alone where it lives on a cyan
+   background, the earlier override to white is fine since :where()
+   loses to the component's own explicit class when the element also
+   sets a background. For the specific `bg-[#D8F053] text-black`
+   pairings we keep text dark against the bright cyan fill: */
+:where(.bg-\[\#D8F053\].text-black),
+:where(.bg-\[\#D8F053\] .text-black) { color: var(--surface-base); }
+
+/* =============================================================
    Reusable component classes (dark theme).
    ============================================================= */
 .card {
