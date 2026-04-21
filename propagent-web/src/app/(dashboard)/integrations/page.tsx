@@ -56,7 +56,7 @@ export default function IntegrationsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-charcoal-900 font-serif">Integrations</h1>
-          <p className="text-charcoal-500 mt-1">Connect your existing databases to the Agent Loop matching engine.</p>
+          <p className="text-charcoal-500 mt-1">Connect your existing databases to the agent-loop matching engine.</p>
         </div>
         <Button className="bg-charcoal-900 text-white rounded-full px-6">
           <Plus className="w-4 h-4 mr-2" />
@@ -83,7 +83,7 @@ export default function IntegrationsPage() {
             <h3 className="font-semibold text-charcoal-900">Secure Connectivity</h3>
           </div>
           <p className="text-sm text-charcoal-500 leading-relaxed">
-            Agent Loop uses encrypted tunnels and read-only credentials to access your data. We never modify your existing records. All matching happens on anonymized criteria to ensure POPIA compliance.
+            agent-loop uses encrypted tunnels and read-only credentials to access your data. We never modify your existing records. All matching happens on anonymized criteria to ensure POPIA compliance.
           </p>
         </div>
       </div>

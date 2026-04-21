@@ -1,4 +1,4 @@
-# Agent Loop Supabase Database Setup Script
+# agent-loop Supabase Database Setup Script
 # Execute migrations in order
 
 param(

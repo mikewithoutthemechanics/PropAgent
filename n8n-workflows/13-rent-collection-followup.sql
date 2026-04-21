@@ -1,5 +1,5 @@
 -- Rent Collection Follow-up Workflow - Supabase Schema
--- Agent Loop - South African Real Estate Platform
+-- agent-loop - South African Real Estate Platform
 
 -- Drop table if exists for clean setup
 DROP TABLE IF EXISTS rent_collection_log;

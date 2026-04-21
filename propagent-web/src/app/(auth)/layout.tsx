@@ -2,7 +2,7 @@ import { ClientProviders } from "@/components/providers/ClientProviders";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Agent Loop - Authentication",
+  title: "agent-loop - Authentication",
   description: "Sign in or create your account",
 };
 

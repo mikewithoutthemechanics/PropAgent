@@ -1,4 +1,4 @@
-# Agent Loop Landing Page Design
+# agent-loop Landing Page Design
 
 > **Note:** This document reflects the actual implementation design system - Modern SaaS with Urbanist font, lime green primary, sky blue accent.
 

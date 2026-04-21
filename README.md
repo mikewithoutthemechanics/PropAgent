@@ -1,4 +1,4 @@
-# Agent Loop
+# agent-loop
 ## Enterprise Real Estate Platform - South Africa
 
 AI-powered real estate management platform leveraging n8n automation to reduce development time by 85 weeks and costs by $500K.
@@ -30,8 +30,8 @@ AI-powered real estate management platform leveraging n8n automation to reduce d
 |----------|---------|------|
 | `feature-inventory/` | Complete breakdown of 372 features by category | 18 files |
 | `specs/` | Technical specifications for P0 features (001-006) | 6 specs |
-| `Agent Loop-n8n-Automation-Strategy.md` | Master automation strategy | 20K words |
-| `Agent Loop-Product-Roadmap.md` | Phased implementation roadmap | 4 phases |
+| `agent-loop-n8n-Automation-Strategy.md` | Master automation strategy | 20K words |
+| `agent-loop-Product-Roadmap.md` | Phased implementation roadmap | 4 phases |
 | `AI-Automation-Inventory.md` | What can/can't be automated | 42 automations |
 | `BLOCKERS.md` | Blockers and workarounds | 10 major blockers |
 
@@ -154,15 +154,15 @@ Use the Groq-based workflows for **completely free** automation:
 ## 📁 Repository Structure
 
 ```
-Agent Loop/
+agent-loop/
 ├── README.md                           # This file
 ├── AI-Automation-Inventory.md          # What can/can't be automated
 ├── BLOCKERS.md                         # Blockers and workarounds
-├── Agent Loop-n8n-Automation-Strategy.md # Master strategy document
-├── Agent Loop-Roadmap.md                 # Phased roadmap (120 weeks)
+├── agent-loop-n8n-Automation-Strategy.md # Master strategy document
+├── agent-loop-Roadmap.md                 # Phased roadmap (120 weeks)
 │
 ├── specs/                              # Technical specifications (6 specs)
-│   ├── 001-agent loop-platform/
+│   ├── 001-agent-loop-platform/
 │   ├── 002-auth-rbac-system/
 │   ├── 003-property-listings/
 │   ├── 004-crm-contacts/
@@ -325,7 +325,7 @@ Due to South African legal and compliance requirements, these features **cannot*
 |----------|------------------|
 | `AI-Automation-Inventory.md` | Complete list of what can/can't be automated |
 | `BLOCKERS.md` | Specific blockers and workarounds |
-| `Agent Loop-n8n-Automation-Strategy.md` | Full automation strategy (20K words) |
+| `agent-loop-n8n-Automation-Strategy.md` | Full automation strategy (20K words) |
 | `specs/001-006` | Technical specs for first 6 features |
 | `n8n-workflows/README.md` | How to use the workflows |
 
@@ -409,14 +409,14 @@ To fully integrate with South African real estate ecosystem:
 
 ## 📄 License
 
-This is a specification and strategy document set for Agent Loop real estate platform.
+This is a specification and strategy document set for agent-loop real estate platform.
 
 ---
 
-**Project**: Agent Loop
+**Project**: agent-loop
 **Market**: South Africa Real Estate  
 **Status**: Strategy Complete, Development Ready  
-**Repository**: https://github.com/mikewithoutthemechanics/Agent Loop.git
+**Repository**: https://github.com/mikewithoutthemechanics/agent-loop.git
 **Last Updated**: 2026-04-15
 
 *Built with n8n + OpenAI + PostgreSQL + React*

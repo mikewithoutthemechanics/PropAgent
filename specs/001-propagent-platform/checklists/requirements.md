@@ -1,4 +1,4 @@
-# Specification Quality Checklist: Agent Loop AI-Powered Property Management Platform
+# Specification Quality Checklist: agent-loop AI-Powered Property Management Platform
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-03-23

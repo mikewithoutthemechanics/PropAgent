@@ -1,4 +1,4 @@
-# Agent Loop n8n Workflow Test Results
+# agent-loop n8n Workflow Test Results
 ## End-to-End Testing Guide
 
 ---
@@ -165,7 +165,7 @@ Get-ChildItem *.json | ForEach-Object {
 ### 1. Set Up Supabase (5 minutes)
 ```bash
 # Create project at https://supabase.com
-# Name: agent loop
+# Name: agent-loop
 # Copy URL and Service Role Key
 ```
 

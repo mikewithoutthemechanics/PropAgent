@@ -68,7 +68,7 @@ export default function SettingsPage() {
     lastName: 'Hodgson',
     email: 'dean@agentloop.co.za',
     phone: '+27827686661',
-    agencyName: 'Agent Loop Consulting',
+    agencyName: 'agent-loop Consulting',
     ffcNumber: 'FFC-2024-001234',
   });
 

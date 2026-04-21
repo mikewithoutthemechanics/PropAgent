@@ -1,5 +1,5 @@
 # n8n Credentials Setup Guide
-## Agent Loop Workflows
+## agent-loop Workflows
 
 ---
 
@@ -44,7 +44,7 @@ If credential doesn't work, you can hardcode temporarily:
 ### Step 1: Create Project
 1. Go to https://supabase.com
 2. Sign up → **New Project**
-3. Name: `agent loop`
+3. Name: `agent-loop`
 4. Save the password
 5. Wait 2 minutes for provisioning
 
@@ -58,7 +58,7 @@ If credential doesn't work, you can hardcode temporarily:
 1. Settings → Credentials → New
 2. Select **Supabase**
 3. Configure:
-   - **Name**: `Agent Loop DB`
+   - **Name**: `agent-loop DB`
    - **Host**: Your Supabase URL
    - **Service Role Secret**: Your service role key
 4. Click **Save**

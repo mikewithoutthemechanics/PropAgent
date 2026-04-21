@@ -37,7 +37,7 @@ export default function NewPropertyPage() {
           name: 'You',
           email: 'you@agentloop.co.za',
           phone: '+27 00 000 0000',
-          agencyName: 'Agent Loop',
+          agencyName: 'agent-loop',
         },
         createdAt: now,
         updatedAt: now,

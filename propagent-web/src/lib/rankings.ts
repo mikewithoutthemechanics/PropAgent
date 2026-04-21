@@ -1,4 +1,4 @@
-// Agent Loop - Ranking & Reviews System
+// agent-loop - Ranking & Reviews System
 // NPS-based agent feedback (principals only)
 
 export type ReviewStatus = 'pending' | 'completed' | 'disputed';

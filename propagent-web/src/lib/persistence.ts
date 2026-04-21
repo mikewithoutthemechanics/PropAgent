@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 // Storage key prefix so we can version/clear if needed
-const KEY_PREFIX = "agent loop::v1::";
+const KEY_PREFIX = "agent-loop::v1::";
 
 function storageKey(key: string) {
   return `${KEY_PREFIX}${key}`;
@@ -31,7 +31,7 @@ export function writeLocal<T>(key: string, value: T): void {
     window.localStorage.setItem(storageKey(key), JSON.stringify(value));
     // Fire a synthetic event so other hooks in the same tab update too.
     window.dispatchEvent(
-      new CustomEvent("agent loop:storage", { detail: { key } })
+      new CustomEvent("agent-loop:storage", { detail: { key } })
     );
   } catch (err) {
     console.warn(`persistence: failed to write ${key}`, err);
@@ -43,7 +43,7 @@ export function removeLocal(key: string): void {
   try {
     window.localStorage.removeItem(storageKey(key));
     window.dispatchEvent(
-      new CustomEvent("agent loop:storage", { detail: { key } })
+      new CustomEvent("agent-loop:storage", { detail: { key } })
     );
   } catch (err) {
     console.warn(`persistence: failed to remove ${key}`, err);
@@ -90,11 +90,11 @@ export function useLocalStorageState<T>(
       }
     };
     window.addEventListener("storage", onStorage);
-    window.addEventListener("agent loop:storage", onCustom as EventListener);
+    window.addEventListener("agent-loop:storage", onCustom as EventListener);
     return () => {
       window.removeEventListener("storage", onStorage);
       window.removeEventListener(
-        "agent loop:storage",
+        "agent-loop:storage",
         onCustom as EventListener,
       );
     };

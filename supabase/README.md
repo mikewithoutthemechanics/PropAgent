@@ -1,4 +1,4 @@
-# Agent Loop Supabase Database Setup
+# agent-loop Supabase Database Setup
 
 ## Quick Setup
 

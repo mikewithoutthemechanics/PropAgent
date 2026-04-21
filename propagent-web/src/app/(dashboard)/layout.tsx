@@ -37,7 +37,7 @@ export default function DashboardLayout({
   // Route first-time users through the onboarding flow once auth resolves.
   // Source of truth is `profile.onboarded_at` (server-authoritative, so the
   // flag follows the user across devices). We fall back to the
-  // `agent loop-onboarded` localStorage flag for two cases:
+  // `agent-loop-onboarded` localStorage flag for two cases:
   //   1. Supabase isn't configured in this environment (no profile ever
   //      loads) — we still want the flow to work for local / preview
   //      builds.
@@ -105,7 +105,7 @@ export default function DashboardLayout({
               <div className="w-8 h-8 bg-[#D8F053] rounded-full flex items-center justify-center">
                 <span className="text-black font-semibold text-sm">S</span>
               </div>
-              <span className="font-medium text-black">Agent Loop</span>
+              <span className="font-medium text-black">agent-loop</span>
             </div>
           </div>
 
@@ -114,7 +114,7 @@ export default function DashboardLayout({
             <div className="w-9 h-9 bg-[#D8F053] rounded-full flex items-center justify-center">
               <span className="text-black font-semibold text-sm">S</span>
             </div>
-            <span className="font-medium text-black">Agent Loop</span>
+            <span className="font-medium text-black">agent-loop</span>
           </div>
 
           {/* Main Menu - Desktop Only */}

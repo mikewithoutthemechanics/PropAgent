@@ -790,8 +790,8 @@ return [{
   "staticData": null,
   "tags": [
     {
-      "name": "Agent Loop",
-      "id": "tag-agent loop",
+      "name": "agent-loop",
+      "id": "tag-agent-loop",
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },

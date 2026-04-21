@@ -1,6 +1,6 @@
-# Contributing to Agent Loop
+# Contributing to agent-loop
 
-Thank you for considering contributing to Agent Loop! Please read this guide to understand our development workflow and how to contribute effectively.
+Thank you for considering contributing to agent-loop! Please read this guide to understand our development workflow and how to contribute effectively.
 
 ## Development Workflow
 

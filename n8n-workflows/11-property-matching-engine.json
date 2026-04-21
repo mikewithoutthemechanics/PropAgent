@@ -149,7 +149,7 @@ return matchPairs.map(pair => ({ json: pair }));"
           "messages": [
             {
               "role": "system",
-              "content": "You are a property matching AI for Agent Loop, a South African real estate platform. Analyze buyer requirements against property listings and calculate match scores.\n\nMatch Factors:\n- Budget alignment (+- 20% flexibility)\n- Location preferences match\n- Property type compatibility\n- Bedroom/bathroom requirements\n- Feature overlap (pool, garage, security, etc.)\n\nReturn valid JSON only with this exact structure:\n{\n  \"match_score\": 0-100,\n  \"match_grade\": \"excellent|good|fair|poor\",\n  \"reasoning\": \"brief 1-2 sentence explanation\",\n  \"key_matches\": [\"what matches well\"],\n  \"concerns\": [\"any mismatches or concerns\"],\n  \"suggested_message\": \"personalized message to buyer (max 300 chars)\"\n}"
+              "content": "You are a property matching AI for agent-loop, a South African real estate platform. Analyze buyer requirements against property listings and calculate match scores.\n\nMatch Factors:\n- Budget alignment (+- 20% flexibility)\n- Location preferences match\n- Property type compatibility\n- Bedroom/bathroom requirements\n- Feature overlap (pool, garage, security, etc.)\n\nReturn valid JSON only with this exact structure:\n{\n  \"match_score\": 0-100,\n  \"match_grade\": \"excellent|good|fair|poor\",\n  \"reasoning\": \"brief 1-2 sentence explanation\",\n  \"key_matches\": [\"what matches well\"],\n  \"concerns\": [\"any mismatches or concerns\"],\n  \"suggested_message\": \"personalized message to buyer (max 300 chars)\"\n}"
             },
             {
               "role": "user",
@@ -306,7 +306,7 @@ return {
           ],
           "from": {
             "email": "matches@agentloop.co.za",
-            "name": "Agent Loop Matches"
+            "name": "agent-loop Matches"
           },
           "subject": "={{ 'We Found You a ' + $json.match_grade.toUpperCase() + ' Property Match!' }}",
           "content": [
@@ -329,7 +329,7 @@ ${$json.suggested_message}
 Reply to this email or call us to arrange a viewing.
 
 Best regards,
-Agent Loop Team`
+agent-loop Team`
 }}"
             }
           ]
@@ -361,7 +361,7 @@ Agent Loop Team`
             {
               "name": "Body",
               "value": "={{
-`Agent Loop: ${$json.match_grade.toUpperCase()} match found! ${$json.property_address} - R${$json.property_price?.toLocaleString()}. Score: ${$json.match_score}/100. ${$json.suggested_message.substring(0, 100)}`
+`agent-loop: ${$json.match_grade.toUpperCase()} match found! ${$json.property_address} - R${$json.property_price?.toLocaleString()}. Score: ${$json.match_score}/100. ${$json.suggested_message.substring(0, 100)}`
 }}"
             }
           ]

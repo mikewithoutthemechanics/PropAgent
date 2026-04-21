@@ -84,16 +84,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (!DEMO_MODE) {
-      localStorage.removeItem('agent loop-demo-mode');
+      localStorage.removeItem('agent-loop-demo-mode');
       return;
     }
     const params = new URLSearchParams(window.location.search);
     const urlDemo = params.get('demo') === 'true';
-    const storedDemo = localStorage.getItem('agent loop-demo-mode') === 'true';
+    const storedDemo = localStorage.getItem('agent-loop-demo-mode') === 'true';
     if (urlDemo || storedDemo) {
       setIsDemoMode(true);
       if (urlDemo) {
-        localStorage.setItem('agent loop-demo-mode', 'true');
+        localStorage.setItem('agent-loop-demo-mode', 'true');
       }
     }
   }, []);
@@ -236,7 +236,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     if (isDemoMode) {
       setIsDemoMode(false);
-      localStorage.removeItem('agent loop-demo-mode');
+      localStorage.removeItem('agent-loop-demo-mode');
       setUser(null);
       setProfile(null);
       setSession(null);

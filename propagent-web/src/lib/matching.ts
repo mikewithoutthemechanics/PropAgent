@@ -1,4 +1,4 @@
-// Property Matching Algorithm for Agent Loop
+// Property Matching Algorithm for agent-loop
 // POPIA-compliant: criteria-only matching, no client data stored on servers
 // Supports both RENTAL (tenants) and SALES (buyers)
 

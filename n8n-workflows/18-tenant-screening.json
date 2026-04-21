@@ -179,13 +179,13 @@
           ],
           "from": {
             "email": "screening@agentloop.co.za",
-            "name": "Agent Loop Screening"
+            "name": "agent-loop Screening"
           },
           "subject": "\u00f0\u0178\u0161\u00a8 HIGH RISK: Tenant Application Requires Urgent Review - {{ $json.applicant_name }}",
           "content": [
             {
               "type": "text/plain",
-              "value": "URGENT: High Risk Tenant Application\n\nApplicant: {{ $json.applicant_name }}\nRisk Level: {{ $json.risk_level.toUpperCase() }}\nRisk Score: {{ $json.risk_score }}/100\nAffordability: {{ $json.affordability_status }} ({{ ($json.affordability_ratio * 100).toFixed(1) }}%)\n\nRED FLAGS:\n{{ $json.red_flags.map(f => `- ${f.flag} (${f.severity})`).join('\\n') }}\n\nRECOMMENDED ACTIONS:\n{{ $json.recommended_verifications.map(v => `- ${v}`).join('\\n') }}\n\nSummary: {{ $json.summary }}\n\nThis application requires immediate manual review before proceeding.\n\nAgent Loop Screening System"
+              "value": "URGENT: High Risk Tenant Application\n\nApplicant: {{ $json.applicant_name }}\nRisk Level: {{ $json.risk_level.toUpperCase() }}\nRisk Score: {{ $json.risk_score }}/100\nAffordability: {{ $json.affordability_status }} ({{ ($json.affordability_ratio * 100).toFixed(1) }}%)\n\nRED FLAGS:\n{{ $json.red_flags.map(f => `- ${f.flag} (${f.severity})`).join('\\n') }}\n\nRECOMMENDED ACTIONS:\n{{ $json.recommended_verifications.map(v => `- ${v}`).join('\\n') }}\n\nSummary: {{ $json.summary }}\n\nThis application requires immediate manual review before proceeding.\n\nagent-loop Screening System"
             }
           ]
         }
@@ -224,13 +224,13 @@
           ],
           "from": {
             "email": "screening@agentloop.co.za",
-            "name": "Agent Loop Screening"
+            "name": "agent-loop Screening"
           },
           "subject": "Tenant Application Screening Complete - {{ $json.applicant_name }}",
           "content": [
             {
               "type": "text/plain",
-              "value": "Tenant Application Screening Complete\n\nApplicant: {{ $json.applicant_name }}\nRisk Level: {{ $json.risk_level.toUpperCase() }}\nRisk Score: {{ $json.risk_score }}/100\nAffordability: {{ $json.affordability_status }} ({{ ($json.affordability_ratio * 100).toFixed(1) }}%)\nCompleteness: {{ $json.completeness_score }}%\n\nPOSITIVE INDICATORS:\n{{ $json.positive_indicators.length > 0 ? $json.positive_indicators.map(i => `- ${i}`).join('\\n') : 'None noted' }}\n\n{{ $json.red_flags.length > 0 ? 'AREAS OF CONCERN:\\n' + $json.red_flags.map(f => `- ${f.flag}`).join('\\n') : '' }}\n\nRECOMMENDED VERIFICATIONS:\n{{ $json.recommended_verifications.map(v => `- ${v}`).join('\\n') }}\n\nSummary: {{ $json.summary }}\n\nRecommendation: {{ $json.recommendation.replace(/_/g, ' ').toUpperCase() }}\n\nAgent Loop Screening System"
+              "value": "Tenant Application Screening Complete\n\nApplicant: {{ $json.applicant_name }}\nRisk Level: {{ $json.risk_level.toUpperCase() }}\nRisk Score: {{ $json.risk_score }}/100\nAffordability: {{ $json.affordability_status }} ({{ ($json.affordability_ratio * 100).toFixed(1) }}%)\nCompleteness: {{ $json.completeness_score }}%\n\nPOSITIVE INDICATORS:\n{{ $json.positive_indicators.length > 0 ? $json.positive_indicators.map(i => `- ${i}`).join('\\n') : 'None noted' }}\n\n{{ $json.red_flags.length > 0 ? 'AREAS OF CONCERN:\\n' + $json.red_flags.map(f => `- ${f.flag}`).join('\\n') : '' }}\n\nRECOMMENDED VERIFICATIONS:\n{{ $json.recommended_verifications.map(v => `- ${v}`).join('\\n') }}\n\nSummary: {{ $json.summary }}\n\nRecommendation: {{ $json.recommendation.replace(/_/g, ' ').toUpperCase() }}\n\nagent-loop Screening System"
             }
           ]
         }

@@ -1,7 +1,7 @@
-# Agent Loop Deployment Guide
+# agent-loop Deployment Guide
 
 ## Overview
-This document clarifies the deployment process for Agent Loop to prevent confusion and ensure consistent, reliable deployments.
+This document clarifies the deployment process for agent-loop to prevent confusion and ensure consistent, reliable deployments.
 
 ## Current Deployment Situation
 

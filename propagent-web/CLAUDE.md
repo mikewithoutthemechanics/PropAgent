@@ -1,4 +1,4 @@
-# Agent Loop Web - Development Guide
+# agent-loop Web - Development Guide
 
 ## Project Overview
 

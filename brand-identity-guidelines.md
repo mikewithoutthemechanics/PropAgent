@@ -1,4 +1,4 @@
-# Agent Loop Brand Identity Guidelines
+# agent-loop Brand Identity Guidelines
 
 ## Modern SaaS Style — Fresh, Innovative, Property Tech
 
@@ -8,7 +8,7 @@
 
 ## 1. Brand Overview
 
-**Company:** Agent Loop
+**Company:** agent-loop
 **Industry:** Real Estate / Property Management (South Africa)  
 **Market Position:** AI-powered property platform for modern agents and property professionals  
 **Brand Personality:** Fresh, Innovative, Tech-Forward, Approachable
@@ -120,7 +120,7 @@
 
 ### Logo Lockup Options
 
-**Primary:** Agent Loop wordmark + Concept A mark (horizontal)
+**Primary:** agent-loop wordmark + Concept A mark (horizontal)
 **Stacked:** Mark above wordmark (square formats)  
 **Wordmark Only:** For legal documents, footers
 
@@ -233,9 +233,9 @@ The actual CSS includes extensive micro-animations:
 ```
 /brand/
 ├── logo/
-│   ├── agent loop-logo-primary.svg
-│   ├── agent loop-logo-white.svg
-│   ├── agent loop-mark.svg
+│   ├── agent-loop-logo-primary.svg
+│   ├── agent-loop-logo-white.svg
+│   ├── agent-loop-mark.svg
 │   └── favicon.ico
 ├── icons/
 │   ├── system-icons.svg

@@ -15,7 +15,7 @@ interface StepMeta {
 const steps: StepMeta[] = [
   {
     id: 1,
-    title: "Welcome to Agent Loop",
+    title: "Welcome to agent-loop",
     description: "Let's get your account set up — takes about 60 seconds.",
   },
   {
@@ -341,7 +341,7 @@ function OnboardingContent() {
         {currentStep === 3 && (
           <div className="space-y-4">
             <p className="text-sm text-charcoal-600 mb-4">
-              Integrations are the heart of Agent Loop. Link your existing databases to start matching buyers automatically.
+              Integrations are the heart of agent-loop. Link your existing databases to start matching buyers automatically.
             </p>
             <div>
               <label className="block text-sm font-medium text-charcoal-700 mb-1">

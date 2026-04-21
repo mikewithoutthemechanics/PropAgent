@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Terms of Service — Agent Loop',
+  title: 'Terms of Service — agent-loop',
 };
 
 export default function TermsPage() {
@@ -7,7 +7,7 @@ export default function TermsPage() {
     <main className="max-w-3xl mx-auto px-6 py-16 prose prose-slate">
       <h1 className="text-3xl font-bold text-charcoal-900 mb-6">Terms of Service</h1>
       <p className="text-charcoal-600">
-        These terms govern your use of Agent Loop. By creating an account or using
+        These terms govern your use of agent-loop. By creating an account or using
         the platform you agree to be bound by them.
       </p>
       <h2 className="mt-8 text-xl font-semibold text-charcoal-900">Your account</h2>
@@ -23,7 +23,7 @@ export default function TermsPage() {
       </ul>
       <h2 className="mt-8 text-xl font-semibold text-charcoal-900">Liability</h2>
       <p className="text-charcoal-600">
-        The platform is provided &ldquo;as is&rdquo;. Agent Loop is not liable for
+        The platform is provided &ldquo;as is&rdquo;. agent-loop is not liable for
         indirect or consequential losses arising from use of the service.
       </p>
       <h2 className="mt-8 text-xl font-semibold text-charcoal-900">Contact</h2>

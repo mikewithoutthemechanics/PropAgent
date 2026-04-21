@@ -1,4 +1,4 @@
-// AI Rent Suggestion Engine for Agent Loop
+// AI Rent Suggestion Engine for agent-loop
 // Supports both simulated data and real market data integration
 
 import { Property } from './types';

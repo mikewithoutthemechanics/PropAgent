@@ -53,7 +53,7 @@ export async function POST(req: Request) {
   const province = body.province ?? 'Gauteng';
   const propertyType = body.propertyType ?? 'residential';
 
-  const key = `agent loop:analytics:${body.suburb.toLowerCase().trim()}|${province.toLowerCase().trim()}|${propertyType.toLowerCase()}`;
+  const key = `agent-loop:analytics:${body.suburb.toLowerCase().trim()}|${province.toLowerCase().trim()}|${propertyType.toLowerCase()}`;
   const cached = await cacheGet<Result>(key);
   if (cached) return NextResponse.json({ ...cached, cached: true });
 

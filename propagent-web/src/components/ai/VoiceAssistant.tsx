@@ -220,7 +220,7 @@ export function VoiceAssistant({ isOpen: externalOpen, onClose: externalClose }:
               <div className="w-8 h-8 bg-[#D8F053] rounded-full flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-black" />
               </div>
-              <span className="text-white font-semibold">Agent Loop Voice</span>
+              <span className="text-white font-semibold">agent-loop Voice</span>
             </div>
             <button onClick={currentOnClose} className="text-white/60 hover:text-white">
               <X className="w-5 h-5" />

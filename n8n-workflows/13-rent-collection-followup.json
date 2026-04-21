@@ -179,7 +179,7 @@
           "messages": [
             {
               "role": "system",
-              "content": "You are a rent collection specialist for Agent Loop, a South African real estate platform. Generate escalating collection messages based on the stage of delinquency. Return ONLY valid JSON with no markdown formatting."
+              "content": "You are a rent collection specialist for agent-loop, a South African real estate platform. Generate escalating collection messages based on the stage of delinquency. Return ONLY valid JSON with no markdown formatting."
             },
             {
               "role": "user",
@@ -266,7 +266,7 @@
           ],
           "from": {
             "email": "collections@agentloop.co.za",
-            "name": "Agent Loop Collections"
+            "name": "agent-loop Collections"
           },
           "subject": "={{ $json.message_email_subject }}",
           "content": [
@@ -398,7 +398,7 @@
           ],
           "from": {
             "email": "collections@agentloop.co.za",
-            "name": "Agent Loop Collections"
+            "name": "agent-loop Collections"
           },
           "subject": "URGENT: Legal Escalation Required - Tenant 30+ Days Overdue",
           "content": [

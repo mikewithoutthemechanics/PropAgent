@@ -1,7 +1,7 @@
 -- Migration: add an `onboarded_at` column to public.profiles so the app
 -- has a server-authoritative signal for whether a user has completed the
 -- new-user onboarding flow. Previously this was tracked only in
--- localStorage (`agent loop-onboarded`), which meant:
+-- localStorage (`agent-loop-onboarded`), which meant:
 --   * new browsers / incognito windows re-triggered onboarding,
 --   * a user logged in on a second device was treated as brand new, and
 --   * there was a split-second flash of dashboard before localStorage

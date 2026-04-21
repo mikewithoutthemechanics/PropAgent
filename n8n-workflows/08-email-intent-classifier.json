@@ -30,7 +30,7 @@
           "messages": [
             {
               "role": "system",
-              "content": "You are an intelligent email classifier for Agent Loop, a South African real estate platform. Analyze emails and classify them into specific intent categories.\n\nCategories:\n- VIEWING_REQUEST: Request to schedule or reschedule a property viewing\n- PRICE_INQUIRY: Questions about price, offers, or negotiations\n- GENERAL_INFO: General questions about properties or services\n- COMPLAINT: Issues, complaints, or problems (marked as high urgency)\n- DOCUMENT_REQUEST: Requests for lease agreements, contracts, or documents\n- SPAM: Junk mail, unsolicited marketing, or irrelevant content\n\nExtract key information like property IDs, dates/times, names, and budget if mentioned.\n\nReturn ONLY a valid JSON object with no markdown formatting:"
+              "content": "You are an intelligent email classifier for agent-loop, a South African real estate platform. Analyze emails and classify them into specific intent categories.\n\nCategories:\n- VIEWING_REQUEST: Request to schedule or reschedule a property viewing\n- PRICE_INQUIRY: Questions about price, offers, or negotiations\n- GENERAL_INFO: General questions about properties or services\n- COMPLAINT: Issues, complaints, or problems (marked as high urgency)\n- DOCUMENT_REQUEST: Requests for lease agreements, contracts, or documents\n- SPAM: Junk mail, unsolicited marketing, or irrelevant content\n\nExtract key information like property IDs, dates/times, names, and budget if mentioned.\n\nReturn ONLY a valid JSON object with no markdown formatting:"
             },
             {
               "role": "user",
@@ -150,7 +150,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "contentType": "application/json",
-        "body": "={{ {\n  \"personalizations\": [\n    {\n      \"to\": [{\"email\": $json.from_email}]\n    }\n  ],\n  \"from\": {\"email\": \"noreply@agentloop.co.za\", \"name\": \"Agent Loop\"},\n  \"subject\": \"Re: \" + $json.subject,\n  \"content\": [\n    {\n      \"type\": \"text/plain\",\n      \"value\": $json.suggested_response + \"\\n\\nThis is an automated response. For urgent matters, please contact us at 087-123-4567.\"\n    }\n  ]\n} }}"
+        "body": "={{ {\n  \"personalizations\": [\n    {\n      \"to\": [{\"email\": $json.from_email}]\n    }\n  ],\n  \"from\": {\"email\": \"noreply@agentloop.co.za\", \"name\": \"agent-loop\"},\n  \"subject\": \"Re: \" + $json.subject,\n  \"content\": [\n    {\n      \"type\": \"text/plain\",\n      \"value\": $json.suggested_response + \"\\n\\nThis is an automated response. For urgent matters, please contact us at 087-123-4567.\"\n    }\n  ]\n} }}"
       },
       "name": "Send Auto-Response",
       "type": "n8n-nodes-base.httpRequest",

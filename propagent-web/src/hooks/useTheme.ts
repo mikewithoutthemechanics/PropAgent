@@ -9,7 +9,7 @@ export function useTheme() {
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    const stored = localStorage.getItem('agent loop-theme') as Theme | null;
+    const stored = localStorage.getItem('agent-loop-theme') as Theme | null;
     if (stored) setTheme(stored);
   }, []);
 
@@ -46,7 +46,7 @@ export function useTheme() {
 
   const changeTheme = (newTheme: Theme) => {
     setTheme(newTheme);
-    localStorage.setItem('agent loop-theme', newTheme);
+    localStorage.setItem('agent-loop-theme', newTheme);
   };
 
   const toggleTheme = () => {

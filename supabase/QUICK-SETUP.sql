@@ -1,4 +1,4 @@
--- Agent Loop Supabase Quick Setup
+-- agent-loop Supabase Quick Setup
 -- Copy this entire file into Supabase SQL Editor and run
 -- URL: https://app.supabase.com/project/sehweutpfftnrcbqshsn/sql-editor
 

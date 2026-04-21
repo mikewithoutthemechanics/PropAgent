@@ -1,6 +1,6 @@
 # Workflow #17: Viewing Scheduler AI
 
-**Project:** Agent Loop - South African Real Estate Platform
+**Project:** agent-loop - South African Real Estate Platform
 **Purpose:** AI-powered property viewing appointment scheduling  
 **Pattern:** Webhook → AI parsing → Calendar check → Confirmation
 

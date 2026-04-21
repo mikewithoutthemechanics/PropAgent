@@ -1,4 +1,4 @@
-# Agent Loop Enterprise Roadmap
+# agent-loop Enterprise Roadmap
 ## AI-Powered Property Management Platform for South Africa
 
 **Total Features**: 300+ across 18 categories  
@@ -10,7 +10,7 @@
 ## 🎯 EXECUTIVE SUMMARY
 
 ### Platform Vision
-Agent Loop is an enterprise-grade, AI-powered property management platform tailored for the South African real estate market. It combines trust accounting, CRM, listing management, compliance automation, and AI-driven communications into a unified ecosystem.
+agent-loop is an enterprise-grade, AI-powered property management platform tailored for the South African real estate market. It combines trust accounting, CRM, listing management, compliance automation, and AI-driven communications into a unified ecosystem.
 
 ### Key Differentiators
 1. **South Africa Compliance-First**: Built-in FICA, POPIA, PPRA compliance

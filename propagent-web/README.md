@@ -1,6 +1,6 @@
-# Agent Loop Web Frontend
+# agent-loop Web Frontend
 
-Next.js 16 frontend for Agent Loop real estate platform - South Africa.
+Next.js 16 frontend for agent-loop real estate platform - South Africa.
 
 ## Tech Stack
 

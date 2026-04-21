@@ -1,4 +1,4 @@
-# Agent Loop Accessibility Audit (WCAG 2.2 AA)
+# agent-loop Accessibility Audit (WCAG 2.2 AA)
 
 > Last Updated: 2026-04-15
 

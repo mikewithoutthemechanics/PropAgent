@@ -221,7 +221,7 @@ export default function SyndicationPage() {
       <div className="mt-8 p-4 bg-lime-400/10 border-2 border-lime-400/30 rounded-2xl">
         <h4 className="font-medium text-charcoal-900 mb-2">How to Configure</h4>
         <ul className="text-sm text-charcoal-600 space-y-1">
-          <li>• <strong>Property24:</strong> Contact Agent Loop for API access</li>
+          <li>• <strong>Property24:</strong> Contact agent-loop for API access</li>
           <li>• <strong>Private Property:</strong> Contact Private Property for API credentials</li>
           <li>• <strong>Facebook/Instagram:</strong> Create a Meta Business App and get access tokens</li>
           <li>• <strong>X (Twitter):</strong> Apply for Twitter API v2 access</li>
