@@ -10,6 +10,7 @@ interface BreadcrumbItem {
 
 const routeLabels: Record<string, string> = {
   '/dashboard': 'Dashboard',
+  '/tools': 'AI Tools',
   '/properties': 'Properties',
   '/properties/[id]': 'Property Details',
   '/leads': 'Leads',

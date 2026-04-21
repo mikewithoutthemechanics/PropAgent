@@ -32,6 +32,7 @@ import { useAuth } from '@/lib/auth';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/tools', label: 'AI Tools', icon: Sparkles },
   { href: '/properties', label: 'Properties', icon: Building2 },
   { href: '/leads', label: 'Leads', icon: TrendingUp },
   { href: '/syndication', label: 'Syndication', icon: Share2 },
