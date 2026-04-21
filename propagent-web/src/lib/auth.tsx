@@ -75,19 +75,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [isDemoMode, setIsDemoMode] = useState(DEMO_MODE);
 
-// Check for demo mode on mount (e.g., from URL parameter or localStorage)
+  // Demo mode is a build-time flag only. When NEXT_PUBLIC_DEMO_MODE is not
+  // "true", URL params and localStorage cannot re-enable it — otherwise
+  // production users could bypass auth by setting a local flag.
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Check URL first, then localStorage
-      const params = new URLSearchParams(window.location.search);
-      const urlDemo = params.get('demo') === 'true';
-      const storedDemo = localStorage.getItem('propagent-demo-mode') === 'true';
-      
-      if (urlDemo || DEMO_MODE || storedDemo) {
-        setIsDemoMode(true);
-        if (urlDemo) {
-          localStorage.setItem('propagent-demo-mode', 'true');
-        }
+    if (typeof window === 'undefined') return;
+    if (!DEMO_MODE) {
+      localStorage.removeItem('propagent-demo-mode');
+      return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    const urlDemo = params.get('demo') === 'true';
+    const storedDemo = localStorage.getItem('propagent-demo-mode') === 'true';
+    if (urlDemo || storedDemo) {
+      setIsDemoMode(true);
+      if (urlDemo) {
+        localStorage.setItem('propagent-demo-mode', 'true');
       }
     }
   }, []);
