@@ -1,35 +1,92 @@
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Pure White Background */
-  --white: #FFFFFF;
-  --white-50: #FAFAFA;
-  --white-100: #F5F5F5;
+  /* ------------------------------------------------------------------
+     Design tokens (dark surface, cyan accent, Roboto).
+     Semantic names follow the new spec; palette names are retained and
+     re-pointed so existing `bg-white`, `text-charcoal-*`, `bg-lime-*`
+     class references continue to resolve without a per-component
+     refactor.
+     ------------------------------------------------------------------ */
 
-  /* Dark Elements - Deep Black & Charcoal */
-  --black: #000000;
-  --charcoal-950: #0A0A0A;
-  --charcoal-900: #111111;
-  --charcoal-800: #1A1A1A;
-  --charcoal-700: #2A2A2A;
-  --charcoal-600: #3D3D3D;
-  --charcoal-500: #525252;
-  --charcoal-400: #6B6B6B;
-  --charcoal-300: #8A8A8A;
-  --charcoal-200: #B3B3B3;
-  --charcoal-100: #D9D9D9;
-  --charcoal-50: #F0F0F0;
+  /* Base surfaces (dark theme) */
+  --surface-base: #000000;      /* color.surface.base */
+  --surface-raised: #2a2a2a;    /* color.surface.raised */
+  --surface-strong: #00beff;    /* color.surface.strong (accent) */
 
-  /* Brand Colors - Lime Green #D8F053 */
-  --lime-50: #FAFCE4;
-  --lime-100: #F5F9C9;
-  --lime-200: #EBF393;
-  --lime-300: #E1ED5D;
-  --lime-400: #D8F053;
-  --lime-500: #C2DC34;
-  --lime-600: #9FB029;
-  --lime-700: #7C8420;
+  /* Semantic text */
+  --text-primary: #ffffff;
+  --text-secondary: #333333;    /* low-contrast; use only on raised */
+  --text-tertiary: #86868b;
+
+  /* Typography scale */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 15px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 21px;
+  --font-size-4xl: 22px;
+  --font-size-base: 16px;
+  --font-weight-base: 400;
+  --line-height-base: 24px;
+  --font-family-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Spacing */
+  --space-1: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 12.5px;
+  --space-5: 13px;
+  --space-6: 14.4px;
+  --space-7: 20px;
+  --space-8: 23px;
+
+  /* Radius */
+  --radius-xs: 3px;
+  --radius-sm: 20px;
+  --radius-md: 50px;
+
+  /* Motion */
+  --motion-duration-instant: 250ms;
+  --motion-duration-fast: 300ms;
+  --motion-duration-normal: 400ms;
+
+  /* Legacy "white" now represents dark raised surface so that
+     existing `bg-white` class renders as card-on-dark. */
+  --white: var(--surface-raised);
+  --white-50: #1e1e1e;
+  --white-100: #1a1a1a;
+
+  /* Legacy "black" is still true black, the app base. */
+  --black: var(--surface-base);
+
+  /* Charcoal palette repurposed as a dark-mode neutral ramp:
+     low indices = bright (text), high indices = deep (surface). */
+  --charcoal-950: #000000;
+  --charcoal-900: #ffffff;      /* text-charcoal-900 -> primary text */
+  --charcoal-800: #f2f2f2;
+  --charcoal-700: #d9d9d9;
+  --charcoal-600: #b3b3b3;
+  --charcoal-500: #86868b;      /* text-charcoal-500 -> tertiary */
+  --charcoal-400: #6b6b6b;
+  --charcoal-300: #3d3d3d;
+  --charcoal-200: #2a2a2a;      /* border-charcoal-200 -> raised border */
+  --charcoal-100: #1f1f1f;      /* border-charcoal-100 -> subtle border */
+  --charcoal-50: #141414;
+
+  /* Brand color (lime -> cyan). Numeric suffix preserved for existing
+     hover: / focus: variants. */
+  --lime-50: #e0f7ff;
+  --lime-100: #b8eeff;
+  --lime-200: #7ce0ff;
+  --lime-300: #33cfff;
+  --lime-400: #00beff;
+  --lime-500: #00a7e0;
+  --lime-600: #0090c2;
+  --lime-700: #006d94;
 
   /* Brand Colors - Light Blue #53B4F0 */
   --sky-50: #F0F9FF;
@@ -50,23 +107,23 @@
   --purple-500: #A855F7;
   --purple-600: #9333EA;
 
-  /* Semantic Colors */
-  --background: var(--white);
-  --foreground: var(--charcoal-900);
-  --card: var(--white);
-  --card-border: var(--charcoal-100);
-  --primary: var(--lime-400);
-  --primary-foreground: var(--charcoal-900);
-  --primary-600: var(--lime-600);
-  --accent: var(--sky-400);
-  --accent-foreground: var(--white);
-  --accent-600: var(--sky-600);
-  --accent-700: var(--sky-700);
-  --expense: var(--rose-500);
-  --expense-600: var(--rose-600);
-  --expense-700: var(--rose-600);
+  /* Semantic aliases (dark) */
+  --background: var(--surface-base);
+  --foreground: var(--text-primary);
+  --card: var(--surface-raised);
+  --card-border: #1f1f1f;
+  --primary: var(--surface-strong);        /* cyan accent */
+  --primary-foreground: var(--surface-base);
+  --primary-600: #0090c2;
+  --accent: var(--surface-strong);
+  --accent-foreground: var(--surface-base);
+  --accent-600: #0090c2;
+  --accent-700: #006d94;
+  --expense: #f43f5e;
+  --expense-600: #e11d48;
+  --expense-700: #be123c;
 
-/* Status Colors */
+  /* Status Colors */
   --emerald-500: #10B981;
   --emerald-600: #059669;
   --amber-500: #F59E0B;
@@ -76,22 +133,47 @@
   --blue-500: #3B82F6;
   --blue-600: #2563EB;
 
-  /* Maintenance Ticket Status Colors */
-  --status-new-bg: var(--charcoal-900);
-  --status-new-text: var(--white);
-  --status-in-progress-bg: var(--lime-400);
-  --status-in-progress-text: var(--charcoal-900);
-  --status-pending-bg: var(--sky-400);
-  --status-pending-text: var(--white);
-  --status-ai-classified-bg: var(--purple-400);
-  --status-ai-classified-text: var(--white);
+  /* Maintenance Ticket Status Colors (dark theme) */
+  --status-new-bg: #1f1f1f;
+  --status-new-text: var(--text-primary);
+  --status-in-progress-bg: var(--surface-strong);
+  --status-in-progress-text: var(--surface-base);
+  --status-pending-bg: var(--sky-500);
+  --status-pending-text: var(--text-primary);
+  --status-ai-classified-bg: var(--purple-500);
+  --status-ai-classified-text: var(--text-primary);
   --status-assigned-bg: var(--blue-500);
-  --status-assigned-text: var(--white);
+  --status-assigned-text: var(--text-primary);
   --status-completed-bg: var(--emerald-500);
-  --status-completed-text: var(--white);
+  --status-completed-text: var(--text-primary);
   --status-cancelled-bg: var(--rose-500);
-  --status-cancelled-text: var(--white);
- }
+  --status-cancelled-text: var(--text-primary);
+}
+
+/* ------------------------------------------------------------------
+   Tailwind 4 @theme bridge — expose the design-system tokens as
+   first-class utility classes (bg-surface-base, text-primary,
+   bg-accent-strong, rounded-xs/sm/md, duration-instant/fast/normal).
+   ------------------------------------------------------------------ */
+@theme {
+  --font-sans: var(--font-family-primary);
+
+  --color-surface-base: var(--surface-base);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-strong: var(--surface-strong);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+
+  --duration-instant: var(--motion-duration-instant);
+  --duration-fast: var(--motion-duration-fast);
+  --duration-normal: var(--motion-duration-normal);
+}
 
 * {
   box-sizing: border-box;
@@ -102,20 +184,21 @@ html {
 }
 
 body {
-  background: var(--white);
-  color: var(--charcoal-900);
-  font-family: 'Urbanist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
+  background: var(--surface-base);
+  color: var(--text-primary);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  line-height: var(--line-height-base);
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Urbanist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-family-primary);
   font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  color: var(--charcoal-900);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--text-primary);
 }
 
 /* Modern Scrollbar */
