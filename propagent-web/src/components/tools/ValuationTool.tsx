@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Home, Search, MapPin, HomeIcon, Calculator, TrendingUp, AlertCircle, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { Home, Search, MapPin, HomeIcon, Calculator, TrendingUp, AlertCircle, ArrowRight, Sparkles } from 'lucide-react';
 import { Card, Button } from '@/components/ui';
 import { formatCurrency, cn } from '@/lib/utils';
+import { aiValuation } from '@/lib/ai-client';
 
 interface ValuationToolProps {
   address?: string;
@@ -18,6 +19,7 @@ export interface PropertyValuation {
   valueRange: { min: number; max: number };
   confidence: number;
   comparableCount: number;
+  rationale: string;
   factors: {
     name: string;
     impact: 'positive' | 'negative' | 'neutral';
@@ -25,16 +27,12 @@ export interface PropertyValuation {
   }[];
 }
 
-const marketTrends: Record<string, number> = {
-  sandton: 8.5, cape_town: 6.2, durban: 4.8, port_elizabeth: 3.2, bloemfontein: 2.5,
-  pretoria: 7.2, johannesburg: 6.8, midrand: 7.5, rosebank: 9.2, fourways: 7.8,
-};
-
 export function ValuationTool({ address, onComplete }: ValuationToolProps) {
   const [searchAddress, setSearchAddress] = useState(address || '');
   const [isValuing, setIsValuing] = useState(false);
   const [result, setResult] = useState<PropertyValuation | null>(null);
   const [step, setStep] = useState<'input' | 'details' | 'result'>('input');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [details, setDetails] = useState({
     bedrooms: 3,
@@ -48,49 +46,85 @@ export function ValuationTool({ address, onComplete }: ValuationToolProps) {
     hasSecurity: false,
   });
 
+  const goToDetails = () => {
+    if (!searchAddress) return;
+    setErrorMsg(null);
+    setStep('details');
+  };
+
   const handleValuate = async () => {
     if (!searchAddress) return;
-    
+
     setIsValuing(true);
-    setStep('details');
-    
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const suburbKey = searchAddress.split(',')[0].toLowerCase().trim().replace(/ /g, '_');
-    const trend = marketTrends[suburbKey] || 5.5;
-    
-    const baseValue = details.bedrooms * 400000 + details.bathrooms * 150000 + details.floorSize * 8000;
-    const conditionMultiplier = details.condition === 'excellent' ? 1.15 : 
-                              details.condition === 'good' ? 1.0 : 
-                              details.condition === 'fair' ? 0.85 : 0.7;
-    const poolBonus = details.hasPool ? 250000 : 0;
-    const securityBonus = details.hasSecurity ? 150000 : 0;
-    
-    const estimatedValue = Math.round((baseValue * conditionMultiplier + poolBonus + securityBonus) * (1 + trend / 100));
-    const variance = estimatedValue * 0.12;
-    
+    setErrorMsg(null);
+
+    const [suburb, province] = searchAddress
+      .split(',')
+      .map((s) => s.trim());
+
+    const res = await aiValuation({
+      address: searchAddress,
+      suburb: suburb || searchAddress,
+      province: province,
+      bedrooms: details.bedrooms,
+      bathrooms: details.bathrooms,
+      garages: details.garages,
+      floorSize: details.floorSize,
+      erfSize: details.erfSize,
+    });
+
+    setIsValuing(false);
+
+    if ('error' in res) {
+      setErrorMsg(
+        res.error.message ||
+          'AI valuation service is unavailable. Check that GROQ_API_KEY is configured.',
+      );
+      return;
+    }
+
+    const { estimatedValue, lowerBound, upperBound, rationale } = res.data;
+    const spread = (upperBound - lowerBound) / Math.max(1, estimatedValue);
+    const confidence = Math.max(60, Math.min(95, Math.round(95 - spread * 100)));
+
     const valuation: PropertyValuation = {
       address: searchAddress,
-      suburb: searchAddress.split(',')[0].trim(),
-      province: searchAddress.split(',')[1]?.trim() || 'Gauteng',
+      suburb: suburb || searchAddress,
+      province: province || '',
       estimatedValue,
-      valueRange: {
-        min: Math.round(estimatedValue - variance),
-        max: Math.round(estimatedValue + variance),
-      },
-      confidence: Math.min(95, 70 + (details.floorSize > 150 ? 10 : 0) + (details.yearBuilt > 2015 ? 5 : 0)),
-      comparableCount: Math.floor(8 + Math.random() * 10),
+      valueRange: { min: lowerBound, max: upperBound },
+      confidence,
+      comparableCount: 0,
+      rationale,
       factors: [
-        { name: 'Location', impact: 'positive', description: `${trend}% annual appreciation in area` },
-        { name: 'Property Size', impact: details.floorSize > 150 ? 'positive' : 'neutral', description: `${details.floorSize}m² floor area` },
-        { name: 'Condition', impact: details.condition === 'good' ? 'positive' : 'neutral', description: `${details.condition} condition` },
-        { name: 'Security', impact: details.hasSecurity ? 'positive' : 'neutral', description: details.hasSecurity ? '24/7 security' : 'No security' },
+        {
+          name: 'AI Model',
+          impact: 'positive',
+          description: 'Groq llama-3.3-70b analysis',
+        },
+        {
+          name: 'Property Size',
+          impact: details.floorSize > 150 ? 'positive' : 'neutral',
+          description: `${details.floorSize} m² floor area`,
+        },
+        {
+          name: 'Condition',
+          impact:
+            details.condition === 'excellent' || details.condition === 'good'
+              ? 'positive'
+              : 'neutral',
+          description: `${details.condition} condition`,
+        },
+        {
+          name: 'Security',
+          impact: details.hasSecurity ? 'positive' : 'neutral',
+          description: details.hasSecurity ? '24/7 security' : 'No security',
+        },
       ],
     };
-    
+
     setResult(valuation);
     setStep('result');
-    setIsValuing(false);
     onComplete?.(valuation);
   };
 
@@ -104,7 +138,10 @@ export function ValuationTool({ address, onComplete }: ValuationToolProps) {
             </div>
             <div>
               <h2 className="text-lg font-semibold text-stone-900">Property Valuation</h2>
-              <p className="text-sm text-stone-500">Get an instant estimated property value</p>
+              <p className="text-sm text-stone-500 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" />
+                AI-powered estimate via Groq
+              </p>
             </div>
           </div>
 
@@ -117,28 +154,21 @@ export function ValuationTool({ address, onComplete }: ValuationToolProps) {
                   type="text"
                   value={searchAddress}
                   onChange={(e) => setSearchAddress(e.target.value)}
-                  placeholder="e.g., 14 Oak Lane, Sandton"
+                  placeholder="e.g., 14 Oak Lane, Sandton, Gauteng"
                   className="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-lg"
                 />
               </div>
             </div>
 
             <Button
-              onClick={handleValuate}
-              disabled={!searchAddress || isValuing}
+              onClick={goToDetails}
+              disabled={!searchAddress}
               className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
             >
-              {isValuing ? (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Analyzing...
-                </div>
-              ) : (
-                <div className="flex items-center justify-center gap-2">
-                  <Calculator className="w-4 h-4" />
-                  Get Valuation
-                </div>
-              )}
+              <div className="flex items-center justify-center gap-2">
+                <Calculator className="w-4 h-4" />
+                Continue
+              </div>
             </Button>
           </div>
         </Card>
@@ -240,18 +270,25 @@ export function ValuationTool({ address, onComplete }: ValuationToolProps) {
             </label>
           </div>
 
+          {errorMsg && (
+            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+              {errorMsg}
+            </div>
+          )}
+
           <Button
             onClick={handleValuate}
+            disabled={isValuing}
             className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
           >
             {isValuing ? (
               <div className="flex items-center justify-center gap-2">
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Calculating...
+                AI analysing...
               </div>
             ) : (
               <div className="flex items-center justify-center gap-2">
-                Calculate Value <ArrowRight className="w-4 h-4" />
+                <Sparkles className="w-4 h-4" /> Run AI Valuation <ArrowRight className="w-4 h-4" />
               </div>
             )}
           </Button>
@@ -262,20 +299,25 @@ export function ValuationTool({ address, onComplete }: ValuationToolProps) {
         <>
           <Card className="p-6 bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200">
             <div className="text-center mb-4">
-              <p className="text-sm text-cyan-600 font-medium">Estimated Property Value</p>
+              <p className="text-sm text-cyan-600 font-medium flex items-center justify-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" /> AI Estimated Value
+              </p>
               <p className="text-4xl font-bold text-cyan-700">{formatCurrency(result.estimatedValue)}</p>
               <p className="text-sm text-stone-500 mt-2">
-                Range: {formatCurrency(result.valueRange.min)} - {formatCurrency(result.valueRange.max)}
+                Range: {formatCurrency(result.valueRange.min)} – {formatCurrency(result.valueRange.max)}
               </p>
             </div>
             <div className="flex justify-center gap-4 text-sm">
               <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full">
                 {result.confidence}% confidence
               </span>
-              <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full">
-                {result.comparableCount} comparables
-              </span>
             </div>
+            {result.rationale && (
+              <p className="mt-4 text-sm text-stone-700 leading-relaxed border-t border-cyan-200 pt-4">
+                <TrendingUp className="w-4 h-4 inline mr-1.5 -mt-0.5 text-cyan-600" />
+                {result.rationale}
+              </p>
+            )}
           </Card>
 
           <Card className="p-6">
@@ -302,9 +344,6 @@ export function ValuationTool({ address, onComplete }: ValuationToolProps) {
               className="flex-1"
             >
               New Valuation
-            </Button>
-            <Button className="flex-1 bg-cyan-500 hover:bg-cyan-600">
-              Use This Value
             </Button>
           </div>
         </>

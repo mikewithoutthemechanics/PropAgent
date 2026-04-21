@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Wrench, Plus, Clock, CheckCircle, AlertTriangle, DollarSign, 
-  Calendar, User, ChevronRight, MoreVertical, Search,
-  Filter, Home, Lightbulb, Droplets, Thermometer
+import {
+  Wrench, Plus, Clock, CheckCircle, AlertTriangle, DollarSign,
+  Calendar, User, ChevronRight, Search, X,
+  Home, Lightbulb, Droplets, Thermometer, Sparkles,
 } from 'lucide-react';
 import { Card } from '@/components/ui';
 import { cn, formatCurrency } from '@/lib/utils';
+import { aiMaintenanceClassify } from '@/lib/ai-client';
 
 interface MaintenanceRequest {
   id: string;
@@ -84,6 +85,51 @@ export function MaintenanceTracker() {
   const [requests, setRequests] = useState<MaintenanceRequest[]>(initialRequests);
   const [filter, setFilter] = useState<string>('all');
   const [search, setSearch] = useState('');
+  const [showNew, setShowNew] = useState(false);
+  const [newForm, setNewForm] = useState({ property: '', issue: '', reportedBy: '' });
+  const [classifying, setClassifying] = useState(false);
+  const [newError, setNewError] = useState<string | null>(null);
+
+  const createRequest = async () => {
+    if (!newForm.issue.trim() || !newForm.property.trim()) {
+      setNewError('Property and issue description are required.');
+      return;
+    }
+    setClassifying(true);
+    setNewError(null);
+    const res = await aiMaintenanceClassify({
+      issue: newForm.issue,
+      property: newForm.property,
+      reportedBy: newForm.reportedBy || undefined,
+    });
+    setClassifying(false);
+    if ('error' in res) {
+      setNewError(
+        res.error.message ||
+          'AI classification unavailable. Check that GROQ_API_KEY is configured.',
+      );
+      return;
+    }
+    const { category, priority, estimatedCost, recommendedVendor } = res.data;
+    const today = new Date().toISOString().slice(0, 10);
+    setRequests((r) => [
+      {
+        id: String(Date.now()),
+        property: newForm.property,
+        issue: newForm.issue,
+        category,
+        priority,
+        status: 'pending',
+        reportedDate: today,
+        estimatedCost,
+        vendor: recommendedVendor,
+        notes: res.data.rationale,
+      },
+      ...r,
+    ]);
+    setNewForm({ property: '', issue: '', reportedBy: '' });
+    setShowNew(false);
+  };
 
   const filteredRequests = requests.filter(req => {
     if (filter !== 'all' && req.status !== filter) return false;
@@ -182,7 +228,10 @@ export function MaintenanceTracker() {
               </button>
             ))}
           </div>
-          <button className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-medium rounded-lg hover:from-orange-600 hover:to-red-600 flex items-center gap-2">
+          <button
+            onClick={() => setShowNew(true)}
+            className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-medium rounded-lg hover:from-orange-600 hover:to-red-600 flex items-center gap-2"
+          >
             <Plus className="w-4 h-4" />
             New Request
           </button>
@@ -260,6 +309,86 @@ export function MaintenanceTracker() {
           )}
         </div>
       </Card>
+
+      {showNew && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <Card className="w-full max-w-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-orange-500" />
+                <h3 className="text-lg font-semibold text-stone-900">New Maintenance Request</h3>
+              </div>
+              <button
+                onClick={() => setShowNew(false)}
+                className="text-stone-400 hover:text-stone-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-sm text-stone-500 mb-4">
+              Describe the issue — Groq AI will categorise it, estimate cost, and suggest a vendor.
+            </p>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-stone-600 mb-1">Property</label>
+                <input
+                  type="text"
+                  value={newForm.property}
+                  onChange={(e) => setNewForm((f) => ({ ...f, property: e.target.value }))}
+                  placeholder="e.g., 14 Oak Lane, Sandton"
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-stone-600 mb-1">Issue description</label>
+                <textarea
+                  rows={3}
+                  value={newForm.issue}
+                  onChange={(e) => setNewForm((f) => ({ ...f, issue: e.target.value }))}
+                  placeholder="e.g., Geyser leaking in main bathroom, no hot water"
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-stone-600 mb-1">Reported by (optional)</label>
+                <input
+                  type="text"
+                  value={newForm.reportedBy}
+                  onChange={(e) => setNewForm((f) => ({ ...f, reportedBy: e.target.value }))}
+                  placeholder="Tenant name"
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                />
+              </div>
+              {newError && <p className="text-sm text-red-600">{newError}</p>}
+              <div className="flex gap-2 pt-2">
+                <button
+                  onClick={() => setShowNew(false)}
+                  className="flex-1 py-2 bg-stone-100 text-stone-700 text-sm font-medium rounded-lg hover:bg-stone-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={createRequest}
+                  disabled={classifying}
+                  className="flex-1 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-medium rounded-lg disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {classifying ? (
+                    <>
+                      <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Classifying…
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      Classify & Create
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

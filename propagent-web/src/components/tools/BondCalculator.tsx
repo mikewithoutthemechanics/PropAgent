@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Calculator, Info, TrendingDown, TrendingUp, Percent, Calendar, DollarSign, Home } from 'lucide-react';
-import { Card } from '@/components/ui';
+import { Calculator, Info, Percent, Calendar, Sparkles } from 'lucide-react';
+import { Card, Button } from '@/components/ui';
 import { formatCurrency, cn } from '@/lib/utils';
+import { aiChat } from '@/lib/ai-client';
 
 interface BondCalculatorProps {
   propertyPrice?: number;
@@ -40,8 +41,12 @@ export function BondCalculator({ propertyPrice = 2500000, onComplete }: BondCalc
   const [termYears, setTermYears] = useState(20);
   const [rates, setRates] = useState(2500);
   const [levies, setLevies] = useState(3500);
+  const [monthlyIncome, setMonthlyIncome] = useState(0);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [selectedBank, setSelectedBank] = useState(SA_BANKS[0]);
+  const [insight, setInsight] = useState<string | null>(null);
+  const [insightLoading, setInsightLoading] = useState(false);
+  const [insightError, setInsightError] = useState<string | null>(null);
 
   const calculation = useMemo((): BondCalculation => {
     const depositAmount = deposit || 0;
@@ -82,6 +87,38 @@ export function BondCalculator({ propertyPrice = 2500000, onComplete }: BondCalc
   const handleBankSelect = (bank: typeof SA_BANKS[0]) => {
     setSelectedBank(bank);
     setInterestRate(bank.rate);
+  };
+
+  const loadAffordability = async () => {
+    setInsight(null);
+    setInsightError(null);
+    setInsightLoading(true);
+    const prompt = `
+You are a South African home-loan affordability advisor. Analyse the following scenario and respond in 120-160 words of plain text (no markdown headings, no JSON). Cover: (1) whether the bond is affordable given income, (2) the debt-to-income ratio, (3) effect of deposit and LTV, (4) one concrete suggestion for the buyer.
+
+Data:
+- Property price: R${price.toLocaleString()}
+- Deposit: R${(deposit || 0).toLocaleString()} (${Math.round(((deposit || 0) / price) * 100)}% of price)
+- Loan amount: R${calculation.loanAmount.toLocaleString()}
+- Interest rate: ${interestRate}% (${selectedBank.name})
+- Term: ${termYears} years
+- Estimated monthly bond: R${calculation.monthlyPayment.toLocaleString()}
+- Monthly rates & levies: R${(rates + levies).toLocaleString()}
+- Gross monthly household income: ${monthlyIncome > 0 ? `R${monthlyIncome.toLocaleString()}` : 'not provided'}
+`.trim();
+
+    try {
+      const reply = await aiChat([{ role: 'user', content: prompt }]);
+      if (!reply) {
+        setInsightError('No insight returned. Check that GROQ_API_KEY is configured.');
+      } else {
+        setInsight(reply);
+      }
+    } catch (err) {
+      setInsightError(String(err));
+    } finally {
+      setInsightLoading(false);
+    }
   };
 
   return (
@@ -282,9 +319,54 @@ export function BondCalculator({ propertyPrice = 2500000, onComplete }: BondCalc
         )}
       </Card>
 
-      {/* Quick Tips */}
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="w-4 h-4 text-emerald-500" />
+          <h3 className="text-base font-semibold text-stone-900">AI Affordability Insight</h3>
+        </div>
+        <p className="text-sm text-stone-500 mb-4">
+          Optionally enter gross monthly income. Groq will analyse if this bond is affordable and suggest next steps.
+        </p>
+        <div className="grid sm:grid-cols-[1fr_auto] gap-3 mb-4">
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500">R</span>
+            <input
+              type="number"
+              placeholder="Monthly income (optional)"
+              value={monthlyIncome || ''}
+              onChange={(e) => setMonthlyIncome(Number(e.target.value) || 0)}
+              className="w-full pl-8 pr-4 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+            />
+          </div>
+          <Button
+            onClick={loadAffordability}
+            disabled={insightLoading}
+            className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700"
+          >
+            {insightLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Analysing…
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4" /> Get AI insight
+              </div>
+            )}
+          </Button>
+        </div>
+        {insightError && (
+          <p className="text-sm text-red-600">{insightError}</p>
+        )}
+        {insight && (
+          <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-wrap">{insight}</p>
+          </div>
+        )}
+      </Card>
+
       <Card className="p-4 bg-stone-50">
-        <h4 className="text-sm font-medium text-stone-700 mb-2">💡 Tips for SA Buyers</h4>
+        <h4 className="text-sm font-medium text-stone-700 mb-2">Tips for SA Buyers</h4>
         <ul className="text-xs text-stone-600 space-y-1">
           <li>• Most banks offer 11.25% - 12.25% for first-time buyers</li>
           <li>• A 10-20% deposit can help negotiate better rates</li>
@@ -292,6 +374,17 @@ export function BondCalculator({ propertyPrice = 2500000, onComplete }: BondCalc
           <li>• Banks may approve 100% bond + higher rate for qualified buyers</li>
         </ul>
       </Card>
+
+      {onComplete && calculation.monthlyPayment > 0 && (
+        <div className="flex justify-end">
+          <Button
+            variant="outline"
+            onClick={() => onComplete(calculation)}
+          >
+            Use this calculation
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Clock, Home, User, Video, Phone, MapPin, X } from 'lucide-react';
+import {
+  ChevronLeft, ChevronRight, Plus, Clock, Home, User, Phone, X, Sparkles,
+} from 'lucide-react';
 import { Card, Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import { aiChat } from '@/lib/ai-client';
 
 interface CalendarEvent {
   id: string;
@@ -43,6 +46,23 @@ export function CalendarView({ onEventClick }: CalendarViewProps) {
   const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 8));
   const [view, setView] = useState<'month' | 'week'>('month');
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [events, setEvents] = useState<CalendarEvent[]>(sampleEvents);
+  const [showNew, setShowNew] = useState(false);
+  const [newPrompt, setNewPrompt] = useState('');
+  const [parsing, setParsing] = useState(false);
+  const [parseError, setParseError] = useState<string | null>(null);
+  const [newEvent, setNewEvent] = useState<Omit<CalendarEvent, 'id'>>({
+    title: '',
+    type: 'showing',
+    property: '',
+    date: '',
+    time: '',
+    duration: 1,
+    client: '',
+    clientPhone: '',
+    status: 'scheduled',
+    hasReminder: false,
+  });
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -50,7 +70,68 @@ export function CalendarView({ onEventClick }: CalendarViewProps) {
 
   const getEventsForDay = (day: number) => {
     const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return sampleEvents.filter(e => e.date === dateStr);
+    return events.filter(e => e.date === dateStr);
+  };
+
+  const parseWithAI = async () => {
+    if (!newPrompt.trim()) return;
+    setParsing(true);
+    setParseError(null);
+    const today = new Date().toISOString().slice(0, 10);
+    const prompt = `You are a strict JSON generator. Extract a calendar event from the user's text and return ONLY a JSON object (no prose, no markdown). Assume today is ${today}. Use 24-hour HH:MM times. Property type defaults to "showing" if unclear. Use these keys exactly:
+{"title": string, "type": "showing"|"inspection"|"viewing"|"meeting"|"maintenance", "property": string, "date": "YYYY-MM-DD", "time": "HH:MM", "duration": number, "client": string, "clientPhone": string}
+
+User text: ${newPrompt}`;
+    const reply = await aiChat([{ role: 'user', content: prompt }]);
+    setParsing(false);
+    if (!reply) {
+      setParseError('AI service unavailable. Check that GROQ_API_KEY is configured.');
+      return;
+    }
+    const match = reply.match(/\{[\s\S]*\}/);
+    if (!match) {
+      setParseError('AI did not return parseable JSON. Try rephrasing.');
+      return;
+    }
+    try {
+      const parsed = JSON.parse(match[0]) as Partial<CalendarEvent>;
+      setNewEvent((e) => ({
+        ...e,
+        title: parsed.title || e.title,
+        type: (parsed.type as CalendarEvent['type']) || e.type,
+        property: parsed.property || e.property,
+        date: parsed.date || e.date,
+        time: parsed.time || e.time,
+        duration: typeof parsed.duration === 'number' ? parsed.duration : e.duration,
+        client: parsed.client || e.client,
+        clientPhone: parsed.clientPhone || e.clientPhone,
+      }));
+    } catch {
+      setParseError('Could not parse AI response. Try rephrasing.');
+    }
+  };
+
+  const saveNewEvent = () => {
+    if (!newEvent.title.trim() || !newEvent.date || !newEvent.time) {
+      setParseError('Title, date and time are required.');
+      return;
+    }
+    setEvents((e) => [{ ...newEvent, id: String(Date.now()) } as CalendarEvent, ...e]);
+    setShowNew(false);
+    setNewPrompt('');
+    setParseError(null);
+    setNewEvent({
+      title: '',
+      type: 'showing',
+      property: '',
+      date: '',
+      time: '',
+      duration: 1,
+      client: '',
+      clientPhone: '',
+      status: 'scheduled',
+      hasReminder: false,
+    });
   };
 
   const navigateMonth = (delta: number) => {
@@ -102,7 +183,10 @@ export function CalendarView({ onEventClick }: CalendarViewProps) {
                 Week
               </button>
             </div>
-            <button className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 flex items-center gap-2">
+            <button
+              onClick={() => setShowNew(true)}
+              className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 flex items-center gap-2"
+            >
               <Plus className="w-4 h-4" /> New Event
             </button>
           </div>
@@ -156,7 +240,7 @@ export function CalendarView({ onEventClick }: CalendarViewProps) {
 
       {/* Today's Schedule */}
       <Card className="p-4">
-        <h3 className="text-sm font-medium text-stone-700 mb-3">Today's Schedule</h3>
+        <h3 className="text-sm font-medium text-stone-700 mb-3">Today&apos;s Schedule</h3>
         <div className="space-y-2">
           {getEventsForDay(8).length === 0 ? (
             <p className="text-sm text-stone-500 py-4 text-center">No events scheduled for today</p>
@@ -211,8 +295,155 @@ export function CalendarView({ onEventClick }: CalendarViewProps) {
               )}
             </div>
             <div className="flex gap-2 mt-6">
-              <Button variant="outline" className="flex-1">Reschedule</Button>
-              <Button className="flex-1 bg-blue-500">Join Call</Button>
+              <Button variant="outline" className="flex-1" onClick={() => setSelectedEvent(null)}>
+                Close
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {showNew && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <Card className="w-full max-w-lg p-6 max-h-[90vh] overflow-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-stone-900">New Event</h3>
+              <button
+                onClick={() => setShowNew(false)}
+                className="text-stone-400 hover:text-stone-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-4 h-4 text-blue-600" />
+                <p className="text-sm font-medium text-blue-900">Describe it in plain English</p>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newPrompt}
+                  onChange={(e) => setNewPrompt(e.target.value)}
+                  placeholder="e.g., Viewing at 14 Oak Lane on 20 April at 10am with John Smith"
+                  className="flex-1 px-3 py-2 bg-white border border-blue-200 rounded-lg text-sm"
+                />
+                <Button
+                  onClick={parseWithAI}
+                  disabled={parsing || !newPrompt.trim()}
+                  className="bg-blue-500 hover:bg-blue-600"
+                >
+                  {parsing ? (
+                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-1" /> Parse
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-stone-600 mb-1">Title</label>
+                <input
+                  type="text"
+                  value={newEvent.title}
+                  onChange={(e) => setNewEvent((v) => ({ ...v, title: e.target.value }))}
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-stone-600 mb-1">Type</label>
+                  <select
+                    value={newEvent.type}
+                    onChange={(e) =>
+                      setNewEvent((v) => ({ ...v, type: e.target.value as CalendarEvent['type'] }))
+                    }
+                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  >
+                    <option value="showing">Showing</option>
+                    <option value="inspection">Inspection</option>
+                    <option value="viewing">Viewing</option>
+                    <option value="meeting">Meeting</option>
+                    <option value="maintenance">Maintenance</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-stone-600 mb-1">Duration (hours)</label>
+                  <input
+                    type="number"
+                    min={0.5}
+                    step={0.5}
+                    value={newEvent.duration}
+                    onChange={(e) =>
+                      setNewEvent((v) => ({ ...v, duration: Number(e.target.value) || 1 }))
+                    }
+                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-stone-600 mb-1">Property</label>
+                <input
+                  type="text"
+                  value={newEvent.property}
+                  onChange={(e) => setNewEvent((v) => ({ ...v, property: e.target.value }))}
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-stone-600 mb-1">Date</label>
+                  <input
+                    type="date"
+                    value={newEvent.date}
+                    onChange={(e) => setNewEvent((v) => ({ ...v, date: e.target.value }))}
+                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-stone-600 mb-1">Time</label>
+                  <input
+                    type="time"
+                    value={newEvent.time}
+                    onChange={(e) => setNewEvent((v) => ({ ...v, time: e.target.value }))}
+                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-stone-600 mb-1">Client (optional)</label>
+                  <input
+                    type="text"
+                    value={newEvent.client ?? ''}
+                    onChange={(e) => setNewEvent((v) => ({ ...v, client: e.target.value }))}
+                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-stone-600 mb-1">Client phone (optional)</label>
+                  <input
+                    type="text"
+                    value={newEvent.clientPhone ?? ''}
+                    onChange={(e) => setNewEvent((v) => ({ ...v, clientPhone: e.target.value }))}
+                    className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm"
+                  />
+                </div>
+              </div>
+              {parseError && <p className="text-sm text-red-600">{parseError}</p>}
+              <div className="flex gap-2 pt-2">
+                <Button variant="outline" className="flex-1" onClick={() => setShowNew(false)}>
+                  Cancel
+                </Button>
+                <Button className="flex-1 bg-blue-500 hover:bg-blue-600" onClick={saveNewEvent}>
+                  <Plus className="w-4 h-4 mr-1" /> Add event
+                </Button>
+              </div>
             </div>
           </Card>
         </div>

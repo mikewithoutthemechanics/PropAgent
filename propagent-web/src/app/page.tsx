@@ -636,7 +636,7 @@ export default function LandingPage() {
               <ul className="space-y-3 text-charcoal-500">
                 <li><a href="#features" className="hover:text-charcoal-900 transition-colors">Features</a></li>
                 <li><a href="#pricing" className="hover:text-charcoal-900 transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-charcoal-900 transition-colors">API</a></li>
+                <li><a href="https://github.com/mikewithoutthemechanics/AgentPing-" target="_blank" rel="noreferrer" className="hover:text-charcoal-900 transition-colors">API</a></li>
               </ul>
             </div>
             
@@ -659,8 +659,8 @@ export default function LandingPage() {
           <div className="pt-8 border-t border-charcoal-100 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-charcoal-400 text-sm">© 2026 AgentPing. All rights reserved.</p>
             <div className="flex items-center gap-6 text-charcoal-400 text-sm">
-              <a href="#" className="hover:text-charcoal-900 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-charcoal-900 transition-colors">Terms</a>
+              <a href="/privacy" className="hover:text-charcoal-900 transition-colors">Privacy</a>
+              <a href="/terms" className="hover:text-charcoal-900 transition-colors">Terms</a>
             </div>
           </div>
         </div>
