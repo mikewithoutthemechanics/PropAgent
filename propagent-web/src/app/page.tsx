@@ -323,25 +323,25 @@ export default function LandingPage() {
           <div className={`max-w-3xl transition-all duration-1000 ease-out ${prefersReducedMotion ? 'opacity-100' : visibleSections.has('hero') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-lime-500/20 backdrop-blur-sm border border-lime-500/30 text-lime-400 text-sm font-semibold rounded-full mb-6">
               <Zap className="w-4 h-4" aria-hidden="true" />
-              <span>South Africa's AI Real Estate Platform</span>
+              <span>Agent Loop — AI-Powered Agent Matching</span>
             </div>
             
             <h1 
               id="hero-title"
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6 text-white"
             >
-              Property,{' '}
+              Your stock,{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-sky-400 relative">
-                <span className="relative z-10">reimagined</span>
+                <span className="relative z-10">their buyers</span>
                 <span className="absolute inset-0 bg-gradient-to-r from-lime-400/30 to-sky-400/30 blur-2xl rounded-full" aria-hidden="true" />
               </span>
               .
             </h1>
             
             <p className="text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-8">
-              AI matches the right buyers to the right properties &mdash; with intelligent pricing,
-              instant lead qualification and paperwork that writes itself. Built for South African
-              agents, landlords, sellers and buyers.
+              AI matches your listings to agents who have ready buyers &mdash; verified via PPRA,
+              connected through integrations, and powered by intelligent matching. Built for South African
+              property practitioners.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -590,7 +590,7 @@ export default function LandingPage() {
               <ul className="space-y-3 text-charcoal-500">
                 <li><a href="#features" className="hover:text-charcoal-900 transition-colors">Features</a></li>
                 <li><a href="#pricing" className="hover:text-charcoal-900 transition-colors">Pricing</a></li>
-                <li><a href="https://github.com/mikewithoutthemechanics/Agent Loop-" target="_blank" rel="noreferrer" className="hover:text-charcoal-900 transition-colors">API</a></li>
+                <li><a href="https://github.com/mikewithoutthemechanics/AgentPing-" target="_blank" rel="noreferrer" className="hover:text-charcoal-900 transition-colors">API</a></li>
               </ul>
             </div>
             

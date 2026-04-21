@@ -103,7 +103,7 @@ export default function DashboardLayout({
             </button>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-[#D8F053] rounded-full flex items-center justify-center">
-                <span className="text-black font-semibold text-sm">S</span>
+                <span className="text-black font-semibold text-xs">AL</span>
               </div>
               <span className="font-medium text-black">Agent Loop</span>
             </div>
@@ -112,7 +112,7 @@ export default function DashboardLayout({
           {/* Desktop: Brand Area */}
           <div className="hidden lg:flex items-center gap-3">
             <div className="w-9 h-9 bg-[#D8F053] rounded-full flex items-center justify-center">
-              <span className="text-black font-semibold text-sm">S</span>
+              <span className="text-black font-semibold text-xs">AL</span>
             </div>
             <span className="font-medium text-black">Agent Loop</span>
           </div>
