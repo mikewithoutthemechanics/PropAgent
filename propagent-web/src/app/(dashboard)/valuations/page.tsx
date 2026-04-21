@@ -275,7 +275,7 @@ CMA RECOMMENDATIONS
 ${generateCMASubject(formData, valuation).recommendations.join('\n')}
 
 ---
-AgentPing Property Valuation System
+Agent Loop Property Valuation System
     `;
     
     const blob = new Blob([reportContent], { type: 'text/plain' });

@@ -45,7 +45,7 @@ const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 // Demo user profile for testing
 const DEMO_PROFILE: Profile = {
   id: 'demo-user-id',
-  email: 'demo@agentping.co.za',
+  email: 'demo@agentloop.co.za',
   first_name: 'Demo',
   last_name: 'User',
   role: 'agent',

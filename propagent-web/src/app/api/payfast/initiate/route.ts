@@ -99,7 +99,7 @@ export async function POST(req: Request) {
   const checkout = buildCheckout({
     mPaymentId,
     amount: plan.priceZar,
-    itemName: `AgentPing ${plan.name}`,
+    itemName: `Agent Loop ${plan.name}`,
     itemDescription: plan.description,
     nameFirst: userFirstName,
     nameLast: userLastName,

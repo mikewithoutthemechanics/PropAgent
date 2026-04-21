@@ -5,8 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 // Storage keys for the new-user onboarding journey. These keys are NEW
 // (intentionally separate from the legacy `propagent-*` namespace) so
 // behavior is clean for future installs without affecting existing users.
-const ONBOARDING_KEY = "agentping-onboarded";
-const TOUR_KEY = "agentping-tour-complete";
+const ONBOARDING_KEY = "agentloop-onboarded";
+const TOUR_KEY = "agentloop-tour-complete";
 
 function isBrowser(): boolean {
   return typeof window !== "undefined";

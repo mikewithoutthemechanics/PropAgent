@@ -15,7 +15,7 @@ interface StepMeta {
 const steps: StepMeta[] = [
   {
     id: 1,
-    title: "Welcome to AgentPing",
+    title: "Welcome to Agent Loop",
     description: "Let's get your account set up — takes about 60 seconds.",
   },
   {

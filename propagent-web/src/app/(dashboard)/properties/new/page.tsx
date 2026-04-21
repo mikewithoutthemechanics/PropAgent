@@ -35,9 +35,9 @@ export default function NewPropertyPage() {
         agent: {
           id: 'agent_demo',
           name: 'You',
-          email: 'you@agentping.co.za',
+          email: 'you@agentloop.co.za',
           phone: '+27 00 000 0000',
-          agencyName: 'AgentPing',
+          agencyName: 'Agent Loop',
         },
         createdAt: now,
         updatedAt: now,

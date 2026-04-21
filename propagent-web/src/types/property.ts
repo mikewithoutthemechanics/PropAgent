@@ -1,4 +1,4 @@
-// Property Types for AgentPing Real Estate Platform
+// Property Types for Agent Loop Real Estate Platform
 
 export type PropertyType = 'house' | 'apartment' | 'flat' | 'townhouse' | 'duplex' | 'penthouse' | 'commercial' | 'industrial' | 'land' | 'vacant_land';
 

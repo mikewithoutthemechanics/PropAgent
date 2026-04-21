@@ -143,7 +143,7 @@ export default function LandingPage() {
 
   const testimonials = [
     { 
-      quote: "AgentPing eliminated hours of administrative work. Our team now focuses on growth instead of paperwork.",
+      quote: "Agent Loop eliminated hours of administrative work. Our team now focuses on growth instead of paperwork.",
       author: "Sarah van der Merwe",
       role: "Director",
       company: "Coastal Properties",
@@ -238,7 +238,7 @@ export default function LandingPage() {
               <div className="w-9 h-9 bg-gradient-to-br from-lime-400 to-sky-400 rounded-xl flex items-center justify-center shadow-lg shadow-lime-500/25">
                 <Home className="w-5 h-5 text-charcoal-900" />
               </div>
-              <span className="text-lg font-semibold tracking-tight text-white">AgentPing</span>
+              <span className="text-lg font-semibold tracking-tight text-white">Agent Loop</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
@@ -578,7 +578,7 @@ export default function LandingPage() {
                 <div className="w-9 h-9 bg-charcoal-900 rounded-xl flex items-center justify-center">
                   <Home className="w-5 h-5 text-lime-400" />
                 </div>
-                <span className="text-lg font-semibold">AgentPing</span>
+                <span className="text-lg font-semibold">Agent Loop</span>
               </div>
               <p className="text-charcoal-500 max-w-sm">
                 South Africa's leading property management platform. Built for modern property professionals.
@@ -590,7 +590,7 @@ export default function LandingPage() {
               <ul className="space-y-3 text-charcoal-500">
                 <li><a href="#features" className="hover:text-charcoal-900 transition-colors">Features</a></li>
                 <li><a href="#pricing" className="hover:text-charcoal-900 transition-colors">Pricing</a></li>
-                <li><a href="https://github.com/mikewithoutthemechanics/AgentPing-" target="_blank" rel="noreferrer" className="hover:text-charcoal-900 transition-colors">API</a></li>
+                <li><a href="https://github.com/mikewithoutthemechanics/Agent Loop-" target="_blank" rel="noreferrer" className="hover:text-charcoal-900 transition-colors">API</a></li>
               </ul>
             </div>
             
@@ -598,7 +598,7 @@ export default function LandingPage() {
               <h4 className="font-semibold mb-4">Contact</h4>
               <ul className="space-y-3 text-charcoal-500">
                 <li className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" /> hello@agentping.co.za
+                  <Mail className="w-4 h-4" /> hello@agentloop.co.za
                 </li>
                 <li className="flex items-center gap-2">
                   <Phone className="w-4 h-4" /> +27 21 555 0123
@@ -611,7 +611,7 @@ export default function LandingPage() {
           </div>
           
           <div className="pt-8 border-t border-charcoal-100 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-charcoal-400 text-sm">© 2026 AgentPing. All rights reserved.</p>
+            <p className="text-charcoal-400 text-sm">© 2026 Agent Loop. All rights reserved.</p>
             <div className="flex items-center gap-6 text-charcoal-400 text-sm">
               <a href="/privacy" className="hover:text-charcoal-900 transition-colors">Privacy</a>
               <a href="/terms" className="hover:text-charcoal-900 transition-colors">Terms</a>
