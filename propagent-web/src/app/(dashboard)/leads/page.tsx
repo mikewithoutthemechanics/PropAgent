@@ -5,6 +5,7 @@ import { Users, Plus, Home, Building2, Phone, Mail, Search, Filter, TrendingUp, 
 import { Card, Button, Badge, Input } from '@/components/ui';
 import { Lead, LeadSource, LeadStatus, LeadType, sampleLeads, leadSourceConfig, getLeadStats } from '@/lib/leads';
 import { useCollection, newId } from '@/lib/persistence';
+import { useNotify } from '@/lib/useNotify';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { exportToCSV } from '@/lib/export';
@@ -103,6 +104,7 @@ export default function LeadsPage() {
     add: addLead,
     remove: removeLead,
   } = useCollection<Lead>('leads', sampleLeads);
+  const notify = useNotify();
 
   const stats = useMemo(() => getLeadStats(leads), [leads]);
 
@@ -173,6 +175,15 @@ export default function LeadsPage() {
       capturedAt: new Date().toISOString(),
     };
     addLead(lead);
+    notify({
+      type: 'new_lead',
+      priority: 'high',
+      title: `New lead: ${lead.name}`,
+      message: `${lead.name} (${lead.type}) came in via ${lead.source}.${
+        lead.preferredSuburb ? ` Looking in ${lead.preferredSuburb}.` : ''
+      }`,
+      actionUrl: '/leads',
+    });
     setShowAddModal(false);
     setNewLead({
       name: '',
