@@ -3,8 +3,8 @@ import "./globals.css";
 import { ClientProviders } from "@/components/providers/ClientProviders";
 
 export const metadata: Metadata = {
-  title: "PropAgent - Property Management",
-  description: "Premium property management platform for South Africa",
+  title: "PropAgent — AI Real Estate Platform",
+  description: "South Africa's AI real estate platform. Match properties with buyers, price listings intelligently, and close deals faster.",
 };
 
 export default function RootLayout({

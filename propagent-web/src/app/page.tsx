@@ -123,21 +123,21 @@ export default function LandingPage() {
   }, [user, loading, isDemoMode]);
 
   const features = [
-    { icon: Building, title: 'Property Portfolio', desc: 'Manage unlimited properties with detailed tracking' },
-    { icon: Users, title: 'Tenant Management', desc: 'Full tenant profiles, lease tracking & communication' },
-    { icon: DollarSign, title: 'Rent Collection', desc: 'Automated payments, invoicing & financial reports' },
-    { icon: Calculator, title: 'Property Valuations', desc: 'AI-powered market valuations & trend analysis' },
-    { icon: FileText, title: 'Document Center', desc: 'Digital leases, agreements & e-signatures' },
-    { icon: Wrench, title: 'Maintenance', desc: 'Work orders, vendor management & tracking' },
-    { icon: BarChart3, title: 'Analytics', desc: 'Real-time insights & portfolio performance' },
-    { icon: Shield, title: 'Compliance', desc: 'Legal compliance & risk management' },
+    { icon: Target, title: 'AI Buyer-Property Matching', desc: 'Scores every buyer against every listing in seconds — surfaces the hottest matches first' },
+    { icon: Calculator, title: 'Intelligent Pricing', desc: 'AVM + live comparable sales recommend the right price, with confidence bands' },
+    { icon: MessageSquare, title: 'AI Lead Concierge', desc: '24/7 WhatsApp & email bot qualifies leads, books viewings and routes hot prospects' },
+    { icon: FileText, title: 'Lease & Contract AI', desc: 'Generate SA-compliant leases, mandates and addenda — e-signatures built in' },
+    { icon: Building, title: 'Unified Property CRM', desc: 'One place for listings, buyers, tenants, landlords and the full deal pipeline' },
+    { icon: BarChart3, title: 'Portfolio Analytics', desc: 'Real-time dashboards on yield, vacancy, arrears and deal velocity' },
+    { icon: Wrench, title: 'Smart Operations', desc: 'Maintenance, inspections and vendor management with AI triage and cost tracking' },
+    { icon: Shield, title: 'POPIA & FICA Ready', desc: 'Compliance checks and document verification baked into every flow' },
   ];
 
   const stats = [
-    { value: 'R2.5B+', label: 'Property Value Managed' },
-    { value: '12,000+', label: 'Units Under Management' },
+    { value: 'R2.5B+', label: 'Property Value Matched' },
+    { value: '12,000+', label: 'Active Listings & Buyers' },
     { value: '98%', label: 'Client Satisfaction' },
-    { value: 'R180M+', label: 'Rent Collected Annually' },
+    { value: '42%', label: 'Faster Time-to-Offer' },
   ];
 
   const testimonials = [
@@ -322,23 +322,25 @@ export default function LandingPage() {
           <div className={`max-w-3xl transition-all duration-1000 ease-out ${prefersReducedMotion ? 'opacity-100' : visibleSections.has('hero') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-lime-500/20 backdrop-blur-sm border border-lime-500/30 text-lime-400 text-sm font-semibold rounded-full mb-6">
               <Zap className="w-4 h-4" aria-hidden="true" />
-              <span>South Africa's #1 Property Platform</span>
+              <span>South Africa's AI Real Estate Platform</span>
             </div>
             
             <h1 
               id="hero-title"
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6 text-white"
             >
-              Property management{' '}
+              Property,{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-sky-400 relative">
                 <span className="relative z-10">reimagined</span>
                 <span className="absolute inset-0 bg-gradient-to-r from-lime-400/30 to-sky-400/30 blur-2xl rounded-full" aria-hidden="true" />
               </span>
+              .
             </h1>
             
             <p className="text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-8">
-              The complete platform for South African property professionals. 
-              Streamline operations, delight tenants, and grow your portfolio with confidence.
+              AI matches the right buyers to the right properties &mdash; with intelligent pricing,
+              instant lead qualification and paperwork that writes itself. Built for South African
+              agents, landlords, sellers and buyers.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -346,7 +348,7 @@ export default function LandingPage() {
                 href="/register" 
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-lime-400 to-sky-400 text-charcoal-900 font-semibold rounded-full hover:from-lime-300 hover:to-sky-300 transition-all duration-300 hover:shadow-xl hover:shadow-lime-400/25 group focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 focus:ring-offset-charcoal-900"
               >
-                Start Free Trial
+                Find your match
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </Link>
               <Link 
@@ -354,7 +356,7 @@ export default function LandingPage() {
                 className="inline-flex items-center justify-center gap-2 px-6 py-4 border-2 border-white/30 text-white font-medium rounded-full hover:bg-white/10 hover:border-white/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-charcoal-900"
               >
                 <Play className="w-4 h-4" aria-hidden="true" />
-                See How It Works
+                See the AI in action
               </Link>
             </div>
 
@@ -375,7 +377,7 @@ export default function LandingPage() {
                     <Star key={i} className="w-4 h-4 text-lime-400 fill-lime-400" aria-hidden="true" />
                   ))}
                 </div>
-                <p className="text-sm text-white/60 font-medium">Trusted by 500+ property professionals</p>
+                <p className="text-sm text-white/60 font-medium">Trusted by 500+ agents, landlords and sellers</p>
               </div>
             </div>
           </div>
@@ -407,12 +409,13 @@ export default function LandingPage() {
       >
         <div className="max-w-7xl mx-auto">
           <div className={`text-center mb-16 transition-all duration-700 delay-100 ${prefersReducedMotion ? '' : visibleSections.has('features') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <span className="text-sky-600 text-sm font-medium tracking-wider uppercase mb-3 block">Features</span>
+            <span className="text-sky-600 text-sm font-medium tracking-wider uppercase mb-3 block">The platform</span>
             <h2 id="features-heading" className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
-              Everything you need to scale
+              One AI platform. Every side of the deal.
             </h2>
             <p className="text-charcoal-500 text-lg max-w-xl mx-auto">
-              A complete suite of tools designed for South African property management
+              From first enquiry to signed lease &mdash; AI that matches buyers to properties,
+              prices listings intelligently and closes deals faster.
             </p>
           </div>
 
@@ -427,18 +430,18 @@ export default function LandingPage() {
               <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-lime-400/5 rounded-full blur-3xl" aria-hidden="true" />
               <div className="relative z-10">
                 <div className="w-14 h-14 bg-gradient-to-br from-lime-400 to-sky-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-lime-400/20">
-                  <BarChart3 className="w-7 h-7 text-charcoal-900" aria-hidden="true" />
+                  <Target className="w-7 h-7 text-charcoal-900" aria-hidden="true" />
                 </div>
-                <h3 className="text-2xl font-semibold mb-3">Powerful Analytics</h3>
-                <p className="text-white/70 mb-6">Get deep insights into your portfolio performance with real-time dashboards and custom reports.</p>
+                <h3 className="text-2xl font-semibold mb-3">AI Matching Engine</h3>
+                <p className="text-white/70 mb-6">The right buyer for every property, the right property for every buyer — scored and ranked in real time across your entire pipeline.</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                    <p className="text-2xl font-bold text-lime-400">+24%</p>
-                    <p className="text-xs text-white/50">Revenue Growth</p>
+                    <p className="text-2xl font-bold text-lime-400">3.1×</p>
+                    <p className="text-xs text-white/50">More Qualified Leads</p>
                   </div>
                   <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                    <p className="text-2xl font-bold text-sky-400">98%</p>
-                    <p className="text-xs text-white/50">Occupancy Rate</p>
+                    <p className="text-2xl font-bold text-sky-400">42%</p>
+                    <p className="text-xs text-white/50">Faster to Offer</p>
                   </div>
                 </div>
               </div>
@@ -595,10 +598,11 @@ export default function LandingPage() {
       >
         <div className="max-w-3xl mx-auto text-center">
           <h2 id="cta-heading" className="text-3xl md:text-5xl font-semibold mb-6">
-            Ready to transform your property management?
+            The AI is ready. Are you?
           </h2>
           <p className="text-white/60 text-lg mb-10">
-            Join thousands of South African property professionals already using PropAgent
+            Let AI match your buyers to the right property, price your listings with the market
+            and handle the paperwork &mdash; so you can focus on closing deals.
           </p>
           <Link 
             href="/register" 
