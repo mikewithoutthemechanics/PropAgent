@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth";
 const steps = [
   {
     id: 1,
-    title: "Welcome to PropAgent",
+    title: "Welcome to AgentPing",
     description: "Let's set up your account to get started",
   },
   {
@@ -140,7 +140,7 @@ function OnboardingContent() {
           <div className="text-center py-8">
             <div className="text-6xl mb-4">🏠</div>
             <p className="text-lg text-charcoal-500">
-              Welcome to PropAgent! Let's get your account set up in just a few
+              Welcome to AgentPing! Let's get your account set up in just a few
               minutes.
             </p>
           </div>

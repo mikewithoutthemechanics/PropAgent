@@ -1,4 +1,4 @@
-// PropAgent - Calendar Types and Functions
+// AgentPing - Calendar Types and Functions
 // Property viewing scheduling and agent calendar management
 
 import { supabase } from './supabase';

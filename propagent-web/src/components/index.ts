@@ -1,7 +1,7 @@
 /**
  * Component Exports
  * 
- * Barrel export for all PropAgent components
+ * Barrel export for all AgentPing components
  */
 
 export { ImageUploader } from './ImageUploader';

@@ -1,7 +1,7 @@
 /**
  * Hook Exports
  * 
- * Barrel export for all PropAgent custom hooks
+ * Barrel export for all AgentPing custom hooks
  */
 
 export { useImageUpload } from './useImageUpload';

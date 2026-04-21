@@ -142,7 +142,7 @@ export default function LandingPage() {
 
   const testimonials = [
     { 
-      quote: "PropAgent eliminated hours of administrative work. Our team now focuses on growth instead of paperwork.",
+      quote: "AgentPing eliminated hours of administrative work. Our team now focuses on growth instead of paperwork.",
       author: "Sarah van der Merwe",
       role: "Director",
       company: "Coastal Properties",
@@ -237,7 +237,7 @@ export default function LandingPage() {
               <div className="w-9 h-9 bg-gradient-to-br from-lime-400 to-sky-400 rounded-xl flex items-center justify-center shadow-lg shadow-lime-500/25">
                 <Home className="w-5 h-5 text-charcoal-900" />
               </div>
-              <span className="text-lg font-semibold tracking-tight text-white">PropAgent</span>
+              <span className="text-lg font-semibold tracking-tight text-white">AgentPing</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
@@ -624,7 +624,7 @@ export default function LandingPage() {
                 <div className="w-9 h-9 bg-charcoal-900 rounded-xl flex items-center justify-center">
                   <Home className="w-5 h-5 text-lime-400" />
                 </div>
-                <span className="text-lg font-semibold">PropAgent</span>
+                <span className="text-lg font-semibold">AgentPing</span>
               </div>
               <p className="text-charcoal-500 max-w-sm">
                 South Africa's leading property management platform. Built for modern property professionals.
@@ -644,7 +644,7 @@ export default function LandingPage() {
               <h4 className="font-semibold mb-4">Contact</h4>
               <ul className="space-y-3 text-charcoal-500">
                 <li className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" /> hello@propagent.co.za
+                  <Mail className="w-4 h-4" /> hello@agentping.co.za
                 </li>
                 <li className="flex items-center gap-2">
                   <Phone className="w-4 h-4" /> +27 21 555 0123
@@ -657,7 +657,7 @@ export default function LandingPage() {
           </div>
           
           <div className="pt-8 border-t border-charcoal-100 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-charcoal-400 text-sm">© 2026 PropAgent. All rights reserved.</p>
+            <p className="text-charcoal-400 text-sm">© 2026 AgentPing. All rights reserved.</p>
             <div className="flex items-center gap-6 text-charcoal-400 text-sm">
               <a href="#" className="hover:text-charcoal-900 transition-colors">Privacy</a>
               <a href="#" className="hover:text-charcoal-900 transition-colors">Terms</a>
