@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
-import { Building2, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Building2, Mail, Lock, User, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -16,8 +15,8 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const { signUp } = useAuth();
-  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -84,7 +83,8 @@ export default function RegisterPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push("/onboarding?registered=true");
+      setSuccess(true);
+      setLoading(false);
     }
   };
 
@@ -106,6 +106,38 @@ export default function RegisterPage() {
           </Link>
         </div>
 
+        {success ? (
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
+            <div className="p-8 text-center">
+              <div className="mx-auto w-12 h-12 bg-lime-500/20 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle2 className="w-6 h-6 text-lime-400" />
+              </div>
+              <h1 className="text-2xl font-semibold text-white">Check your email</h1>
+              <p className="text-sm text-charcoal-400 mt-2">
+                We sent a confirmation link to <span className="text-white font-medium">{formData.email}</span>.
+                Click it to activate your account and sign in.
+              </p>
+              <p className="text-xs text-charcoal-500 mt-4">
+                Didn&apos;t get it? Check your spam folder, or{" "}
+                <button
+                  type="button"
+                  onClick={() => setSuccess(false)}
+                  className="text-lime-400 hover:text-lime-300 font-medium"
+                >
+                  try again
+                </button>
+                .
+              </p>
+              <Link
+                href="/login"
+                className="mt-6 inline-flex items-center gap-2 text-sm text-lime-400 hover:text-lime-300 font-medium"
+              >
+                Back to sign in
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        ) : (
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
           <div className="p-8">
             <div className="mb-6">
@@ -268,6 +300,7 @@ export default function RegisterPage() {
             </div>
           </div>
         </div>
+        )}
 
         <div className="mt-6 text-center">
           <Link href="/" className="text-sm text-charcoal-500 hover:text-lime-400 transition-all duration-300">

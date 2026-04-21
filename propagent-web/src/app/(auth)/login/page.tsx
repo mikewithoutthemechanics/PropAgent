@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
   const router = useRouter();
+  const demoModeEnabled = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,14 +200,16 @@ export default function LoginPage() {
               </button>
             </form>
 
-            <button
-              type="button"
-              onClick={handleDemoLogin}
-              disabled={loading}
-              className="w-full mt-4 py-2.5 px-4 bg-lime-600/20 hover:bg-lime-600/30 border border-lime-500/30 text-lime-400 font-medium rounded-md transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
-            >
-              Demo Login (admin / admin123)
-            </button>
+            {demoModeEnabled && (
+              <button
+                type="button"
+                onClick={handleDemoLogin}
+                disabled={loading}
+                className="w-full mt-4 py-2.5 px-4 bg-lime-600/20 hover:bg-lime-600/30 border border-lime-500/30 text-lime-400 font-medium rounded-md transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                Demo Login (admin / admin123)
+              </button>
+            )}
 
             <div className="mt-6 pt-6 border-t border-charcoal-500/20 text-center">
               <p className="text-sm text-charcoal-400">

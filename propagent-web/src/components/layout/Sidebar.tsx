@@ -1,6 +1,7 @@
-import { useState } from 'react';
+'use client';
+
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, 
   Building2, 
@@ -52,10 +53,13 @@ const navItems = [
 
 export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
+    onClose?.();
+    router.push('/login');
   };
 
   return (
