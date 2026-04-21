@@ -10,6 +10,7 @@ import {
 } from '@/lib/data';
 import { useCollection, newId } from '@/lib/persistence';
 import { formatDate, formatCurrency } from '@/lib/utils';
+import { sendWelcomeEmail } from '@/lib/email-client';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 
 const statusConfig = {
@@ -363,6 +364,11 @@ export default function TenantsPage() {
     };
 
     addTenant(tenant);
+    void sendWelcomeEmail({
+      to: tenant.email,
+      recipientName: `${tenant.firstName} ${tenant.lastName}`,
+      role: 'tenant',
+    });
     setShowAddModal(false);
     setNewTenant({
       firstName: '',

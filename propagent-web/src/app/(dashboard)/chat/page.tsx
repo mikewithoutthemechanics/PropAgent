@@ -6,6 +6,7 @@ import { Card, CardHeader, Button, Avatar } from '@/components/ui';
 import { mockConversations, mockProperties, UIConversation, UIChatMessage } from '@/lib/data';
 import { useCollection, newId, readLocal } from '@/lib/persistence';
 import { formatDateTime } from '@/lib/utils';
+import { aiChat, AIChatMessage } from '@/lib/ai-client';
 
 export default function ChatPage() {
   const {
@@ -49,15 +50,20 @@ export default function ChatPage() {
     setNewMessage('');
     setIsTyping(true);
 
-    const messageCopy = newMessage;
-    setTimeout(() => {
-      const aiResponseTime = new Date().toISOString();
+    const priorMessages = [...currentConv.messages, userMessage];
+    const apiMessages: AIChatMessage[] = priorMessages.slice(-12).map(m => ({
+      role: m.senderType === 'ai' ? 'assistant' : 'user',
+      content: m.content,
+    }));
+
+    (async () => {
+      const replyContent = await aiChat(apiMessages);
       const aiResponse: UIChatMessage = {
         id: newId('msg'),
         senderId: 'ai',
         senderType: 'ai',
-        content: generateAIResponse(messageCopy),
-        timestamp: aiResponseTime,
+        content: replyContent || generateAIResponse(userMessage.content),
+        timestamp: new Date().toISOString(),
         read: true,
       };
 
@@ -71,7 +77,7 @@ export default function ChatPage() {
         });
       }
       setIsTyping(false);
-    }, 1500);
+    })();
   };
 
   const handleAddChat = () => {
