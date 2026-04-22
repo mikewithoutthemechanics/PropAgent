@@ -218,19 +218,22 @@ Agent Loop`,
     variables: ['agent_name', 'tenant_name', 'property_address', 'application_date', 'application_link'],
   },
   property_match: {
-    subject: 'Property Match Found - {{property_title}}',
+    subject: '🎯 New AI Match: {{property_title}}',
     body: `Dear {{recipient_name}},
 
-We found a property that matches your criteria!
+Our AI Matching Engine has found a high-probability match for your buyer!
 
-{{property_title}}
+Property: {{property_title}}
 Location: {{location}}
 Price: R{{price}}
-Match Score: {{match_score}}%
+Match Score: {{match_score}}% (within 20% variance)
 
-View property: {{property_link}}
+This property matches your client's requirements closely. You can now reach out to the listing agent to arrange a viewing.
 
-Agent Loop`,
+View match details: {{property_link}}
+
+Kind regards,
+Agent Loop AI`,
     variables: ['recipient_name', 'property_title', 'location', 'price', 'match_score', 'property_link'],
   },
   system_alert: {
@@ -261,7 +264,7 @@ export const SMS_TEMPLATES: Record<NotificationType, string> = {
   commission_update: 'Agent Loop: Commission R{{amount}} {{status}}. Details: {{link}}',
   lease_expiry: 'Agent Loop: Lease expiry reminder for {{address}}. Contact us to renew.',
   tenant_application: 'Agent Loop: New application from {{name}}. Review: {{link}}',
-  property_match: 'Agent Loop: New match! {{title}} at R{{price}}. View: {{link}}',
+  property_match: '🎯 agent-loop Match: {{title}} at R{{price}} ({{match_score}}% match). View: {{link}}',
   system_alert: 'Agent Loop Alert: {{message}}',
 };
 

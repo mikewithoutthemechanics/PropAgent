@@ -34,7 +34,7 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     
-  const { error } = await signIn(process.env.NEXT_PUBLIC_DEMO_EMAIL || "demo@agentloop.co.za", process.env.NEXT_PUBLIC_DEMO_PASSWORD || "demo");
+    const { error } = await signIn("admin@agentloop.com", "admin123");
     
     if (!error) {
       router.push("/");

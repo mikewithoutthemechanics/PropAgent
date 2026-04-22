@@ -1,13 +1,13 @@
-# Feature Specification: PropAgent AI-Powered Property Management Platform
+# Feature Specification: agent-loop AI-Powered Property Management Platform
 
-**Feature Branch**: `001-propagent-platform`  
+**Feature Branch**: `001-agent-loop-platform`
 **Created**: 2026-03-23  
 **Status**: Draft  
-**Input**: User description: "PropAgent AI-powered property management and tenant communication platform"
+**Input**: User description: "agent-loop AI-powered property management and tenant communication platform"
 
 ## Overview
 
-PropAgent is an AI-powered property management platform designed for landlords and property managers to efficiently manage properties, communicate with tenants, and automate routine tasks. The platform leverages AI to handle tenant inquiries, schedule maintenance, track rent payments, and provide insights into property performance.
+agent-loop is an AI-powered property management platform designed for landlords and property managers to efficiently manage properties, communicate with tenants, and automate routine tasks. The platform leverages AI to handle tenant inquiries, schedule maintenance, track rent payments, and provide insights into property performance.
 
 ## User Scenarios & Testing
 

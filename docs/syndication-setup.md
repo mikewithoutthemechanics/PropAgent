@@ -97,7 +97,7 @@ N8N_LINKEDIN_PERSON_ID=your_person_id
 
 ## Step 4: Configure Webhook URLs
 
-Each workflow has a webhook URL that needs to be configured in your PropAgent application:
+Each workflow has a webhook URL that needs to be configured in your agent-loop application:
 
 1. **Property24**: `https://your-n8n-instance.com/webhook/property24-syndicate`
 2. **Private Property**: `https://your-n8n-instance.com/webhook/private-property-syndicate`
@@ -106,7 +106,7 @@ Each workflow has a webhook URL that needs to be configured in your PropAgent ap
 5. **Twitter**: `https://your-n8n-instance.com/webhook/twitter-syndicate`
 6. **LinkedIn**: `https://your-n8n-instance.com/webhook/linkedin-syndicate`
 
-Set these as environment variables in your PropAgent application:
+Set these as environment variables in your agent-loop application:
 
 ```
 N8N_PROPERTY24_WEBHOOK=https://your-n8n-instance.com/webhook/property24-syndicate
@@ -119,7 +119,7 @@ N8N_LINKEDIN_WEBHOOK=https://your-n8n-instance.com/webhook/linkedin-syndicate
 
 ## Step 5: Test the Integration
 
-1. Go to the Syndication page in PropAgent
+1. Go to the Syndication page in agent-loop
 2. Configure the platforms with your credentials
 3. Select platforms to post to
 4. Test with a sample property

@@ -1,4 +1,4 @@
-# PropAgent Rebrand - Executive Professional
+# agent-loop Rebrand - Executive Professional
 ## Complete Brand Identity & Design System
 
 ---
@@ -7,7 +7,7 @@
 
 | Element | Value |
 |---------|-------|
-| **Company** | PropAgent |
+| **Company** | agent-loop |
 | **Industry** | Real Estate / Property Management (South Africa) |
 | **Positioning** | Premium property platform for SA property professionals |
 | **Brand Personality** | Authority, Trust, Sophistication, Innovation |
@@ -215,7 +215,7 @@ Dashboard → Properties → Tenants → Rent → Maintenance → Leads → Repo
 ## 11. Key Messages by Audience
 
 ### For Agents
-- "List on Property24 while managing everything in PropAgent"
+- "List on Property24 while managing everything in agent-loop"
 - "Spend less time on admin, more time closing deals"
 
 ### For Landlords

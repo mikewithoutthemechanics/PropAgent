@@ -1,6 +1,6 @@
 -- ============================================
 -- Lease Agreement Analyzer - Supabase Schema
--- Workflow #12: PropAgent Real Estate Platform
+-- Workflow #12: agent-loop Real Estate Platform
 -- ============================================
 
 -- Main table for lease analysis results

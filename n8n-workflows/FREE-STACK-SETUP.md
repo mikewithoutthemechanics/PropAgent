@@ -1,4 +1,4 @@
-# PropAgent Free Stack Setup
+# agent-loop Free Stack Setup
 ## Groq AI + Supabase PostgreSQL = $0/month
 
 ---
@@ -23,7 +23,7 @@
 1. Go to https://console.groq.com
 2. Sign up with email/GitHub
 3. Navigate to **API Keys**
-4. Create new key: `propagent-prod`
+4. Create new key: `agent-loop-prod`
 5. Copy the key (starts with `gsk_`)
 
 **Free Limits:**
@@ -44,7 +44,7 @@
 2. Sign up with email/GitHub
 3. Click **New Project**
 4. Fill in:
-   - Name: `propagent`
+   - Name: `agent-loop`
    - Database Password: (generate strong password)
    - Region: Choose closest (e.g., `us-east-1`)
 5. Wait ~2 minutes for database to provision
@@ -118,7 +118,7 @@ INSERT INTO tenants (first_name, last_name, phone, rent_amount, rent_due_date) V
 1. Go to https://resend.com
 2. Sign up with email/GitHub
 3. Navigate to **API Keys**
-4. Create new key: `propagent-prod`
+4. Create new key: `agent-loop-prod`
 5. Copy the key (starts with `re_`)
 6. Verify your sender identity (from Address tab)
 
@@ -156,7 +156,7 @@ INSERT INTO tenants (first_name, last_name, phone, rent_amount, rent_due_date) V
 
 #### Supabase Credential
 1. Click **New** → **Supabase**
-2. Name: `PropAgent DB`
+2. Name: `agent-loop DB`
 3. Host: `https://your-project-ref.supabase.co`
 4. Service Role Secret: (from Project Settings → API → service_role key)
 5. Save
@@ -245,7 +245,7 @@ Expected: AI classifies as VIEWING + responds with available times
 
 ### Free Tier Limits (Monthly)
 
-| Service | Limit | PropAgent Usage | Status |
+| Service | Limit | agent-loop Usage | Status |
 |---------|-------|-----------------|--------|
 | Groq Tokens | 1,000,000/day | ~10,000/day | ✅ 1% used |
 | Supabase DB | 500MB | ~50MB | ✅ 10% used |

@@ -236,7 +236,9 @@ function OnboardingContent() {
       last_name: formData.lastName,
       phone: formData.phone,
       role: formData.role,
+      ffc_number: formData.ffcNumber,
       onboarded_at: new Date().toISOString(),
+      verified_at: formData.ppraVerified ? new Date().toISOString() : undefined,
     });
 
     if (error) {

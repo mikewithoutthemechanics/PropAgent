@@ -1,4 +1,4 @@
-# AgentPing Web - Development Guide
+# agent-loop Web - Development Guide
 
 ## Project Overview
 
@@ -16,7 +16,7 @@
 ## Running
 
 ```bash
-cd propagent-web
+cd agentloop-web
 npm run dev    # Frontend on localhost:3000
 ```
 

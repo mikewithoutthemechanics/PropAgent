@@ -85,7 +85,7 @@ function layout(title: string, bodyHtml: string, ctaHref?: string, ctaLabel?: st
         ${cta}
       </div>
       <p style="text-align:center;color:${muted};font-size:12px;margin-top:16px;">
-        Sent by Agent Loop · <a href="https://propagent-web-one.vercel.app" style="color:${muted};">agentloop.ai</a>
+        Sent by Agent Loop · <a href="https://agentloop-web-one.vercel.app" style="color:${muted};">agentloop.ai</a>
       </p>
     </div>
   </body>
@@ -114,7 +114,7 @@ export function welcomeEmail({
   to,
   recipientName,
   role,
-  dashboardUrl = 'https://propagent-web-one.vercel.app/dashboard',
+  dashboardUrl = 'https://agentloop-web-one.vercel.app/dashboard',
 }: WelcomeEmailInput): SendEmailInput {
   const body =
     role === 'agent'
@@ -274,7 +274,7 @@ export function newLeadEmail({
   leadPhone,
   propertyAddress,
   message,
-  leadsUrl = 'https://propagent-web-one.vercel.app/leads',
+  leadsUrl = 'https://agentloop-web-one.vercel.app/leads',
 }: NewLeadEmailInput): SendEmailInput {
   const subject = `New lead: ${leadName}${propertyAddress ? ` — ${propertyAddress}` : ''}`;
   const body = `<p>Hi ${escapeHtml(agentName)},</p>

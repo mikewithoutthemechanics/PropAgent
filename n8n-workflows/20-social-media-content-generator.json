@@ -236,7 +236,7 @@
         "contentType": "application/json",
         "body": {
           "message": "={{ $json.facebook_post + '\\n\\n' + $json.facebook_cta }}",
-          "link": "={{ 'https://propagent.co.za/property/' + $json.property_id }}"
+          "link": "={{ 'https://agentloop.co.za/property/' + $json.property_id }}"
         }
       },
       "name": "Post to Facebook",
@@ -257,7 +257,7 @@
         "contentType": "application/json",
         "body": {
           "caption": "={{ $json.instagram_caption + '\\n\\n' + $json.instagram_hashtags?.join(' ') }}",
-          "image_url": "={{ $json.main_image_url || 'https://propagent.co.za/placeholder-property.jpg' }}"
+          "image_url": "={{ $json.main_image_url || 'https://agentloop.co.za/placeholder-property.jpg' }}"
         }
       },
       "name": "Post to Instagram",
@@ -288,7 +288,7 @@
               "media": [
                 {
                   "status": "READY",
-                  "originalUrl": "={{ 'https://propagent.co.za/property/' + $json.property_id }}",
+                  "originalUrl": "={{ 'https://agentloop.co.za/property/' + $json.property_id }}",
                   "title": {
                     "text": "={{ 'Property in ' + $json.suburb }}"
                   }
