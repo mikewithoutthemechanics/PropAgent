@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowLeft, Check, Sparkles, Database, Link2, Upload, ShieldCheck, FileCheck, AlertCircle } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, Sparkles, Database, Upload, ShieldCheck, FileCheck, AlertCircle } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { setOnboardingDone, setTourDone } from "@/lib/onboarding";
 
@@ -148,16 +148,22 @@ function OnboardingContent() {
   const { profile, updateProfile } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (profile) {
-      setFormData((prev) => ({
-        ...prev,
-        firstName: profile.first_name || "",
-        lastName: profile.last_name || "",
-        phone: profile.phone || "",
-      }));
+  // Sync profile fields into local form state once profile loads.
+  // We track a key so that the initial state factory in useState runs
+  // fresh when the profile identity changes (avoids calling setState
+  // inside an effect, which React 19 strict mode disallows).
+  const profileKey = profile?.id ?? "";
+  const [syncedProfileKey, setSyncedProfileKey] = useState("");
+
+  if (profileKey && profileKey !== syncedProfileKey) {
+    setSyncedProfileKey(profileKey);
+    const fn = profile?.first_name || "";
+    const ln = profile?.last_name || "";
+    const ph = profile?.phone || "";
+    if (fn !== formData.firstName || ln !== formData.lastName || ph !== formData.phone) {
+      setFormData((prev) => ({ ...prev, firstName: fn, lastName: ln, phone: ph }));
     }
-  }, [profile]);
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,

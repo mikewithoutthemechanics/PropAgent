@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Filter, Users, Home, DollarSign, MapPin, Calendar, Sparkles, Target, ChevronRight, Bell, SlidersHorizontal, Search, TrendingUp, Building, Key, HomeIcon, Brain, Zap, ArrowRight, RefreshCw, Eye } from 'lucide-react';
-import { Card, Button, Badge } from '@/components/ui';
+import { Plus, Users, Home, MapPin, Sparkles, Search, TrendingUp, Building, Key, Brain, Zap, RefreshCw, Eye } from 'lucide-react';
+import { Button, Badge } from '@/components/ui';
 import { cn } from '@/lib/utils';
-import { kznLocations, areaProfiles } from '@/lib/kzn-locations';
+import { kznLocations } from '@/lib/kzn-locations';
 
 type MatchTab = 'ai-recommendations' | 'rentals' | 'sales';
 
@@ -146,8 +146,6 @@ const buyerCriteria = [
 export default function MatchingPage() {
   const [activeTab, setActiveTab] = useState<MatchTab>('ai-recommendations');
   const [selectedCriteria, setSelectedCriteria] = useState<string | null>(null);
-  const [mobileListOpen, setMobileListOpen] = useState(false);
-  const [filterOpen, setFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Get unique locations for search

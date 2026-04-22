@@ -11,10 +11,8 @@ import {
   MessageSquare,
   Settings,
   LogOut,
-  Home,
   Bell,
   CreditCard,
-  Target,
   UserCheck,
   Wallet,
   Trophy,
@@ -23,11 +21,8 @@ import {
   Calendar,
   Sparkles,
   Share2,
-  ArrowUpRight,
-  BarChart3,
   TrendingUp,
   Brain,
-  Link2,
   Database
 } from 'lucide-react';
 import { cn } from '@/lib/utils';

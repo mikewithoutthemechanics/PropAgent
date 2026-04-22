@@ -4,9 +4,6 @@ import { useState } from 'react';
 import {
   Database,
   Plus,
-  Settings,
-  Check,
-  ExternalLink,
   RefreshCw,
   Trash2,
   TestTube,
@@ -18,8 +15,7 @@ import {
   ShieldCheck,
   AlertCircle,
 } from 'lucide-react';
-import { Card, Button, Badge } from '@/components/ui';
-import { cn } from '@/lib/utils';
+import { Button, Badge } from '@/components/ui';
 
 interface Integration {
   id: string;
