@@ -1,4 +1,4 @@
-// agent-loop - Financial Management System
+// Agent Loop - Financial Management System
 // Comprehensive rent roll, expenses, invoices, and reporting
 
 import { Property, Tenant, Payment } from './types';

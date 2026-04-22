@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Privacy Policy — agent-loop',
+  title: 'Privacy Policy — Agent Loop',
 };
 
 export default function PrivacyPage() {
@@ -7,7 +7,7 @@ export default function PrivacyPage() {
     <main className="max-w-3xl mx-auto px-6 py-16 prose prose-slate">
       <h1 className="text-3xl font-bold text-charcoal-900 mb-6">Privacy Policy</h1>
       <p className="text-charcoal-600">
-        agent-loop (Pty) Ltd (&ldquo;agent-loop&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) respects your
+        Agent Loop (Pty) Ltd (&ldquo;Agent Loop&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) respects your
         privacy. This policy explains what personal information we collect through
         our platform, how we use it, and your rights under the Protection of
         Personal Information Act (POPIA).

@@ -1,4 +1,4 @@
-// KZN, South Africa locations for agent-loop
+// KZN, South Africa locations for Agent Loop
 // Focused on North Coast: Ballito, Salt Rock, Sheffield, Umhlanga, Midlands
 
 export const kznLocations = {

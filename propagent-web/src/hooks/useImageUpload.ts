@@ -2,7 +2,7 @@
  * useImageUpload Hook
  * 
  * Custom React hook for managing image uploads, reordering, and deletion
- * for property listings in agent-loop
+ * for property listings in Agent Loop
  */
 
 import { useState, useCallback, useMemo } from 'react';

@@ -1,4 +1,4 @@
-// agent-loop - Agent Types and Management
+// Agent Loop - Agent Types and Management
 // FFC-verified estate agent management system
 
 export type EmploymentStatus = 'employed' | 'self_employed' | 'business_owner';

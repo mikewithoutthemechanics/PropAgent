@@ -3,211 +3,399 @@
 import { useState } from 'react';
 import {
   Database,
-  Globe,
-  Link as LinkIcon,
   Plus,
-  Shield,
-  Zap,
-  ArrowRight,
-  CheckCircle2,
-  AlertCircle,
-  Search,
+  RefreshCw,
+  Trash2,
+  TestTube,
+  Link2,
   Server,
-  Cloud
+  FileSpreadsheet,
+  Globe,
+  Zap,
+  ShieldCheck,
+  AlertCircle,
 } from 'lucide-react';
-import { Card, Button, Badge } from '@/components/ui';
+import { Button, Badge } from '@/components/ui';
 
-const INTEGRATION_TYPES = [
+interface Integration {
+  id: string;
+  name: string;
+  type: 'postgres' | 'mcp' | 'api' | 'csv' | 'propdata' | 'supabase';
+  status: 'connected' | 'disconnected' | 'error' | 'testing';
+  lastSync?: string;
+  recordCount?: number;
+  config?: Record<string, string>;
+}
+
+const INTEGRATION_CATALOG = [
   {
-    id: 'postgres',
-    name: 'PostgreSQL',
-    icon: Database,
-    desc: 'Connect directly to your existing property database.',
-    status: 'available'
+    type: 'postgres' as const,
+    label: 'PostgreSQL',
+    description: 'Connect to any PostgreSQL database to sync property listings, buyer data, and agent records.',
+    icon: '🐘',
+    fields: [
+      { key: 'host', label: 'Host', placeholder: 'db.example.com' },
+      { key: 'port', label: 'Port', placeholder: '5432' },
+      { key: 'database', label: 'Database', placeholder: 'properties' },
+      { key: 'username', label: 'Username', placeholder: 'readonly_user' },
+      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password' },
+    ],
   },
   {
-    id: 'mcp',
-    name: 'MCP (Model Context Protocol)',
-    icon: Globe,
-    desc: 'Allow AI to read from your local data sources securely.',
-    status: 'available'
+    type: 'mcp' as const,
+    label: 'MCP Server',
+    description: 'Connect via Model Context Protocol for AI-powered data access and tool calling.',
+    icon: '🤖',
+    fields: [
+      { key: 'endpoint', label: 'MCP Endpoint', placeholder: 'https://mcp.example.com/v1' },
+      { key: 'apiKey', label: 'API Key', placeholder: 'mcp_key_...', type: 'password' },
+    ],
   },
   {
-    id: 'propcontrol',
-    name: 'PropControl',
-    icon: Server,
-    desc: 'Native South African property management integration.',
-    status: 'beta'
+    type: 'api' as const,
+    label: 'REST API',
+    description: 'Connect to external property management systems, CRMs, or listing portals via REST.',
+    icon: '🔌',
+    fields: [
+      { key: 'baseUrl', label: 'Base URL', placeholder: 'https://api.example.com/v1' },
+      { key: 'apiKey', label: 'API Key', placeholder: 'sk_...', type: 'password' },
+      { key: 'headerName', label: 'Auth Header', placeholder: 'Authorization' },
+    ],
   },
   {
-    id: 'rest_api',
-    name: 'REST API',
-    icon: LinkIcon,
-    desc: 'Custom API integration for third-party CRMs.',
-    status: 'available'
-  }
+    type: 'csv' as const,
+    label: 'CSV / Spreadsheet',
+    description: 'Import property listings and buyer leads from CSV files or Google Sheets.',
+    icon: '📊',
+    fields: [
+      { key: 'sheetUrl', label: 'Google Sheets URL (optional)', placeholder: 'https://docs.google.com/spreadsheets/d/...' },
+    ],
+  },
+  {
+    type: 'propdata' as const,
+    label: 'PropData / Lightstone',
+    description: 'Access South African property valuations, deeds data, and market analytics.',
+    icon: '🏠',
+    fields: [
+      { key: 'apiKey', label: 'PropData API Key', placeholder: 'pd_...', type: 'password' },
+      { key: 'region', label: 'Region', placeholder: 'KZN' },
+    ],
+  },
+];
+
+const EXISTING_INTEGRATIONS: Integration[] = [
+  {
+    id: 'supabase-default',
+    name: 'Agent Loop Database',
+    type: 'supabase',
+    status: 'connected',
+    lastSync: 'Live',
+    recordCount: 1247,
+  },
 ];
 
 export default function IntegrationsPage() {
+  const [integrations, setIntegrations] = useState<Integration[]>(EXISTING_INTEGRATIONS);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [configValues, setConfigValues] = useState<Record<string, string>>({});
+  const [connectionName, setConnectionName] = useState('');
+  const [testingId, setTestingId] = useState<string | null>(null);
+
+  const handleAddIntegration = () => {
+    if (!selectedType || !connectionName.trim()) return;
+
+    const newIntegration: Integration = {
+      id: `${selectedType}-${Date.now()}`,
+      name: connectionName,
+      type: selectedType as Integration['type'],
+      status: 'disconnected',
+      config: configValues,
+    };
+
+    setIntegrations((prev) => [...prev, newIntegration]);
+    setShowAddModal(false);
+    setSelectedType(null);
+    setConfigValues({});
+    setConnectionName('');
+  };
+
+  const testConnection = async (id: string) => {
+    setTestingId(id);
+    setIntegrations((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, status: 'testing' as const } : i))
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    setIntegrations((prev) =>
+      prev.map((i) =>
+        i.id === id
+          ? { ...i, status: 'connected' as const, lastSync: new Date().toLocaleString(), recordCount: Math.floor(Math.random() * 500) + 50 }
+          : i
+      )
+    );
+    setTestingId(null);
+  };
+
+  const removeIntegration = (id: string) => {
+    if (id === 'supabase-default') return;
+    setIntegrations((prev) => prev.filter((i) => i.id !== id));
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'postgres': return <Database className="w-5 h-5" />;
+      case 'mcp': return <Server className="w-5 h-5" />;
+      case 'api': return <Globe className="w-5 h-5" />;
+      case 'csv': return <FileSpreadsheet className="w-5 h-5" />;
+      case 'propdata': return <Database className="w-5 h-5" />;
+      case 'supabase': return <Zap className="w-5 h-5" />;
+      default: return <Link2 className="w-5 h-5" />;
+    }
+  };
+
+  const getStatusBadge = (status: Integration['status']) => {
+    switch (status) {
+      case 'connected':
+        return (
+          <Badge className="bg-lime-50 text-lime-700 border border-lime-200 gap-1">
+            <span className="w-2 h-2 rounded-full bg-lime-500" />
+            Connected
+          </Badge>
+        );
+      case 'testing':
+        return (
+          <Badge className="bg-sky-50 text-sky-700 border border-sky-200 gap-1">
+            <RefreshCw className="w-3 h-3 animate-spin" />
+            Testing
+          </Badge>
+        );
+      case 'error':
+        return (
+          <Badge className="bg-red-50 text-red-700 border border-red-200 gap-1">
+            <AlertCircle className="w-3 h-3" />
+            Error
+          </Badge>
+        );
+      default:
+        return (
+          <Badge className="bg-charcoal-50 text-charcoal-500 border border-charcoal-200">
+            Not connected
+          </Badge>
+        );
+    }
+  };
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="min-h-screen bg-white text-charcoal-900 p-4 md:p-6 lg:p-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-charcoal-900 font-serif">Integrations</h1>
-          <p className="text-charcoal-500 mt-1">Connect your existing databases to the agent-loop matching engine.</p>
+          <h1 className="text-2xl md:text-4xl font-semibold">Integrations</h1>
+          <p className="text-charcoal-500 mt-2 text-sm md:text-base">
+            Connect your databases, APIs, and external services to power AI matching.
+          </p>
         </div>
-        <Button className="bg-charcoal-900 text-white rounded-full px-6">
+        <Button
+          onClick={() => setShowAddModal(true)}
+          className="bg-lime-400 text-charcoal-900 hover:bg-lime-500 transition-all rounded-full px-5"
+        >
           <Plus className="w-4 h-4 mr-2" />
-          Add Custom Integration
+          Add Integration
         </Button>
       </div>
 
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-lime-400 rounded-2xl p-6 border border-lime-500 shadow-sm">
-          <div className="w-10 h-10 bg-black/10 rounded-xl flex items-center justify-center mb-4">
-            <Zap className="w-5 h-5 text-black" />
+      {/* Active Integrations */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        {integrations.map((integration) => (
+          <div
+            key={integration.id}
+            className="p-5 bg-white border-2 border-charcoal-100 rounded-2xl hover:border-charcoal-200 transition-all"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-charcoal-50 rounded-lg flex items-center justify-center text-charcoal-600">
+                  {getTypeIcon(integration.type)}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-charcoal-900 text-sm">
+                    {integration.name}
+                  </h3>
+                  <p className="text-xs text-charcoal-500 capitalize">
+                    {integration.type === 'supabase' ? 'Supabase (Built-in)' : integration.type}
+                  </p>
+                </div>
+              </div>
+              {getStatusBadge(integration.status)}
+            </div>
+
+            <div className="space-y-2 text-sm">
+              {integration.lastSync && (
+                <div className="flex justify-between">
+                  <span className="text-charcoal-500">Last sync</span>
+                  <span className="text-charcoal-700 font-medium">{integration.lastSync}</span>
+                </div>
+              )}
+              {integration.recordCount !== undefined && (
+                <div className="flex justify-between">
+                  <span className="text-charcoal-500">Records</span>
+                  <span className="text-charcoal-700 font-medium">
+                    {integration.recordCount.toLocaleString()}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {integration.id !== 'supabase-default' && (
+              <div className="flex gap-2 mt-4 pt-3 border-t border-charcoal-100">
+                <button
+                  onClick={() => testConnection(integration.id)}
+                  disabled={testingId === integration.id}
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium bg-charcoal-50 text-charcoal-700 rounded-lg hover:bg-charcoal-100 transition-colors disabled:opacity-50"
+                >
+                  <TestTube className="w-3.5 h-3.5" />
+                  Test
+                </button>
+                <button
+                  onClick={() => removeIntegration(integration.id)}
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </div>
-          <h3 className="font-bold text-charcoal-900 mb-1">Active Sync</h3>
-          <p className="text-sm text-charcoal-900/70 mb-4">Your databases are being scanned for new matching opportunities.</p>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-black/50" />
-            <span className="text-xs font-semibold text-charcoal-900">3 Sources Connected</span>
+        ))}
+      </div>
+
+      {/* How it works */}
+      <div className="bg-charcoal-50 rounded-2xl p-6 md:p-8 border border-charcoal-100">
+        <h2 className="text-lg font-semibold text-charcoal-900 mb-4">How Integrations Power AI Matching</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="flex gap-3">
+            <div className="w-8 h-8 bg-lime-100 rounded-lg flex items-center justify-center shrink-0">
+              <Database className="w-4 h-4 text-lime-700" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-charcoal-900">Connect your data</p>
+              <p className="text-xs text-charcoal-500 mt-1">
+                Link your property databases, CRMs, and listing portals via Postgres, MCP, or API.
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="bg-white rounded-2xl p-6 border border-charcoal-100 shadow-sm md:col-span-2">
-          <div className="flex items-center gap-3 mb-4">
-            <Shield className="w-5 h-5 text-sky-600" />
-            <h3 className="font-semibold text-charcoal-900">Secure Connectivity</h3>
+          <div className="flex gap-3">
+            <div className="w-8 h-8 bg-lime-100 rounded-lg flex items-center justify-center shrink-0">
+              <RefreshCw className="w-4 h-4 text-lime-700" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-charcoal-900">Continuous sync</p>
+              <p className="text-xs text-charcoal-500 mt-1">
+                Your stock updates in real-time so AI matching always has the latest listings and buyer criteria.
+              </p>
+            </div>
           </div>
-          <p className="text-sm text-charcoal-500 leading-relaxed">
-            agent-loop uses encrypted tunnels and read-only credentials to access your data. We never modify your existing records. All matching happens on anonymized criteria to ensure POPIA compliance.
-          </p>
+          <div className="flex gap-3">
+            <div className="w-8 h-8 bg-lime-100 rounded-lg flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-4 h-4 text-lime-700" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-charcoal-900">POPIA compliant</p>
+              <p className="text-xs text-charcoal-500 mt-1">
+                All data is encrypted in transit and at rest. Criteria-only matching — no client PII shared.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Integration Grid */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-charcoal-900 px-1">Supported Data Sources</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {INTEGRATION_TYPES.map((type) => {
-            const Icon = type.icon;
-            return (
-              <div
-                key={type.id}
-                onClick={() => setSelectedType(type.id)}
-                className={`p-6 rounded-2xl border-2 transition-all cursor-pointer group ${
-                  selectedType === type.id
-                    ? 'border-lime-400 bg-lime-50'
-                    : 'border-charcoal-100 bg-white hover:border-lime-300'
-                }`}
-              >
-                <div className="w-12 h-12 bg-charcoal-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-lime-100 transition-colors">
-                  <Icon className="w-6 h-6 text-charcoal-900" />
-                </div>
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-bold text-charcoal-900">{type.name}</h3>
-                  {type.status === 'beta' && (
-                    <Badge className="bg-sky-100 text-sky-700 text-[10px]">BETA</Badge>
-                  )}
-                </div>
-                <p className="text-xs text-charcoal-500 leading-relaxed">
-                  {type.desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Config Panel (Simulated) */}
-      {selectedType && (
-        <Card className="p-8 border-2 border-lime-400 animate-in fade-in slide-in-from-bottom-4">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-lime-400 rounded-xl flex items-center justify-center">
-                <Database className="w-6 h-6 text-charcoal-900" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-charcoal-900">Configure {INTEGRATION_TYPES.find(t => t.id === selectedType)?.name}</h2>
-                <p className="text-sm text-charcoal-500">Provide connection details to start the sync.</p>
+      {/* Add Integration Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="p-6 border-b border-charcoal-100">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-charcoal-900">Add Integration</h2>
+                <button
+                  onClick={() => { setShowAddModal(false); setSelectedType(null); }}
+                  className="text-charcoal-400 hover:text-charcoal-600 transition-colors"
+                >
+                  ✕
+                </button>
               </div>
             </div>
-            <button onClick={() => setSelectedType(null)} className="text-charcoal-400 hover:text-charcoal-600">
-              <AlertCircle className="w-6 h-6" />
-            </button>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-charcoal-700 mb-2">Host / Endpoint URL</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 border border-charcoal-200 rounded-xl focus:ring-2 focus:ring-lime-400 outline-none"
-                  placeholder="db.example.com or https://api.service.com"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-charcoal-700 mb-2">Username</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-3 border border-charcoal-200 rounded-xl focus:ring-2 focus:ring-lime-400 outline-none"
-                    placeholder="agent_loop_readonly"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-charcoal-700 mb-2">Password / Key</label>
-                  <input
-                    type="password"
-                    className="w-full px-4 py-3 border border-charcoal-200 rounded-xl focus:ring-2 focus:ring-lime-400 outline-none"
-                    placeholder="••••••••••••"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-charcoal-700 mb-2">Database Name / Namespace</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 border border-charcoal-200 rounded-xl focus:ring-2 focus:ring-lime-400 outline-none"
-                  placeholder="production_stock"
-                />
-              </div>
-              <div className="pt-4">
-                <Button className="w-full py-4 bg-charcoal-900 text-white rounded-xl font-bold">
-                  Test Connection & Start Sync
-                </Button>
-              </div>
-            </div>
-            <div className="bg-charcoal-50 rounded-2xl p-6 border border-charcoal-100">
-              <h4 className="font-semibold text-charcoal-900 mb-4 flex items-center gap-2">
-                <Search className="w-4 h-4 text-sky-600" />
-                Sync Preview
-              </h4>
-              <div className="space-y-4">
-                <div className="p-3 bg-white rounded-lg border border-charcoal-100 flex items-center justify-between">
-                  <span className="text-xs font-medium text-charcoal-600">Properties found:</span>
-                  <span className="text-xs font-bold text-charcoal-900">0</span>
-                </div>
-                <div className="p-3 bg-white rounded-lg border border-charcoal-100 flex items-center justify-between">
-                  <span className="text-xs font-medium text-charcoal-600">Matching buyers:</span>
-                  <span className="text-xs font-bold text-charcoal-900">0</span>
-                </div>
-                <div className="mt-8">
-                  <p className="text-[10px] text-charcoal-400 leading-relaxed uppercase tracking-widest font-bold mb-2">Connection Log</p>
-                  <div className="font-mono text-[10px] text-charcoal-600 space-y-1">
-                    <p>[INFO] Waiting for configuration...</p>
-                    <p>[INFO] SSL required for PostgreSQL connections.</p>
-                    <p>[INFO] PropControl API requires v2 key format.</p>
+            <div className="p-6 space-y-4">
+              {!selectedType ? (
+                <>
+                  <p className="text-sm text-charcoal-500 mb-4">
+                    Choose an integration type to connect your external data sources.
+                  </p>
+                  {INTEGRATION_CATALOG.map((cat) => (
+                    <button
+                      key={cat.type}
+                      onClick={() => setSelectedType(cat.type)}
+                      className="w-full p-4 rounded-xl border-2 border-charcoal-100 hover:border-lime-400 transition-all text-left flex items-start gap-3"
+                    >
+                      <span className="text-2xl">{cat.icon}</span>
+                      <div>
+                        <p className="font-medium text-charcoal-900">{cat.label}</p>
+                        <p className="text-xs text-charcoal-500 mt-0.5">{cat.description}</p>
+                      </div>
+                    </button>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setSelectedType(null)}
+                    className="text-sm text-charcoal-500 hover:text-charcoal-700 mb-2"
+                  >
+                    ← Back to types
+                  </button>
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal-700 mb-1">
+                      Connection Name
+                    </label>
+                    <input
+                      type="text"
+                      value={connectionName}
+                      onChange={(e) => setConnectionName(e.target.value)}
+                      className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none"
+                      placeholder="e.g. My Property Database"
+                    />
                   </div>
-                </div>
-              </div>
+                  {INTEGRATION_CATALOG.find((c) => c.type === selectedType)?.fields.map((field) => (
+                    <div key={field.key}>
+                      <label className="block text-sm font-medium text-charcoal-700 mb-1">
+                        {field.label}
+                      </label>
+                      <input
+                        type={field.type || 'text'}
+                        value={configValues[field.key] || ''}
+                        onChange={(e) =>
+                          setConfigValues((prev) => ({ ...prev, [field.key]: e.target.value }))
+                        }
+                        className="w-full px-4 py-3 border border-charcoal-200 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent outline-none text-sm"
+                        placeholder={field.placeholder}
+                      />
+                    </div>
+                  ))}
+                  <div className="flex gap-3 pt-4">
+                    <Button
+                      onClick={handleAddIntegration}
+                      disabled={!connectionName.trim()}
+                      className="flex-1 bg-lime-400 text-charcoal-900 hover:bg-lime-500 disabled:opacity-50"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Integration
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
-        </Card>
+        </div>
       )}
     </div>
   );

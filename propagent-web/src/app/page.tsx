@@ -143,7 +143,7 @@ export default function LandingPage() {
 
   const testimonials = [
     { 
-      quote: "agent-loop eliminated hours of administrative work. Our team now focuses on growth instead of paperwork.",
+      quote: "Agent Loop eliminated hours of administrative work. Our team now focuses on growth instead of paperwork.",
       author: "Sarah van der Merwe",
       role: "Director",
       company: "Coastal Properties",
@@ -238,7 +238,7 @@ export default function LandingPage() {
               <div className="w-9 h-9 bg-gradient-to-br from-lime-400 to-sky-400 rounded-xl flex items-center justify-center shadow-lg shadow-lime-500/25">
                 <Home className="w-5 h-5 text-charcoal-900" />
               </div>
-              <span className="text-lg font-semibold tracking-tight text-white">agent-loop</span>
+              <span className="text-lg font-semibold tracking-tight text-white">Agent Loop</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
@@ -323,25 +323,25 @@ export default function LandingPage() {
           <div className={`max-w-3xl transition-all duration-1000 ease-out ${prefersReducedMotion ? 'opacity-100' : visibleSections.has('hero') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-lime-500/20 backdrop-blur-sm border border-lime-500/30 text-lime-400 text-sm font-semibold rounded-full mb-6">
               <Zap className="w-4 h-4" aria-hidden="true" />
-              <span>South Africa's AI Real Estate Platform</span>
+              <span>Agent Loop — AI-Powered Agent Matching</span>
             </div>
             
             <h1 
               id="hero-title"
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6 text-white"
             >
-              Property,{' '}
+              Your stock,{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-sky-400 relative">
-                <span className="relative z-10">reimagined</span>
+                <span className="relative z-10">their buyers</span>
                 <span className="absolute inset-0 bg-gradient-to-r from-lime-400/30 to-sky-400/30 blur-2xl rounded-full" aria-hidden="true" />
               </span>
               .
             </h1>
             
             <p className="text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-8">
-              AI matches the right buyers to the right properties &mdash; with intelligent pricing,
-              instant lead qualification and paperwork that writes itself. Built for South African
-              agents, landlords, sellers and buyers.
+              AI matches your listings to agents who have ready buyers &mdash; verified via PPRA,
+              connected through integrations, and powered by intelligent matching. Built for South African
+              property practitioners.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -578,7 +578,7 @@ export default function LandingPage() {
                 <div className="w-9 h-9 bg-charcoal-900 rounded-xl flex items-center justify-center">
                   <Home className="w-5 h-5 text-lime-400" />
                 </div>
-                <span className="text-lg font-semibold">agent-loop</span>
+                <span className="text-lg font-semibold">Agent Loop</span>
               </div>
               <p className="text-charcoal-500 max-w-sm">
                 South Africa's leading property management platform. Built for modern property professionals.
@@ -590,7 +590,7 @@ export default function LandingPage() {
               <ul className="space-y-3 text-charcoal-500">
                 <li><a href="#features" className="hover:text-charcoal-900 transition-colors">Features</a></li>
                 <li><a href="#pricing" className="hover:text-charcoal-900 transition-colors">Pricing</a></li>
-                <li><a href="https://github.com/mikewithoutthemechanics/agent-loop-" target="_blank" rel="noreferrer" className="hover:text-charcoal-900 transition-colors">API</a></li>
+                <li><a href="https://github.com/mikewithoutthemechanics/AgentPing-" target="_blank" rel="noreferrer" className="hover:text-charcoal-900 transition-colors">API</a></li>
               </ul>
             </div>
             
@@ -611,7 +611,7 @@ export default function LandingPage() {
           </div>
           
           <div className="pt-8 border-t border-charcoal-100 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-charcoal-400 text-sm">© 2026 agent-loop. All rights reserved.</p>
+            <p className="text-charcoal-400 text-sm">© 2026 Agent Loop. All rights reserved.</p>
             <div className="flex items-center gap-6 text-charcoal-400 text-sm">
               <a href="/privacy" className="hover:text-charcoal-900 transition-colors">Privacy</a>
               <a href="/terms" className="hover:text-charcoal-900 transition-colors">Terms</a>

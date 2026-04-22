@@ -1,7 +1,7 @@
 /**
  * Hook Exports
  * 
- * Barrel export for all agent-loop custom hooks
+ * Barrel export for all Agent Loop custom hooks
  */
 
 export { useImageUpload } from './useImageUpload';

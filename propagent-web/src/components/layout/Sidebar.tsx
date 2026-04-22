@@ -11,10 +11,8 @@ import {
   MessageSquare,
   Settings,
   LogOut,
-  Home,
   Bell,
   CreditCard,
-  Target,
   UserCheck,
   Wallet,
   Trophy,
@@ -23,9 +21,9 @@ import {
   Calendar,
   Sparkles,
   Share2,
-  ArrowUpRight,
-  BarChart3,
-  TrendingUp
+  TrendingUp,
+  Brain,
+  Database
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/auth';
@@ -39,15 +37,15 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, tour: 'dashboard' },
+  { href: '/matching', label: 'AI Matching', icon: Brain, tour: 'matching' },
+  { href: '/integrations', label: 'Integrations', icon: Database, tour: 'integrations' },
   { href: '/tools', label: 'AI Tools', icon: Sparkles, tour: 'tools' },
   { href: '/properties', label: 'Properties', icon: Building2, tour: 'properties' },
   { href: '/leads', label: 'Leads', icon: TrendingUp, tour: 'leads' },
-  { href: '/integrations', label: 'Integrations', icon: Share2 },
   { href: '/syndication', label: 'Syndication', icon: Share2 },
   { href: '/rent-ai', label: 'Rent AI', icon: Sparkles },
   { href: '/calendar', label: 'Calendar', icon: Calendar },
   { href: '/valuations', label: 'Valuations', icon: Calculator, tour: 'valuations' },
-  { href: '/matching', label: 'Tenant Match', icon: Target },
   { href: '/escrow', label: 'Escrow', icon: Wallet },
   { href: '/documents', label: 'Documents', icon: FileText },
   { href: '/rankings', label: 'Rankings', icon: Trophy },
@@ -77,11 +75,11 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       <div className="p-4 border-b border-gray-100">
         <Link href="/dashboard" className="flex items-center gap-3 group">
           <div className="w-10 h-10 bg-[#D8F053] rounded-full flex items-center justify-center">
-            <span className="text-black font-bold text-lg">S</span>
+            <span className="text-black font-bold text-lg">AL</span>
           </div>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight text-black">agent-loop</h1>
-            <p className="text-xs text-gray-500">Property Management</p>
+            <h1 className="text-lg font-semibold tracking-tight text-black">Agent Loop</h1>
+            <p className="text-xs text-gray-500">AI-Powered Matching</p>
           </div>
         </Link>
       </div>

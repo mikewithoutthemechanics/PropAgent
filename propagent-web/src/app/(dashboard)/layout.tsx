@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { Sidebar, MobileSidebar } from '@/components/layout/Sidebar';
 import { VoiceAssistant } from '@/components/ai/VoiceAssistant';
-import { Bell, Settings, User, Menu, ShieldAlert, Sparkles, Clock } from 'lucide-react';
+import { Bell, Settings, User, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { useOnboardingState } from '@/lib/onboarding';
 
@@ -37,7 +37,7 @@ export default function DashboardLayout({
   // Route first-time users through the onboarding flow once auth resolves.
   // Source of truth is `profile.onboarded_at` (server-authoritative, so the
   // flag follows the user across devices). We fall back to the
-  // `agent-loop-onboarded` localStorage flag for two cases:
+  // `agentloop-onboarded` localStorage flag for two cases:
   //   1. Supabase isn't configured in this environment (no profile ever
   //      loads) — we still want the flow to work for local / preview
   //      builds.
@@ -103,18 +103,18 @@ export default function DashboardLayout({
             </button>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-[#D8F053] rounded-full flex items-center justify-center">
-                <span className="text-black font-semibold text-sm">S</span>
+                <span className="text-black font-semibold text-xs">AL</span>
               </div>
-              <span className="font-medium text-black">agent-loop</span>
+              <span className="font-medium text-black">Agent Loop</span>
             </div>
           </div>
 
           {/* Desktop: Brand Area */}
           <div className="hidden lg:flex items-center gap-3">
             <div className="w-9 h-9 bg-[#D8F053] rounded-full flex items-center justify-center">
-              <span className="text-black font-semibold text-sm">S</span>
+              <span className="text-black font-semibold text-xs">AL</span>
             </div>
-            <span className="font-medium text-black">agent-loop</span>
+            <span className="font-medium text-black">Agent Loop</span>
           </div>
 
           {/* Main Menu - Desktop Only */}
@@ -153,40 +153,7 @@ export default function DashboardLayout({
 
         {/* Main Content Area */}
         <main id="main-content" className="flex-1 p-4 md:p-6 overflow-auto bg-white">
-          {!profile?.verified_at && !isDemoMode && pathname !== '/onboarding' ? (
-            <div className="h-full flex items-center justify-center p-4">
-              <div className="max-w-md w-full bg-white border-2 border-charcoal-100 rounded-2xl p-8 text-center shadow-sm">
-                <div className="mx-auto w-16 h-16 rounded-2xl bg-sky-50 flex items-center justify-center mb-6">
-                  <ShieldAlert className="w-8 h-8 text-sky-600" />
-                </div>
-                <h2 className="text-2xl font-bold text-charcoal-900 mb-3 font-serif">
-                  Verification Pending
-                </h2>
-                <p className="text-charcoal-500 mb-8">
-                  Your profile is currently being cross-referenced with the <strong>PPRA practitioner database</strong>.
-                  This typically takes 2-4 hours. You'll receive a WhatsApp and email notification once verified.
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 p-4 bg-charcoal-50 rounded-xl text-left">
-                    <Clock className="w-5 h-5 text-charcoal-400" />
-                    <div>
-                      <p className="text-sm font-medium text-charcoal-900">Estimated time remaining</p>
-                      <p className="text-xs text-charcoal-500">Approx. 2 hours 15 minutes</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-4 bg-lime-50 rounded-xl text-left">
-                    <Sparkles className="w-5 h-5 text-lime-600" />
-                    <div>
-                      <p className="text-sm font-medium text-charcoal-900">While you wait...</p>
-                      <p className="text-xs text-charcoal-500">Check out our <Link href="/tools" className="text-lime-600 underline">AI Tools</Link> documentation.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            children
-          )}
+          {children}
         </main>
       </div>
 

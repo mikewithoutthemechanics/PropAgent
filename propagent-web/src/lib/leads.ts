@@ -1,4 +1,4 @@
-// agent-loop - Lead Generation Sources
+// Agent Loop - Lead Generation Sources
 // Property24, Facebook, website integration for tenant/landlord leads
 
 export type LeadSource = 'property24' | 'facebook' | 'website' | 'referral' | 'direct';

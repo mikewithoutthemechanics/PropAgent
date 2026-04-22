@@ -1,4 +1,4 @@
-// Document Management System for agent-loop
+// Document Management System for Agent Loop
 // Secure lease/contract storage with versioning and expiry alerts
 
 export type DocumentCategory = 
