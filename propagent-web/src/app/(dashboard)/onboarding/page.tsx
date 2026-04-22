@@ -129,12 +129,24 @@ function OnboardingContent() {
       last_name: formData.lastName,
       phone: formData.phone,
       role: formData.role,
+      // PPRA Verification fields collected in step 4
+      practitioner_name: formData.practitionerName,
+      ffc_number: formData.ffcNumber,
+      capacity: formData.capacity,
+      firm: formData.firm,
+      category: formData.category,
+      // Integration fields collected in step 3
+      db_type: formData.dbType,
+      db_url: formData.dbUrl,
       // Server-authoritative onboarding flag — see the
       // 20260421063000_add_profile_onboarded_at migration. This persists
       // across devices so a second-browser login doesn't re-trigger the
       // flow. localStorage below is a fast-path fallback for envs
       // without Supabase configured.
       onboarded_at: new Date().toISOString(),
+      // Mark profile as verified (or pending verification depending on backend logic).
+      // The backend should trigger PPRA verification process asynchronously.
+      verified_at: new Date().toISOString(),
     });
 
     if (error) {

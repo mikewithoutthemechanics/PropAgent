@@ -38,6 +38,16 @@ export interface Profile {
   verified_at?: string | null;
   created_at: string;
   updated_at?: string;
+  // PPRA Verification fields
+  practitioner_name?: string;
+  ffc_number?: string;
+  capacity?: string;
+  firm?: string;
+  category?: string;
+  ffc_file_url?: string;
+  // Integration fields
+  db_type?: string;
+  db_url?: string;
 }
 
 // Demo mode flag - set to true to bypass authentication for testing
