@@ -1,4 +1,4 @@
-# PropAgent AI Automation Inventory
+# agent-loop AI Automation Inventory
 ## What We Have vs. What We Can't Automate
 
 **Last Updated**: 2026-04-15  

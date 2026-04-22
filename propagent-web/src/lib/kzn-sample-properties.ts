@@ -1,4 +1,4 @@
-// KZN-focused sample properties for AgentPing
+// KZN-focused sample properties for agent-loop
 // Ballito, Salt Rock, Sheffield, Umhlanga, Midlands
 
 import { Property, PropertyType, PropertyStatus, ListingType, Province } from '@/types/property';

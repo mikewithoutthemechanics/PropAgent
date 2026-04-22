@@ -1,4 +1,4 @@
-// Notification System for AgentPing
+// Notification System for agent-loop
 // POPIA-compliant: User consent for notifications, audit logging
 
 import { supabase } from './supabase';
@@ -93,7 +93,7 @@ This is a friendly reminder that your lease for {{property_address}} expires on 
 Please contact us if you'd like to discuss renewal options.
 
 Kind regards,
-AgentPing Team`,
+agent-loop Team`,
     variables: ['recipient_name', 'property_address', 'lease_end_date'],
   },
   viewing_invite: {
@@ -108,7 +108,7 @@ Time: {{viewing_time}}
 Please confirm your attendance by clicking the link below:
 {{confirmation_link}}
 
-AgentPing`,
+agent-loop`,
     variables: ['recipient_name', 'property_address', 'viewing_date', 'viewing_time', 'confirmation_link'],
   },
   payment_due: {
@@ -121,7 +121,7 @@ Please ensure payment is made by the due date to avoid late fees.
 
 Payment reference: {{reference}}
 
-AgentPing`,
+agent-loop`,
     variables: ['recipient_name', 'property_address', 'amount', 'due_date', 'reference'],
   },
   payment_received: {
@@ -134,7 +134,7 @@ Payment date: {{paid_date}}
 Reference: {{reference}}
 
 Thank you,
-AgentPing`,
+agent-loop`,
     variables: ['recipient_name', 'amount', 'property_address', 'paid_date', 'reference'],
   },
   maintenance_update: {
@@ -148,7 +148,7 @@ Status: {{status}}
 
 {{#if scheduled_date}}Scheduled: {{scheduled_date}}{{/if}}
 
-AgentPing`,
+agent-loop`,
     variables: ['recipient_name', 'request_title', 'status', 'notes', 'scheduled_date'],
   },
   new_lead: {
@@ -165,7 +165,7 @@ Urgency: {{urgency}}
 
 View details: {{lead_link}}
 
-AgentPing`,
+agent-loop`,
     variables: ['agent_name', 'tenant_name', 'budget_min', 'budget_max', 'location', 'property_types', 'urgency', 'lead_link'],
   },
   document_expiry: {
@@ -178,7 +178,7 @@ Please upload a new document to avoid service interruption.
 
 {{upload_link}}
 
-AgentPing`,
+agent-loop`,
     variables: ['recipient_name', 'document_type', 'expiry_date', 'upload_link'],
   },
   commission_update: {
@@ -189,7 +189,7 @@ Your commission of R{{amount}} has been {{status}}.
 
 {{#if details}}Details: {{details}}{{/if}}
 
-AgentPing`,
+agent-loop`,
     variables: ['agent_name', 'amount', 'status', 'details'],
   },
   lease_expiry: {
@@ -200,7 +200,7 @@ Your lease at {{property_address}} expires on {{lease_end_date}}.
 
 Please contact us to discuss renewal options.
 
-AgentPing`,
+agent-loop`,
     variables: ['recipient_name', 'property_address', 'lease_end_date'],
   },
   tenant_application: {
@@ -214,23 +214,26 @@ Application date: {{application_date}}
 
 Review: {{application_link}}
 
-AgentPing`,
+agent-loop`,
     variables: ['agent_name', 'tenant_name', 'property_address', 'application_date', 'application_link'],
   },
   property_match: {
-    subject: 'Property Match Found - {{property_title}}',
+    subject: '🎯 New AI Match: {{property_title}}',
     body: `Dear {{recipient_name}},
 
-We found a property that matches your criteria!
+Our AI Matching Engine has found a high-probability match for your buyer!
 
-{{property_title}}
+Property: {{property_title}}
 Location: {{location}}
 Price: R{{price}}
-Match Score: {{match_score}}%
+Match Score: {{match_score}}% (within 20% variance)
 
-View property: {{property_link}}
+This property matches your client's requirements closely. You can now reach out to the listing agent to arrange a viewing.
 
-AgentPing`,
+View match details: {{property_link}}
+
+Kind regards,
+agent-loop AI`,
     variables: ['recipient_name', 'property_title', 'location', 'price', 'match_score', 'property_link'],
   },
   system_alert: {
@@ -241,7 +244,7 @@ AgentPing`,
 
 {{#if action_required}}Action required: {{action_link}}{{/if}}
 
-AgentPing`,
+agent-loop`,
     variables: ['recipient_name', 'alert_title', 'alert_message', 'action_required', 'action_link'],
   },
 };
@@ -251,18 +254,18 @@ AgentPing`,
 // ============================================================================
 
 export const SMS_TEMPLATES: Record<NotificationType, string> = {
-  lease_reminder: 'AgentPing: Your lease at {{address}} expires on {{date}}. Contact us to renew.',
-  viewing_invite: 'AgentPing: Viewing invite for {{address}} on {{date}} at {{time}}. Confirm: {{link}}',
-  payment_due: 'AgentPing: Rent of R{{amount}} due on {{date}}. Ref: {{reference}}',
-  payment_received: 'AgentPing: Payment of R{{amount}} received. Thank you!',
-  maintenance_update: 'AgentPing: Maintenance request "{{title}}" status: {{status}}',
-  new_lead: 'AgentPing: New lead! {{name}} looking for {{beds}} bed in {{area}}. View: {{link}}',
-  document_expiry: 'AgentPing: Your {{doc}} expires {{date}}. Upload new: {{link}}',
-  commission_update: 'AgentPing: Commission R{{amount}} {{status}}. Details: {{link}}',
-  lease_expiry: 'AgentPing: Lease expiry reminder for {{address}}. Contact us to renew.',
-  tenant_application: 'AgentPing: New application from {{name}}. Review: {{link}}',
-  property_match: 'AgentPing: New match! {{title}} at R{{price}}. View: {{link}}',
-  system_alert: 'AgentPing Alert: {{message}}',
+  lease_reminder: 'agent-loop: Your lease at {{address}} expires on {{date}}. Contact us to renew.',
+  viewing_invite: 'agent-loop: Viewing invite for {{address}} on {{date}} at {{time}}. Confirm: {{link}}',
+  payment_due: 'agent-loop: Rent of R{{amount}} due on {{date}}. Ref: {{reference}}',
+  payment_received: 'agent-loop: Payment of R{{amount}} received. Thank you!',
+  maintenance_update: 'agent-loop: Maintenance request "{{title}}" status: {{status}}',
+  new_lead: 'agent-loop: New lead! {{name}} looking for {{beds}} bed in {{area}}. View: {{link}}',
+  document_expiry: 'agent-loop: Your {{doc}} expires {{date}}. Upload new: {{link}}',
+  commission_update: 'agent-loop: Commission R{{amount}} {{status}}. Details: {{link}}',
+  lease_expiry: 'agent-loop: Lease expiry reminder for {{address}}. Contact us to renew.',
+  tenant_application: 'agent-loop: New application from {{name}}. Review: {{link}}',
+  property_match: '🎯 agent-loop Match: {{title}} at R{{price}} ({{match_score}}% match). View: {{link}}',
+  system_alert: 'agent-loop Alert: {{message}}',
 };
 
 // ============================================================================

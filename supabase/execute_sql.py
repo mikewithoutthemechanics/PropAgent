@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PropAgent Supabase SQL Executor
+agent-loop Supabase SQL Executor
 Uses psycopg2 to execute migration SQL directly
 """
 
@@ -73,7 +73,7 @@ def execute_sql_file(filepath):
     return 0
 
 if __name__ == "__main__":
-    print("PropAgent Supabase SQL Executor")
+    print("agent-loop Supabase SQL Executor")
     print("=" * 50)
     print("")
     print("NOTE: Direct database connection requires the database password")

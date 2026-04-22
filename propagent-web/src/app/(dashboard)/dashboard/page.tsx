@@ -514,14 +514,97 @@ function DashboardView() {
         )}
       </div>
 
-      <PaymentsOverview />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Main Stats Column */}
+        <div className="lg:col-span-3 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+              <div className="bg-charcoal-900 rounded-2xl p-6 h-full border border-charcoal-800">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-lime-400" />
+                    <h2 className="text-white text-lg font-semibold">AI Matching Engine</h2>
+                  </div>
+                  <Link href="/matching" className="text-xs text-lime-400 hover:text-lime-300">View matches →</Link>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-charcoal-800 rounded-xl p-4 border border-charcoal-700/50">
+                    <p className="text-xs text-charcoal-400 uppercase tracking-wider font-semibold">Total Stock</p>
+                    <p className="text-2xl font-bold text-white mt-1">{properties.length}</p>
+                    <div className="mt-2 flex items-center gap-1 text-[10px] text-lime-400">
+                      <TrendingUp className="w-3 h-3" />
+                      <span>Ready to match</span>
+                    </div>
+                  </div>
+                  <div className="bg-charcoal-800 rounded-xl p-4 border border-charcoal-700/50">
+                    <p className="text-xs text-charcoal-400 uppercase tracking-wider font-semibold">Buyer Requests</p>
+                    <p className="text-2xl font-bold text-white mt-1">42</p>
+                    <div className="mt-2 flex items-center gap-1 text-[10px] text-sky-400">
+                      <Users className="w-3 h-3" />
+                      <span>Active criteria</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 p-4 bg-lime-400/10 rounded-xl border border-lime-400/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-lime-400">Active Matching Focus</span>
+                    <span className="text-[10px] text-charcoal-400 uppercase">20% Variance enabled</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-charcoal-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-lime-400 w-[78%] rounded-full shadow-[0_0_8px_rgba(163,230,53,0.5)]"></div>
+                  </div>
+                  <p className="text-[10px] text-charcoal-400 mt-2">AI is currently scanning 248 possible combinations across your network.</p>
+                </div>
+              </div>
+            </div>
+            <div className="md:col-span-1">
+              <div className="bg-white rounded-2xl p-6 h-full border border-charcoal-100 shadow-sm flex flex-col">
+                <div className="w-10 h-10 bg-lime-100 rounded-xl flex items-center justify-center mb-4">
+                  <Target className="w-5 h-5 text-lime-600" />
+                </div>
+                <h3 className="font-semibold text-charcoal-900 mb-1">New Match Alert</h3>
+                <p className="text-xs text-charcoal-500 mb-4 flex-1">
+                  A new property in Umhlanga matches 92% of your client "Sarah J" criteria.
+                </p>
+                <Link href="/matching" className="w-full py-2 bg-charcoal-900 text-white rounded-lg text-xs font-semibold text-center hover:bg-charcoal-800 transition-colors">
+                  View Match
+                </Link>
+              </div>
+            </div>
+          </div>
+          <PaymentsOverview />
+        </div>
+
+        {/* Sidebar Column */}
+        <div className="lg:col-span-1 space-y-6">
+          <RequestsList tickets={tickets} tenants={tenants} />
+          <div className="bg-sky-900 rounded-2xl p-5 text-white overflow-hidden relative">
+            <div className="relative z-10">
+              <h3 className="font-semibold mb-2">Stock Recommendations</h3>
+              <p className="text-xs text-sky-100 mb-4 opacity-80">
+                Recommended stock for your existing buyers based on AI scoring.
+              </p>
+              <div className="space-y-3">
+                {[1, 2].map((i) => (
+                  <div key={i} className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-sky-200">94% Match</span>
+                      <ArrowUpRight className="w-3 h-3 text-white/50" />
+                    </div>
+                    <p className="text-sm font-medium truncate">Modern Umhlanga Suite</p>
+                    <p className="text-[10px] text-sky-100 opacity-60 mt-1">Recommended for: Buyer #829</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-sky-400/20 rounded-full blur-2xl"></div>
+          </div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-3">
           <PropertySpotlight properties={properties} tenants={tenants} />
-        </div>
-        <div className="lg:col-span-1">
-          <RequestsList tickets={tickets} tenants={tenants} />
         </div>
       </div>
 

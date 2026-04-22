@@ -1,8 +1,8 @@
-# AgentPing — Persistence Test Plan
+# agent-loop — Persistence Test Plan
 
 **Scope:** Prove that CRUD mutations made from the dashboard UI survive a hard page reload (simulating a closed tab / new session). Focus on pages wired in PR #6 and PR #7. Adversarial cases are designed so a broken persistence layer produces visibly different results.
 
-**Environment:** `NEXT_PUBLIC_DEMO_MODE=true`, `npm run dev` on `http://localhost:3000`. Storage namespace: `propagent::v1::<key>`.
+**Environment:** `NEXT_PUBLIC_DEMO_MODE=true`, `npm run dev` on `http://localhost:3000`. Storage namespace: `agent-loop::v1::<key>`.
 
 **Reload method:** `Ctrl+Shift+R` (hard reload, bypasses bfcache) unless noted otherwise.
 
@@ -20,13 +20,13 @@
 **Steps:**
 1. Note current tenant count on the "Tenants" header (e.g. "N total tenants").
 2. Click the floating "+" button.
-3. Fill: First Name = `Devin`, Last Name = `Tester`, Email = `devin.tester@agentping.test`. Click **Add Tenant**.
+3. Fill: First Name = `Devin`, Last Name = `Tester`, Email = `devin.tester@agent-loop.test`. Click **Add Tenant**.
 4. Observe the new tenant appears in the list; header count increments to **N+1**.
 5. Hard reload (`Ctrl+Shift+R`).
 
 **Pass criteria:**
 - After reload, the header count is **N+1** (not N).
-- A row for "Devin Tester" / `devin.tester@agentping.test` is visible in the table/cards.
+- A row for "Devin Tester" / `devin.tester@agent-loop.test` is visible in the table/cards.
 
 **Adversarial fail signals:**
 - Count reverts to N → persistence write didn't happen.
@@ -116,12 +116,12 @@
 
 ## Test 6 — Cross-page isolation (adversarial)
 
-**Purpose:** Confirm that writing to one collection doesn't corrupt another — i.e. namespacing (`propagent::v1::tenants`, `propagent::v1::notifications`, etc.) is correct.
+**Purpose:** Confirm that writing to one collection doesn't corrupt another — i.e. namespacing (`agent-loop::v1::tenants`, `agent-loop::v1::notifications`, etc.) is correct.
 
 **Steps:**
 1. After completing Tests 1–3, open DevTools → Application → Local Storage → `http://localhost:3000`.
-2. Confirm presence of distinct keys: `propagent::v1::tenants`, `propagent::v1::notifications`, `propagent::v1::conversations`, etc.
-3. Spot-check the `propagent::v1::tenants` value contains the new "Devin Tester" record and **does not** contain chat messages or notification rows.
+2. Confirm presence of distinct keys: `agent-loop::v1::tenants`, `agent-loop::v1::notifications`, `agent-loop::v1::conversations`, etc.
+3. Spot-check the `agent-loop::v1::tenants` value contains the new "Devin Tester" record and **does not** contain chat messages or notification rows.
 
 **Pass criteria:**
 - Each collection is under its own key.

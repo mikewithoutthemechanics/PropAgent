@@ -41,7 +41,7 @@ type Result = {
 const TTL_SECONDS = 60 * 60 * 12;
 
 function cacheKey(b: Body): string {
-  return `propagent:market-comparison:${[
+  return `agent-loop:market-comparison:${[
     (b.address ?? '').toLowerCase().trim(),
     (b.suburb ?? '').toLowerCase().trim(),
     (b.city ?? '').toLowerCase().trim(),

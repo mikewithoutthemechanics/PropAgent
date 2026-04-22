@@ -1,7 +1,7 @@
 -- Migration: Additional tables for new workflows
 -- Created: 2026-03-23
 -- Workflows: 08, 09, 13, 20
--- Updated: 2026-03-24 - Added listing_syndication table for PropAgent Listing Syndication
+-- Updated: 2026-03-24 - Added listing_syndication table for agent-loop Listing Syndication
 
 -- ============================================
 -- EMAIL CLASSIFICATIONS (Workflow 08)

@@ -1,13 +1,13 @@
-# PropAgent Deployment Guide
+# agent-loop Deployment Guide
 
 ## Overview
-This document clarifies the deployment process for PropAgent to prevent confusion and ensure consistent, reliable deployments.
+This document clarifies the deployment process for agent-loop to prevent confusion and ensure consistent, reliable deployments.
 
 ## Current Deployment Situation
 
 As of the time of this document, there appear to be two Vercel projects associated with this codebase:
-1. `https://vercel.com/agentcy/propagent-web`
-2. `https://vercel.com/michael-s-projects-1c4584cf/propagent-web`
+1. `https://vercel.com/agentcy/agentloop-web`
+2. `https://vercel.com/michael-s-projects-1c4584cf/agentloop-web`
 
 To resolve this confusion and establish a single source of truth for deployments, we are implementing automated deployments via GitHub Actions.
 
@@ -68,7 +68,7 @@ If deployments fail:
 1. Check the GitHub Actions logs for error details
 2. Verify that the Vercel credentials in the repository secrets are correct
 3. Ensure the Vercel project ID and organization ID are accurate
-4. Check that the `propagent-web` directory contains the correct Next.js application
+4. Check that the `agentloop-web` directory contains the correct Next.js application
 
 ## Best Practices
 

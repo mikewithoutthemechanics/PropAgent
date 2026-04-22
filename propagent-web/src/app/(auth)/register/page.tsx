@@ -102,7 +102,7 @@ export default function RegisterPage() {
             <div className="w-10 h-10 bg-gradient-to-br from-lime-500 to-lime-600 rounded-lg flex items-center justify-center shadow-lg shadow-lime-500/20 group-hover:shadow-lime-500/40 transition-all duration-300">
               <Building2 className="w-5 h-5 text-white" />
             </div>
-            <span className="text-2xl font-serif font-semibold text-white">AgentPing</span>
+            <span className="text-2xl font-serif font-semibold text-white">agent-loop</span>
           </Link>
         </div>
 
@@ -142,7 +142,7 @@ export default function RegisterPage() {
           <div className="p-8">
             <div className="mb-6">
               <h1 className="text-2xl font-semibold text-white">Create account</h1>
-              <p className="text-sm text-charcoal-400 mt-1">Join AgentPing and start managing properties</p>
+              <p className="text-sm text-charcoal-400 mt-1">Join agent-loop and start managing properties</p>
             </div>
 
             <button

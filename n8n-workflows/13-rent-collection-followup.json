@@ -179,7 +179,7 @@
           "messages": [
             {
               "role": "system",
-              "content": "You are a rent collection specialist for PropAgent, a South African real estate platform. Generate escalating collection messages based on the stage of delinquency. Return ONLY valid JSON with no markdown formatting."
+              "content": "You are a rent collection specialist for agent-loop, a South African real estate platform. Generate escalating collection messages based on the stage of delinquency. Return ONLY valid JSON with no markdown formatting."
             },
             {
               "role": "user",
@@ -265,8 +265,8 @@
             }
           ],
           "from": {
-            "email": "collections@propagent.co.za",
-            "name": "PropAgent Collections"
+            "email": "collections@agentloop.co.za",
+            "name": "agent-loop Collections"
           },
           "subject": "={{ $json.message_email_subject }}",
           "content": [
@@ -391,14 +391,14 @@
             {
               "to": [
                 {
-                  "email": "legal@propagent.co.za"
+                  "email": "legal@agentloop.co.za"
                 }
               ]
             }
           ],
           "from": {
-            "email": "collections@propagent.co.za",
-            "name": "PropAgent Collections"
+            "email": "collections@agentloop.co.za",
+            "name": "agent-loop Collections"
           },
           "subject": "URGENT: Legal Escalation Required - Tenant 30+ Days Overdue",
           "content": [

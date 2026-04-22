@@ -106,7 +106,7 @@ export async function GET(req: Request) {
         propertyAddress: address,
         daysUntilExpiry: days,
         leaseEndDate: end.toISOString().slice(0, 10),
-        renewalUrl: 'https://propagent-web-one.vercel.app/tenants',
+        renewalUrl: 'https://agentloop-web-one.vercel.app/tenants',
       }),
     );
     if (res.ok) sent++;

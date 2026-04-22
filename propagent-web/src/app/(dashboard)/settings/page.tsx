@@ -66,9 +66,9 @@ export default function SettingsPage() {
   const [profile, setProfile] = useLocalStorageState<ProfileForm>('settings_profile', {
     firstName: 'Dean',
     lastName: 'Hodgson',
-    email: 'dean@agentping.co.za',
+    email: 'dean@agentloop.co.za',
     phone: '+27827686661',
-    agencyName: 'AgentPing Consulting',
+    agencyName: 'agent-loop Consulting',
     ffcNumber: 'FFC-2024-001234',
   });
 

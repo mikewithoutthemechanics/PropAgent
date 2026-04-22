@@ -23,12 +23,12 @@ Six n8n workflows have been created and are ready to use:
 - `n8n-workflows/syndication/linkedin-workflow.json`
 
 Each workflow:
-- Accepts webhook calls from PropAgent
+- Accepts webhook calls from agent-loop
 - Formats property data for the specific platform
 - Posts to the platform's API
 - Returns success/failure status and post URL
 
-### 2. PropAgent Backend Integration
+### 2. agent-loop Backend Integration
 The `syndication-service.ts` has been updated to:
 - Use n8n workflows via webhooks instead of direct API calls
 - Handle API credentials securely through environment variables
@@ -73,7 +73,7 @@ The `syndication-service.ts` has been updated to:
 - Person ID
 
 ### 3. Webhook URLs
-Configure these environment variables in PropAgent:
+Configure these environment variables in agent-loop:
 
 ```
 N8N_PROPERTY24_WEBHOOK=https://your-n8n-instance.com/webhook/property24-syndicate
@@ -86,12 +86,12 @@ N8N_LINKEDIN_WEBHOOK=https://your-n8n-instance.com/webhook/linkedin-syndicate
 
 ## How It Works
 
-1. User selects platforms in PropAgent Syndication page
-2. PropAgent calls the corresponding n8n webhook with property data
+1. User selects platforms in agent-loop Syndication page
+2. agent-loop calls the corresponding n8n webhook with property data
 3. n8n workflow formats the data for the specific platform
 4. n8n posts to the platform's API
 5. n8n returns success/failure status and post URL
-6. PropAgent displays results to user
+6. agent-loop displays results to user
 
 ## Next Steps
 

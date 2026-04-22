@@ -1,7 +1,7 @@
 /**
  * Component Exports
  * 
- * Barrel export for all AgentPing components
+ * Barrel export for all agent-loop components
  */
 
 export { ImageUploader } from './ImageUploader';

@@ -1,4 +1,4 @@
-// AgentPing - Escrow & Payment System
+// agent-loop - Escrow & Payment System
 // Secure commission holding and release
 
 export type EscrowStatus = 

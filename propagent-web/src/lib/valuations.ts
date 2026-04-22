@@ -1,4 +1,4 @@
-// Property Valuation Tools for AgentPing
+// Property Valuation Tools for agent-loop
 // AVM (Automated Valuation Model) estimation and comparable analysis
 // Placeholder for Lightstone/Windeed integration
 

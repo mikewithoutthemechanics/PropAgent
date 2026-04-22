@@ -38,7 +38,7 @@ function cacheKey(b: Body): string {
     String(b.erfSize ?? ''),
     String(b.floorSize ?? ''),
   ].join('|');
-  return `propagent:valuation:${norm}`;
+  return `agent-loop:valuation:${norm}`;
 }
 
 export async function POST(req: Request) {
