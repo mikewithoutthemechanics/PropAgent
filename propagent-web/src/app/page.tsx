@@ -359,60 +359,53 @@ export default function LandingPage() {
         className="relative min-h-screen flex items-center pt-28 pb-16 overflow-hidden bg-charcoal-900"
         aria-labelledby="hero-title"
       >
-        {/* Cinematic Video Background */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <div className="absolute inset-0 bg-charcoal-900/40 z-10" />
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover scale-110"
-          >
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-building-exterior-4410-large.mp4" type="video/mp4" />
-          </video>
-        </div>
+        <HeroVideo
+          videoSrc="https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-building-exterior-4410-large.mp4"
+          posterSrc="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1920&auto=format&fit=crop"
+          overlay
+          className="absolute inset-0 !h-screen"
+        >
+          <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div className="max-w-4xl">
+              <div className="hero-animate inline-flex items-center gap-3 px-5 py-2 bg-white/5 backdrop-blur-md border border-white/10 text-white text-[10px] tracking-[0.4em] font-bold uppercase mb-12">
+                <Zap className="w-4 h-4 text-lime-400" aria-hidden="true" />
+                <span>THE OPERATING SYSTEM FOR PROPERTY LEADERS</span>
+              </div>
 
-        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="max-w-4xl">
-            <div className="hero-animate inline-flex items-center gap-3 px-5 py-2 bg-white/5 backdrop-blur-md border border-white/10 text-white text-[10px] tracking-[0.4em] font-bold uppercase mb-12">
-              <Zap className="w-4 h-4 text-lime-400" aria-hidden="true" />
-              <span>THE OPERATING SYSTEM FOR PROPERTY LEADERS</span>
-            </div>
+              <h1
+                id="hero-title"
+                className="hero-animate text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter leading-[0.85] mb-12 text-white"
+              >
+                List it. <br />
+                <span className="text-white/20">Match it.</span> <br />
+                Close it.
+              </h1>
 
-            <h1
-              id="hero-title"
-              className="hero-animate text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter leading-[0.85] mb-12 text-white"
-            >
-              List it. <br />
-              <span className="text-white/20">Match it.</span> <br />
-              Close it.
-            </h1>
-
-            <div className="grid md:grid-cols-2 gap-12 items-end">
-               <p className="hero-animate text-xl md:text-2xl text-white/70 leading-tight font-light tracking-tight max-w-sm">
-                 Architecting the future of South African property management with cinematic intelligence.
-               </p>
-               
-               <div className="hero-animate flex flex-col sm:flex-row gap-6">
-                 <Link
-                   href="/register"
-                   className="inline-flex items-center justify-center gap-4 px-10 py-6 bg-white text-charcoal-900 text-[10px] tracking-[0.3em] font-bold hover:bg-lime-400 transition-all duration-500 group"
-                 >
-                   INITIALIZE PLATFORM
-                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                 </Link>
-                 <Link
-                   href="#pricing"
-                   className="inline-flex items-center justify-center gap-4 px-10 py-6 border border-white/20 text-white text-[10px] tracking-[0.3em] font-bold hover:bg-white/10 transition-all duration-500"
-                 >
-                   VIEW EDITIONS
-                 </Link>
-               </div>
+              <div className="grid md:grid-cols-2 gap-12 items-end">
+                 <p className="hero-animate text-xl md:text-2xl text-white/70 leading-tight font-light tracking-tight max-w-sm">
+                   Architecting the future of South African property management with cinematic intelligence.
+                 </p>
+                 
+                 <div className="hero-animate flex flex-col sm:flex-row gap-6">
+                   <Link
+                     href="/register"
+                     className="inline-flex items-center justify-center gap-4 px-10 py-6 bg-white text-charcoal-900 text-[10px] tracking-[0.3em] font-bold hover:bg-lime-400 transition-all duration-500 group"
+                   >
+                     INITIALIZE PLATFORM
+                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                   </Link>
+                   <Link
+                     href="#pricing"
+                     className="inline-flex items-center justify-center gap-4 px-10 py-6 border border-white/20 text-white text-[10px] tracking-[0.3em] font-bold hover:bg-white/10 transition-all duration-500"
+                   >
+                     VIEW EDITIONS
+                   </Link>
+                 </div>
+              </div>
             </div>
           </div>
-        </div>
-        
+        </HeroVideo>
+
         {/* Scroll Indicator */}
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 animate-bounce">
            <div className="w-px h-12 bg-gradient-to-b from-white to-transparent opacity-50" />
