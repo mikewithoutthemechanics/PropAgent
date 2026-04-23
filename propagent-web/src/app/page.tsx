@@ -39,6 +39,13 @@ import {
   Heart
 } from 'lucide-react';
 import CircularCarousel from '@/components/ui/CircularCarousel';
+import ThreeScene from '@/components/ThreeScene';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function LandingPage() {
   const { user, loading, isDemoMode } = useAuth();
@@ -95,33 +102,62 @@ export default function LandingPage() {
   }, [handleScroll]);
 
   useEffect(() => {
-    if (prefersReducedMotion) {
-      setVisibleSections(new Set(['hero', 'features', 'testimonials', 'pricing', 'cta']));
-      return;
-    }
+    if (prefersReducedMotion) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleSections((prev) => new Set([...prev, entry.target.id]));
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    // Hero animations
+    gsap.fromTo('.hero-animate', 
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: 'power3.out', delay: 0.5 }
     );
 
-    const sections = ['hero', 'features', 'testimonials', 'pricing', 'cta'];
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
+    // Feature cards stagger
+    gsap.from('.feature-card', {
+      scrollTrigger: {
+        trigger: '#features',
+        start: 'top 80%',
+      },
+      opacity: 0,
+      y: 30,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: 'power2.out'
     });
 
-    return () => observer.disconnect();
-  }, [prefersReducedMotion]);
+    // Perspective transitions for sections
+    const sections = ['#features', '#testimonials', '#pricing', '#cta'];
+    sections.forEach(section => {
+      gsap.fromTo(section, 
+        { perspective: 1000, rotationX: 10, opacity: 0.8 },
+        { 
+          rotationX: 0, 
+          opacity: 1, 
+          duration: 1.5,
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: 'top center',
+            scrub: true
+          }
+        }
+      );
+    });
 
-  useEffect(() => {
-  }, [user, loading, isDemoMode]);
+    // Parallax effects
+    gsap.to('.parallax-bg', {
+      yPercent: -20,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
+  }, [prefersReducedMotion]);
 
   const features = [
     { icon: Target, title: 'AI Buyer-Property Matching', desc: 'Scores every buyer against every listing in seconds — surfaces the hottest matches first' },
@@ -210,6 +246,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white text-charcoal-900 font-sans overflow-x-hidden">
+      <ThreeScene />
       <a 
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-charcoal-900 focus:text-white focus:rounded-lg focus:font-medium"
@@ -302,7 +339,7 @@ export default function LandingPage() {
         aria-labelledby="hero-title"
       >
         {/* Video Background */}
-        <div className="absolute inset-0 z-0">
+        <div className="parallax-bg absolute inset-0 z-0">
           <video
             autoPlay
             muted
@@ -320,15 +357,15 @@ export default function LandingPage() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`max-w-3xl transition-all duration-1000 ease-out ${prefersReducedMotion ? 'opacity-100' : visibleSections.has('hero') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-lime-500/20 backdrop-blur-sm border border-lime-500/30 text-lime-400 text-sm font-semibold rounded-full mb-6">
+          <div className="max-w-3xl">
+            <div className="hero-animate inline-flex items-center gap-2 px-4 py-1.5 bg-lime-500/20 backdrop-blur-sm border border-lime-500/30 text-lime-400 text-sm font-semibold rounded-full mb-6">
               <Zap className="w-4 h-4" aria-hidden="true" />
               <span>Agent Loop — AI-Powered Agent Matching</span>
             </div>
             
             <h1 
               id="hero-title"
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6 text-white"
+              className="hero-animate text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6 text-white"
             >
               Your stock,{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-sky-400 relative">
@@ -338,13 +375,13 @@ export default function LandingPage() {
               .
             </h1>
             
-            <p className="text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-8">
+            <p className="hero-animate text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-8">
               AI matches your listings to agents who have ready buyers &mdash; verified via PPRA,
               connected through integrations, and powered by intelligent matching. Built for South African
               property practitioners.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="hero-animate flex flex-col sm:flex-row gap-4">
               <Link 
                 href="/register" 
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-lime-400 to-sky-400 text-charcoal-900 font-semibold rounded-full hover:from-lime-300 hover:to-sky-300 transition-all duration-300 hover:shadow-xl hover:shadow-lime-400/25 group focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 focus:ring-offset-charcoal-900"
@@ -429,6 +466,21 @@ export default function LandingPage() {
             autoRotateSpeed={0.12}
             tiltAngle={-10}
           />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-20">
+            {features.map((feature, i) => (
+              <div 
+                key={i}
+                className="feature-card bg-white p-6 rounded-2xl border border-charcoal-100 hover:border-lime-400/50 hover:shadow-xl hover:shadow-lime-400/5 transition-all duration-300"
+              >
+                <div className="w-12 h-12 bg-lime-50 rounded-xl flex items-center justify-center mb-4">
+                  <feature.icon className="w-6 h-6 text-lime-600" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <p className="text-charcoal-500 text-sm leading-relaxed">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
 
           <div className="mt-10 flex justify-center">
             <Link href="#pricing" className="inline-flex items-center gap-2 text-sky-600 font-medium hover:text-sky-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-600 focus:ring-offset-2 rounded-lg px-4 py-2">
