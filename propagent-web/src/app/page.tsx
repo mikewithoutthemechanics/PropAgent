@@ -105,10 +105,26 @@ export default function LandingPage() {
   useEffect(() => {
     if (prefersReducedMotion) return;
 
+    // Split text animation for hero title
+    const heroTitle = document.getElementById('hero-title');
+    if (heroTitle) {
+      const text = heroTitle.innerText;
+      heroTitle.innerHTML = text.split('').map(char => `<span class="char inline-block">${char === ' ' ? '&nbsp;' : char}</span>`).join('');
+      gsap.from('.char', {
+        opacity: 0,
+        y: 20,
+        rotateX: -90,
+        stagger: 0.02,
+        duration: 0.8,
+        ease: 'back.out(1.7)',
+        delay: 0.5
+      });
+    }
+
     // Hero animations
     gsap.fromTo('.hero-animate', 
       { opacity: 0, y: 50 },
-      { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: 'power3.out', delay: 0.5 }
+      { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: 'power3.out', delay: 0.8 }
     );
 
     // Feature cards stagger
@@ -370,7 +386,7 @@ export default function LandingPage() {
 
               <h1
                 id="hero-title"
-                className="hero-animate text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-semibold tracking-tight leading-[1.05] mb-6 text-white"
+                className="hero-animate text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold tracking-tight leading-[1.05] mb-6 text-white"
               >
                 List it.{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-sky-400">
