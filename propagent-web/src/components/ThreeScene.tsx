@@ -9,12 +9,16 @@ export default function ThreeScene() {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // Cache dimensions to avoid layout thrashing
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
     // Scene setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     containerRef.current.appendChild(renderer.domElement);
 
@@ -33,7 +37,7 @@ export default function ThreeScene() {
       positions[i3 + 1] = (Math.random() - 0.5) * 15;
       positions[i3 + 2] = (Math.random() - 0.5) * 15;
 
-      const mixedColor = color1.clone().learn(color2, Math.random());
+      const mixedColor = color1.clone().lerp(color2, Math.random());
       colors[i3] = mixedColor.r;
       colors[i3 + 1] = mixedColor.g;
       colors[i3 + 2] = mixedColor.b;
@@ -63,8 +67,8 @@ export default function ThreeScene() {
     let mouseY = 0;
 
     const handleMouseMove = (event: MouseEvent) => {
-      mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
-      mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
+      mouseX = (event.clientX / width - 0.5) * 2;
+      mouseY = (event.clientY / height - 0.5) * 2;
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -91,9 +95,11 @@ export default function ThreeScene() {
 
     // Handle resize
     const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(width, height);
     };
 
     window.addEventListener('resize', handleResize);
