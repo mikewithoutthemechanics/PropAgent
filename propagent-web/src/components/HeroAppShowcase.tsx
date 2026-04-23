@@ -67,8 +67,8 @@ function HouseSilhouette({ position }: { position: [number, number, number] }) {
 function DashboardCard({
   position,
   rotation = [0, 0, 0],
-  width = 2.2,
-  height = 1.3,
+  width = 2.6,
+  height = 1.6,
   accent = '#84cc16',
   children,
 }: {
@@ -81,22 +81,22 @@ function DashboardCard({
 }) {
   return (
     <group position={position} rotation={rotation}>
-      <RoundedBox args={[width, height, 0.06]} radius={0.08} smoothness={4}>
-        <meshStandardMaterial color="#0f172a" roughness={0.35} metalness={0.25} />
+      <RoundedBox args={[width, height, 0.08]} radius={0.1} smoothness={4}>
+        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.4} />
       </RoundedBox>
       {/* accent strip */}
-      <mesh position={[-(width / 2) + 0.04, 0, 0.032]}>
-        <planeGeometry args={[0.04, height - 0.15]} />
+      <mesh position={[-(width / 2) + 0.05, 0, 0.042]}>
+        <planeGeometry args={[0.06, height - 0.2]} />
         <meshBasicMaterial color={accent} />
       </mesh>
       <Html
         transform
         occlude="blending"
-        position={[0.04, 0, 0.04]}
-        distanceFactor={1.6}
+        position={[0.06, 0, 0.05]}
+        distanceFactor={1.4}
         style={{
-          width: `${width * 140}px`,
-          height: `${height * 140}px`,
+          width: `${width * 160}px`,
+          height: `${height * 160}px`,
           pointerEvents: 'none',
         }}
       >
@@ -104,11 +104,11 @@ function DashboardCard({
           style={{
             width: '100%',
             height: '100%',
-            padding: '14px 16px',
+            padding: '18px 20px',
             color: 'white',
             fontFamily: 'Inter, system-ui, sans-serif',
-            fontSize: 12,
-            lineHeight: 1.35,
+            fontSize: 14,
+            lineHeight: 1.4,
           }}
         >
           {children}
@@ -132,54 +132,54 @@ function Scene() {
   return (
     <group ref={group}>
       {/* Listing card */}
-      <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.35}>
-        <DashboardCard position={[-1.3, 1.1, 0]} accent="#84cc16" width={2.4} height={1.35}>
+      <Float speed={1.2} rotationIntensity={0.1} floatIntensity={0.2}>
+        <DashboardCard position={[-1.5, 1.3, 0]} accent="#84cc16" width={2.8} height={1.6}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 10, color: '#84cc16', fontWeight: 600, letterSpacing: 1 }}>NEW LISTING</span>
-            <span style={{ fontSize: 10, color: '#94a3b8' }}>Cape Town · Sea Point</span>
+            <span style={{ fontSize: 11, color: '#84cc16', fontWeight: 600, letterSpacing: 1 }}>NEW LISTING</span>
+            <span style={{ fontSize: 11, color: '#94a3b8' }}>Cape Town · Sea Point</span>
           </div>
-          <div style={{ fontSize: 18, fontWeight: 700, marginTop: 8 }}>3 Bed Apartment</div>
-          <div style={{ fontSize: 13, color: '#cbd5e1', marginTop: 2 }}>R 4,250,000</div>
-          <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
-            <span style={{ padding: '2px 8px', background: '#1e293b', borderRadius: 10, fontSize: 10 }}>3 Bed</span>
-            <span style={{ padding: '2px 8px', background: '#1e293b', borderRadius: 10, fontSize: 10 }}>2 Bath</span>
-            <span style={{ padding: '2px 8px', background: '#1e293b', borderRadius: 10, fontSize: 10 }}>Sea view</span>
+          <div style={{ fontSize: 20, fontWeight: 700, marginTop: 10 }}>3 Bed Apartment</div>
+          <div style={{ fontSize: 15, color: '#cbd5e1', marginTop: 4 }}>R 4,250,000</div>
+          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+            <span style={{ padding: '3px 10px', background: '#1e293b', borderRadius: 12, fontSize: 11 }}>3 Bed</span>
+            <span style={{ padding: '3px 10px', background: '#1e293b', borderRadius: 12, fontSize: 11 }}>2 Bath</span>
+            <span style={{ padding: '3px 10px', background: '#1e293b', borderRadius: 12, fontSize: 11 }}>Sea view</span>
           </div>
         </DashboardCard>
       </Float>
 
       {/* Match card */}
-      <Float speed={1.4} rotationIntensity={0.2} floatIntensity={0.4}>
-        <DashboardCard position={[1.5, 0.1, 0.4]} rotation={[0, -0.25, 0]} accent="#0ea5e9" width={2.3} height={1.4}>
-          <div style={{ fontSize: 10, color: '#0ea5e9', fontWeight: 600, letterSpacing: 1 }}>AI MATCH · 94%</div>
-          <div style={{ fontSize: 15, fontWeight: 700, marginTop: 8 }}>Sarah M. · Ready buyer</div>
-          <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>Pre-approved R4.5M · Atlantic Seaboard</div>
-          <div style={{ marginTop: 10, height: 6, background: '#1e293b', borderRadius: 4, overflow: 'hidden' }}>
+      <Float speed={1.4} rotationIntensity={0.15} floatIntensity={0.25}>
+        <DashboardCard position={[1.8, 0.2, 0.6]} rotation={[0, -0.3, 0]} accent="#0ea5e9" width={2.7} height={1.7}>
+          <div style={{ fontSize: 11, color: '#0ea5e9', fontWeight: 600, letterSpacing: 1 }}>AI MATCH · 94%</div>
+          <div style={{ fontSize: 18, fontWeight: 700, marginTop: 10 }}>Sarah M. · Ready buyer</div>
+          <div style={{ fontSize: 13, color: '#94a3b8', marginTop: 4 }}>Pre-approved R4.5M · Atlantic Seaboard</div>
+          <div style={{ marginTop: 12, height: 8, background: '#1e293b', borderRadius: 5, overflow: 'hidden' }}>
             <div style={{ width: '94%', height: '100%', background: 'linear-gradient(90deg,#84cc16,#0ea5e9)' }} />
           </div>
-          <div style={{ fontSize: 10, color: '#cbd5e1', marginTop: 8 }}>PPRA verified · FICA ✓ · POPIA ✓</div>
+          <div style={{ fontSize: 11, color: '#cbd5e1', marginTop: 10 }}>PPRA verified · FICA ✓ · POPIA ✓</div>
         </DashboardCard>
       </Float>
 
       {/* Deal pipeline mini card */}
-      <Float speed={1} rotationIntensity={0.1} floatIntensity={0.3}>
-        <DashboardCard position={[-0.6, -1.3, 0.8]} rotation={[0, 0.2, 0]} accent="#84cc16" width={2.0} height={1.1}>
-          <div style={{ fontSize: 10, color: '#94a3b8', fontWeight: 600, letterSpacing: 1 }}>DEAL PIPELINE</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 4, marginTop: 10 }}>
+      <Float speed={1} rotationIntensity={0.08} floatIntensity={0.2}>
+        <DashboardCard position={[-0.8, -1.5, 1.0]} rotation={[0, 0.25, 0]} accent="#84cc16" width={2.4} height={1.3}>
+          <div style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600, letterSpacing: 1 }}>DEAL PIPELINE</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 6, marginTop: 12 }}>
             {['Lead', 'View', 'Offer', 'Close'].map((s, i) => (
               <div key={s} style={{ textAlign: 'center' }}>
                 <div
                   style={{
-                    height: 6,
-                    borderRadius: 3,
+                    height: 8,
+                    borderRadius: 4,
                     background: i <= 2 ? 'linear-gradient(90deg,#84cc16,#0ea5e9)' : '#1e293b',
                   }}
                 />
-                <div style={{ fontSize: 9, color: '#cbd5e1', marginTop: 4 }}>{s}</div>
+                <div style={{ fontSize: 10, color: '#cbd5e1', marginTop: 6 }}>{s}</div>
               </div>
             ))}
           </div>
-          <div style={{ fontSize: 11, color: '#e2e8f0', marginTop: 10 }}>
+          <div style={{ fontSize: 12, color: '#e2e8f0', marginTop: 12 }}>
             12 active · <span style={{ color: '#84cc16' }}>3 hot</span>
           </div>
         </DashboardCard>
@@ -191,18 +191,18 @@ function Scene() {
       </Float>
 
       {/* Match beams connecting house -> cards */}
-      <MatchBeam from={[0.2, 0.2, -1.2]} to={[-1.3, 1.1, 0]} color="#84cc16" />
-      <MatchBeam from={[0.2, 0.2, -1.2]} to={[1.5, 0.1, 0.4]} color="#0ea5e9" />
-      <MatchBeam from={[0.2, 0.2, -1.2]} to={[-0.6, -1.3, 0.8]} color="#84cc16" />
+      <MatchBeam from={[0.2, 0.2, -1.2]} to={[-1.5, 1.3, 0]} color="#84cc16" />
+      <MatchBeam from={[0.2, 0.2, -1.2]} to={[1.8, 0.2, 0.6]} color="#0ea5e9" />
+      <MatchBeam from={[0.2, 0.2, -1.2]} to={[-0.8, -1.5, 1.0]} color="#84cc16" />
     </group>
   );
 }
 
 export default function HeroAppShowcase() {
   return (
-    <div className="relative w-full h-full min-h-[420px] md:min-h-[560px]">
+    <div className="relative w-full h-full min-h-[500px] md:min-h-[650px]">
       <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
-        <PerspectiveCamera makeDefault position={[0, 0.2, 5.5]} fov={45} />
+        <PerspectiveCamera makeDefault position={[0, 0.5, 6.5]} fov={40} />
         <ambientLight intensity={0.55} />
         <pointLight position={[5, 6, 5]} intensity={1.1} color="#84cc16" />
         <pointLight position={[-6, -3, -4]} intensity={0.6} color="#0ea5e9" />

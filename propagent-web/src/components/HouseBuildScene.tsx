@@ -45,10 +45,10 @@ const seg = (p: number, from: number, to: number) => {
 
 function House({ progressRef }: { progressRef: React.MutableRefObject<number> }) {
   const group = useRef<THREE.Group>(null);
-  const foundationRef = useRef<THREE.Mesh>(null);
+  const foundationRef = useRef<THREE.Group>(null);
   const wallsRef = useRef<THREE.Group>(null);
-  const roofRef = useRef<THREE.Mesh>(null);
-  const doorRef = useRef<THREE.Mesh>(null);
+  const roofRef = useRef<THREE.Group>(null);
+  const doorRef = useRef<THREE.Group>(null);
   const windowsRef = useRef<THREE.Group>(null);
   const landscapeRef = useRef<THREE.Group>(null);
 
@@ -66,7 +66,7 @@ function House({ progressRef }: { progressRef: React.MutableRefObject<number> })
     if (foundationRef.current) {
       foundationRef.current.scale.y = 0.01 + fp * 0.99;
       foundationRef.current.position.y = -1.0 + fp * 0.1;
-      (foundationRef.current.material as THREE.MeshStandardMaterial).opacity = fp;
+      foundationRef.current.visible = fp > 0;
     }
 
     // Walls: 0.15 -> 0.45 — extrude upward
@@ -81,27 +81,37 @@ function House({ progressRef }: { progressRef: React.MutableRefObject<number> })
     const rp = seg(p, 0.45, 0.65);
     if (roofRef.current) {
       roofRef.current.position.y = 2.5 - rp * 1.4; // 2.5 -> 1.1
-      const mat = roofRef.current.material as THREE.MeshStandardMaterial;
-      mat.opacity = rp;
       roofRef.current.visible = rp > 0.01;
+      roofRef.current.children.forEach(c => {
+        if ((c as THREE.Mesh).material) {
+           ((c as THREE.Mesh).material as THREE.MeshStandardMaterial).opacity = rp;
+        }
+      });
     }
 
     // Door + windows: 0.65 -> 0.8
     const dp = seg(p, 0.65, 0.8);
     if (doorRef.current) {
-      const mat = doorRef.current.material as THREE.MeshStandardMaterial;
-      mat.opacity = dp;
       doorRef.current.scale.y = 0.01 + dp * 0.99;
       doorRef.current.visible = dp > 0.01;
+      doorRef.current.children.forEach(c => {
+        if ((c as THREE.Mesh).material) {
+          ((c as THREE.Mesh).material as THREE.MeshStandardMaterial).opacity = dp;
+        }
+      });
     }
     if (windowsRef.current) {
       windowsRef.current.children.forEach((child, i) => {
         const delay = i * 0.15;
         const wwp = seg(p, 0.65 + delay * 0.1, 0.8 + delay * 0.1);
-        const mesh = child as THREE.Mesh;
-        const mat = mesh.material as THREE.MeshBasicMaterial;
-        mat.opacity = wwp * 0.9;
-        mesh.visible = wwp > 0.01;
+        child.visible = wwp > 0.01;
+        if ((child as THREE.Group).children) {
+            (child as THREE.Group).children.forEach(gc => {
+                if ((gc as THREE.Mesh).material) {
+                   ((gc as THREE.Mesh).material as THREE.MeshStandardMaterial).opacity = wwp;
+                }
+            });
+        }
       });
     }
 
@@ -121,94 +131,126 @@ function House({ progressRef }: { progressRef: React.MutableRefObject<number> })
     <group ref={group}>
       {/* Ground */}
       <mesh position={[0, -1.02, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <circleGeometry args={[6, 48]} />
-        <meshStandardMaterial color="#1a2330" roughness={1} />
+        <circleGeometry args={[8, 64]} />
+        <meshStandardMaterial color="#0f172a" roughness={1} />
       </mesh>
 
       {/* Foundation slab */}
-      <mesh ref={foundationRef} position={[0, -1, 0]}>
-        <boxGeometry args={[3.2, 0.3, 2.4]} />
-        <meshStandardMaterial color="#475569" roughness={0.9} transparent opacity={0} />
-      </mesh>
+      <group ref={foundationRef} position={[0, -1, 0]}>
+        <mesh receiveShadow castShadow>
+          <boxGeometry args={[3.4, 0.3, 2.6]} />
+          <meshStandardMaterial color="#334155" roughness={0.8} />
+        </mesh>
+        {/* steps */}
+        <mesh position={[0, -0.05, 1.4]} receiveShadow castShadow>
+          <boxGeometry args={[1.2, 0.1, 0.4]} />
+          <meshStandardMaterial color="#475569" />
+        </mesh>
+      </group>
 
-      {/* Walls (scaled from base) */}
+      {/* Walls (detailed) */}
       <group ref={wallsRef} position={[0, -0.85, 0]}>
-        {/* back */}
-        <mesh position={[0, 0.9, -1.1]}>
-          <boxGeometry args={[3, 1.8, 0.1]} />
-          <meshStandardMaterial color="#e2e8f0" roughness={0.7} />
+        {/* Main structure */}
+        <mesh position={[0, 0.9, 0]} castShadow receiveShadow>
+          <boxGeometry args={[3.2, 1.8, 2.4]} />
+          <meshStandardMaterial color="#f8fafc" roughness={0.5} />
         </mesh>
-        {/* front */}
-        <mesh position={[0, 0.9, 1.1]}>
-          <boxGeometry args={[3, 1.8, 0.1]} />
-          <meshStandardMaterial color="#e2e8f0" roughness={0.7} />
-        </mesh>
-        {/* left */}
-        <mesh position={[-1.5, 0.9, 0]}>
-          <boxGeometry args={[0.1, 1.8, 2.2]} />
-          <meshStandardMaterial color="#cbd5e1" roughness={0.7} />
-        </mesh>
-        {/* right */}
-        <mesh position={[1.5, 0.9, 0]}>
-          <boxGeometry args={[0.1, 1.8, 2.2]} />
-          <meshStandardMaterial color="#cbd5e1" roughness={0.7} />
+        {/* trim / baseboard exterior */}
+        <mesh position={[0, 0.1, 0]}>
+          <boxGeometry args={[3.3, 0.2, 2.5]} />
+          <meshStandardMaterial color="#cbd5e1" />
         </mesh>
       </group>
 
-      {/* Roof (triangular prism approximated with a 4-sided cone) */}
-      <mesh ref={roofRef} position={[0, 1.1, 0]} rotation={[0, Math.PI / 4, 0]}>
-        <coneGeometry args={[2.35, 1.1, 4]} />
-        <meshStandardMaterial color="#84cc16" roughness={0.5} metalness={0.15} transparent opacity={0} />
-      </mesh>
+      {/* Roof (Realistic Gabled) */}
+      <group ref={roofRef} position={[0, 1.1, 0]}>
+         {/* Main Gable */}
+        <mesh position={[0, 0.45, 0]} rotation={[0, 0, 0]} castShadow>
+          <coneGeometry args={[2.4, 1.2, 4]} />
+          <meshStandardMaterial color="#1e293b" roughness={0.4} metalness={0.1} transparent opacity={0} />
+        </mesh>
+        {/* Ridge cap */}
+        <mesh position={[0, 1.05, 0]} rotation={[0, Math.PI/4, 0]}>
+          <boxGeometry args={[0.1, 0.1, 3.4]} />
+          <meshStandardMaterial color="#0f172a" transparent opacity={0} />
+        </mesh>
+      </group>
 
-      {/* Door */}
-      <mesh ref={doorRef} position={[0, -0.25, 1.16]}>
-        <boxGeometry args={[0.55, 1.1, 0.05]} />
-        <meshStandardMaterial color="#0ea5e9" roughness={0.4} metalness={0.2} transparent opacity={0} />
-      </mesh>
+      {/* Door with Frame */}
+      <group ref={doorRef} position={[0, -0.25, 1.21]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.65, 1.2, 0.1]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.8} transparent opacity={0} />
+        </mesh>
+        <mesh position={[0, 0, 0.04]} castShadow>
+          <boxGeometry args={[0.55, 1.1, 0.05]} />
+          <meshStandardMaterial color="#84cc16" roughness={0.4} metalness={0.2} transparent opacity={0} />
+        </mesh>
+        {/* handle */}
+        <mesh position={[0.2, 0, 0.08]}>
+          <sphereGeometry args={[0.03]} />
+          <meshStandardMaterial color="#fbbf24" metalness={0.8} roughness={0.2} transparent opacity={0} />
+        </mesh>
+      </group>
 
-      {/* Windows (glowing) */}
+      {/* Windows with Frames */}
       <group ref={windowsRef}>
-        <mesh position={[-1.0, 0.3, 1.16]}>
-          <planeGeometry args={[0.6, 0.45]} />
-          <meshBasicMaterial color="#fde68a" transparent opacity={0} />
-        </mesh>
-        <mesh position={[1.0, 0.3, 1.16]}>
-          <planeGeometry args={[0.6, 0.45]} />
-          <meshBasicMaterial color="#fde68a" transparent opacity={0} />
-        </mesh>
-        <mesh position={[1.56, 0.3, 0]} rotation={[0, Math.PI / 2, 0]}>
-          <planeGeometry args={[0.6, 0.45]} />
-          <meshBasicMaterial color="#fde68a" transparent opacity={0} />
-        </mesh>
-        <mesh position={[-1.56, 0.3, 0]} rotation={[0, -Math.PI / 2, 0]}>
-          <planeGeometry args={[0.6, 0.45]} />
-          <meshBasicMaterial color="#fde68a" transparent opacity={0} />
-        </mesh>
+        {[
+          { pos: [-1.0, 0.3, 1.21], rot: [0, 0, 0] },
+          { pos: [1.0, 0.3, 1.21], rot: [0, 0, 0] },
+          { pos: [1.61, 0.3, 0], rot: [0, Math.PI / 2, 0] },
+          { pos: [-1.61, 0.3, 0], rot: [0, -Math.PI / 2, 0] },
+        ].map((win, i) => (
+          <group key={i} position={win.pos} rotation={win.rot}>
+            {/* Frame */}
+            <mesh>
+              <boxGeometry args={[0.7, 0.55, 0.08]} />
+              <meshStandardMaterial color="#1e293b" transparent opacity={0} />
+            </mesh>
+            {/* Glass */}
+            <mesh position={[0, 0, 0.02]}>
+              <planeGeometry args={[0.6, 0.45]} />
+              <meshStandardMaterial 
+                color="#0ea5e9" 
+                emissive="#0ea5e9" 
+                emissiveIntensity={0.5} 
+                transparent 
+                opacity={0} 
+                metalness={0.9} 
+                roughness={0.1}
+              />
+            </mesh>
+          </group>
+        ))}
       </group>
 
-      {/* Landscape: trees + path */}
+      {/* Landscape (Improved) */}
       <group ref={landscapeRef}>
         {/* path */}
-        <mesh position={[0, -0.99, 1.9]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[0.7, 1.4]} />
-          <meshStandardMaterial color="#334155" />
+        <mesh position={[0, -0.99, 2.2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[1.2, 2.4]} />
+          <meshStandardMaterial color="#1e293b" />
+        </mesh>
+        {/* grass patches */}
+        <mesh position={[0, -1.0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+           <circleGeometry args={[5, 32]} />
+           <meshStandardMaterial color="#064e3b" />
         </mesh>
         {/* trees */}
         {[
-          [-2.3, -0.6, 1.2],
-          [2.4, -0.6, 0.6],
-          [-2.6, -0.6, -0.8],
-          [2.6, -0.6, -1.3],
+          [-3.0, -0.6, 1.5],
+          [3.2, -0.6, 0.8],
+          [-3.5, -0.6, -1.2],
+          [3.5, -0.6, -1.8],
         ].map(([x, y, z], i) => (
           <group key={i} position={[x, y, z]}>
-            <mesh position={[0, 0, 0]}>
-              <cylinderGeometry args={[0.08, 0.1, 0.6, 8]} />
-              <meshStandardMaterial color="#78350f" />
+            <mesh position={[0, 0.3, 0]} castShadow>
+              <cylinderGeometry args={[0.1, 0.15, 0.8, 8]} />
+              <meshStandardMaterial color="#451a03" />
             </mesh>
-            <mesh position={[0, 0.55, 0]}>
-              <coneGeometry args={[0.45, 1.0, 10]} />
-              <meshStandardMaterial color="#15803d" />
+            <mesh position={[0, 1.0, 0]} castShadow>
+              <sphereGeometry args={[0.6, 12, 12]} />
+              <meshStandardMaterial color="#14532d" roughness={0.8} />
             </mesh>
           </group>
         ))}
@@ -285,20 +327,20 @@ export default function HouseBuildScene() {
         {/* Canvas */}
         <div className="absolute inset-0 z-0">
           <Canvas shadows dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
-            <PerspectiveCamera makeDefault position={[4.5, 2.2, 5.5]} fov={40} />
-            <ambientLight intensity={0.45} />
+            <PerspectiveCamera makeDefault position={[5.5, 3.2, 7.5]} fov={35} />
+            <ambientLight intensity={0.5} />
             <directionalLight
-              position={[6, 8, 5]}
-              intensity={1.1}
+              position={[10, 12, 8]}
+              intensity={1.5}
               color="#ffffff"
               castShadow
-              shadow-mapSize-width={1024}
-              shadow-mapSize-height={1024}
+              shadow-mapSize-width={2048}
+              shadow-mapSize-height={2048}
             />
-            <pointLight position={[-5, 3, -5]} intensity={0.5} color="#0ea5e9" />
+            <pointLight position={[-8, 5, -5]} intensity={0.8} color="#0ea5e9" />
             <House progressRef={progressRef} />
-            <ContactShadows position={[0, -1.0, 0]} opacity={0.4} scale={12} blur={2.5} far={4} />
-            <Environment preset="sunset" />
+            <ContactShadows position={[0, -1.0, 0]} opacity={0.6} scale={15} blur={2} far={5} />
+            <Environment preset="night" />
           </Canvas>
         </div>
 
