@@ -10,3 +10,5 @@ n8n-workflows/supabase-credential.json
 .env
 .env.local
 .env.*.local
+.vercel
+.env*.local

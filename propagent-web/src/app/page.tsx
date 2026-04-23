@@ -39,7 +39,8 @@ import {
   Heart
 } from 'lucide-react';
 import CircularCarousel from '@/components/ui/CircularCarousel';
-import PropertyThreeScene from '@/components/PropertyThreeScene';
+import HeroAppShowcase from '@/components/HeroAppShowcase';
+import HouseBuildScene from '@/components/HouseBuildScene';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -248,8 +249,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-charcoal-900 font-sans overflow-x-hidden">
-      <PropertyThreeScene />
+    <div className="min-h-screen bg-white text-charcoal-900 font-sans overflow-x-hidden">
       <a 
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-charcoal-900 focus:text-white focus:rounded-lg focus:font-medium"
@@ -338,82 +338,134 @@ export default function LandingPage() {
       <section 
         id="hero"
         ref={heroRef as React.RefObject<HTMLElement>}
-        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-transparent"
+        className="relative pt-28 pb-16 md:pt-32 md:pb-24 overflow-hidden bg-gradient-to-br from-charcoal-900 via-charcoal-900 to-charcoal-800"
         aria-labelledby="hero-title"
       >
-        {/* Video Background */}
-        <div className="parallax-bg absolute inset-0 z-0">
-          {/* Transparent spacer to let 3D through */}
-          <div className="w-full h-full bg-transparent" />
-          {/* Gradient Overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/60 to-transparent" />
+        {/* Grid background — property blueprint feel */}
+        <div
+          className="absolute inset-0 opacity-[0.08] pointer-events-none"
+          aria-hidden="true"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, #84cc16 1px, transparent 1px), linear-gradient(to bottom, #84cc16 1px, transparent 1px)',
+            backgroundSize: '56px 56px',
+            maskImage: 'radial-gradient(ellipse at 50% 40%, black 40%, transparent 80%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at 50% 40%, black 40%, transparent 80%)',
+          }}
+        />
+        {/* Ambient color glow */}
+        <div className="parallax-bg absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute -top-40 -left-40 w-[560px] h-[560px] rounded-full bg-lime-500/15 blur-3xl" />
+          <div className="absolute -bottom-40 -right-40 w-[620px] h-[620px] rounded-full bg-sky-500/15 blur-3xl" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="hero-animate inline-flex items-center gap-2 px-4 py-1.5 bg-lime-500/20 backdrop-blur-sm border border-lime-500/30 text-lime-400 text-sm font-semibold rounded-full mb-6">
-              <Zap className="w-4 h-4" aria-hidden="true" />
-              <span>Agent Loop — AI-Powered Agent Matching</span>
-            </div>
-            
-            <h1 
-              id="hero-title"
-              className="hero-animate text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] mb-6 text-white"
-            >
-              Your stock,{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-sky-400 relative">
-                <span className="relative z-10">their buyers</span>
-                <span className="absolute inset-0 bg-gradient-to-r from-lime-400/30 to-sky-400/30 blur-2xl rounded-full" aria-hidden="true" />
-              </span>
-              .
-            </h1>
-            
-            <p className="hero-animate text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-8">
-              AI matches your listings to agents who have ready buyers &mdash; verified via PPRA,
-              connected through integrations, and powered by intelligent matching. Built for South African
-              property practitioners.
-            </p>
-            
-            <div className="hero-animate flex flex-col sm:flex-row gap-4">
-              <Link 
-                href="/register" 
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-lime-400 to-sky-400 text-charcoal-900 font-semibold rounded-full hover:from-lime-300 hover:to-sky-300 transition-all duration-300 hover:shadow-xl hover:shadow-lime-400/25 group focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 focus:ring-offset-charcoal-900"
-              >
-                Find your match
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-              </Link>
-              <Link 
-                href="#features" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-4 border-2 border-white/30 text-white font-medium rounded-full hover:bg-white/10 hover:border-white/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-charcoal-900"
-              >
-                <Play className="w-4 h-4" aria-hidden="true" />
-                See the AI in action
-              </Link>
-            </div>
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+            {/* Left: copy */}
+            <div className="lg:col-span-6">
+              <div className="hero-animate inline-flex items-center gap-2 px-4 py-1.5 bg-lime-500/15 border border-lime-400/30 text-lime-300 text-sm font-semibold rounded-full mb-6">
+                <Zap className="w-4 h-4" aria-hidden="true" />
+                <span>The operating system for South African property</span>
+              </div>
 
-            <div className="flex items-center gap-6 mt-10 pt-10 border-t border-white/20">
-              <div className="flex -space-x-3" aria-label="Trusted by property professionals">
-                {[1,2,3,4,5].map((i) => (
-                  <div 
-                    key={i} 
-                    className="w-10 h-10 rounded-full bg-gradient-to-br from-lime-400/30 to-sky-400/30 border-2 border-charcoal-900 flex items-center justify-center text-xs font-medium text-white"
+              <h1
+                id="hero-title"
+                className="hero-animate text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-semibold tracking-tight leading-[1.05] mb-6 text-white"
+              >
+                List it.{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-sky-400">
+                  Match it.
+                </span>{' '}
+                Close it.
+              </h1>
+
+              <p className="hero-animate text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-8">
+                Agent Loop is the AI deal engine for estate agents, landlords
+                and sellers. Load a mandate once — we match it to pre-qualified
+                buyers and tenants across agencies, generate POPIA &amp; FICA
+                paperwork, and drive every deal from enquiry to keys-in-hand.
+              </p>
+
+              {/* Live stat ticker — property-specific */}
+              <div className="hero-animate grid grid-cols-3 gap-3 max-w-lg mb-8">
+                {[
+                  { k: 'Listings under AI', v: '12,400+' },
+                  { k: 'Ready buyers matched', v: 'R2.5B+' },
+                  { k: 'Faster to offer', v: '42%' },
+                ].map((s) => (
+                  <div
+                    key={s.k}
+                    className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm px-3 py-3"
                   >
-                    {String.fromCharCode(64 + i)}
+                    <div className="text-lg md:text-xl font-semibold text-white tabular-nums">
+                      {s.v}
+                    </div>
+                    <div className="text-[11px] uppercase tracking-wider text-white/50 mt-0.5">
+                      {s.k}
+                    </div>
                   </div>
                 ))}
               </div>
-              <div>
-                <div className="flex items-center gap-1" aria-label="5-star rating">
-                  {[1,2,3,4,5].map((i) => (
-                    <Star key={i} className="w-4 h-4 text-lime-400 fill-lime-400" aria-hidden="true" />
-                  ))}
+
+              <div className="hero-animate flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/register"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-gradient-to-r from-lime-400 to-sky-400 text-charcoal-900 font-semibold rounded-full hover:from-lime-300 hover:to-sky-300 transition-all duration-300 hover:shadow-xl hover:shadow-lime-400/25 group focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 focus:ring-offset-charcoal-900"
+                >
+                  List a property
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="#build-scene"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-white/25 text-white font-medium rounded-full hover:bg-white/10 hover:border-white/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-charcoal-900"
+                >
+                  <Play className="w-4 h-4" aria-hidden="true" />
+                  See how a deal is built
+                </Link>
+              </div>
+
+              <div className="flex items-center gap-4 mt-8 pt-8 border-t border-white/10">
+                <div className="flex items-center gap-2 text-white/70">
+                  <Shield className="w-4 h-4 text-lime-400" aria-hidden="true" />
+                  <span className="text-sm">PPRA verified</span>
                 </div>
-                <p className="text-sm text-white/60 font-medium">Trusted by 500+ agents, landlords and sellers</p>
+                <div className="w-px h-4 bg-white/15" />
+                <div className="flex items-center gap-2 text-white/70">
+                  <FileCheck className="w-4 h-4 text-lime-400" aria-hidden="true" />
+                  <span className="text-sm">POPIA &amp; FICA ready</span>
+                </div>
+                <div className="w-px h-4 bg-white/15" />
+                <div className="flex items-center gap-2 text-white/70">
+                  <Key className="w-4 h-4 text-lime-400" aria-hidden="true" />
+                  <span className="text-sm">500+ agencies</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: property-specific 3D app showcase */}
+            <div className="lg:col-span-6 relative">
+              <div className="hero-animate relative rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm overflow-hidden shadow-2xl shadow-lime-500/10">
+                {/* floating labels — tie visual to real app features */}
+                <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full bg-charcoal-900/70 border border-white/10 text-[11px] text-white/70 font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse" />
+                  Live matching engine
+                </div>
+                <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-charcoal-900/70 border border-white/10 text-[11px] text-white/70 font-medium">
+                  <Home className="w-3 h-3 text-sky-400" />
+                  3 bed · Sea Point
+                </div>
+                <HeroAppShowcase />
+                <div className="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between text-[11px] text-white/60">
+                  <span>Drag to explore · scroll for the full deal flow</span>
+                  <span className="tabular-nums">LOT #A-4250</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      <HouseBuildScene />
 
       <main id="main-content" className="relative z-10 bg-white">
       <section className="py-12 border-y border-lime-100/50 bg-gradient-to-r from-lime-50/50 via-white to-lime-50/50">
