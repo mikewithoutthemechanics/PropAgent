@@ -149,61 +149,49 @@ function House({ progressRef }: { progressRef: React.MutableRefObject<number> })
         </mesh>
       </group>
 
-      {/* Walls - Modern Minimalist */}
+      {/* Walls - Museum Grade Minimalist */}
       <group ref={wallsRef} position={[0, -0.85, 0]}>
-        {/* Ground Floor */}
-        <mesh position={[0, 1.0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[4.0, 2.0, 3.0]} />
-          <meshStandardMaterial color="#f8fafc" roughness={0.2} metalness={0.05} />
+        {/* Main Monolith */}
+        <mesh position={[0, 1.25, 0]} castShadow receiveShadow>
+          <boxGeometry args={[3.0, 2.5, 3.0]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.01} metalness={0.05} />
         </mesh>
-        {/* Accent Wall / Feature */}
-        <mesh position={[1.8, 1.0, 0]} castShadow>
-          <boxGeometry args={[0.5, 2.1, 3.1]} />
-          <meshStandardMaterial color="#1e293b" metalness={0.5} roughness={0.1} />
-        </mesh>
-      </group>
-
-      {/* Roof - Sharp Slate */}
-      <group ref={roofRef} position={[0, 1.15, 0]}>
-        <mesh position={[0, 0.4, 0]} castShadow>
-          <boxGeometry args={[4.4, 0.8, 3.4]} />
-          <meshStandardMaterial color="#0f172a" roughness={0.1} metalness={0.8} transparent opacity={0} />
-        </mesh>
-        {/* Overhang details */}
-        <mesh position={[0, -0.05, 0]}>
-          <boxGeometry args={[4.5, 0.1, 3.5]} />
-          <meshStandardMaterial color="#1e293b" transparent opacity={0} />
+        {/* Void / Cutout */}
+        <mesh position={[0, 1.25, 1.45]} castShadow>
+          <boxGeometry args={[1.5, 1.8, 0.2]} />
+          <meshStandardMaterial color="#0f172a" roughness={1} />
         </mesh>
       </group>
 
-      {/* Door - Lime Accent */}
-      <group ref={doorRef} position={[0, -0.15, 1.51]}>
+      {/* Roof - Floating Plane */}
+      <group ref={roofRef} position={[0, 2.45, 0]}>
+        <mesh position={[0, 0.05, 0]} castShadow>
+          <boxGeometry args={[4.0, 0.1, 4.0]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.1} metalness={0.2} transparent opacity={0} />
+        </mesh>
+      </group>
+
+      {/* Door - Minimalist Wood */}
+      <group ref={doorRef} position={[0, -0.3, 1.51]}>
         <mesh castShadow>
-          <boxGeometry args={[0.8, 1.4, 0.1]} />
-          <meshStandardMaterial color="#84cc16" emissive="#84cc16" emissiveIntensity={0.5} transparent opacity={0} />
-        </mesh>
-        <mesh position={[0.25, 0, 0.06]}>
-          <sphereGeometry args={[0.04]} />
-          <meshStandardMaterial color="#fbbf24" metalness={1} roughness={0} transparent opacity={0} />
+          <boxGeometry args={[0.7, 1.1, 0.05]} />
+          <meshStandardMaterial color="#1e293b" roughness={0.5} transparent opacity={0} />
         </mesh>
       </group>
 
-      {/* Windows - Glass with high reflection/emission */}
+      {/* Windows - Large Format Glass */}
       <group ref={windowsRef}>
         {[
-          { pos: [-1.2, 0.4, 1.51], scale: [1, 1, 1] },
-          { pos: [1.2, 0.4, 1.51], scale: [1, 1, 1] },
-          { pos: [2.01, 0.6, 0.5], scale: [1, 1.5, 1], rot: [0, Math.PI / 2, 0] },
-          { pos: [2.01, 0.6, -0.5], scale: [1, 1.5, 1], rot: [0, Math.PI / 2, 0] },
-          { pos: [-2.01, 1.2, 0], scale: [1, 0.4, 2.5], rot: [0, -Math.PI / 2, 0] },
+          { pos: [-1.51, 1.25, 0], scale: [0.1, 1.8, 2.2] },
+          { pos: [1.51, 1.25, 0], scale: [0.1, 1.8, 2.2] },
         ].map((win, i) => (
-          <group key={i} position={win.pos} rotation={win.rot || [0,0,0]}>
+          <group key={i} position={win.pos}>
             <mesh scale={win.scale as [number, number, number]}>
-              <boxGeometry args={[0.8, 0.8, 0.1]} />
+              <boxGeometry args={[1, 1, 1]} />
               <meshStandardMaterial 
-                color="#0ea5e9" 
-                emissive="#0ea5e9" 
-                emissiveIntensity={2} 
+                color="#84cc16" 
+                emissive="#84cc16" 
+                emissiveIntensity={0.5} 
                 transparent 
                 opacity={0} 
                 metalness={1} 
