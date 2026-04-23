@@ -39,7 +39,7 @@ import {
   Heart
 } from 'lucide-react';
 import CircularCarousel from '@/components/ui/CircularCarousel';
-import ThreeScene from '@/components/ThreeScene';
+import PropertyThreeScene from '@/components/PropertyThreeScene';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -144,7 +144,7 @@ export default function LandingPage() {
 
     // Parallax effects
     gsap.to('.parallax-bg', {
-      yPercent: -20,
+      opacity: 0,
       ease: 'none',
       scrollTrigger: {
         trigger: '#hero',
@@ -153,6 +153,9 @@ export default function LandingPage() {
         scrub: true
       }
     });
+
+    // Animate 3D scene elements on scroll could be done here if we had ref to them, 
+    // but we'll stick to R3F's internal useFrame for now or simple opacity.
 
     return () => {
       ScrollTrigger.getAll().forEach(t => t.kill());
@@ -245,8 +248,8 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-charcoal-900 font-sans overflow-x-hidden">
-      <ThreeScene />
+    <div className="min-h-screen bg-transparent text-charcoal-900 font-sans overflow-x-hidden">
+      <PropertyThreeScene />
       <a 
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-charcoal-900 focus:text-white focus:rounded-lg focus:font-medium"
@@ -335,25 +338,15 @@ export default function LandingPage() {
       <section 
         id="hero"
         ref={heroRef as React.RefObject<HTMLElement>}
-        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-charcoal-900"
+        className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-transparent"
         aria-labelledby="hero-title"
       >
         {/* Video Background */}
         <div className="parallax-bg absolute inset-0 z-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover opacity-60"
-            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%231a1a1a' width='1920' height='1080'/%3E%3C/svg%3E"
-          >
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-modern-office-building-exterior-at-sunset-4416-large.mp4" type="video/mp4" />
-          </video>
+          {/* Transparent spacer to let 3D through */}
+          <div className="w-full h-full bg-transparent" />
           {/* Gradient Overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/70 to-charcoal-900/30" />
-          {/* Animated gradient accent */}
-          <div className="absolute inset-0 bg-gradient-to-r from-lime-500/10 via-transparent to-sky-500/10 animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/60 to-transparent" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -422,7 +415,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <main id="main-content">
+      <main id="main-content" className="relative z-10 bg-white">
       <section className="py-12 border-y border-lime-100/50 bg-gradient-to-r from-lime-50/50 via-white to-lime-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -622,7 +615,7 @@ export default function LandingPage() {
       </section>
       </main>
 
-      <footer className="py-16 px-4 sm:px-6 lg:px-8 border-t border-charcoal-100">
+      <footer className="relative z-10 py-16 px-4 sm:px-6 lg:px-8 border-t border-charcoal-100 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div className="md:col-span-2">
