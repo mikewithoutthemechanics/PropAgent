@@ -1,22 +1,31 @@
-import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { aiLimiter, checkLimit } from '@/lib/redis';
 import { chatJSON } from '@/lib/openai-server';
+import { apiError, apiOk, getRequestId } from '@/lib/api-response';
+import { parseJsonBody } from '@/lib/validation';
 
 export const runtime = 'nodejs';
 
-type Body = {
-  name?: string;
-  monthlyIncome?: number;
-  monthlyRent?: number;
-  creditScore?: number;
-  employmentStatus?: string;
-  employerTenureMonths?: number;
-  hasPets?: boolean;
-  petDetails?: string;
-  references?: Array<{ landlord: string; response: 'good' | 'bad' | 'pending' | 'no_response' }>;
-  prevEvictions?: number;
-  notes?: string;
-};
+const bodySchema = z.object({
+  name: z.string().optional(),
+  monthlyIncome: z.number().positive(),
+  monthlyRent: z.number().positive(),
+  creditScore: z.number().optional(),
+  employmentStatus: z.string().optional(),
+  employerTenureMonths: z.number().optional(),
+  hasPets: z.boolean().optional(),
+  petDetails: z.string().optional(),
+  references: z
+    .array(
+      z.object({
+        landlord: z.string(),
+        response: z.enum(['good', 'bad', 'pending', 'no_response']),
+      }),
+    )
+    .optional(),
+  prevEvictions: z.number().optional(),
+  notes: z.string().optional(),
+});
 
 type Result = {
   recommendation: 'approve' | 'conditional' | 'decline';
@@ -32,26 +41,17 @@ type Result = {
 };
 
 export async function POST(req: Request) {
-  let body: Body;
-  try {
-    body = (await req.json()) as Body;
-  } catch {
-    return NextResponse.json({ error: 'invalid_json' }, { status: 400 });
+  const requestId = getRequestId(req);
+  const parsedBody = await parseJsonBody(req, bodySchema, requestId);
+  if ('response' in parsedBody) {
+    return parsedBody.response;
   }
-  if (!body.monthlyIncome || !body.monthlyRent) {
-    return NextResponse.json(
-      { error: 'monthly_income_and_rent_required' },
-      { status: 400 },
-    );
-  }
+  const body = parsedBody.data;
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
   const limit = await checkLimit(aiLimiter, `ai:tenant-screening:${ip}`);
   if (!limit.success) {
-    return NextResponse.json(
-      { error: 'rate_limited', reset: limit.reset },
-      { status: 429 },
-    );
+    return apiError(requestId, 'rate_limited', 429, { reset: limit.reset });
   }
 
   const prompt = `You are a South African rental-tenant screening analyst. Evaluate the applicant below against industry best practice (3x rent affordability, credit ≥ 650 strong / 500-650 borderline, stable employment, clean references, no prior evictions). Take account of ZAR salaries. Do NOT recommend decline on protected-class factors.
@@ -93,12 +93,11 @@ Applicant:
   );
 
   if (!parsed || !parsed.recommendation) {
-    return NextResponse.json({
-      error: 'ai_unavailable',
+    return apiError(requestId, 'ai_unavailable', 503, {
       message:
         'AI tenant screening unavailable. Set GROQ_API_KEY to enable AI analysis.',
-    }, { status: 503 });
+    });
   }
 
-  return NextResponse.json(parsed);
+  return apiOk(requestId, { result: parsed });
 }

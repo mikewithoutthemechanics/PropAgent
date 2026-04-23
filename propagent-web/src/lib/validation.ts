@@ -1,55 +1,28 @@
-export interface ValidationError {
-  field: string;
-  message: string;
-}
+import { z, ZodError, type ZodTypeAny } from 'zod';
+import { apiError } from '@/lib/api-response';
 
-export function validateEmail(email: string): string | null {
-  if (!email) return 'Email is required';
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!re.test(email)) return 'Invalid email format';
-  return null;
-}
-
-export function validatePhone(phone: string): string | null {
-  if (!phone) return 'Phone is required';
-  const re = /^(\+27|0)[6-8][0-9]{8}$/;
-  if (!re.test(phone.replace(/\s/g, ''))) return 'Invalid SA phone format (e.g., +27827686661)';
-  return null;
-}
-
-export function validatePassword(password: string): string | null {
-  if (!password) return 'Password is required';
-  if (password.length < 8) return 'Password must be at least 8 characters';
-  return null;
-}
-
-export function validateRequired(value: string, field: string): string | null {
-  if (!value.trim()) return `${field} is required`;
-  return null;
-}
-
-export function validateForm(fields: Record<string, string>): ValidationError[] {
-  const errors: ValidationError[] = [];
-  
-  for (const [field, value] of Object.entries(fields)) {
-    let error: string | null = null;
-    
-    switch (field) {
-      case 'email':
-        error = validateEmail(value);
-        break;
-      case 'phone':
-        error = validatePhone(value);
-        break;
-      case 'password':
-        error = validatePassword(value);
-        break;
-      default:
-        error = validateRequired(value, field.charAt(0).toUpperCase() + field.slice(1));
-    }
-    
-    if (error) errors.push({ field, message: error });
+export async function parseJsonBody<TSchema extends ZodTypeAny>(
+  req: Request,
+  schema: TSchema,
+  requestId: string,
+): Promise<{ data: z.infer<TSchema> } | { response: ReturnType<typeof apiError> }> {
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return { response: apiError(requestId, 'invalid_json', 400) };
   }
-  
-  return errors;
+
+  try {
+    return { data: schema.parse(body) };
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return {
+        response: apiError(requestId, 'validation_failed', 400, {
+          issues: err.issues,
+        }),
+      };
+    }
+    return { response: apiError(requestId, 'validation_failed', 400) };
+  }
 }

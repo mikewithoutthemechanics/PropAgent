@@ -1,16 +1,19 @@
-import { NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
+import { z } from 'zod';
 import { buildCheckout, payfastConfig } from '@/lib/payfast';
 import { supabaseAdmin, supabaseAdminConfigured } from '@/lib/supabase-admin';
 import { getPlan } from '@/lib/plans';
 import { checkLimit, writeLimiter } from '@/lib/redis';
+import { apiError, apiOk, getRequestId } from '@/lib/api-response';
+import { parseJsonBody } from '@/lib/validation';
+import { apiLog } from '@/lib/logger';
 
 export const runtime = 'nodejs';
 
-type Body = {
-  planId?: string;
-  userId?: string; // optional override; we prefer the session user
-};
+const bodySchema = z.object({
+  planId: z.string().min(1),
+  userId: z.string().optional(),
+});
 
 function originFrom(req: Request): string {
   const h = new Headers(req.headers);
@@ -21,24 +24,22 @@ function originFrom(req: Request): string {
 }
 
 export async function POST(req: Request) {
-  let body: Body;
-  try {
-    body = (await req.json()) as Body;
-  } catch {
-    return NextResponse.json({ error: 'invalid_json' }, { status: 400 });
+  const requestId = getRequestId(req);
+  const parsedBody = await parseJsonBody(req, bodySchema, requestId);
+  if ('response' in parsedBody) {
+    return parsedBody.response;
   }
+  const body = parsedBody.data;
+
   const plan = body.planId ? getPlan(body.planId) : undefined;
   if (!plan || !plan.paid) {
-    return NextResponse.json({ error: 'invalid_plan' }, { status: 400 });
+    return apiError(requestId, 'invalid_plan', 400);
   }
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
   const limit = await checkLimit(writeLimiter, `payfast:initiate:${ip}`);
   if (!limit.success) {
-    return NextResponse.json(
-      { error: 'rate_limited', reset: limit.reset },
-      { status: 429 },
-    );
+    return apiError(requestId, 'rate_limited', 429, { reset: limit.reset });
   }
 
   // Resolve the paying user from the Supabase access token that the browser
@@ -72,7 +73,7 @@ export async function POST(req: Request) {
   }
 
   if (!userId) {
-    return NextResponse.json({ error: 'unauthenticated' }, { status: 401 });
+    return apiError(requestId, 'unauthenticated', 401);
   }
 
   // Persist a pending subscription row so the ITN webhook can match it up.
@@ -91,7 +92,10 @@ export async function POST(req: Request) {
         status: 'pending',
       });
     } catch (err) {
-      console.warn('[payfast/initiate] failed to insert pending subscription', err);
+      apiLog('warn', 'payfast_initiate_pending_insert_failed', {
+        requestId,
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
   }
 
@@ -116,7 +120,7 @@ export async function POST(req: Request) {
   });
 
   const cfg = payfastConfig();
-  return NextResponse.json({
+  return apiOk(requestId, {
     url: checkout.url,
     mPaymentId,
     mode: cfg.mode,

@@ -41,7 +41,7 @@ export function CardHeader({ title, subtitle, action, className }: CardHeaderPro
 }
 
 interface BadgeProps {
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'outline';
   children: React.ReactNode;
   className?: string;
 }
@@ -52,6 +52,7 @@ const badgeStyles = {
   warning: "badge-warning",
   danger: "badge-danger",
   info: "badge-info",
+  outline: "bg-transparent",
 };
 
 export function Badge({ variant = 'default', children, className }: BadgeProps) {

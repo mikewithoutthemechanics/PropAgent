@@ -12,13 +12,14 @@
 // We ALWAYS respond 200 to PayFast (their docs require it), but log any
 // validation failures server-side.
 
-import { NextResponse } from 'next/server';
 import { parseItnForm, verifyItn } from '@/lib/payfast';
 import {
   supabaseAdmin,
   supabaseAdminConfigured,
 } from '@/lib/supabase-admin';
 import { getPlan } from '@/lib/plans';
+import { apiError, apiOk, getRequestId } from '@/lib/api-response';
+import { apiLog } from '@/lib/logger';
 
 export const runtime = 'nodejs';
 
@@ -38,19 +39,22 @@ function statusFromPaymentStatus(paymentStatus: string): SubscriptionStatus {
 }
 
 export async function POST(req: Request) {
+  const requestId = getRequestId(req);
   const rawBody = await req.text();
   const { fields, order } = parseItnForm(rawBody);
 
   const result = await verifyItn(fields, order, rawBody);
   if (!result.ok) {
-    console.warn('[payfast/itn] rejected:', result.reason, {
+    apiLog('warn', 'payfast_itn_rejected', {
+      requestId,
+      reason: result.reason,
       m_payment_id: fields.m_payment_id,
       pf_payment_id: fields.pf_payment_id,
       payment_status: fields.payment_status,
     });
     // PayFast retries on non-200s; we return 200 so they don't retry an
     // invalid / forged request indefinitely.
-    return NextResponse.json({ ok: false, reason: result.reason });
+    return apiError(requestId, result.reason, 200);
   }
 
   const mPaymentId = fields.m_payment_id;
@@ -60,13 +64,13 @@ export async function POST(req: Request) {
   const amountGross = parseFloat(fields.amount_gross || '0');
 
   if (!mPaymentId) {
-    console.warn('[payfast/itn] missing m_payment_id');
-    return NextResponse.json({ ok: false, reason: 'missing_m_payment_id' });
+    apiLog('warn', 'payfast_itn_missing_payment_id', { requestId });
+    return apiError(requestId, 'missing_m_payment_id', 200);
   }
 
   if (!supabaseAdminConfigured) {
-    console.warn('[payfast/itn] supabase admin not configured; cannot persist');
-    return NextResponse.json({ ok: true, skipped: 'no_admin_client' });
+    apiLog('warn', 'payfast_itn_no_admin_client', { requestId });
+    return apiOk(requestId, { skipped: 'no_admin_client' });
   }
 
   const admin = supabaseAdmin();
@@ -80,7 +84,10 @@ export async function POST(req: Request) {
     .maybeSingle();
 
   if (selectErr) {
-    console.warn('[payfast/itn] subscription lookup failed', selectErr);
+    apiLog('warn', 'payfast_itn_subscription_lookup_failed', {
+      requestId,
+      error: selectErr.message,
+    });
   }
 
   const newStatus = statusFromPaymentStatus(paymentStatus);
@@ -100,16 +107,17 @@ export async function POST(req: Request) {
       ? Number(existing.price_zar)
       : expectedPlan?.priceZar;
     if (expectedAmount == null || !expectedPlan) {
-      console.warn('[payfast/itn] unknown plan, refusing', { planId });
-      return NextResponse.json({ ok: false, reason: 'unknown_plan' });
+      apiLog('warn', 'payfast_itn_unknown_plan', { requestId, planId });
+      return apiError(requestId, 'unknown_plan', 200);
     }
     if (Math.abs(amountGross - expectedAmount) > 0.01) {
-      console.warn('[payfast/itn] amount mismatch', {
+      apiLog('warn', 'payfast_itn_amount_mismatch', {
+        requestId,
         expected: expectedAmount,
         got: amountGross,
         planId,
       });
-      return NextResponse.json({ ok: false, reason: 'amount_mismatch' });
+      return apiError(requestId, 'amount_mismatch', 200);
     }
   }
 
@@ -165,8 +173,11 @@ export async function POST(req: Request) {
         .eq('id', userId);
     }
   } catch (err) {
-    console.warn('[payfast/itn] write failed', err);
+    apiLog('warn', 'payfast_itn_write_failed', {
+      requestId,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 
-  return NextResponse.json({ ok: true });
+  return apiOk(requestId, {});
 }

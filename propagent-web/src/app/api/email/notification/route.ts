@@ -1,40 +1,33 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { notificationEmail, sendEmail } from '@/lib/email';
 import { checkLimit, writeLimiter } from '@/lib/redis';
+import { apiError, apiOk, getRequestId } from '@/lib/api-response';
+import { parseJsonBody } from '@/lib/validation';
 
 export const runtime = 'nodejs';
 
-type Body = {
-  to?: string;
-  recipientName?: string;
-  title?: string;
-  message?: string;
-  actionUrl?: string;
-  actionLabel?: string;
-};
+const bodySchema = z.object({
+  to: z.string().email(),
+  recipientName: z.string().min(1),
+  title: z.string().min(1),
+  message: z.string().min(1),
+  actionUrl: z.string().url().optional(),
+  actionLabel: z.string().optional(),
+});
 
 export async function POST(req: Request) {
-  let body: Body;
-  try {
-    body = (await req.json()) as Body;
-  } catch {
-    return NextResponse.json({ error: 'invalid_json' }, { status: 400 });
+  const requestId = getRequestId(req);
+  const parsedBody = await parseJsonBody(req, bodySchema, requestId);
+  if ('response' in parsedBody) {
+    return parsedBody.response;
   }
-  const { to, recipientName, title, message, actionUrl, actionLabel } = body;
-  if (!to || !recipientName || !title || !message) {
-    return NextResponse.json(
-      { error: 'to_recipientName_title_message_required' },
-      { status: 400 },
-    );
-  }
+  const { to, recipientName, title, message, actionUrl, actionLabel } = parsedBody.data;
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
   const limit = await checkLimit(writeLimiter, `email:notification:${ip}`);
   if (!limit.success) {
-    return NextResponse.json(
-      { error: 'rate_limited', reset: limit.reset },
-      { status: 429 },
-    );
+    return apiError(requestId, 'rate_limited', 429, { reset: limit.reset });
   }
 
   const result = await sendEmail(
@@ -48,10 +41,9 @@ export async function POST(req: Request) {
     }),
   );
   if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error, skipped: result.skipped ?? false },
-      { status: result.skipped ? 200 : 502 },
-    );
+    return apiError(requestId, result.error || 'email_failed', result.skipped ? 200 : 502, {
+      skipped: result.skipped ?? false,
+    });
   }
-  return NextResponse.json({ ok: true, id: result.id });
+  return apiOk(requestId, { id: result.id });
 }

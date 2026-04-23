@@ -16,7 +16,7 @@ function AnimatedGradientHeader() {
   );
 }
 
-function GlassCard({ children, hoverEffect = false }: { children: React.ReactNode; hoverEffect?: boolean }) {
+function GlassCard({ children, hoverEffect = false, className }: { children: React.ReactNode; hoverEffect?: boolean; className?: string }) {
   const [isHovered, setIsHovered] = useState(false);
   
   return ( 
@@ -24,7 +24,8 @@ function GlassCard({ children, hoverEffect = false }: { children: React.ReactNod
       className={cn(
         "relative overflow-hidden rounded-2xl bg-white border-2 border-charcoal-100",
         hoverEffect && isHovered && "transform -translate-y-1 shadow-xl shadow-lime-400/20 border-lime-400/30 scale-[1.02]",
-        hoverEffect && "transition-all duration-300"
+        hoverEffect && "transition-all duration-300",
+        className
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
