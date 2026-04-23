@@ -43,6 +43,7 @@ import CircularCarousel from '@/components/ui/CircularCarousel';
 import HomeFlythroughHero from '@/components/HomeFlythroughHero';
 import HouseBuildScene from '@/components/HouseBuildScene';
 import ScrollytellingFeatures from '@/components/ScrollytellingFeatures';
+import PropertyPulseScene from '@/components/PropertyPulseScene';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -206,21 +207,21 @@ export default function LandingPage() {
       author: "Sarah van der Merwe",
       role: "Director",
       company: "Coastal Properties",
-      image: null
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"
     },
     { 
       quote: "The tenant portal alone revolutionized how we communicate. Maintenance requests dropped by 60% in the first month.",
       author: "Michael Roberts",
       role: "Portfolio Manager",
       company: "Urban Living SA",
-      image: null
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200"
     },
     { 
       quote: "Finally, a property management system that actually understands the South African market. Worth every rand.",
       author: "James Mitchell",
       role: "CEO",
       company: "Mitchell Properties",
-      image: null
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
     },
   ];
 
@@ -351,117 +352,70 @@ export default function LandingPage() {
       <section 
         id="hero"
         ref={heroRef as React.RefObject<HTMLElement>}
-        className="relative pt-28 pb-16 md:pt-32 md:pb-24 overflow-hidden bg-gradient-to-br from-charcoal-900 via-charcoal-900 to-charcoal-800"
+        className="relative min-h-screen flex items-center pt-28 pb-16 overflow-hidden bg-charcoal-900"
         aria-labelledby="hero-title"
       >
-        {/* Grid background — property blueprint feel */}
-        <div
-          className="absolute inset-0 opacity-[0.08] pointer-events-none"
-          aria-hidden="true"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, #84cc16 1px, transparent 1px), linear-gradient(to bottom, #84cc16 1px, transparent 1px)',
-            backgroundSize: '56px 56px',
-            maskImage: 'radial-gradient(ellipse at 50% 40%, black 40%, transparent 80%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at 50% 40%, black 40%, transparent 80%)',
-          }}
-        />
-        {/* Ambient color glow */}
-        <div className="parallax-bg absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute -top-40 -left-40 w-[560px] h-[560px] rounded-full bg-lime-500/15 blur-3xl" />
-          <div className="absolute -bottom-40 -right-40 w-[620px] h-[620px] rounded-full bg-sky-500/15 blur-3xl" />
+        {/* Cinematic Video Background */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <div className="absolute inset-0 bg-charcoal-900/40 z-10" />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover scale-110"
+          >
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-building-exterior-4410-large.mp4" type="video/mp4" />
+          </video>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-            {/* Left: copy */}
-            <div className="lg:col-span-6">
-              <div className="hero-animate inline-flex items-center gap-2 px-4 py-1.5 bg-lime-500/15 border border-lime-400/30 text-lime-300 text-sm font-semibold rounded-full mb-6">
-                <Zap className="w-4 h-4" aria-hidden="true" />
-                <span>The operating system for South African property</span>
-              </div>
-
-              <h1
-                id="hero-title"
-                className="hero-animate text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter leading-[0.9] mb-8 text-white"
-              >
-                The New <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-sky-400">
-                  Standard.
-                </span>
-              </h1>
-
-              <p className="hero-animate text-xl md:text-2xl text-white/80 max-w-xl leading-tight mb-10 font-light tracking-tight">
-                Architecting the future of property management. 
-                Experience a cinematic platform that matches intuition with intelligence.
-              </p>
-
-              {/* Live stat ticker — property-specific */}
-              <div className="hero-animate grid grid-cols-3 gap-3 max-w-lg mb-8">
-                {[
-                  { k: 'Listings under AI', v: '12,400+' },
-                  { k: 'Ready buyers matched', v: 'R2.5B+' },
-                  { k: 'Faster to offer', v: '42%' },
-                ].map((s) => (
-                  <div
-                    key={s.k}
-                    className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm px-3 py-3"
-                  >
-                    <div className="text-lg md:text-xl font-semibold text-white tabular-nums">
-                      {s.v}
-                    </div>
-                    <div className="text-[11px] uppercase tracking-wider text-white/50 mt-0.5">
-                      {s.k}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="hero-animate flex flex-col sm:flex-row gap-5">
-                <Link
-                  href="/register"
-                  className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-charcoal-900 font-bold rounded-none hover:bg-lime-400 transition-all duration-500 hover:shadow-[0_0_30px_rgba(132,204,22,0.3)] group focus:outline-none"
-                >
-                  ENTER THE LOOP
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-                </Link>
-                <Link
-                  href="#build-scene"
-                  className="inline-flex items-center justify-center gap-3 px-8 py-4 border border-white/20 text-white font-medium rounded-none hover:bg-white/5 hover:border-white transition-all duration-500 focus:outline-none"
-                >
-                  VIEW MONOGRAPH
-                </Link>
-              </div>
-
-              <div className="flex items-center gap-4 mt-8 pt-8 border-t border-white/10">
-                <div className="flex items-center gap-2 text-white/70">
-                  <Shield className="w-4 h-4 text-lime-400" aria-hidden="true" />
-                  <span className="text-sm">PPRA verified</span>
-                </div>
-                <div className="w-px h-4 bg-white/15" />
-                <div className="flex items-center gap-2 text-white/70">
-                  <FileCheck className="w-4 h-4 text-lime-400" aria-hidden="true" />
-                  <span className="text-sm">POPIA &amp; FICA ready</span>
-                </div>
-                <div className="w-px h-4 bg-white/15" />
-                <div className="flex items-center gap-2 text-white/70">
-                  <Key className="w-4 h-4 text-lime-400" aria-hidden="true" />
-                  <span className="text-sm">500+ agencies</span>
-                </div>
-              </div>
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="max-w-4xl">
+            <div className="hero-animate inline-flex items-center gap-3 px-5 py-2 bg-white/5 backdrop-blur-md border border-white/10 text-white text-[10px] tracking-[0.4em] font-bold uppercase mb-12">
+              <Zap className="w-4 h-4 text-lime-400" aria-hidden="true" />
+              <span>THE OPERATING SYSTEM FOR PROPERTY LEADERS</span>
             </div>
 
-            {/* Right: Architectural Hero Visual */}
-            <div className="lg:col-span-6 relative">
-              <div className="hero-animate relative overflow-hidden">
-                <HomeFlythroughHero />
-              </div>
+            <h1
+              id="hero-title"
+              className="hero-animate text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter leading-[0.85] mb-12 text-white"
+            >
+              List it. <br />
+              <span className="text-white/20">Match it.</span> <br />
+              Close it.
+            </h1>
+
+            <div className="grid md:grid-cols-2 gap-12 items-end">
+               <p className="hero-animate text-xl md:text-2xl text-white/70 leading-tight font-light tracking-tight max-w-sm">
+                 Architecting the future of South African property management with cinematic intelligence.
+               </p>
+               
+               <div className="hero-animate flex flex-col sm:flex-row gap-6">
+                 <Link
+                   href="/register"
+                   className="inline-flex items-center justify-center gap-4 px-10 py-6 bg-white text-charcoal-900 text-[10px] tracking-[0.3em] font-bold hover:bg-lime-400 transition-all duration-500 group"
+                 >
+                   INITIALIZE PLATFORM
+                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                 </Link>
+                 <Link
+                   href="#pricing"
+                   className="inline-flex items-center justify-center gap-4 px-10 py-6 border border-white/20 text-white text-[10px] tracking-[0.3em] font-bold hover:bg-white/10 transition-all duration-500"
+                 >
+                   VIEW EDITIONS
+                 </Link>
+               </div>
             </div>
           </div>
         </div>
+        
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+           <div className="w-px h-12 bg-gradient-to-b from-white to-transparent opacity-50" />
+        </div>
       </section>
 
-      <HouseBuildScene />
+      <PropertyPulseScene />
 
       <ScrollytellingFeatures />
 
@@ -469,105 +423,128 @@ export default function LandingPage() {
 
       <section 
         id="testimonials" 
-        className="py-40 md:py-60 bg-white"
+        className="py-40 md:py-60 bg-charcoal-900 text-white overflow-hidden"
         aria-labelledby="testimonials-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
-            <div className="max-w-2xl">
-              <span className="text-charcoal-400 text-[10px] tracking-[0.4em] font-bold uppercase mb-6 block">COLLECTIVE</span>
-              <h2 id="testimonials-heading" className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight">
-                Trusted by the Industry&apos;s Finest.
+          <div className="flex flex-col md:flex-row items-end justify-between mb-32 gap-8">
+            <div className="max-w-3xl">
+              <span className="text-lime-400 text-[10px] tracking-[0.4em] font-bold uppercase mb-8 block">THE COLLECTIVE</span>
+              <h2 id="testimonials-heading" className="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9]">
+                Endorsed by the <br /><span className="text-white/20">Market Leaders.</span>
               </h2>
-            </div>
-            <div className="flex gap-4">
-              {/* Custom Navigation */}
-              <div className="w-16 h-16 border border-charcoal-200 flex items-center justify-center hover:bg-charcoal-900 hover:text-white transition-all cursor-pointer">
-                <ChevronLeft className="w-6 h-6" />
-              </div>
-              <div className="w-16 h-16 border border-charcoal-200 flex items-center justify-center hover:bg-charcoal-900 hover:text-white transition-all cursor-pointer">
-                <ChevronRight className="w-6 h-6" />
-              </div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="grid md:grid-cols-3 gap-16">
             {testimonials.map((t, i) => (
-              <div key={i} className="group">
-                <p className="text-2xl font-light text-charcoal-600 mb-12 leading-relaxed italic">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-charcoal-100 flex items-center justify-center group-hover:bg-lime-400 transition-colors duration-500">
-                    <span className="text-sm font-bold">{t.author[0]}</span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-[10px] tracking-widest uppercase">{t.author}</h4>
-                    <p className="text-charcoal-400 text-[10px] tracking-widest uppercase">{t.company}</p>
+              <div key={i} className="group relative">
+                <div className="absolute -top-12 -left-8 text-[12rem] font-bold text-white/5 pointer-events-none select-none">
+                  &ldquo;
+                </div>
+                <div className="relative z-10">
+                  <p className="text-2xl md:text-3xl font-light text-white/90 mb-16 leading-tight tracking-tight">
+                    {t.quote}
+                  </p>
+                  
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 grayscale hover:grayscale-0 transition-all duration-700">
+                      {t.image ? (
+                        <img src={t.image} alt={t.author} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                          <span className="text-xl font-bold">{t.author[0]}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-[10px] tracking-[0.3em] uppercase mb-1">{t.author}</h4>
+                      <div className="flex items-center gap-3">
+                         <p className="text-lime-400 text-[10px] tracking-[0.2em] uppercase font-bold">{t.role}</p>
+                         <div className="w-1 h-1 bg-white/20 rounded-full" />
+                         <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase">{t.company}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+          
+          <div className="mt-40 pt-20 border-t border-white/5 flex flex-wrap justify-center gap-12 md:gap-24 opacity-30 grayscale">
+             {['Pam Golding', 'Seeff', 'RE/MAX', 'Lew Geffen', 'Chas Everitt'].map(brand => (
+               <span key={brand} className="text-2xl font-black tracking-tighter">{brand}</span>
+             ))}
           </div>
         </div>
       </section>
 
       <section 
         id="pricing" 
-        className={`py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-white transition-all duration-700 ${prefersReducedMotion ? '' : visibleSections.has('pricing') ? 'opacity-100' : 'opacity-0'}`}
+        className="py-40 md:py-60 px-4 sm:px-6 lg:px-8 bg-white"
         aria-labelledby="pricing-heading"
       >
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-lime-500 text-sm font-medium tracking-wider uppercase mb-3 block">Pricing</span>
-            <h2 id="pricing-heading" className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
-              Simple, transparent pricing
+          <div className="text-center mb-32">
+            <span className="text-charcoal-400 text-[10px] tracking-[0.4em] font-bold uppercase mb-8 block">EDITIONS</span>
+            <h2 id="pricing-heading" className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 leading-[0.9]">
+              Investment <br /><span className="text-charcoal-300">Tiers.</span>
             </h2>
-            <p className="text-charcoal-500 text-lg max-w-xl mx-auto">
-              No hidden fees. No surprises. Just powerful property management.
-            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {plans.map((plan, i) => (
               <div 
                 key={i}
-                className={`relative rounded-none p-12 transition-all duration-700 border ${
+                className={`relative group p-12 transition-all duration-700 border ${
                   plan.popular 
-                    ? `bg-charcoal-900 border-charcoal-800 scale-110 z-10 shadow-[0_0_50px_rgba(0,0,0,0.3)]` 
+                    ? `bg-charcoal-900 border-charcoal-800 shadow-[0_40px_100px_rgba(0,0,0,0.2)]` 
                     : `bg-white border-charcoal-100 hover:border-charcoal-300`
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-4 left-0 px-4 py-1 bg-lime-400 text-charcoal-900 text-[10px] tracking-widest font-bold uppercase">
-                    RECOMMENDED
+                  <div className="absolute top-0 right-0 px-4 py-1 bg-lime-400 text-charcoal-900 text-[10px] tracking-widest font-bold uppercase">
+                    POPULAR
                   </div>
                 )}
-                <h3 className={`text-[10px] tracking-[0.4em] font-bold mb-8 uppercase ${plan.popular ? 'text-white/50' : 'text-charcoal-400'}`}>{plan.name}</h3>
-                <div className="flex items-baseline gap-1 mb-4">
-                  <span className={`text-6xl font-bold tracking-tighter ${plan.popular ? 'text-white' : 'text-charcoal-900'}`}>{plan.price}</span>
-                  {plan.period && <span className={plan.popular ? 'text-white/50' : 'text-charcoal-400'}>{plan.period}</span>}
+                
+                <div className="mb-12">
+                   <h3 className={`text-[10px] tracking-[0.4em] font-bold mb-8 uppercase ${plan.popular ? 'text-white/50' : 'text-charcoal-400'}`}>
+                     {plan.name}
+                   </h3>
+                   <div className="flex items-baseline gap-1 mb-4">
+                     <span className={`text-7xl font-bold tracking-tighter ${plan.popular ? 'text-white' : 'text-charcoal-900'}`}>
+                       {plan.price}
+                     </span>
+                     {plan.period && <span className={`text-sm font-bold tracking-widest ${plan.popular ? 'text-white/30' : 'text-charcoal-300'}`}>{plan.period}</span>}
+                   </div>
+                   <p className={`text-sm tracking-wide ${plan.popular ? 'text-white/60' : 'text-charcoal-500'}`}>
+                     {plan.desc}
+                   </p>
                 </div>
-                <p className={plan.popular ? 'text-white/80 text-xl mb-12 font-light' : 'text-charcoal-500 text-xl mb-12 font-light'}>{plan.desc}</p>
+
+                <div className={`w-full h-px mb-12 ${plan.popular ? 'bg-white/10' : 'bg-charcoal-100'}`} />
                 
                 <ul className="space-y-6 mb-16">
                   {plan.features.map((f, j) => (
-                    <li key={j} className="flex items-center gap-4 text-sm">
-                      <div className={`w-1.5 h-1.5 rounded-none ${plan.popular ? 'bg-lime-400' : 'bg-charcoal-900'}`} />
-                      <span className={plan.popular ? 'text-white/70' : 'text-charcoal-600'}>{f}</span>
+                    <li key={j} className="flex items-center gap-4">
+                      <div className={`w-1 h-1 ${plan.popular ? 'bg-lime-400' : 'bg-charcoal-900'}`} />
+                      <span className={`text-[11px] tracking-wider uppercase font-bold ${plan.popular ? 'text-white/70' : 'text-charcoal-600'}`}>
+                        {f}
+                      </span>
                     </li>
                   ))}
                 </ul>
                 
                 <Link 
                   href="/register" 
-                  className={`block text-center py-5 text-[10px] tracking-[0.3em] font-bold transition-all duration-500 ${
+                  className={`block text-center py-6 text-[10px] tracking-[0.3em] font-bold transition-all duration-500 ${
                     plan.popular 
                       ? 'bg-white text-charcoal-900 hover:bg-lime-400' 
                       : 'bg-charcoal-900 text-white hover:bg-lime-400 hover:text-charcoal-900'
                   }`}
                 >
-                  SECURE EDITION
+                  ACQUIRE LICENSE
                 </Link>
               </div>
             ))}
