@@ -273,7 +273,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-charcoal-900 font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-charcoal-900 text-white font-sans overflow-x-hidden">
       <a 
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-charcoal-900 focus:text-white focus:rounded-lg focus:font-medium"
@@ -281,10 +281,7 @@ export default function LandingPage() {
         Skip to main content
       </a>
 
-      <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-50 mix-blend-multiply" 
-        aria-hidden="true"
-        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} 
-      />
+      {/* Removed global noise overlay for crisper visuals */}
 
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
@@ -296,10 +293,10 @@ export default function LandingPage() {
               <div className="w-10 h-10 bg-white rounded-none flex items-center justify-center">
                 <Home className="w-6 h-6 text-charcoal-900" />
               </div>
-              <span className="text-xl font-bold tracking-[0.2em] uppercase text-white">Agent Loop</span>
+              <span className="text-xl font-semibold tracking-[0.1em] uppercase text-white">Agent Loop</span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-12">
+            <div className="hidden md:flex items-center gap-10">
               {[
                 { label: 'MANIFESTO', href: '#features' },
                 { label: 'EDITIONS', href: '#pricing' },
@@ -308,7 +305,7 @@ export default function LandingPage() {
                 <a 
                   key={item.label} 
                   href={item.href} 
-                  className="text-[10px] tracking-[0.3em] text-white/50 hover:text-white transition-all font-bold"
+                  className="text-[12px] tracking-[0.12em] text-white/70 hover:text-white transition-colors font-medium"
                 >
                   {item.label}
                 </a>
@@ -316,10 +313,10 @@ export default function LandingPage() {
             </div>
 
             <div className="flex items-center gap-6">
-              <Link href="/login" className="hidden sm:block text-[10px] tracking-[0.3em] text-white/50 hover:text-white transition-all font-bold">
+              <Link href="/login" className="hidden sm:block text-[12px] tracking-[0.12em] text-white/70 hover:text-white transition-colors font-medium">
                 SIGN IN
               </Link>
-              <Link href="/register" className="px-6 py-3 bg-white text-charcoal-900 text-[10px] tracking-[0.3em] font-bold hover:bg-lime-400 transition-all">
+              <Link href="/register" className="px-6 py-3 bg-white text-charcoal-900 text-[12px] tracking-[0.12em] font-semibold hover:bg-lime-400 transition-colors">
                 GET STARTED
               </Link>
               <button 
@@ -374,7 +371,7 @@ export default function LandingPage() {
 
               <h1
                 id="hero-title"
-                className="hero-animate text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter leading-[0.85] mb-12 text-white"
+                className="hero-animate text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-extrabold tracking-tight leading-[0.85] mb-12 text-white"
               >
                 List it. <br />
                 <span className="text-white/20">Match it.</span> <br />
@@ -382,21 +379,21 @@ export default function LandingPage() {
               </h1>
 
               <div className="grid md:grid-cols-2 gap-12 items-end">
-                 <p className="hero-animate text-xl md:text-2xl text-white/70 leading-tight font-light tracking-tight max-w-sm">
+                 <p className="hero-animate text-xl md:text-2xl text-white/80 leading-tight font-light tracking-tight max-w-sm">
                    Architecting the future of South African property management with cinematic intelligence.
                  </p>
                  
                  <div className="hero-animate flex flex-col sm:flex-row gap-6">
                    <Link
                      href="/register"
-                     className="inline-flex items-center justify-center gap-4 px-10 py-6 bg-white text-charcoal-900 text-[10px] tracking-[0.3em] font-bold hover:bg-lime-400 transition-all duration-500 group"
+                     className="inline-flex items-center justify-center gap-4 px-10 py-6 bg-white text-charcoal-900 text-[12px] tracking-[0.12em] font-semibold hover:bg-lime-400 transition-colors duration-300 group"
                    >
                      INITIALIZE PLATFORM
                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                    </Link>
                    <Link
                      href="#pricing"
-                     className="inline-flex items-center justify-center gap-4 px-10 py-6 border border-white/20 text-white text-[10px] tracking-[0.3em] font-bold hover:bg-white/10 transition-all duration-500"
+                     className="inline-flex items-center justify-center gap-4 px-10 py-6 border border-white/30 text-white text-[12px] tracking-[0.12em] font-medium hover:bg-white/10 transition-colors duration-300"
                    >
                      VIEW EDITIONS
                    </Link>
