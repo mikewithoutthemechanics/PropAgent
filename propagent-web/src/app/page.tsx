@@ -40,10 +40,10 @@ import {
   Heart
 } from 'lucide-react';
 import CircularCarousel from '@/components/ui/CircularCarousel';
-import HomeFlythroughHero from '@/components/HomeFlythroughHero';
+import HeroVideo from '@/components/HeroVideo';
 import HouseBuildScene from '@/components/HouseBuildScene';
 import ScrollytellingFeatures from '@/components/ScrollytellingFeatures';
-import PropertyPulseScene from '@/components/PropertyPulseScene';
+import MarketMapScene from '@/components/MarketMapScene';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -415,7 +415,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <PropertyPulseScene />
+      <MarketMapScene />
 
       <ScrollytellingFeatures />
 
