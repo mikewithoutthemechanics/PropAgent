@@ -44,6 +44,10 @@ import HeroVideo from '@/components/HeroVideo';
 import HouseBuildScene from '@/components/HouseBuildScene';
 import ScrollytellingFeatures from '@/components/ScrollytellingFeatures';
 import MarketMapScene from '@/components/MarketMapScene';
+import PropertyGallery from '@/components/PropertyGallery';
+import PricingEditorial from '@/components/pricing/PricingEditorial';
+import TestimonialsMarquee from '@/components/social/TestimonialsMarquee';
+import FooterMinimal from '@/components/footer/FooterMinimal';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -419,138 +423,15 @@ export default function LandingPage() {
 
       <ScrollytellingFeatures />
 
+      <PropertyGallery />
+
       <main id="main-content" className="relative z-10 bg-white">
 
-      <section 
-        id="testimonials" 
-        className="py-40 md:py-60 bg-charcoal-900 text-white overflow-hidden"
-        aria-labelledby="testimonials-heading"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-32 gap-8">
-            <div className="max-w-3xl">
-              <span className="text-lime-400 text-[10px] tracking-[0.4em] font-bold uppercase mb-8 block">THE COLLECTIVE</span>
-              <h2 id="testimonials-heading" className="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9]">
-                Endorsed by the <br /><span className="text-white/20">Market Leaders.</span>
-              </h2>
-            </div>
-          </div>
+      {/* Testimonials Marquee */}
+      <TestimonialsMarquee />
 
-          <div className="grid md:grid-cols-3 gap-16">
-            {testimonials.map((t, i) => (
-              <div key={i} className="group relative">
-                <div className="absolute -top-12 -left-8 text-[12rem] font-bold text-white/5 pointer-events-none select-none">
-                  &ldquo;
-                </div>
-                <div className="relative z-10">
-                  <p className="text-2xl md:text-3xl font-light text-white/90 mb-16 leading-tight tracking-tight">
-                    {t.quote}
-                  </p>
-                  
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 grayscale hover:grayscale-0 transition-all duration-700">
-                      {t.image ? (
-                        <img src={t.image} alt={t.author} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                          <span className="text-xl font-bold">{t.author[0]}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-[10px] tracking-[0.3em] uppercase mb-1">{t.author}</h4>
-                      <div className="flex items-center gap-3">
-                         <p className="text-lime-400 text-[10px] tracking-[0.2em] uppercase font-bold">{t.role}</p>
-                         <div className="w-1 h-1 bg-white/20 rounded-full" />
-                         <p className="text-white/40 text-[10px] tracking-[0.2em] uppercase">{t.company}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mt-40 pt-20 border-t border-white/5 flex flex-wrap justify-center gap-12 md:gap-24 opacity-30 grayscale">
-             {['Pam Golding', 'Seeff', 'RE/MAX', 'Lew Geffen', 'Chas Everitt'].map(brand => (
-               <span key={brand} className="text-2xl font-black tracking-tighter">{brand}</span>
-             ))}
-          </div>
-        </div>
-      </section>
-
-      <section 
-        id="pricing" 
-        className="py-40 md:py-60 px-4 sm:px-6 lg:px-8 bg-white"
-        aria-labelledby="pricing-heading"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-32">
-            <span className="text-charcoal-400 text-[10px] tracking-[0.4em] font-bold uppercase mb-8 block">EDITIONS</span>
-            <h2 id="pricing-heading" className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 leading-[0.9]">
-              Investment <br /><span className="text-charcoal-300">Tiers.</span>
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, i) => (
-              <div 
-                key={i}
-                className={`relative group p-12 transition-all duration-700 border ${
-                  plan.popular 
-                    ? `bg-charcoal-900 border-charcoal-800 shadow-[0_40px_100px_rgba(0,0,0,0.2)]` 
-                    : `bg-white border-charcoal-100 hover:border-charcoal-300`
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute top-0 right-0 px-4 py-1 bg-lime-400 text-charcoal-900 text-[10px] tracking-widest font-bold uppercase">
-                    POPULAR
-                  </div>
-                )}
-                
-                <div className="mb-12">
-                   <h3 className={`text-[10px] tracking-[0.4em] font-bold mb-8 uppercase ${plan.popular ? 'text-white/50' : 'text-charcoal-400'}`}>
-                     {plan.name}
-                   </h3>
-                   <div className="flex items-baseline gap-1 mb-4">
-                     <span className={`text-7xl font-bold tracking-tighter ${plan.popular ? 'text-white' : 'text-charcoal-900'}`}>
-                       {plan.price}
-                     </span>
-                     {plan.period && <span className={`text-sm font-bold tracking-widest ${plan.popular ? 'text-white/30' : 'text-charcoal-300'}`}>{plan.period}</span>}
-                   </div>
-                   <p className={`text-sm tracking-wide ${plan.popular ? 'text-white/60' : 'text-charcoal-500'}`}>
-                     {plan.desc}
-                   </p>
-                </div>
-
-                <div className={`w-full h-px mb-12 ${plan.popular ? 'bg-white/10' : 'bg-charcoal-100'}`} />
-                
-                <ul className="space-y-6 mb-16">
-                  {plan.features.map((f, j) => (
-                    <li key={j} className="flex items-center gap-4">
-                      <div className={`w-1 h-1 ${plan.popular ? 'bg-lime-400' : 'bg-charcoal-900'}`} />
-                      <span className={`text-[11px] tracking-wider uppercase font-bold ${plan.popular ? 'text-white/70' : 'text-charcoal-600'}`}>
-                        {f}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <Link 
-                  href="/register" 
-                  className={`block text-center py-6 text-[10px] tracking-[0.3em] font-bold transition-all duration-500 ${
-                    plan.popular 
-                      ? 'bg-white text-charcoal-900 hover:bg-lime-400' 
-                      : 'bg-charcoal-900 text-white hover:bg-lime-400 hover:text-charcoal-900'
-                  }`}
-                >
-                  ACQUIRE LICENSE
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Pricing Editorial */}
+      <PricingEditorial />
 
       <section 
         id="cta"
@@ -582,55 +463,7 @@ export default function LandingPage() {
       </section>
       </main>
 
-      <footer className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 border-t border-charcoal-100 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-12 gap-16 mb-24">
-            <div className="md:col-span-6">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 bg-charcoal-900 flex items-center justify-center">
-                  <Home className="w-6 h-6 text-lime-400" />
-                </div>
-                <span className="text-xl font-bold tracking-[0.2em] uppercase">Agent Loop</span>
-              </div>
-              <p className="text-charcoal-500 text-xl font-light max-w-md leading-relaxed">
-                South Africa&apos;s leading property management platform. Built for modern property professionals who value precision over noise.
-              </p>
-            </div>
-            
-            <div className="md:col-span-3">
-              <h4 className="text-[10px] tracking-[0.3em] font-bold uppercase mb-8 text-charcoal-400">PRODUCT</h4>
-              <ul className="space-y-4 text-charcoal-600 font-medium">
-                <li><a href="#features" className="hover:text-charcoal-900 transition-all">MANIFESTO</a></li>
-                <li><a href="#pricing" className="hover:text-charcoal-900 transition-all">EDITIONS</a></li>
-                <li><a href="https://github.com/mikewithoutthemechanics/AgentPing-" target="_blank" rel="noreferrer" className="hover:text-charcoal-900 transition-all text-xs">SOURCE CODE</a></li>
-              </ul>
-            </div>
-            
-            <div className="md:col-span-3">
-              <h4 className="text-[10px] tracking-[0.3em] font-bold uppercase mb-8 text-charcoal-400">CONTACT</h4>
-              <ul className="space-y-4 text-charcoal-600 font-medium">
-                <li className="flex items-center gap-2">
-                  hello@agentloop.co.za
-                </li>
-                <li className="flex items-center gap-2">
-                  +27 21 555 0123
-                </li>
-                <li className="flex items-center gap-2">
-                  Cape Town, SA
-                </li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="pt-12 border-t border-charcoal-100 flex flex-col md:flex-row items-center justify-between gap-8">
-            <p className="text-charcoal-400 text-[10px] tracking-[0.2em] font-bold uppercase">© 2026 Agent Loop. ALL RIGHTS RESERVED.</p>
-            <div className="flex items-center gap-12 text-charcoal-400 text-[10px] tracking-[0.2em] font-bold uppercase">
-              <a href="/privacy" className="hover:text-charcoal-900 transition-all">PRIVACY</a>
-              <a href="/terms" className="hover:text-charcoal-900 transition-all">TERMS</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <FooterMinimal />
     </div>
   );
 }
