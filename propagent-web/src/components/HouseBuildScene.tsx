@@ -67,6 +67,14 @@ function House({ progressRef }: { progressRef: React.MutableRefObject<number> })
       foundationRef.current.scale.y = 0.01 + fp * 0.99;
       foundationRef.current.position.y = -1.0 + fp * 0.1;
       foundationRef.current.visible = fp > 0;
+      foundationRef.current.children.forEach(c => {
+         if ((c as THREE.Mesh).material) {
+            const mat = (c as THREE.Mesh).material as THREE.MeshStandardMaterial;
+            mat.roughness = 0.2;
+            mat.metalness = 0.8;
+            mat.color.set(fp > 0.5 ? '#ffffff' : '#888888');
+         }
+      });
     }
 
     // Walls: 0.15 -> 0.45 — extrude upward
@@ -75,6 +83,14 @@ function House({ progressRef }: { progressRef: React.MutableRefObject<number> })
       wallsRef.current.scale.y = 0.001 + wp * 0.999;
       wallsRef.current.position.y = -0.85; // base stays pinned
       wallsRef.current.visible = wp > 0;
+      wallsRef.current.children.forEach(c => {
+        if ((c as THREE.Mesh).material) {
+           const mat = (c as THREE.Mesh).material as THREE.MeshStandardMaterial;
+           mat.opacity = wp;
+           mat.transparent = true;
+           mat.roughness = 0.1;
+        }
+      });
     }
 
     // Roof: 0.45 -> 0.65 — drop in from above

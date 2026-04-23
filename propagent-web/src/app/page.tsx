@@ -40,8 +40,9 @@ import {
   Heart
 } from 'lucide-react';
 import CircularCarousel from '@/components/ui/CircularCarousel';
-import ArchitecturalHero from '@/components/ArchitecturalHero';
+import HomeFlythroughHero from '@/components/HomeFlythroughHero';
 import HouseBuildScene from '@/components/HouseBuildScene';
+import ScrollytellingFeatures from '@/components/ScrollytellingFeatures';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -453,7 +454,7 @@ export default function LandingPage() {
             {/* Right: Architectural Hero Visual */}
             <div className="lg:col-span-6 relative">
               <div className="hero-animate relative overflow-hidden">
-                <ArchitecturalHero />
+                <HomeFlythroughHero />
               </div>
             </div>
           </div>
@@ -462,62 +463,9 @@ export default function LandingPage() {
 
       <HouseBuildScene />
 
+      <ScrollytellingFeatures />
+
       <main id="main-content" className="relative z-10 bg-white">
-      <section className="py-12 border-y border-lime-100/50 bg-gradient-to-r from-lime-50/50 via-white to-lime-50/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, i) => (
-              <div 
-                key={i} 
-                className="text-center group"
-              >
-                <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-lime-600 to-sky-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">{stat.value}</p>
-                <p className="text-sm text-charcoal-500 mt-1 font-medium group-hover:text-sky-600 transition-colors">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section 
-        id="features"
-        ref={featuresRef as React.RefObject<HTMLElement>}
-        className="py-20 md:py-40 px-4 sm:px-6 lg:px-8 bg-white"
-        aria-labelledby="features-heading"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-12 gap-20 items-start">
-            <div className="lg:col-span-5 sticky top-40">
-              <span className="text-charcoal-400 text-[10px] tracking-[0.4em] font-bold uppercase mb-6 block">MANIFESTO</span>
-              <h2 id="features-heading" className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight mb-8">
-                The Architecture of the Deal.
-              </h2>
-              <p className="text-charcoal-500 text-xl leading-relaxed font-light">
-                We've deconstructed the property lifecycle and rebuilt it for the modern era. 
-                Every module is a masterclass in efficiency and elegance.
-              </p>
-            </div>
-
-            <div className="lg:col-span-7 space-y-40">
-              {features.map((feature, i) => (
-                <div 
-                  key={i}
-                  className="feature-reveal group border-t border-charcoal-100 pt-12"
-                >
-                  <div className="flex items-start justify-between mb-8">
-                    <span className="text-4xl font-light text-charcoal-300 tabular-nums">0{i + 1}</span>
-                    <div className="w-16 h-16 bg-charcoal-50 flex items-center justify-center group-hover:bg-lime-400 transition-colors duration-500">
-                      <feature.icon className="w-8 h-8 text-charcoal-900" />
-                    </div>
-                  </div>
-                  <h3 className="text-3xl font-bold mb-6 tracking-tight group-hover:translate-x-4 transition-transform duration-500">{feature.title}</h3>
-                  <p className="text-charcoal-500 text-xl leading-relaxed max-w-2xl font-light">{feature.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section 
         id="testimonials" 
