@@ -59,14 +59,22 @@ export default function ScrollytellingFeatures() {
     if (!containerRef.current) return;
 
     const sections = gsap.utils.toArray('.feature-step');
-    
+
+    // Core scrollytelling timeline with snap similar to silencio.es
     const tl = gsap.timeline({
+      defaults: { ease: 'power2.out' },
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top top',
         end: `+=${sections.length * 100}%`,
         pin: true,
-        scrub: true,
+        anticipatePin: 1,
+        scrub: 1,
+        snap: {
+          snapTo: 1 / Math.max(1, sections.length - 1),
+          duration: 0.6,
+          ease: 'power2.out'
+        },
         onUpdate: (self) => {
           const index = Math.min(
             Math.floor(self.progress * sections.length),
@@ -77,13 +85,39 @@ export default function ScrollytellingFeatures() {
       }
     });
 
+    // Add a subtle masked wipe on scene changes using a shared overlay element
+    const wipe = document.querySelector('#feature-wipe-mask') as HTMLDivElement | null;
+    if (wipe) {
+      tl.addLabel('wipeIn')
+        .fromTo(
+          wipe,
+          { scaleX: 0, transformOrigin: 'left center', opacity: 0.6 },
+          { scaleX: 1, duration: 0.35, ease: 'power2.inOut', opacity: 0.75 },
+          0
+        )
+        .addLabel('wipeOut')
+        .to(
+          wipe,
+          { scaleX: 0, transformOrigin: 'right center', duration: 0.35, ease: 'power2.inOut', opacity: 0.0 },
+          0.35
+        );
+    }
+
     return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+      tl.kill();
     };
   }, []);
 
   return (
     <div ref={containerRef} className="relative h-screen overflow-hidden bg-charcoal-900">
+      {/* Mask used for soft scene wipes (kept very subtle) */}
+      <div
+        id="feature-wipe-mask"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 left-0 w-full bg-gradient-to-r from-charcoal-900 via-white/10 to-charcoal-900 opacity-0 scale-x-0"
+        style={{ mixBlendMode: 'overlay' }}
+      />
       <div className="absolute inset-0 grid lg:grid-cols-2">
         {/* Left: Content */}
         <div className="relative z-10 flex flex-col justify-center px-8 lg:px-20 py-20">

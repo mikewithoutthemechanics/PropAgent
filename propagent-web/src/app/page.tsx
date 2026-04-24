@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
@@ -67,6 +67,7 @@ export default function LandingPage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const parallaxOffset = useRef(0);
+  const isTouchDevice = useRef(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -77,6 +78,7 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
+    isTouchDevice.current = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
     setMousePosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     
     const handleMouseMove = (e: MouseEvent) => {
@@ -97,6 +99,16 @@ export default function LandingPage() {
       window.removeEventListener('touchmove', handleTouchMove);
     };
   }, []);
+
+  // Cursor micro‑parallax for hero (desktop, not reduced motion)
+  const heroParallaxStyle = useMemo(() => {
+    if (typeof window === 'undefined' || prefersReducedMotion || isTouchDevice.current) return {} as React.CSSProperties;
+    const cx = mousePosition.x / window.innerWidth - 0.5;
+    const cy = mousePosition.y / window.innerHeight - 0.5;
+    const tx = Math.max(-1, Math.min(1, cx)) * 14; // clamp
+    const ty = Math.max(-1, Math.min(1, cy)) * 10;
+    return { transform: `translate3d(${tx}px, ${ty}px, 0)` } as React.CSSProperties;
+  }, [mousePosition, prefersReducedMotion]);
 
   const handleScroll = useCallback(() => {
     const scrollY = window.scrollY;
@@ -133,6 +145,13 @@ export default function LandingPage() {
       { opacity: 0, y: 50 },
       { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: 'power3.out', delay: 0.8 }
     );
+
+    // Hero masked intro wipe
+    const mask = document.getElementById('hero-mask');
+    if (mask) {
+      gsap.fromTo(mask, { scaleX: 0, transformOrigin: 'left center', opacity: 0.0 }, { scaleX: 1, opacity: 0.12, duration: 0.6, ease: 'power2.out', delay: 0.2 });
+      gsap.to(mask, { opacity: 0, duration: 0.6, delay: 0.9, ease: 'power1.out' });
+    }
 
     // Feature reveal animation
     gsap.utils.toArray('.feature-reveal').forEach((feature: any) => {
@@ -356,13 +375,15 @@ export default function LandingPage() {
         className="relative min-h-screen flex items-center pt-28 pb-16 overflow-hidden bg-charcoal-900"
         aria-labelledby="hero-title"
       >
+        {/* Hero masked intro */}
+        <div id="hero-mask" aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0" />
         <HeroVideo
           videoSrc="https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-building-exterior-4410-large.mp4"
           posterSrc="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1920&auto=format&fit=crop"
           overlay
           className="absolute inset-0 !h-screen"
         >
-          <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full" style={heroParallaxStyle}>
             <div className="max-w-4xl">
               <div className="hero-animate inline-flex items-center gap-3 px-5 py-2 bg-white/5 backdrop-blur-md border border-white/10 text-white text-[10px] tracking-[0.4em] font-bold uppercase mb-12">
                 <Zap className="w-4 h-4 text-lime-400" aria-hidden="true" />
