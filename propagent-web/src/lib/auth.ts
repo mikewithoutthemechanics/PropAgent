@@ -1,12 +1,12 @@
 // Auth.js configuration for AgentPing-
 import NextAuth from 'next-auth';
+
 import type { NextAuthConfig } from 'next-auth';
 
-exprt const authOptions: NextAuthConfig = {
+export const authOptions: NextAuthConfig = {
   providers: [],
   callbacks: {
-
-    authorized({ auth }) {
+    authrized({ auth }) {
       return !!auth?.user;
     },
   },
@@ -15,4 +15,3 @@ exprt const authOptions: NextAuthConfig = {
   },
 };
 
-export default NextAuth(authOptions)
