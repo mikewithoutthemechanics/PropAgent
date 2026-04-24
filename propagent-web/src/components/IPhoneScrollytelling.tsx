@@ -296,6 +296,18 @@ export default function IPhoneScrollytelling() {
 
         {/* Right: iPhone Frame */}
         <div className="relative flex items-center justify-center z-10 shrink-0">
+          {/* Ambient glow pulse behind iPhone — shifts colour per step */}
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none rounded-full blur-[100px] opacity-35 transition-colors duration-700"
+            style={{ backgroundColor: step.accent, transform: 'scale(0.65) translateY(5%)' }}
+          />
+          {/* Secondary outer halo */}
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none rounded-full blur-[160px] opacity-15 transition-colors duration-1000"
+            style={{ backgroundColor: step.accent, transform: 'scale(1.1)' }}
+          />
           {/* iPhone outer shell */}
           <div
             className="relative"
@@ -304,7 +316,7 @@ export default function IPhoneScrollytelling() {
               height: 490,
               borderRadius: 44,
               background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 40%, #111 100%)',
-              boxShadow: `0 0 0 2px #333, 0 40px 120px rgba(0,0,0,0.8), 0 0 80px ${step.accent}33`,
+              boxShadow: `0 0 0 2px #3a3a3a, 0 60px 140px rgba(0,0,0,0.9), 0 0 120px ${step.accent}44`,
               padding: 4,
               transition: 'box-shadow 0.8s ease',
             }}
@@ -364,11 +376,6 @@ export default function IPhoneScrollytelling() {
             <div className="absolute -right-1 top-36 w-0.5 h-16 bg-[#333] rounded-full" />
           </div>
 
-          {/* Reflection / glow */}
-          <div
-            className="absolute inset-0 rounded-full blur-3xl opacity-20 pointer-events-none transition-all duration-1000"
-            style={{ backgroundColor: step.accent, transform: 'scale(0.7) translateY(20%)' }}
-          />
         </div>
       </div>
 

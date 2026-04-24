@@ -51,6 +51,13 @@ function useReducedMotion() {
   return reduced;
 }
 
+const COMPLIANCE_BADGES = [
+  { label: 'PPRA Registered', icon: '🏛️' },
+  { label: 'POPIA Compliant', icon: '🔒' },
+  { label: 'FICA Ready', icon: '✓' },
+  { label: 'NCA Aligned', icon: '📋' },
+];
+
 export default function PricingEditorial() {
   const reduced = useReducedMotion();
   const [annual, setAnnual] = useState(false);
@@ -60,7 +67,21 @@ export default function PricingEditorial() {
   []);
 
   return (
-    <section id="pricing" className="relative py-28 md:py-40 bg-charcoal-900">
+    <section id="pricing" className="relative pt-20 pb-28 md:pb-40 bg-charcoal-900">
+      {/* Compliance trust strip */}
+      <div className="border-b border-white/5 mb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-wrap items-center gap-x-10 gap-y-3">
+            <span className="text-[9px] tracking-[0.35em] font-bold uppercase text-white/25 shrink-0">COMPLIANCE</span>
+            {COMPLIANCE_BADGES.map((b) => (
+              <span key={b.label} className="flex items-center gap-2 text-[10px] tracking-[0.2em] font-semibold uppercase text-white/40 hover:text-white/70 transition-colors cursor-default">
+                <span aria-hidden>{b.icon}</span>
+                {b.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-12 md:mb-20">
           <div>
@@ -95,10 +116,17 @@ export default function PricingEditorial() {
                 )}
                 <h3 className="text-xl font-semibold text-white mb-2">{t.name}</h3>
                 <p className="text-white/70 mb-6">{t.desc}</p>
-                <div className="flex items-end gap-2 mb-8">
-                  <span className={`text-4xl md:text-5xl font-bold ${t.popular ? 'text-lime-400' : 'text-white'}`}>{priceStr}</span>
-                  {!isCustom && (
-                    <span className="text-sm text-white/60">/{annual ? 'yr' : 'mo'}</span>
+                <div className="flex flex-col mb-8">
+                  <div className="flex items-end gap-2">
+                    <span className={`text-4xl md:text-5xl font-bold ${t.popular ? 'text-lime-400' : 'text-white'}`}>{priceStr}</span>
+                    {!isCustom && (
+                      <span className="text-sm text-white/60">/{annual ? 'yr' : 'mo'}</span>
+                    )}
+                  </div>
+                  {annual && !isCustom && typeof t.monthly === 'number' && typeof t.yearly === 'number' && (
+                    <span className="mt-1 text-xs text-lime-400 font-semibold">
+                      Save {CURRENCY}{(new Intl.NumberFormat('en-ZA', { maximumFractionDigits: 0 })).format(t.monthly * 12 - t.yearly)} / year
+                    </span>
                   )}
                 </div>
                 <ul className="space-y-3 mb-8">

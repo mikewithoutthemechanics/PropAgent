@@ -8,6 +8,7 @@ type Testimonial = {
   role?: string;
   company?: string;
   image?: string;
+  avatarColor?: string;
 };
 
 const TESTIMONIALS: Testimonial[] = [
@@ -37,14 +38,29 @@ const TESTIMONIALS: Testimonial[] = [
     author: 'Lerato Khoza',
     role: 'Sales Lead',
     company: 'Gauteng Homes',
+    avatarColor: '#84cc16',
   },
   {
     quote: 'The analytics give us clarity on yield and vacancy like never before.',
     author: 'Daniel Naidoo',
     role: 'COO',
     company: 'Township Living',
+    avatarColor: '#f472b6',
+  },
+  {
+    quote: 'Agent Loop paid for itself in the first month. The AI matching is genuinely impressive.',
+    author: 'Pieter van Wyk',
+    role: 'Principal',
+    company: 'Cape Coastal Realty',
+    avatarColor: '#fbbf24',
   },
 ];
+
+/** Derive initials (up to 2 chars) from a full name */
+function initials(name: string): string {
+  const parts = name.trim().split(' ');
+  return (parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '');
+}
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -113,9 +129,15 @@ export default function TestimonialsMarquee() {
                 <blockquote className="text-xl md:text-2xl font-light text-white/90 mb-8 leading-tight tracking-tight">{t.quote}</blockquote>
                 <figcaption className="flex items-center gap-4">
                   {t.image ? (
-                    <img src={t.image} alt={t.author} className="w-12 h-12 object-cover grayscale" />
+                    <img src={t.image} alt={t.author} className="w-12 h-12 rounded-full object-cover" style={{ boxShadow: `0 0 0 2px ${t.avatarColor ?? '#84cc16'}40` }} />
                   ) : (
-                    <div className="w-12 h-12 bg-white/10" aria-hidden="true" />
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-extrabold tracking-wide"
+                      style={{ backgroundColor: `${t.avatarColor ?? '#84cc16'}20`, color: t.avatarColor ?? '#84cc16', boxShadow: `0 0 0 2px ${t.avatarColor ?? '#84cc16'}40` }}
+                      aria-hidden="true"
+                    >
+                      {initials(t.author)}
+                    </div>
                   )}
                   <div>
                     <div className="font-bold text-[10px] tracking-[0.3em] uppercase">{t.author}</div>
@@ -137,9 +159,21 @@ export default function TestimonialsMarquee() {
                 {row.map((t, i) => (
                   <span key={i} className="inline-flex items-center gap-4 px-8 md:px-12 text-white/80">
                     {t.image ? (
-                      <img src={t.image} alt="" className="w-8 h-8 rounded-full object-cover opacity-70" aria-hidden="true" />
+                      <img
+                        src={t.image}
+                        alt=""
+                        className="w-9 h-9 rounded-full object-cover shrink-0"
+                        style={{ boxShadow: `0 0 0 2px ${t.avatarColor ?? '#84cc16'}50` }}
+                        aria-hidden="true"
+                      />
                     ) : (
-                      <span className="w-8 h-8 rounded-full bg-white/10" aria-hidden="true" />
+                      <span
+                        className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-extrabold shrink-0"
+                        style={{ backgroundColor: `${t.avatarColor ?? '#84cc16'}20`, color: t.avatarColor ?? '#84cc16', boxShadow: `0 0 0 2px ${t.avatarColor ?? '#84cc16'}50` }}
+                        aria-hidden="true"
+                      >
+                        {initials(t.author)}
+                      </span>
                     )}
                     <span className="text-sm md:text-base">“{t.quote}” — <span className="text-white">{t.author}</span></span>
                     <span className="w-2 h-2 bg-white/10 inline-block" aria-hidden="true" />

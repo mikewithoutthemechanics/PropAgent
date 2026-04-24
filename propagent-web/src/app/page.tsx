@@ -1,20 +1,20 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
 import {
-  Home,
   ArrowRight,
   Zap,
   Menu,
   X,
   Building,
+  Shield,
 } from 'lucide-react';
 import HeroVideo from '@/components/HeroVideo';
-import AIMatchSection from '@/components/AIMatchSection';
-import IPhoneScrollytelling from '@/components/IPhoneScrollytelling';
-import PropertyCarousel3D from '@/components/PropertyCarousel3D';
+import HowItWorks from '@/components/HowItWorks';
+import StickyDemoCTA from '@/components/StickyDemoCTA';
 import PricingEditorial from '@/components/pricing/PricingEditorial';
 import TestimonialsMarquee from '@/components/social/TestimonialsMarquee';
 import FooterMinimal from '@/components/footer/FooterMinimal';
@@ -25,13 +25,21 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+// Lazy-load heavy R3F / WebGL / 3D components — removes ~300KB from initial bundle
+const AIMatchSection = dynamic(() => import('@/components/AIMatchSection'), { ssr: false });
+const IPhoneScrollytelling = dynamic(() => import('@/components/IPhoneScrollytelling'), { ssr: false });
+const PropertyCarousel3D = dynamic(() => import('@/components/PropertyCarousel3D'), { ssr: false });
+
 export default function LandingPage() {
   const { user, loading } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [emailValue, setEmailValue] = useState('');
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const isTouchDevice = useRef(false);
 
   // Reduced motion detection
@@ -122,6 +130,16 @@ export default function LandingPage() {
         gsap.to(mask, { opacity: 0, duration: 0.5, delay: 0.7, ease: 'power1.out' });
       }
 
+      // Ken Burns on hero video: subtle scale settle
+      const heroVideo = document.querySelector('.parallax-bg video') as HTMLVideoElement | null;
+      if (heroVideo) {
+        gsap.fromTo(
+          heroVideo,
+          { scale: 1.07 },
+          { scale: 1, duration: 3.5, ease: 'power1.out', delay: 0 }
+        );
+      }
+
       // Hero video parallax out on scroll
       gsap.to('.parallax-bg', {
         opacity: 0,
@@ -134,7 +152,21 @@ export default function LandingPage() {
         },
       });
 
-      // Section entrance animations (perspective depth feel)
+      // Section entrance animations — clip-path wipe on headings
+      gsap.utils.toArray<HTMLElement>('.section-heading-wipe').forEach((el) => {
+        gsap.fromTo(
+          el,
+          { clipPath: 'inset(0 100% 0 0)' },
+          {
+            clipPath: 'inset(0 0% 0 0)',
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 85%' },
+          }
+        );
+      });
+
+      // General section entrance (depth feel)
       gsap.utils.toArray<HTMLElement>('.section-enter').forEach((el) => {
         gsap.fromTo(
           el,
@@ -158,6 +190,13 @@ export default function LandingPage() {
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, [prefersReducedMotion]);
+
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailValue.trim()) return;
+    // TODO: wire to your email collection endpoint / CRM
+    setEmailSubmitted(true);
+  };
 
   return (
     <div className="min-h-screen bg-[#060810] text-white font-sans overflow-x-hidden">
@@ -190,6 +229,7 @@ export default function LandingPage() {
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-10">
               {[
+                { label: 'HOW IT WORKS', href: '#how-it-works' },
                 { label: 'AI PLATFORM', href: '#ai' },
                 { label: 'FEATURES', href: '#features' },
                 { label: 'LISTINGS', href: '#listings' },
@@ -235,6 +275,7 @@ export default function LandingPage() {
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-[#060810] z-40 pt-24 px-6 md:hidden flex flex-col gap-6">
           {[
+            { label: 'How It Works', href: '#how-it-works' },
             { label: 'AI Platform', href: '#ai' },
             { label: 'Features', href: '#features' },
             { label: 'Listings', href: '#listings' },
@@ -287,45 +328,87 @@ export default function LandingPage() {
               {/* Headline — split-text reveal */}
               <h1
                 id="hero-title"
-                className="text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-extrabold tracking-tight leading-[0.85] mb-14 text-white"
+                className="text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] font-extrabold tracking-tight leading-[0.85] mb-10 text-white"
                 style={{ perspective: 800 }}
               >
                 List it.{'\n'}Match it.{'\n'}Close it.
               </h1>
 
-              {/* Sub-copy + CTAs */}
-              <div className="grid md:grid-cols-2 gap-12 items-end">
-                <p className="hero-animate text-xl md:text-2xl text-white/70 leading-tight font-light tracking-tight max-w-sm">
-                  The AI operating system for South African property leaders. Listings, buyers and deals — unified.
-                </p>
-                <div className="hero-animate flex flex-col sm:flex-row gap-5">
-                  <Link
-                    href="/register"
-                    className="inline-flex items-center justify-center gap-4 px-10 py-6 bg-lime-400 text-[#060810] text-[12px] tracking-[0.12em] font-bold hover:bg-white transition-colors duration-300 group"
-                  >
-                    START FREE
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <a
-                    href="#features"
-                    className="inline-flex items-center justify-center gap-4 px-10 py-6 border border-white/20 text-white text-[12px] tracking-[0.12em] font-medium hover:bg-white/10 transition-colors duration-300"
-                  >
-                    SEE HOW IT WORKS
-                  </a>
-                </div>
+              {/* Sub-copy */}
+              <p className="hero-animate text-xl md:text-2xl text-white/70 leading-tight font-light tracking-tight max-w-md mb-10">
+                The AI operating system for South African property professionals. Listings, buyers and deals — unified.
+              </p>
+
+              {/* Inline email capture — primary CTA */}
+              <div className="hero-animate mb-6">
+                {emailSubmitted ? (
+                  <div className="inline-flex items-center gap-3 px-6 py-4 bg-lime-400/10 border border-lime-400/30 text-lime-400 text-sm font-medium rounded-sm">
+                    <span>✓</span>
+                    <span>You're on the list — we'll be in touch shortly.</span>
+                  </div>
+                ) : (
+                  <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md" aria-label="Get early access">
+                    <label htmlFor="hero-email" className="sr-only">Work email address</label>
+                    <input
+                      id="hero-email"
+                      type="email"
+                      required
+                      placeholder="Your work email"
+                      value={emailValue}
+                      onChange={(e) => setEmailValue(e.target.value)}
+                      className="flex-1 px-5 py-4 bg-white/8 border border-white/15 text-white text-sm placeholder:text-white/35 focus:outline-none focus:border-lime-400/60 transition-colors rounded-sm backdrop-blur-md"
+                    />
+                    <button
+                      type="submit"
+                      className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-lime-400 text-[#060810] text-[11px] tracking-[0.12em] font-extrabold hover:bg-white transition-colors duration-200 rounded-sm whitespace-nowrap"
+                    >
+                      GET EARLY ACCESS
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </form>
+                )}
+              </div>
+
+              {/* Secondary action */}
+              <div className="hero-animate flex items-center gap-5">
+                <a
+                  href="#how-it-works"
+                  className="text-white/40 text-[11px] tracking-[0.12em] font-medium hover:text-white/80 transition-colors inline-flex items-center gap-2"
+                >
+                  SEE HOW IT WORKS
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
               </div>
             </div>
           </div>
         </HeroVideo>
 
+        {/* Social proof bar — immediately below hero copy */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/8 bg-[#060810]/60 backdrop-blur-xl">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center gap-x-8 gap-y-2">
+            <div className="flex items-center gap-2 text-white/40 text-[10px] tracking-[0.25em] font-semibold uppercase">
+              <Shield className="w-3.5 h-3.5 text-lime-400" aria-hidden />
+              PPRA Registered
+            </div>
+            <div className="w-px h-3 bg-white/10 hidden sm:block" aria-hidden />
+            <span className="text-white/40 text-[10px] tracking-[0.25em] font-semibold uppercase">500+ Active Agents</span>
+            <div className="w-px h-3 bg-white/10 hidden sm:block" aria-hidden />
+            <span className="text-white/40 text-[10px] tracking-[0.25em] font-semibold uppercase">R2.5B+ Matched</span>
+            <div className="w-px h-3 bg-white/10 hidden sm:block" aria-hidden />
+            <span className="text-white/40 text-[10px] tracking-[0.25em] font-semibold uppercase">POPIA Compliant</span>
+            <div className="w-px h-3 bg-white/10 hidden sm:block" aria-hidden />
+            <span className="text-white/40 text-[10px] tracking-[0.25em] font-semibold uppercase">FICA Ready</span>
+          </div>
+        </div>
+
         {/* Scroll indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 animate-bounce">
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 animate-bounce">
           <span className="text-white/30 text-[9px] tracking-widest uppercase font-bold">Scroll</span>
           <div className="w-px h-10 bg-gradient-to-b from-white/50 to-transparent" />
         </div>
 
         {/* Floating stats pills */}
-        <div className="absolute bottom-20 right-8 z-20 hidden lg:flex flex-col gap-3">
+        <div className="absolute top-1/2 right-8 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-3">
           {[
             { val: 'R2.5B+', label: 'Matched' },
             { val: '42%', label: 'Faster' },
@@ -341,6 +424,9 @@ export default function LandingPage() {
 
       {/* ── MAIN CONTENT ──────────────────────────────────────────── */}
       <main id="main-content">
+
+        {/* How It Works — bridges hero to features */}
+        <HowItWorks />
 
         {/* AI Match Intelligence Section */}
         <div id="ai">
@@ -391,7 +477,7 @@ export default function LandingPage() {
             </span>
             <h2
               id="cta-heading"
-              className="section-enter text-5xl md:text-8xl font-extrabold tracking-tighter mb-12 leading-[0.85] text-white"
+              className="section-heading-wipe section-enter text-5xl md:text-8xl font-extrabold tracking-tighter mb-12 leading-[0.85] text-white"
             >
               The AI is Ready.<br />
               <span className="text-white/20">Are You?</span>
@@ -399,13 +485,34 @@ export default function LandingPage() {
             <p className="section-enter text-white/50 text-xl md:text-2xl mb-16 font-light max-w-2xl mx-auto leading-tight">
               Join the collective of high-performing property professionals who trust Agent Loop.
             </p>
-            <div className="section-enter flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link
-                href="/register"
-                className="px-14 py-6 bg-lime-400 text-[#060810] text-[11px] tracking-[0.3em] font-extrabold hover:bg-white transition-all duration-500 w-full sm:w-auto"
-              >
-                INITIALIZE PLATFORM
-              </Link>
+
+            {/* Inline email capture in CTA too */}
+            <div className="section-enter flex flex-col items-center gap-6">
+              {emailSubmitted ? (
+                <div className="inline-flex items-center gap-3 px-6 py-4 bg-lime-400/10 border border-lime-400/30 text-lime-400 text-sm font-medium">
+                  <span>✓</span>
+                  <span>You're on the list — we'll be in touch shortly.</span>
+                </div>
+              ) : (
+                <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md w-full" aria-label="Get early access from CTA">
+                  <label htmlFor="cta-email" className="sr-only">Work email address</label>
+                  <input
+                    id="cta-email"
+                    type="email"
+                    required
+                    placeholder="Your work email"
+                    value={emailValue}
+                    onChange={(e) => setEmailValue(e.target.value)}
+                    className="flex-1 px-5 py-4 bg-white/5 border border-white/15 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-lime-400/60 transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    className="px-8 py-4 bg-lime-400 text-[#060810] text-[11px] tracking-[0.3em] font-extrabold hover:bg-white transition-all duration-300 whitespace-nowrap"
+                  >
+                    INITIALIZE PLATFORM
+                  </button>
+                </form>
+              )}
               <span className="text-white/20 text-[10px] tracking-widest font-bold uppercase">NO COMMITMENT REQUIRED</span>
             </div>
           </div>
@@ -413,6 +520,9 @@ export default function LandingPage() {
       </main>
 
       <FooterMinimal />
+
+      {/* Sticky demo bar — appears after 30% scroll */}
+      <StickyDemoCTA />
     </div>
   );
 }

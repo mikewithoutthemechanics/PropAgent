@@ -233,9 +233,9 @@ export default function PropertyCarousel3D() {
                 <div
                   className="group w-full h-full rounded-3xl overflow-hidden relative cursor-pointer"
                   style={{
-                    background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)',
+                    background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
                     border: '1px solid rgba(255,255,255,0.08)',
-                    boxShadow: '0 30px 80px rgba(0,0,0,0.6)',
+                    boxShadow: '0 40px 80px -20px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04), 0 20px 40px -10px rgba(0,0,0,0.6)',
                   }}
                 >
                   {/* Property image */}
