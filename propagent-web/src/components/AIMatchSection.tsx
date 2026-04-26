@@ -10,10 +10,10 @@ if (typeof window !== 'undefined') {
 }
 
 const STATS = [
-  { value: 'R2.5B+', label: 'Property Value Matched', icon: TrendingUp, color: '#84cc16' },
-  { value: '12,000+', label: 'Active Listings Processed', icon: Target, color: '#38bdf8' },
-  { value: '42%', label: 'Faster Time-to-Offer', icon: Clock, color: '#fbbf24' },
-  { value: '98%', label: 'Match Accuracy Rate', icon: Brain, color: '#a78bfa' },
+  { value: 'R2.5B+', label: 'Property Value Matched', icon: TrendingUp, color: '#00d4ff' },
+  { value: '12,000+', label: 'Active Listings Processed', icon: Target, color: '#33ddff' },
+  { value: '42%', label: 'Faster Time-to-Offer', icon: Clock, color: '#0090c2' },
+  { value: '98%', label: 'Match Accuracy Rate', icon: Brain, color: '#66e6ff' },
 ];
 
 const PILLARS = [
@@ -21,19 +21,19 @@ const PILLARS = [
     icon: Brain,
     title: 'Neural Matching Engine',
     desc: 'Decomposes every listing into 40+ semantic vectors, cross-references with buyer profiles in real-time.',
-    accent: '#84cc16',
+    accent: '#00d4ff',
   },
   {
     icon: Zap,
     title: 'Instant Lead Scoring',
     desc: 'Every inbound lead receives a predictive score based on financial readiness, intent signals, and property fit.',
-    accent: '#38bdf8',
+    accent: '#33ddff',
   },
   {
     icon: Shield,
     title: 'POPIA-Compliant AI',
     desc: 'Full audit trail, consent management and data minimisation baked into every AI workflow.',
-    accent: '#fbbf24',
+    accent: '#0090c2',
   },
 ];
 
@@ -129,90 +129,189 @@ export default function AIMatchSection() {
     return () => io.disconnect();
   }, [prefersReducedMotion]);
 
+  const formatted = useMemo(() =>
+    new Intl.NumberFormat('en-ZA', { maximumFractionDigits: 0 }),
+  []);
+
+  // Animated counter with elastic feel
+  const AnimatedStat = ({ value, suffix = '' }: { value: string | number, suffix?: string }) => {
+    const [display, setDisplay] = useState(0);
+    const [hasAnimated, setHasAnimated] = useState(false);
+    const targetRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      if (!inView || hasAnimated || prefersReducedMotion) return;
+      const numVal = typeof value === 'number' ? value : 0;
+      if (numVal === 0) return;
+
+      let start: number;
+      const duration = 2000;
+      const easeOut = (t: number) => 1 - Math.pow(1 - t, 4);
+
+      const animate = (now: number) => {
+        if (!start) start = now;
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeOut(progress);
+        setDisplay(Math.floor(eased * numVal));
+        if (progress < 1) requestAnimationFrame(animate);
+        else setHasAnimated(true);
+      };
+      requestAnimationFrame(animate);
+    }, [inView, hasAnimated, value, prefersReducedMotion]);
+
+    return (
+      <span className="text-3xl md:text-4xl font-extrabold text-white mb-2 tracking-tight tabular-nums">
+        {typeof value === 'number' ? display : value}{suffix}
+      </span>
+    );
+  };
+
   return (
     <section
       ref={sectionRef}
-      className="relative py-40 overflow-hidden bg-[#070a0f]"
+      className="relative py-48 md:py-64 overflow-hidden bg-[#060810]"
       aria-labelledby="ai-match-heading"
     >
-      {/* Parallax ambient blobs */}
-      <div className="ai-bg-blob pointer-events-none absolute top-1/3 left-1/4 w-[600px] h-[600px] rounded-full bg-lime-400/5 blur-[150px]" />
-      <div className="ai-bg-blob pointer-events-none absolute bottom-1/3 right-1/4 w-[500px] h-[500px] rounded-full bg-sky-400/5 blur-[150px]" />
+      {/* Parallax ambient blobs — more layers, richer */}
+      <div className="ai-bg-blob pointer-events-none absolute top-1/3 left-1/4 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,rgba(0,212,255,0.08)_0%,transparent_70%)]" />
+      <div className="ai-bg-blob pointer-events-none absolute bottom-1/3 right-1/4 w-[700px] h-[700px] rounded-full bg-[radial-gradient(circle,rgba(51,221,255,0.06)_0%,transparent_70%)]" />
+      <div className="ai-bg-blob pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[400px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(0,212,255,0.04)_0%,transparent_70%)]" />
 
       {/* Grid pattern overlay */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        className="pointer-events-none absolute inset-0 opacity-[0.015]"
         style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)
+          `,
+          backgroundSize: '80px 80px',
         }}
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section label */}
-        <div className="ai-section-heading text-center mb-24">
-          <span className="block text-[10px] tracking-[0.4em] font-bold uppercase text-lime-400 mb-8">
+        {/* Section label — decorative underline */}
+        <div className="ai-section-heading text-center mb-32">
+          <span className="block text-[10px] tracking-[0.5em] font-bold uppercase text-[#00d4ff] mb-8 hero-animate flex items-center justify-center gap-4">
+            <span className="w-12 h-px bg-[#00d4ff]/30" />
             AI INTELLIGENCE
+            <span className="w-12 h-px bg-[#00d4ff]/30" />
           </span>
           <h2
             id="ai-match-heading"
-            className="text-5xl md:text-8xl font-extrabold text-white tracking-tighter leading-[0.85] mb-8"
+            className="text-display-4xl md:text-display-6xl font-extrabold text-white tracking-tighter leading-[0.85] mb-10"
           >
-            Matching buyers<br />
+            Matching buyers.{'\n'}
             <span className="text-white/20">to properties.</span>
           </h2>
-          <p className="text-white/40 text-xl md:text-2xl font-light max-w-2xl mx-auto leading-tight">
+          <p className="text-white/50 text-xl md:text-2xl font-light max-w-2xl mx-auto leading-relaxed">
             Our AI doesn't just search — it understands intent, finances, lifestyle and timing to surface the perfect match.
           </p>
         </div>
 
-        {/* Stats row */}
-        <div className="ai-stats grid grid-cols-2 md:grid-cols-4 gap-4 mb-24">
-          {STATS.map((stat, i) => (
-            <div
-              key={i}
-              className="ai-stat relative p-8 rounded-2xl border overflow-hidden"
-              style={{
-                borderColor: `${stat.color}20`,
-                background: `linear-gradient(135deg, ${stat.color}08 0%, transparent 60%)`,
-              }}
-            >
-              <stat.icon className="w-6 h-6 mb-4 opacity-60" style={{ color: stat.color }} />
-              <div className="text-3xl md:text-4xl font-extrabold text-white mb-2 tracking-tight"
-                style={prefersReducedMotion ? {} : {}}>
-                {stat.value}
-              </div>
-              <div className="text-white/40 text-[11px] tracking-wider uppercase font-medium">{stat.label}</div>
-
-              {/* Corner accent */}
+        {/* Stats row — enhanced with animated counters and glow */}
+        <div className="ai-stats grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-32">
+          {STATS.map((stat, i) => {
+            const Icon = stat.icon;
+            return (
               <div
-                className="absolute bottom-0 right-0 w-20 h-20 rounded-tl-3xl opacity-10"
-                style={{ backgroundColor: stat.color }}
-              />
-            </div>
-          ))}
+                key={i}
+                className="ai-stat relative p-8 md:p-10 rounded-2xl border overflow-hidden transition-all duration-500 hover:border-[#00d4ff]/40 group"
+                style={{
+                  borderColor: `${stat.color}25`,
+                  background: `linear-gradient(135deg, ${stat.color}10 0%, transparent 50%)`,
+                }}
+              >
+                {/* Glow on hover */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                  style={{
+                    background: `radial-gradient(ellipse at 30% 0%, ${stat.color}15 0%, transparent 60%)`,
+                  }}
+                />
+
+                <Icon className="w-7 h-7 mb-5 opacity-60 relative z-10" style={{ color: stat.color }} />
+                <div className="relative z-10 text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight">
+                  {typeof stat.value === 'number' ? (
+                    <AnimatedStat value={stat.value} />
+                  ) : (
+                    stat.value
+                  )}
+                </div>
+                <div className="relative z-10 text-white/40 text-[11px] tracking-[0.15em] uppercase font-semibold">
+                  {stat.label}
+                </div>
+
+                {/* Corner accent — more dynamic */}
+                <div
+                  className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-3xl opacity-15 group-hover:opacity-25 transition-opacity duration-500"
+                  style={{ backgroundColor: stat.color }}
+                />
+
+                {/* Subtle top highlight */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00d4ff]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </div>
+            );
+          })}
         </div>
 
-        {/* 3 Pillars */}
-        <div className="ai-pillars grid md:grid-cols-3 gap-6">
-          {PILLARS.map((pillar, i) => (
-            <div
-              key={i}
-              className="ai-pillar group relative p-10 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-500 overflow-hidden"
-              style={{ background: 'rgba(255,255,255,0.02)' }}
-            >
-              {/* Hover glow */}
+        {/* 3 Pillars — premium glass-morphism cards */}
+        <div className="ai-pillars grid md:grid-cols-3 gap-6 md:gap-8">
+          {PILLARS.map((pillar, i) => {
+            const Icon = pillar.icon;
+            return (
               <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl"
-                style={{ background: `radial-gradient(ellipse at 50% 0%, ${pillar.accent}15 0%, transparent 60%)` }}
-              />
-
-              <div
-                className="w-12 h-12 flex items-center justify-center rounded-xl mb-8 relative z-10"
-                style={{ backgroundColor: `${pillar.accent}15` }}
+                key={i}
+                className="ai-pillar group relative p-8 md:p-10 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-500 overflow-hidden"
+                style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.005) 100%)' }}
               >
-                <pillar.icon className="w-6 h-6" style={{ color: pillar.accent }} />
+                {/* Animated gradient ambience */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                  style={{
+                    background: `radial-gradient(ellipse at 50% -30%, ${pillar.accent}12 0%, transparent 50%)`,
+                  }}
+                />
+
+                {/* Hover glow ring */}
+                <div
+                  className="absolute -inset-px opacity-0 group-hover:opacity-30 transition-opacity duration-700 rounded-2xl"
+                  style={{
+                    background: `linear-gradient(135deg, ${pillar.accent}15 0%, transparent 50%, ${pillar.accent}10 100%)`,
+                    filter: 'blur(8px)',
+                  }}
+                />
+
+                <div
+                  className="w-12 h-12 flex items-center justify-center rounded-xl mb-8 relative z-10 transition-all duration-300 group-hover:scale-110"
+                  style={{
+                    backgroundColor: `${pillar.accent}15`,
+                    border: `1px solid ${pillar.accent}25`,
+                    boxShadow: `0 0 20px ${pillar.accent}15`,
+                  }}
+                >
+                  <Icon className="w-6 h-6" style={{ color: pillar.accent }} />
+                </div>
+
+                <h3 className="relative z-10 text-2xl font-bold text-white tracking-tight mb-4 group-hover:text-[#00d4ff] transition-colors duration-300">
+                  {pillar.title}
+                </h3>
+                <p className="relative z-10 text-white/50 text-base leading-relaxed font-light">
+                  {pillar.desc}
+                </p>
+
+                {/* Number accent — watermark style */}
+                <div
+                  className="absolute top-8 right-8 text-7xl font-extrabold opacity-6 leading-none pointer-events-none select-none"
+                  style={{ color: pillar.accent }}
+                >
+                  0{i + 1}
+                </div>
               </div>
+            );
+          })}
+        </div>
 
               <h3 className="relative z-10 text-2xl font-bold text-white tracking-tight mb-4">{pillar.title}</h3>
               <p className="relative z-10 text-white/40 text-base leading-relaxed font-light">{pillar.desc}</p>

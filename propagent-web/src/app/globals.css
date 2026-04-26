@@ -1,5 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
+
+/* =============================================================
+   Typography — Bold dual-type system
+   Syne (display): geometric, modern, characterful
+   Inter (body): clean, readable, functional
+   ============================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
 
 /* =============================================================
    Design tokens — dark surface, cyan accent, Roboto.
@@ -11,110 +17,127 @@
 :root {
   /* Semantic surfaces */
   --surface-base: #000000;
-  --surface-raised: #2a2a2a;
-  --surface-strong: #00beff;
+  --surface-raised: #1a1a1a;
+  --surface-strong: #00d4ff; /* vibrant cyan */
 
   /* Semantic text */
   --text-primary: #ffffff;
-  --text-secondary: #cfcfcf;   /* raised low-contrast body */
-  --text-tertiary: #86868b;
+  --text-secondary: #c0c0c0;   /* raised low-contrast body */
+  --text-tertiary: #606060;
+  --text-accent: #00d4ff;      /* accent for highlights */
 
-  /* Typography scale */
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
+  /* Typography scale — Syne (display) + Inter (body) */
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Display sizes — dramatic hierarchy */
+  --display-xs: 12px;
+  --display-sm: 14px;
+  --display-md: 16px;
+  --display-lg: 18px;
+  --display-xl: 20px;
+  --display-2xl: 24px;
+  --display-3xl: 30px;
+  --display-4xl: 42px;
+  --display-5xl: 56px;
+  --display-6xl: 72px;
+  --display-7xl: 96px;
+  --display-8xl: 120px; /* hero max */
+
+  /* Body sizes — standard scale */
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
   --font-size-md: 15px;
-  --font-size-lg: 16px;
-  --font-size-xl: 18px;
-  --font-size-2xl: 20px;
-  --font-size-3xl: 21px;
-  --font-size-4xl: 22px;
-  --font-size-base: 16px;
+  --font-size-lg: 17px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+
   --font-weight-base: 400;
-  --line-height-base: 24px;
-  --font-family-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --line-height-base: 1.6;
+  --font-letter-spacing: -0.02em;
 
   /* Spacing */
-  --space-1: 6px;
+  --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
-  --space-4: 12.5px;
-  --space-5: 13px;
-  --space-6: 14.4px;
-  --space-7: 20px;
-  --space-8: 23px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 48px;
+  --space-9: 64px;
+  --space-10: 96px;
 
   /* Radius */
   --radius-xs: 3px;
-  --radius-sm: 20px;
-  --radius-md: 50px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
 
-  /* Motion */
-  --motion-duration-instant: 250ms;
-  --motion-duration-fast: 300ms;
-  --motion-duration-normal: 400ms;
+  /* Motion — signature easing */
+  --ease-brand: cubic-bezier(0.25, 1, 0.5, 1); /* smooth-snap */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* elastic bounce */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Legacy colour names. Charcoal retains its "dark ramp" meaning so
-     bg-charcoal-900 stays dark. text-charcoal-* is inverted below via
-     explicit utility overrides so labels stay readable on the dark base. */
-  --white: #2a2a2a;
-  --white-50: #1e1e1e;
-  --white-100: #1a1a1a;
+  --motion-instant: 200ms;
+  --motion-fast: 300ms;
+  --motion-normal: 500ms;
+  --motion-slow: 700ms;
+
+  /* Legacy colour names — dark surface ramp */
+  --white: #1a1a1a; /* bg-white = raised dark card */
+  --white-50: #121212;
+  --white-100: #0a0a0a;
   --black: #000000;
 
-  --charcoal-50:  #f5f5f5;
-  --charcoal-100: #e8e8e8;
-  --charcoal-200: #2a2a2a;
-  --charcoal-300: #3d3d3d;
-  --charcoal-400: #6b6b6b;
-  --charcoal-500: #86868b;
-  --charcoal-600: #3d3d3d;
-  --charcoal-700: #2a2a2a;
-  --charcoal-800: #1a1a1a;
-  --charcoal-900: #0a0a0a;
-  --charcoal-950: #000000;
+  --charcoal-50:  #e8e8e8;
+  --charcoal-100: #d4d4d4;
+  --charcoal-200: #1a1a1a;
+  --charcoal-300: #2a2a2a;
+  --charcoal-400: #3d3d3d;
+  --charcoal-500: #525252;
+  --charcoal-600: #666666;
+  --charcoal-700: #7a7a7a;
+  --charcoal-800: #8e8e8e;
+  --charcoal-900: #a3a3a3;
+  --charcoal-950: #ffffff; /* text-white on dark */
 
-  /* Accent ramp (was lime; now cyan brand) */
-  --lime-50:  #001a22;
-  --lime-100: #002b3a;
-  --lime-200: #00475e;
-  --lime-300: #007ea8;
-  --lime-400: #00beff;
-  --lime-500: #00a7e0;
-  --lime-600: #0090c2;
-  --lime-700: #006d94;
+  /* Cyan accent ramp (kept as requested) */
+  --lime-50:  #001516;
+  --lime-100: #002329;
+  --lime-200: #003b42;
+  --lime-300: #006675;
+  --lime-400: #00a8c8;      /* Keep neon cyan */
+  --lime-500: #00d4ff;      /* Primary accent — bright cyan */
+  --lime-600: #33ddff;
+  --lime-700: #66e6ff;
 
-  --sky-50:  #001a22;
-  --sky-100: #002b3a;
-  --sky-200: #00475e;
+  --sky-50:  #001516;
+  --sky-100: #002329;
+  --sky-200: #003b42;
   --sky-300: #33cfff;
-  --sky-400: #00beff;
-  --sky-500: #00a7e0;
-  --sky-600: #0090c2;
-  --sky-700: #006d94;
+  --sky-400: #00d4ff;
+  --sky-500: #00a8c8;
+  --sky-600: #0090b0;
+  --sky-700: #006d8e;
 
-  --purple-50:  #1a0b2e;
-  --purple-100: #2a1246;
-  --purple-200: #3e1e63;
-  --purple-300: #5a2a8a;
-  --purple-400: #9333EA;
-  --purple-500: #A855F7;
-  --purple-600: #C084FC;
+  /* Purple variants for variety */
+  --purple-400: #c084fc;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
 
   /* Semantic aliases */
   --background: var(--surface-base);
   --foreground: var(--text-primary);
   --card: var(--surface-raised);
-  --card-border: #1f1f1f;
+  --card-border: #252525;
   --primary: var(--surface-strong);
   --primary-foreground: var(--surface-base);
-  --primary-600: #0090c2;
   --accent: var(--surface-strong);
   --accent-foreground: var(--surface-base);
-  --accent-600: #0090c2;
-  --accent-700: #006d94;
-  --expense: #f43f5e;
-  --expense-600: #e11d48;
-  --expense-700: #be123c;
 
   /* Status */
   --emerald-500: #10B981;
@@ -125,84 +148,84 @@
   --rose-600: #E11D48;
   --blue-500: #3B82F6;
   --blue-600: #2563EB;
-
-  /* Maintenance ticket badges (dark-theme) */
-  --status-new-bg: #1f1f1f;
-  --status-new-text: var(--text-primary);
-  --status-in-progress-bg: var(--surface-strong);
-  --status-in-progress-text: var(--surface-base);
-  --status-pending-bg: var(--sky-500);
-  --status-pending-text: var(--text-primary);
-  --status-ai-classified-bg: var(--purple-500);
-  --status-ai-classified-text: var(--text-primary);
-  --status-assigned-bg: var(--blue-500);
-  --status-assigned-text: var(--text-primary);
-  --status-completed-bg: var(--emerald-500);
-  --status-completed-text: var(--text-primary);
-  --status-cancelled-bg: var(--rose-500);
-  --status-cancelled-text: var(--text-primary);
 }
 
 /* =============================================================
-   Tailwind 4 @theme — expose semantic tokens as utility classes
-   and remap Tailwind's built-in lime / sky palettes onto the cyan
-   brand so every bg-lime-*, from-lime-*, bg-sky-*, etc. flips to
-   the new accent without editing components.
+   Base element styling — dark theme with distinctive typography
    ============================================================= */
-@theme {
-  --font-sans: var(--font-family-primary);
+* {
+  box-sizing: border-box;
+}
 
-  --color-surface-base: var(--surface-base);
-  --color-surface-raised: var(--surface-raised);
-  --color-surface-strong: var(--surface-strong);
+html {
+  scroll-behavior: smooth;
+  background-color: var(--surface-base);
+}
 
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-tertiary: var(--text-tertiary);
+body {
+  background-color: var(--surface-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-base);
+  line-height: var(--line-height-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  /* Subtle grain overlay for texture */
+  position: relative;
+}
 
-  --radius-xs: var(--radius-xs);
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+}
 
-  --duration-instant: var(--motion-duration-instant);
-  --duration-fast: var(--motion-duration-fast);
-  --duration-normal: var(--motion-duration-normal);
+/* Display headings — Syne */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--font-letter-spacing);
+  line-height: 1.1;
+  color: var(--text-primary);
+  margin: 0;
+}
 
-  /* Cyan accent — overrides Tailwind's default lime */
-  --color-lime-50:  #001a22;
-  --color-lime-100: #002b3a;
-  --color-lime-200: #00475e;
-  --color-lime-300: #007ea8;
-  --color-lime-400: #00beff;
-  --color-lime-500: #00a7e0;
-  --color-lime-600: #0090c2;
-  --color-lime-700: #006d94;
+/* Display size scale — dramatic jumps */
+.text-display-xs { font-size: var(--display-xs); font-family: var(--font-display); }
+.text-display-sm { font-size: var(--display-sm); font-family: var(--font-display); }
+.text-display-md { font-size: var(--display-md); font-family: var(--font-display); }
+.text-display-lg { font-size: var(--display-lg); font-family: var(--font-display); }
+.text-display-xl { font-size: var(--display-xl); font-family: var(--font-display); }
+.text-display-2xl { font-size: var(--display-2xl); font-family: var(--font-display); }
+.text-display-3xl { font-size: var(--display-3xl); font-family: var(--font-display); }
+.text-display-4xl { font-size: var(--display-4xl); font-family: var(--font-display); }
+.text-display-5xl { font-size: var(--display-5xl); font-family: var(--font-display); }
+.text-display-6xl { font-size: var(--display-6xl); font-family: var(--font-display); }
+.text-display-7xl { font-size: var(--display-7xl); font-family: var(--font-display); }
+.text-display-8xl { font-size: var(--display-8xl); font-family: var(--font-display); }
 
-  /* Sky aligned to the same brand axis */
-  --color-sky-50:  #001a22;
-  --color-sky-100: #002b3a;
-  --color-sky-200: #00475e;
-  --color-sky-300: #33cfff;
-  --color-sky-400: #00beff;
-  --color-sky-500: #00a7e0;
-  --color-sky-600: #0090c2;
-  --color-sky-700: #006d94;
+/* Body text — Inter */
+p, span, li, label, td, th, dd, dt, blockquote, figcaption, a, button, input, select, textarea {
+  font-family: var(--font-body);
+  color: inherit;
+}
 
-  /* Custom charcoal ramp (not part of Tailwind defaults). Kept as a
-     dark ramp so bg-charcoal-900 reads as a deep surface. Text and
-     border utilities that use these colours are inverted in the
-     override block below. */
-  --color-charcoal-50:  #f5f5f5;
-  --color-charcoal-100: #e8e8e8;
-  --color-charcoal-200: #2a2a2a;
-  --color-charcoal-300: #3d3d3d;
-  --color-charcoal-400: #6b6b6b;
-  --color-charcoal-500: #86868b;
-  --color-charcoal-600: #3d3d3d;
-  --color-charcoal-700: #2a2a2a;
-  --color-charcoal-800: #1a1a1a;
-  --color-charcoal-900: #0a0a0a;
-  --color-charcoal-950: #000000;
+/* Headings get slightly lighter weight for contrast */
+h1, h2, h3 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 /* =============================================================
@@ -256,12 +279,37 @@ p, span, li, label, td, th, dd, dt, blockquote, figcaption {
   background: #3d3d3d;
 }
 
+/* Scrollbar — sleek dark */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--charcoal-400);
+  border-radius: var(--radius-xs);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--charcoal-500);
+}
+
+/* Selection highlight */
+::selection {
+  background: rgba(0, 212, 255, 0.22);
+  color: var(--text-primary);
+}
+
+/* Focus visible — WCAG 2.2 AA compliant */
+*:focus-visible {
+  outline: 2px solid var(--surface-strong);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
 /* =============================================================
-   Tailwind utility overrides.
-   These are placed OUTSIDE any @layer so they land AFTER Tailwind's
-   emitted utilities in the cascade and win on source order. The
-   :where() wrapper keeps specificity low so component-level classes
-   can still override when needed.
+   Tailwind utility overrides (dark theme mapping)
    ============================================================= */
 
 /* bg-white = raised card surface on dark, not pure white */
@@ -272,16 +320,15 @@ p, span, li, label, td, th, dd, dt, blockquote, figcaption {
 :where(.bg-white\/60) { background-color: color-mix(in srgb, var(--surface-raised) 60%, transparent); }
 :where(.bg-white\/50) { background-color: color-mix(in srgb, var(--surface-raised) 50%, transparent); }
 :where(.bg-white\/30) { background-color: color-mix(in srgb, var(--surface-raised) 30%, transparent); }
-:where(.bg-white\/20) { background-color: color-mix(in srgb, #ffffff 20%, transparent); }
-:where(.bg-white\/10) { background-color: color-mix(in srgb, #ffffff 10%, transparent); }
-:where(.bg-white\/5)  { background-color: color-mix(in srgb, #ffffff 5%, transparent); }
+:where(.bg-white\/20) { background-color: color-mix(in srgb, #1a1a1a 20%, transparent); }
+:where(.bg-white\/10) { background-color: color-mix(in srgb, #1a1a1a 10%, transparent); }
+:where(.bg-white\/5)  { background-color: color-mix(in srgb, #1a1a1a 5%, transparent); }
 
-/* text-white must stay white (Tailwind maps it to --color-white which
-   we don't override — but just in case, enforce). */
+/* text-white must stay white */
 :where(.text-white) { color: #ffffff; }
 
 /* border-white on dark theme = subtle light border */
-:where(.border-white) { border-color: #3d3d3d; }
+:where(.border-white) { border-color: #252525; }
 :where(.border-white\/20) { border-color: color-mix(in srgb, #ffffff 20%, transparent); }
 :where(.border-white\/10) { border-color: color-mix(in srgb, #ffffff 10%, transparent); }
 
@@ -290,56 +337,120 @@ p, span, li, label, td, th, dd, dt, blockquote, figcaption {
 :where(.to-white)   { --tw-gradient-to: var(--surface-base); }
 :where(.via-white)  { --tw-gradient-via: var(--surface-base); }
 
-/* text-charcoal-* — invert the ramp so labels stay readable on dark. */
+/* text-charcoal-* — invert the ramp so labels stay readable on dark */
 :where(.text-charcoal-50)  { color: #1a1a1a; }
-:where(.text-charcoal-100) { color: #2a2a2a; }
-:where(.text-charcoal-200) { color: #3d3d3d; }
-:where(.text-charcoal-300) { color: #525252; }
-:where(.text-charcoal-400) { color: #6b6b6b; }
-:where(.text-charcoal-500) { color: #86868b; }
-:where(.text-charcoal-600) { color: #c8c8c8; }
-:where(.text-charcoal-700) { color: #e0e0e0; }
-:where(.text-charcoal-800) { color: #f2f2f2; }
-:where(.text-charcoal-900) { color: #ffffff; }
+:where(.text-charcoal-100) { color: #252525; }
+:where(.text-charcoal-200) { color: #2a2a2a; }
+:where(.text-charcoal-300) { color: #3d3d3d; }
+:where(.text-charcoal-400) { color: #525252; }
+:where(.text-charcoal-500) { color: #666666; }
+:where(.text-charcoal-600) { color: #7a7a7a; }
+:where(.text-charcoal-700) { color: #8e8e8e; }
+:where(.text-charcoal-800) { color: #a3a3a3; }
+:where(.text-charcoal-900) { color: #b8b8b8; }
 :where(.text-charcoal-950) { color: #ffffff; }
 
-/* border-charcoal-* — borders on dark use subtle dark variants. */
-:where(.border-charcoal-50)  { border-color: #141414; }
-:where(.border-charcoal-100) { border-color: #1f1f1f; }
-:where(.border-charcoal-200) { border-color: #2a2a2a; }
-:where(.border-charcoal-300) { border-color: #3d3d3d; }
-:where(.border-charcoal-400) { border-color: #6b6b6b; }
-:where(.border-charcoal-500) { border-color: #525252; }
-:where(.border-charcoal-600) { border-color: #3d3d3d; }
-:where(.border-charcoal-700) { border-color: #2a2a2a; }
-:where(.border-charcoal-800) { border-color: #1f1f1f; }
-:where(.border-charcoal-900) { border-color: #1f1f1f; }
+/* border-charcoal-* — borders on dark use subtle dark variants */
+:where(.border-charcoal-50)  { border-color: #0a0a0a; }
+:where(.border-charcoal-100) { border-color: #0f0f0f; }
+:where(.border-charcoal-200) { border-color: #1a1a1a; }
+:where(.border-charcoal-300) { border-color: #252525; }
+:where(.border-charcoal-400) { border-color: #2a2a2a; }
+:where(.border-charcoal-500) { border-color: #3d3d3d; }
+:where(.border-charcoal-600) { border-color: #525252; }
+:where(.border-charcoal-700) { border-color: #666666; }
+:where(.border-charcoal-800) { border-color: #7a7a7a; }
+:where(.border-charcoal-900) { border-color: #8e8e8e; }
 
 /* divide-charcoal-* — same as borders */
-:where(.divide-charcoal-100 > :not([hidden]) ~ :not([hidden])) { border-color: #1f1f1f; }
-:where(.divide-charcoal-200 > :not([hidden]) ~ :not([hidden])) { border-color: #2a2a2a; }
+:where(.divide-charcoal-100 > :not([hidden]) ~ :not([hidden])) { border-color: #0f0f0f; }
+:where(.divide-charcoal-200 > :not([hidden]) ~ :not([hidden])) { border-color: #1a1a1a; }
+:where(.divide-charcoal-300 > :not([hidden]) ~ :not([hidden])) { border-color: #252525; }
 
-/* ring offsets against dark base */
+/* Ring offsets */
 :where(.ring-offset-charcoal-900) { --tw-ring-offset-color: #0a0a0a; }
 :where(.ring-offset-charcoal-950) { --tw-ring-offset-color: #000000; }
 
-/* text-black -> bright on dark so legacy "text-black" labels read. */
+/* text-black -> bright on dark */
 :where(.text-black) { color: #ffffff; }
 
-/* =============================================================
-   Arbitrary hex utility remaps.
+/* Gray scale remap */
+:where(.bg-gray-50)  { background-color: var(--surface-raised); }
+:where(.bg-gray-100) { background-color: #1f1f1f; }
+:where(.bg-gray-200) { background-color: #2a2a2a; }
+:where(.hover\:bg-gray-50:hover)  { background-color: #1f1f1f; }
+:where(.hover\:bg-gray-100:hover) { background-color: #1f1f1f; }
 
-   Several pages predate the dark system and reach for concrete hex
-   values (e.g. `bg-[#D8F053]` for the old lime brand, `bg-[#F5F5F5]`
-   for light card surfaces). These classes compile to escaped
-   selectors and bypass the CSS-variable remap above, so they must
-   be re-pointed explicitly. Keep these keyed on the literal hex
-   so a grep still lands the reader here.
-   ============================================================= */
+:where(.border-gray-100) { border-color: #1f1f1f; }
+:where(.border-gray-200) { border-color: #2a2a2a; }
+:where(.border-gray-300) { border-color: #3d3d3d; }
+:where(.divide-gray-100 > :not([hidden]) ~ :not([hidden])) { border-color: #1f1f1f; }
+:where(.divide-gray-200 > :not([hidden]) ~ :not([hidden])) { border-color: #2a2a2a; }
 
-/* Old lime brand → cyan accent */
+:where(.text-gray-400) { color: var(--text-tertiary); }
+:where(.text-gray-500) { color: var(--text-tertiary); }
+:where(.text-gray-600) { color: var(--text-secondary); }
+:where(.text-gray-700, .text-gray-800, .text-gray-900) { color: var(--text-primary); }
+
+/* Stone/slate/zinc ramps */
+:where(
+  .bg-stone-50, .bg-stone-100, .bg-stone-200,
+  .bg-slate-50, .bg-slate-100, .bg-slate-200,
+  .bg-neutral-50, .bg-neutral-100, .bg-neutral-200,
+  .bg-zinc-50, .bg-zinc-100, .bg-zinc-200
+) { background-color: var(--surface-raised); }
+
+:where(
+  .hover\:bg-stone-50:hover, .hover\:bg-stone-100:hover,
+  .hover\:bg-slate-50:hover, .hover\:bg-slate-100:hover,
+  .hover\:bg-neutral-50:hover, .hover\:bg-neutral-100:hover,
+  .hover\:bg-zinc-50:hover, .hover\:bg-zinc-100:hover
+) { background-color: #1f1f1f; }
+
+:where(
+  .border-stone-100, .border-stone-200, .border-stone-300,
+  .border-slate-100, .border-slate-200, .border-slate-300,
+  .border-neutral-100, .border-neutral-200, .border-neutral-300,
+  .border-zinc-100, .border-zinc-200, .border-zinc-300
+) { border-color: #3d3d3d; }
+
+:where(
+  .divide-stone-100 > :not([hidden]) ~ :not([hidden]),
+  .divide-stone-200 > :not([hidden]) ~ :not([hidden]),
+  .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+  .divide-slate-200 > :not([hidden]) ~ :not([hidden])
+) { border-color: #2a2a2a; }
+
+:where(
+  .text-stone-900, .text-stone-800, .text-stone-700,
+  .text-slate-900, .text-slate-800, .text-slate-700,
+  .text-neutral-900, .text-neutral-800, .text-neutral-700,
+  .text-zinc-900, .text-zinc-800, .text-zinc-700
+) { color: var(--text-primary); }
+
+:where(
+  .text-stone-600, .text-slate-600, .text-neutral-600, .text-zinc-600
+) { color: var(--text-secondary); }
+
+:where(
+  .text-stone-500, .text-stone-400,
+  .text-slate-500, .text-slate-400,
+  .text-neutral-500, .text-neutral-400,
+  .text-zinc-500, .text-zinc-400
+) { color: var(--text-tertiary); }
+
+:where(
+  .placeholder\:text-stone-400::placeholder,
+  .placeholder\:text-stone-500::placeholder,
+  .placeholder\:text-slate-400::placeholder,
+  .placeholder\:text-slate-500::placeholder,
+  .placeholder\:text-neutral-400::placeholder,
+  .placeholder\:text-zinc-400::placeholder
+) { color: var(--text-tertiary); }
+
+/* Old lime brand → keep neon cyan as requested */
 :where(.bg-\[\#D8F053\]) { background-color: var(--surface-strong); }
-:where(.hover\:bg-\[\#D8F053\]:hover) { background-color: var(--surface-strong); }
+:where(.hover\:bg-\[\#D8F053\]:hover) { background-color: #33ddff; }
 :where(.bg-\[\#D8F053\]\/10) { background-color: color-mix(in srgb, var(--surface-strong) 10%, transparent); }
 :where(.bg-\[\#D8F053\]\/20) { background-color: color-mix(in srgb, var(--surface-strong) 20%, transparent); }
 :where(.bg-\[\#D8F053\]\/30) { background-color: color-mix(in srgb, var(--surface-strong) 30%, transparent); }
@@ -349,15 +460,15 @@ p, span, li, label, td, th, dd, dt, blockquote, figcaption {
 :where(.hover\:border-\[\#D8F053\]:hover) { border-color: var(--surface-strong); }
 :where(.text-\[\#D8F053\]) { color: var(--surface-strong); }
 
-/* Old lime hover → darker cyan */
-:where(.bg-\[\#C2DC34\]) { background-color: #0090c2; }
-:where(.hover\:bg-\[\#C2DC34\]:hover) { background-color: #0090c2; }
+/* Old lime hover → brighter cyan on hover */
+:where(.bg-\[\#C2DC34\]) { background-color: #33ddff; }
+:where(.hover\:bg-\[\#C2DC34\]:hover) { background-color: #66e6ff; }
 
 /* Light neutral surfaces → dark theme surfaces */
 :where(.bg-\[\#FFFFFF\]) { background-color: var(--surface-base); }
 :where(.bg-\[\#F5F5F5\]) { background-color: var(--surface-raised); }
 :where(.bg-\[\#F5F5F5\]\/50) { background-color: color-mix(in srgb, var(--surface-raised) 50%, transparent); }
-:where(.border-\[\#E5E5E5\]) { border-color: #3d3d3d; }
+:where(.border-\[\#E5E5E5\]) { border-color: #2a2a2a; }
 
 /* Dim grey label text → readable tertiary text on dark */
 :where(.text-\[\#525252\]) { color: var(--text-tertiary); }
@@ -509,162 +620,243 @@ p, span, li, label, td, th, dd, dt, blockquote, figcaption {
   { color: #d8b4fe; }
 
 /* =============================================================
-   Reusable component classes (dark theme).
+   Reusable component classes (dark theme, refined)
    ============================================================= */
+
+/* Cards — enriched with depth micro-interactions */
 .card {
   background: var(--surface-raised);
   border: 1px solid var(--card-border);
-  border-radius: var(--radius-sm);
-  padding: 1.5rem;
-  transition: all var(--motion-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: all var(--motion-normal) var(--ease-brand);
   color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 0%, rgba(0, 212, 255, 0.08) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity var(--motion-normal) var(--ease-brand);
+  pointer-events: none;
 }
 
 .card:hover {
   border-color: #3d3d3d;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 255, 255, 0.04);
+  transform: translateY(-4px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 .card-elevated {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .card-elevated:hover {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-  transform: translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(0, 212, 255, 0.08);
+  transform: translateY(-6px);
 }
 
-.card-lg { border-radius: 24px; }
-.card-sm { border-radius: 16px; }
+.card-lg { border-radius: var(--radius-lg); }
+.card-sm { border-radius: var(--radius-md); }
 
+/* Glass — premium frosted */
 .glass {
-  background: rgba(42, 42, 42, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(26, 26, 26, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-/* Buttons */
+/* Floating shadow layer for depth */
+.glass::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* =============================================================
+   Buttons — magnetic feel, premium polish
+   ============================================================= */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  border-radius: 9999px;
-  transition: all var(--motion-duration-fast) ease;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  transition: all var(--motion-fast) var(--ease-brand);
   cursor: pointer;
   border: none;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s var(--ease-brand);
+}
+
+.btn:hover::after {
+  transform: translateX(100%);
 }
 
 .btn-primary {
-  background: var(--surface-strong);
+  background: linear-gradient(135deg, var(--surface-strong) 0%, #0090c2 100%);
   color: var(--surface-base);
-  box-shadow: 0 2px 8px rgba(0, 190, 255, 0.3);
+  box-shadow:
+    0 4px 16px rgba(0, 212, 255, 0.25),
+    0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .btn-primary:hover {
-  background: #33cfff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 190, 255, 0.45);
+  background: linear-gradient(135deg, #33ddff 0%, var(--surface-strong) 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    0 8px 32px rgba(0, 212, 255, 0.35),
+    0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
 }
 
 .btn-secondary {
   background: transparent;
   color: var(--text-primary);
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--charcoal-400);
 }
 
 .btn-secondary:hover {
-  background: var(--surface-raised);
-  border-color: #525252;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--charcoal-300);
+  transform: translateY(-1px);
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
 }
 
 .btn-ghost:hover {
-  background: var(--surface-raised);
   color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.btn-accent {
-  background: var(--surface-strong);
-  color: var(--surface-base);
-  box-shadow: 0 2px 8px rgba(0, 190, 255, 0.3);
-}
-
-.btn-accent:hover {
-  background: #33cfff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 190, 255, 0.45);
-}
-
-/* Inputs */
+/* =============================================================
+   Inputs — refined focus, better spacing
+   ============================================================= */
 input, select, textarea {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-body);
 }
 
 .input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.8125rem;
-  border: 1px solid #3d3d3d;
-  border-radius: 9999px;
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--charcoal-400);
+  border-radius: var(--radius-md);
   background: var(--surface-raised);
   color: var(--text-primary);
-  transition: all var(--motion-duration-fast) ease;
+  transition: all var(--motion-fast) var(--ease-brand);
 }
 
 .input:focus {
   outline: none;
   border-color: var(--surface-strong);
-  box-shadow: 0 0 0 3px rgba(0, 190, 255, 0.2);
+  box-shadow:
+    0 0 0 3px rgba(0, 212, 255, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
 }
 
 .input:hover {
-  border-color: #525252;
+  border-color: var(--charcoal-300);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .input::placeholder {
   color: var(--text-tertiary);
-}
-
-/* Badges */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.3125rem 0.75rem;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  border-radius: 9999px;
   letter-spacing: 0.02em;
 }
 
-.badge-success { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-.badge-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-.badge-danger  { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
-.badge-info    { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-.badge-neutral { background: #1f1f1f; color: var(--text-tertiary); }
-.badge-lime    { background: var(--surface-strong); color: var(--surface-base); }
-.badge-sky     { background: var(--surface-strong); color: var(--surface-base); }
+/* =============================================================
+   Badges — crisp, modern, with glow
+   ============================================================= */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
 
-/* Tables */
+.badge-success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+}
+.badge-warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+}
+.badge-danger {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fb7185;
+  box-shadow: 0 0 12px rgba(244, 63, 94, 0.2);
+}
+.badge-info {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+}
+.badge-neutral {
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  border: 1px solid var(--charcoal-400);
+}
+.badge-lime, .badge-sky {
+  background: var(--surface-strong);
+  color: var(--surface-base);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+  font-weight: 800;
+}
+
+/* =============================================================
+   Tables — clean, precise
+   ============================================================= */
 .table-container {
   overflow-x: auto;
-  border-radius: var(--radius-sm);
-  border: 1px solid #1f1f1f;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--charcoal-300);
   background: var(--surface-raised);
 }
 
@@ -676,58 +868,54 @@ table {
 
 th {
   text-align: left;
-  padding: 0.875rem 1rem;
-  font-size: 0.6875rem;
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--font-size-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-tertiary);
-  background: #1e1e1e;
-  border-bottom: 1px solid #1f1f1f;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--charcoal-300);
 }
 
 td {
-  padding: 1rem;
-  border-bottom: 1px solid #1f1f1f;
-  font-size: 0.8125rem;
-  color: #d0d0d0;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--charcoal-200);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
 }
 
 tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.01);
 }
 
 /* =============================================================
-   Animations & motion utilities.
+   Animations & motion utilities — signature feel
    ============================================================= */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes scaleIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 12px rgba(0, 212, 255, 0.2); }
+  50% { box-shadow: 0 0 24px rgba(0, 212, 255, 0.4); }
 }
 @keyframes shimmer {
   0% { background-position: -200px 0; }
   100% { background-position: calc(200px + 100%) 0; }
 }
 
-.animate-fade-in { animation: fadeIn var(--motion-duration-fast) ease-out; }
-.animate-slide-up { animation: slideUp var(--motion-duration-fast) ease-out; }
-.animate-scale-in { animation: scaleIn var(--motion-duration-instant) ease-out; }
+.animate-fade-in { animation: fadeIn var(--motion-instant) var(--ease-brand); }
+.animate-slide-up { animation: slideUp var(--motion-normal) var(--ease-brand); }
+.animate-scale-in { animation: scaleIn var(--motion-instant) var(--ease-spring); }
 
 /* Motion reduced */
 @media (prefers-reduced-motion: reduce) {
@@ -739,76 +927,122 @@ tr:hover td {
   }
 }
 
-/* Sidebar link hover/active state */
-.sidebar-link {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.625rem 1rem;
-  color: var(--text-tertiary);
-  border-radius: var(--radius-xs);
-  transition: all var(--motion-duration-instant) ease;
-}
-
-.sidebar-link:hover {
-  color: var(--text-primary);
-  background: var(--surface-raised);
-}
-
-.sidebar-link-active {
-  color: var(--surface-base);
-  background: var(--surface-strong);
-}
-
-.sidebar-link-active::before {
-  content: none;
-}
-
-/* Text utilities (dark theme) */
+/* =============================================================
+   Text utilities — refined hierarchy
+   ============================================================= */
 .text-muted { color: var(--text-tertiary); }
 .text-muted-dark { color: var(--text-tertiary); }
 .text-success { color: #34d399; }
 .text-warning { color: #fbbf24; }
 .text-danger { color: #fb7185; }
-.text-lime { color: var(--surface-strong); }
-.text-sky { color: var(--surface-strong); }
+.text-accent {
+  color: var(--surface-strong);
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+  font-weight: 700;
+}
 .text-dark { color: var(--text-primary); }
 
-.border-light { border-color: #1f1f1f; }
-.border-lime { border-color: var(--surface-strong); }
-.border-sky { border-color: var(--surface-strong); }
-.border-dark { border-color: #3d3d3d; }
+.border-light { border-color: var(--charcoal-200); }
+.border-accent { border-color: var(--surface-strong); }
+.border-dark { border-color: var(--charcoal-400); }
 
-/* Focus visible — required by WCAG 2.2 AA */
-*:focus-visible {
-  outline: 2px solid var(--surface-strong);
-  outline-offset: 2px;
-  border-radius: 3px;
+/* =============================================================
+   Shadow utilities — layered depth
+   ============================================================= */
+.shadow-card {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
+.shadow-card-hover:hover {
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+.shadow-button {
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(0, 212, 255, 0.12);
+}
+.shadow-button-hover:hover {
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.5),
+    0 0 32px rgba(0, 212, 255, 0.2);
+}
+.shadow-accent { box-shadow: 0 0 24px rgba(0, 212, 255, 0.35); }
+.shadow-accent-subtle { box-shadow: 0 0 12px rgba(0, 212, 255, 0.18); }
 
-/* Shadow utilities (subtle on dark) */
-.shadow-card { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3); }
-.shadow-card-hover:hover { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6); }
-.shadow-button { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
-.shadow-button-hover:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5); }
-.shadow-lime { box-shadow: 0 4px 12px rgba(0, 190, 255, 0.35); }
-.shadow-sky { box-shadow: 0 4px 12px rgba(0, 190, 255, 0.35); }
-
-/* Lift utilities */
-.lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-.lift:hover { transform: translateY(-2px); }
+/* Lift utilities — subtle elevation */
+.lift {
+  transition: transform var(--motion-fast) var(--ease-brand), box-shadow var(--motion-fast) var(--ease-brand);
+}
+.lift:hover { transform: translateY(-3px); }
 .lift:active { transform: translateY(0); }
 .lift-sm:hover { transform: translateY(-1px); }
-.lift-lg:hover { transform: translateY(-4px); }
+.lift-lg:hover { transform: translateY(-6px); }
 
-.glow-lime { box-shadow: 0 0 20px rgba(0, 190, 255, 0.5); }
-.glow-sky { box-shadow: 0 0 20px rgba(0, 190, 255, 0.5); }
-.glow-lime-subtle { box-shadow: 0 0 10px rgba(0, 190, 255, 0.3); }
+/* Magnetic button effect (inline JS adds transform) */
+.magnetic-cta {
+  transition: transform 0.15s var(--ease-brand), box-shadow 0.2s var(--ease-brand);
+  will-change: transform;
+}
+.magnetic-cta:active {
+  transform: scale(0.97) !important;
+}
 
-/* Typography utility shortcuts */
+/* =============================================================
+   Typography utility shortcuts — with new font scale
+   ============================================================= */
 .text-xs  { font-size: var(--font-size-xs); }
 .text-sm  { font-size: var(--font-size-sm); }
 .text-md  { font-size: var(--font-size-md); }
 .text-lg  { font-size: var(--font-size-lg); }
 .text-xl  { font-size: var(--font-size-xl); }
+.text-2xl  { font-size: var(--font-size-2xl); }
+.text-3xl  { font-size: var(--font-size-3xl); }
+.text-4xl  { font-size: var(--font-size-4xl); }
+
+/* Font family shortcuts */
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+
+/* Tracking (letter-spacing) */
+.tracking-tight { letter-spacing: var(--font-letter-spacing); }
+.tracking-normal { letter-spacing: 0; }
+.tracking-wide { letter-spacing: 0.05em; }
+.tracking-wider { letter-spacing: 0.1em; }
+.tracking-widest { letter-spacing: 0.15em; }
+.tracking-[0.35em] { letter-spacing: 0.35em; }
+.tracking-[0.4em] { letter-spacing: 0.4em; }
+.tracking-[0.5em] { letter-spacing: 0.5em; }
+
+/* Gradient text utility */
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #00d4ff 0%, #33ddff 50%, #00a8c8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Utility shortcuts */
+.text-xs  { font-size: var(--font-size-xs); }
+.text-sm  { font-size: var(--font-size-sm); }
+.text-md  { font-size: var(--font-size-md); }
+.text-lg  { font-size: var(--font-size-lg); }
+.text-xl  { font-size: var(--font-size-xl); }
+.text-2xl  { font-size: var(--font-size-2xl); }
+.text-3xl  { font-size: var(--font-size-3xl); }
+.text-4xl  { font-size: var(--font-size-4xl); }
+
+/* Vertical spacing shortcuts */
+.section-py { padding-top: var(--space-9); padding-bottom: var(--space-8); }
+.divider-gradient {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.25), transparent);
+}

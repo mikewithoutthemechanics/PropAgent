@@ -234,150 +234,174 @@ export default function IPhoneScrollytelling() {
         }}
       />
 
-      <div className="absolute inset-0 flex flex-col lg:flex-row items-center justify-center gap-12 px-6 lg:px-20">
-        {/* Left: Copy */}
-        <div className="flex-1 flex flex-col justify-center max-w-lg z-10">
-          <span
-            className="text-[10px] tracking-[0.4em] font-bold uppercase mb-6 block transition-all duration-500"
-            style={{ color: step.accent }}
-          >
-            {step.label}
-          </span>
-          <h2 className="text-5xl md:text-7xl font-extrabold text-white tracking-tighter leading-[0.9] mb-8 whitespace-pre-line transition-all duration-500">
-            {step.title}
-          </h2>
-          <p className="text-white/50 text-lg leading-relaxed font-light max-w-sm transition-all duration-500">
-            {step.desc}
-          </p>
+        {/* Background gradient blob — smoother transitions */}
+        <div
+          className="pointer-events-none absolute inset-0 transition-all duration-1000"
+          style={{
+            background: `radial-gradient(ellipse 70% 70% at 70% 50%, ${step.accent}12 0%, transparent 70%)`,
+          }}
+        />
 
-          {/* Step indicators */}
-          <div className="flex gap-3 mt-14">
-            {STEPS.map((s, i) => (
-              <button
-                key={i}
-                aria-label={`Go to step ${i + 1}: ${s.label}`}
-                className="h-1 rounded-full transition-all duration-500"
-                style={{
-                  width: i === activeIndex ? 48 : 16,
-                  backgroundColor: i === activeIndex ? step.accent : 'rgba(255,255,255,0.1)',
-                }}
-              />
-            ))}
-          </div>
+        {/* Additional ambient light layer */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-[#060810]/30 to-[#060810]/60" />
 
-          {/* Step label list */}
-          <div className="mt-8 flex flex-col gap-3">
-            {STEPS.map((s, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 transition-all duration-500"
-                style={{ opacity: i === activeIndex ? 1 : 0.3 }}
-              >
-                <div
-                  className="w-6 h-6 flex items-center justify-center rounded-full text-[10px] font-bold"
-                  style={{
-                    backgroundColor: i === activeIndex ? `${s.accent}20` : 'transparent',
-                    color: i === activeIndex ? s.accent : 'rgba(255,255,255,0.3)',
-                    border: `1px solid ${i === activeIndex ? s.accent : 'rgba(255,255,255,0.1)'}`,
-                  }}
-                >
-                  {i + 1}
-                </div>
-                <span
-                  className="text-[11px] tracking-widest font-bold uppercase"
-                  style={{ color: i === activeIndex ? s.accent : 'rgba(255,255,255,0.3)' }}
-                >
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: iPhone Frame */}
-        <div className="relative flex items-center justify-center z-10 shrink-0">
-          {/* Ambient glow pulse behind iPhone — shifts colour per step */}
-          <div
-            aria-hidden
-            className="absolute inset-0 pointer-events-none rounded-full blur-[100px] opacity-35 transition-colors duration-700"
-            style={{ backgroundColor: step.accent, transform: 'scale(0.65) translateY(5%)' }}
-          />
-          {/* Secondary outer halo */}
-          <div
-            aria-hidden
-            className="absolute inset-0 pointer-events-none rounded-full blur-[160px] opacity-15 transition-colors duration-1000"
-            style={{ backgroundColor: step.accent, transform: 'scale(1.1)' }}
-          />
-          {/* iPhone outer shell */}
-          <div
-            className="relative"
-            style={{
-              width: 240,
-              height: 490,
-              borderRadius: 44,
-              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 40%, #111 100%)',
-              boxShadow: `0 0 0 2px #3a3a3a, 0 60px 140px rgba(0,0,0,0.9), 0 0 120px ${step.accent}44`,
-              padding: 4,
-              transition: 'box-shadow 0.8s ease',
-            }}
-          >
-            {/* Inner screen bezel */}
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: 40,
-                overflow: 'hidden',
-                background: '#0f1117',
-                position: 'relative',
-              }}
+        <div className="absolute inset-0 flex flex-col lg:flex-row items-center justify-center gap-16 px-6 lg:px-20">
+          {/* Left: Copy — editorial spacing */}
+          <div className="flex-1 flex flex-col justify-center max-w-lg z-10">
+            <span
+              className="text-[10px] tracking-[0.5em] font-bold uppercase mb-8 block transition-all duration-700"
+              style={{ color: step.accent, textShadow: `0 0 20px ${step.accent}40` }}
             >
-              {/* Notch */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: 80,
-                  height: 22,
-                  background: '#111',
-                  borderBottomLeftRadius: 14,
-                  borderBottomRightRadius: 14,
-                  zIndex: 20,
-                }}
-              />
+              {step.label}
+            </span>
+            <h2 className="text-display-4xl md:text-display-6xl font-extrabold text-white tracking-tighter leading-[0.85] mb-10 whitespace-pre-line transition-all duration-500">
+              {step.title}
+            </h2>
+            <p className="text-white/50 text-lg md:text-xl leading-relaxed font-light max-w-sm transition-all duration-500">
+              {step.desc}
+            </p>
 
-              {/* Status bar */}
-              <div className="flex items-center justify-between px-4 pt-6 pb-2">
-                <span className="text-white text-[8px] font-semibold">9:41</span>
-                <div className="flex gap-1 items-center">
-                  <div className="w-3 h-1.5 rounded-sm bg-white/60" />
-                  <div className="w-0.5 h-2 rounded-sm bg-white/60" />
-                  <div className="w-3 h-1.5 rounded-sm border border-white/40">
-                    <div className="w-2 h-full rounded-sm" style={{ backgroundColor: step.accent }} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Dynamic Screen Content */}
-              <div className="px-2 pb-2" style={{ height: 'calc(100% - 54px)' }}>
-                <PhoneScreen step={step} />
-              </div>
-
-              {/* Home indicator */}
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-20 h-1 rounded-full bg-white/30" />
+            {/* Step indicators — refined */}
+            <div className="flex gap-4 mt-16">
+              {STEPS.map((s, idx) => (
+                <button
+                  key={idx}
+                  aria-label={`Go to step ${idx + 1}: ${s.label}`}
+                  className="h-1.5 rounded-full transition-all duration-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]"
+                  style={{
+                    width: i === idx ? 48 : 16,
+                    backgroundColor: i === idx ? step.accent : 'rgba(255,255,255,0.08)',
+                    boxShadow: i === idx ? `0 0 12px ${step.accent}60` : 'none',
+                  }}
+                />
+              ))}
             </div>
 
-            {/* Side buttons */}
-            <div className="absolute -left-1 top-24 w-0.5 h-8 bg-[#333] rounded-full" />
-            <div className="absolute -left-1 top-36 w-0.5 h-12 bg-[#333] rounded-full" />
-            <div className="absolute -left-1 top-52 w-0.5 h-12 bg-[#333] rounded-full" />
-            <div className="absolute -right-1 top-36 w-0.5 h-16 bg-[#333] rounded-full" />
+            {/* Step label list — refined */}
+            <div className="mt-10 flex flex-col gap-4">
+              {STEPS.map((s, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 transition-all duration-500"
+                  style={{ opacity: idx === i ? 1 : 0.25 }}
+                >
+                  <div
+                    className="w-7 h-7 flex items-center justify-center rounded-full text-[10px] font-bold border transition-all duration-500"
+                    style={{
+                      backgroundColor: idx === i ? `${s.accent}15` : 'transparent',
+                      color: idx === i ? s.accent : 'rgba(255,255,255,0.3)',
+                      borderColor: idx === i ? s.accent : 'rgba(255,255,255,0.08)',
+                      boxShadow: idx === i ? `0 0 8px ${s.accent}20` : 'none',
+                    }}
+                  >
+                    {idx + 1}
+                  </div>
+                  <span
+                    className="text-[11px] tracking-[0.2em] font-bold uppercase"
+                    style={{ color: idx === i ? s.accent : 'rgba(255,255,255,0.3)' }}
+                  >
+                    {s.label}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
 
+          {/* Right: iPhone Frame — premium feel */}
+          <div className="relative flex items-center justify-center z-10 shrink-0">
+            {/* Ambient glow pulse behind iPhone — shifts colour per step */}
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none rounded-full blur-[120px] opacity-25 transition-colors duration-1000"
+              style={{ backgroundColor: step.accent, transform: 'scale(0.55) translateY(8%)' }}
+            />
+            {/* Secondary outer halo — larger, softer */}
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none rounded-full blur-[180px] opacity-10 transition-colors duration-1500"
+              style={{ backgroundColor: step.accent, transform: 'scale(1.2)' }}
+            />
+            {/* Ring accent */}
+            <div
+              className="absolute inset-0 pointer-events-none rounded-full border border-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+              style={{ transform: 'scale(1.05)' }}
+            />
+
+            {/* iPhone outer shell — refined */}
+            <div
+              className="relative"
+              style={{
+                width: 260,
+                height: 530,
+                borderRadius: 48,
+                background: 'linear-gradient(145deg, #1e1e1e 0%, #141414 40%, #0a0a0a 100%)',
+                boxShadow: `
+                  0 0 0 1px #2a2a2a,
+                  0 0 0 2px #0a0a0a,
+                  0 60px 140px rgba(0,0,0,0.9),
+                  0 0 120px ${step.accent}35
+                `,
+                padding: 3,
+                transition: 'box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1)',
+              }}
+            >
+              {/* Inner screen bezel — notch */}
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: 45,
+                  overflow: 'hidden',
+                  background: '#0a0e14',
+                  position: 'relative',
+                }}
+              >
+                {/* Dynamic island / notch */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 100,
+                    height: 28,
+                    background: '#000',
+                    borderBottomLeftRadius: 18,
+                    borderBottomRightRadius: 18,
+                    zIndex: 20,
+                    boxShadow: '0 0 0 1px rgba(255,255,255,0.05)',
+                  }}
+                />
+
+                {/* Status bar — refined */}
+                <div className="flex items-center justify-between px-5 pt-7 pb-2">
+                  <span className="text-white/60 text-[9px] font-semibold">9:41</span>
+                  <div className="flex gap-1.5 items-center">
+                    <div className="w-3.5 h-1.5 rounded-sm bg-white/50" />
+                    <div className="w-0.5 h-2 rounded-sm bg-white/40" />
+                    <div className="w-3 h-1.5 rounded-sm border border-white/30 relative overflow-hidden">
+                      <div className="absolute inset-0" style={{ backgroundColor: step.accent, opacity: 0.8 }} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dynamic Screen Content */}
+                <div className="px-2.5 pb-2" style={{ height: 'calc(100% - 56px)' }}>
+                  <PhoneScreen step={step} />
+                </div>
+
+                {/* Home indicator — sleeker */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-16 h-0.5 rounded-full bg-white/20" />
+              </div>
+
+              {/* Side buttons — subtle */}
+              <div className="absolute -left-1 top-28 w-px h-8 bg-[#222] rounded-full" />
+              <div className="absolute -left-1 top-40 w-px h-14 bg-[#222] rounded-full" />
+              <div className="absolute -left-1 top-58 w-px h-14 bg-[#222] rounded-full" />
+              <div className="absolute -right-1 top-38 w-px h-18 bg-[#222] rounded-full" />
+            </div>
+          </div>
         </div>
-      </div>
 
       {/* Feature step scroll anchors */}
       {STEPS.map((_, i) => (

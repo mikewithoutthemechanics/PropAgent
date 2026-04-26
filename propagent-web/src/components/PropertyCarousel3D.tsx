@@ -19,8 +19,8 @@ const PROPERTIES = [
     baths: 3,
     size: '420 m²',
     tag: 'LUXURY',
-    tagColor: '#84cc16',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6d5e0f4c?w=800&h=600&fit=crop&q=80',
+    tagColor: '#00d4ff',
+    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop&q=80',
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ const PROPERTIES = [
     baths: 2,
     size: '210 m²',
     tag: 'HOT DEAL',
-    tagColor: '#f87171',
+    tagColor: '#f472b6',
     image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop&q=80',
   },
   {
@@ -43,7 +43,7 @@ const PROPERTIES = [
     baths: 3,
     size: '310 m²',
     tag: 'NEW',
-    tagColor: '#38bdf8',
+    tagColor: '#34d399',
     image: 'https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800&h=600&fit=crop&q=80',
   },
   {
@@ -67,7 +67,7 @@ const PROPERTIES = [
     baths: 2,
     size: '185 m²',
     tag: 'VIEWS',
-    tagColor: '#a78bfa',
+    tagColor: '#a855f7',
     image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop&q=80',
   },
   {
@@ -79,7 +79,7 @@ const PROPERTIES = [
     baths: 5,
     size: '850 m²',
     tag: 'ICONIC',
-    tagColor: '#f472b6',
+    tagColor: '#f43f5e',
     image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800&h=600&fit=crop&q=80',
   },
 ];
@@ -229,13 +229,19 @@ export default function PropertyCarousel3D() {
                   backfaceVisibility: 'hidden',
                 }}
               >
-                {/* Card */}
+                {/* Card — premium glass morphism */}
                 <div
                   className="group w-full h-full rounded-3xl overflow-hidden relative cursor-pointer"
                   style={{
-                    background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+                    background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 60%, rgba(0,0,0,0.2) 100%)',
                     border: '1px solid rgba(255,255,255,0.08)',
-                    boxShadow: '0 40px 80px -20px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04), 0 20px 40px -10px rgba(0,0,0,0.6)',
+                    boxShadow: `
+                      0 30px 60px -20px rgba(0,0,0,0.8),
+                      0 0 0 1px rgba(255,255,255,0.04),
+                      0 20px 40px -10px rgba(0,0,0,0.6),
+                      inset 0 1px 0 rgba(255,255,255,0.04)
+                    `,
+                    transition: 'all 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
                   }}
                 >
                   {/* Property image */}
@@ -243,54 +249,74 @@ export default function PropertyCarousel3D() {
                     <img
                       src={prop.image}
                       alt={prop.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-120"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                    {/* Tag */}
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#060810]/90 via-[#060810]/30 to-transparent transition-opacity duration-500" />
+
+                    {/* Tag — glowing, modern */}
                     <div
-                      className="absolute top-3 left-3 px-2 py-1 text-[9px] font-extrabold tracking-widest rounded-sm"
-                      style={{ backgroundColor: prop.tagColor, color: '#000' }}
+                      className="absolute top-4 left-4 px-3 py-1 text-[10px] font-extrabold tracking-widest rounded-sm backdrop-blur-md transition-all duration-300 group-hover:scale-105"
+                      style={{
+                        backgroundColor: `${prop.tagColor}30`,
+                        color: '#fff',
+                        border: `1px solid ${prop.tagColor}50`,
+                        boxShadow: `0 0 16px ${prop.tagColor}40`,
+                        textShadow: `0 0 8px ${prop.tagColor}60`,
+                      }}
                     >
                       {prop.tag}
                     </div>
-                    {/* Like button */}
+
+                    {/* Like button — with glow */}
                     <button
-                      className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md bg-black/30"
+                      className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-xl bg-white/5 border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-[#00d4ff] hover:shadow-[0_0_20px_rgba(0,212,255,0.4)]"
                       aria-label={liked.has(prop.id) ? 'Unlike' : 'Like'}
                       onClick={(e) => { e.stopPropagation(); toggleLike(prop.id); }}
                     >
                       <Heart
-                        className="w-4 h-4 transition-colors"
+                        className="w-4 h-4 transition-all duration-300"
                         fill={liked.has(prop.id) ? '#f87171' : 'none'}
-                        stroke={liked.has(prop.id) ? '#f87171' : 'white'}
+                        stroke={liked.has(prop.id) ? '#f87171' : 'rgba(255,255,255,0.6)'}
+                        style={liked.has(prop.id) ? { filter: 'drop-shadow(0 0 8px #f87171)' } : {}}
                       />
                     </button>
                   </div>
 
                   {/* Card body */}
                   <div className="p-5">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-white font-bold text-sm leading-tight">{prop.title}</h3>
-                      <span className="text-lime-400 font-extrabold text-sm ml-2 whitespace-nowrap">{prop.price}</span>
+                    <div className="flex items-start justify-between mb-2.5">
+                      <h3 className="text-white font-bold text-sm leading-tight group-hover:text-[#00d4ff] transition-colors duration-300">
+                        {prop.title}
+                      </h3>
+                      <span className="text-[#00d4ff] font-extrabold text-sm ml-2 whitespace-nowrap drop-shadow-[0_0_10px_rgba(0,212,255,0.5)]">
+                        {prop.price}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-1 text-white/40 text-[10px] mb-4">
+                    <div className="flex items-center gap-1.5 text-white/40 text-[10px] mb-4">
                       <MapPin className="w-3 h-3" />
                       <span>{prop.location}</span>
                     </div>
-                    <div className="flex items-center gap-4 text-white/50 text-[10px]">
-                      <span className="flex items-center gap-1"><Bed className="w-3 h-3" /> {prop.beds}</span>
-                      <span className="flex items-center gap-1"><Bath className="w-3 h-3" /> {prop.baths}</span>
-                      <span className="flex items-center gap-1"><Maximize2 className="w-3 h-3" /> {prop.size}</span>
+                    <div className="flex items-center gap-5 text-white/50 text-[10px]">
+                      <span className="flex items-center gap-1.5"><Bed className="w-3 h-3 opacity-60" /> {prop.beds}</span>
+                      <span className="flex items-center gap-1.5"><Bath className="w-3 h-3 opacity-60" /> {prop.baths}</span>
+                      <span className="flex items-center gap-1.5"><Maximize2 className="w-3 h-3 opacity-60" /> {prop.size}</span>
                     </div>
                   </div>
 
-                  {/* View CTA */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-5 pt-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button className="w-full py-2 text-[10px] font-bold tracking-widest text-black bg-lime-400 rounded-lg flex items-center justify-center gap-2">
-                      VIEW LISTING <ArrowRight className="w-3 h-3" />
+                  {/* View CTA — more dramatic reveal */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-5 pt-12 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                    <button className="w-full py-3 text-[11px] font-bold tracking-[0.15em] text-black bg-gradient-to-r from-[#00d4ff] to-[#0090c2] rounded-lg flex items-center justify-center gap-2 shadow-button hover:shadow-button-hover transition-shadow">
+                      VIEW LISTING <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
+
+                  {/* Floating accent light on hover */}
+                  <div
+                    className="absolute -top-20 -right-20 w-40 h-40 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none"
+                    style={{ background: step => step.tagColor || '#00d4ff', filter: 'blur(40px)' }}
+                  />
                 </div>
               </div>
             );

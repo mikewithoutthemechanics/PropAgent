@@ -115,8 +115,10 @@ export default function TestimonialsMarquee() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-end justify-between mb-16 md:mb-24 gap-8">
           <div className="max-w-3xl">
-            <span className="text-lime-400 text-[10px] tracking-[0.4em] font-bold uppercase mb-8 block">THE COLLECTIVE</span>
-            <h2 id="testimonials-heading" className="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9]">
+            <span className="text-[#00d4ff] text-[10px] tracking-[0.4em] font-bold uppercase mb-8 block drop-shadow-[0_0_10px_rgba(0,212,255,0.5)]">
+              THE COLLECTIVE
+            </span>
+            <h2 id="testimonials-heading" className="text-6xl md:text-8xl font-extrabold tracking-tighter leading-[0.9]">
               Endorsed by the <br /><span className="text-white/20">Market Leaders.</span>
             </h2>
           </div>
@@ -125,19 +127,34 @@ export default function TestimonialsMarquee() {
         {reduced ? (
           <div className="grid md:grid-cols-3 gap-10">
             {TESTIMONIALS.map((t, i) => (
-              <figure key={i} className="p-8 bg-white/5 border border-white/10">
-                <blockquote className="text-xl md:text-2xl font-light text-white/90 mb-8 leading-tight tracking-tight">{t.quote}</blockquote>
+              <figure key={i} className="p-8 bg-white/5 border border-white/10 hover:border-[#00d4ff]/20 transition-all duration-500 rounded-2xl">
+                <blockquote className="text-xl md:text-2xl font-light text-white/90 mb-8 leading-tight tracking-tight">
+                  "{t.quote}"
+                </blockquote>
                 <figcaption className="flex items-center gap-4">
                   {t.image ? (
-                    <img src={t.image} alt={t.author} className="w-12 h-12 rounded-full object-cover" style={{ boxShadow: `0 0 0 2px ${t.avatarColor ?? '#84cc16'}40` }} />
+                    <img src={t.image} alt={t.author} className="w-12 h-12 rounded-full object-cover border-2 transition-all duration-300 hover:border-[#00d4ff]" style={{ boxShadow: `0 0 0 2px ${t.avatarColor ?? '#00d4ff'}40` }} />
                   ) : (
                     <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-extrabold tracking-wide"
-                      style={{ backgroundColor: `${t.avatarColor ?? '#84cc16'}20`, color: t.avatarColor ?? '#84cc16', boxShadow: `0 0 0 2px ${t.avatarColor ?? '#84cc16'}40` }}
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold tracking-wide border-2 transition-all duration-300 hover:scale-105 hover:border-[#00d4ff]"
+                      style={{
+                        backgroundColor: `${t.avatarColor ?? '#00d4ff'}20`,
+                        color: t.avatarColor ?? '#00d4ff',
+                        boxShadow: `0 0 0 2px ${t.avatarColor ?? '#00d4ff'}40`,
+                      }}
                       aria-hidden="true"
                     >
                       {initials(t.author)}
                     </div>
+                  )}
+                  <div>
+                    <div className="font-bold text-[10px] tracking-[0.3em] uppercase text-white">{t.author}</div>
+                    <div className="text-white/50 text-xs">{[t.role, t.company].filter(Boolean).join(' · ')}</div>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
                   )}
                   <div>
                     <div className="font-bold text-[10px] tracking-[0.3em] uppercase">{t.author}</div>
