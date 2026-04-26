@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import { Zap, Target, TrendingUp, Clock, Shield, Brain } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
@@ -312,21 +312,6 @@ export default function AIMatchSection() {
             );
           })}
         </div>
-
-              <h3 className="relative z-10 text-2xl font-bold text-white tracking-tight mb-4">{pillar.title}</h3>
-              <p className="relative z-10 text-white/40 text-base leading-relaxed font-light">{pillar.desc}</p>
-
-              {/* Number accent */}
-              <div
-                className="absolute top-8 right-8 text-7xl font-extrabold opacity-5 leading-none"
-                style={{ color: pillar.accent }}
-              >
-                0{i + 1}
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* Bottom horizontal rule */}
         <div className="mt-24 flex items-center gap-8">
           <div className="flex-1 h-px bg-white/5" />

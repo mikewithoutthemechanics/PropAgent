@@ -132,21 +132,6 @@ export default function HowItWorks() {
           </div>
         </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="mb-20 md:mb-28">
-          <span className="block text-[10px] tracking-[0.4em] font-bold uppercase text-lime-400 mb-6">
-            HOW IT WORKS
-          </span>
-          <h2
-            id="hiw-heading"
-            className="hiw-heading text-5xl md:text-7xl font-extrabold text-white tracking-tighter leading-[0.88]"
-          >
-            Three steps.<br />
-            <span className="text-white/20">Infinite leverage.</span>
-          </h2>
-        </div>
-
         {/* Cards — refined with glass, hover glow, and equal heights */}
         <div className="hiw-cards grid md:grid-cols-3 gap-8 md:gap-10 relative">
           {/* Connector lines (desktop only) — subtle */}
@@ -218,10 +203,6 @@ export default function HowItWorks() {
             );
           })}
         </div>
-      </div>
-    </section>
-  );
-}
       </div>
     </section>
   );

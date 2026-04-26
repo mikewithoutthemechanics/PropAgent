@@ -315,7 +315,7 @@ export default function PropertyCarousel3D() {
                   {/* Floating accent light on hover */}
                   <div
                     className="absolute -top-20 -right-20 w-40 h-40 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none"
-                    style={{ background: step => step.tagColor || '#00d4ff', filter: 'blur(40px)' }}
+                    style={{ background: prop.tagColor || '#00d4ff', filter: 'blur(40px)' }}
                   />
                 </div>
               </div>

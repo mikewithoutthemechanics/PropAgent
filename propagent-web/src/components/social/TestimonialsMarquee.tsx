@@ -155,15 +155,6 @@ export default function TestimonialsMarquee() {
               </figure>
             ))}
           </div>
-                  )}
-                  <div>
-                    <div className="font-bold text-[10px] tracking-[0.3em] uppercase">{t.author}</div>
-                    <div className="text-white/50 text-xs">{[t.role, t.company].filter(Boolean).join(' · ')}</div>
-                  </div>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
         ) : (
           <div
             className="relative border-t border-b border-white/10 py-8 cursor-default select-none"

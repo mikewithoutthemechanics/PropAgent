@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropAgent — Your legacy, made.</title>
+    <meta name="description" content="South Africa's premier property management platform. Streamline operations, delight tenants, and grow your portfolio.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+    <style>
+        :root { --bg: #000000; --text: #ffffff; --accent: #f5f5f0; --muted: #666666; --font-display: 'Syne', system-ui, sans-serif; --font-body: 'Space Grotesk', system-ui, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
+        
+        /* Header */
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; }
+        .logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: white; text-decoration: none; letter-spacing: -0.02em; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: white; }
+        .cta-btn { background: var(--accent); color: black; padding: 0.8rem 1.8rem; border-radius: 100px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: transform 0.3s, box-shadow 0.3s; }
+        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255,255,255,0.2); }
+        
+        /* Hero Section */
+        .hero { position: relative; height: 100vh; min-height: 700px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .hero-gradient { position: absolute; top: 0; left: 0; right: 0; height: 60%; background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%); pointer-events: none; }
+        .hero-content { position: relative; z-index: 10; text-align: center; max-width: 900px; padding: 2rem; }
+        .hero-subtitle { font-size: 1rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; }
+        .hero-title { font-family: var(--font-display); font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 1.5rem; opacity: 0; }
+        .hero-desc { font-size: 1.3rem; color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto 2.5rem; opacity: 0; }
+        .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; opacity: 0; }
+        .btn-primary { background: var(--accent); color: black; padding: 1rem 2.5rem; border-radius: 100px; text-decoration: none; font-weight: 600; transition: transform 0.3s; }
+        .btn-primary:hover { transform: scale(1.05); }
+        .btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 1rem 2.5rem; border-radius: 100px; text-decoration: none; font-weight: 500; transition: all 0.3s; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: white; }
+        
+        /* Stats Banner */
+        .stats-banner { padding: 4rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .stats-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; }
+        .stat-item { opacity: 0; transform: translateY(20px); }
+        .stat-value { font-family: var(--font-display); font-size: 2.5rem; font-weight: 500; color: var(--accent); }
+        .stat-label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        
+        /* Video Section */
+        .video-section { padding: 10rem 2rem; }
+        .section-title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 500; letter-spacing: -0.02em; text-align: center; margin-bottom: 1rem; }
+        .section-desc { text-align: center; color: var(--muted); max-width: 500px; margin: 0 auto 4rem; }
+        .video-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .video-card { position: relative; border-radius: 1rem; overflow: hidden; aspect-ratio: 16/10; opacity: 0; transform: translateY(40px); cursor: pointer; }
+        .video-card video { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .video-card:hover video { transform: scale(1.05); }
+        .video-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%); display: flex; align-items: flex-end; padding: 1.5rem; }
+        .video-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+        
+        /* Features Section */
+        .features { padding: 10rem 2rem; background: #0a0a0a; }
+        .features-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .feature-card { background: #111; border-radius: 1rem; padding: 3rem; opacity: 0; transform: translateY(40px); }
+        .feature-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
+        .feature-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 500; margin-bottom: 1rem; }
+        .feature-text { color: rgba(255,255,255,0.6); line-height: 1.7; }
+        
+        /* Values Section */
+        .values { padding: 10rem 2rem; }
+        .values-title { font-family: var(--font-display); font-size: 2.5rem; font-weight: 500; letter-spacing: -0.02em; text-align: center; margin-bottom: 4rem; }
+        .values-list { max-width: 900px; margin: 0 auto; }
+        .value-item { padding: 2rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-family: var(--font-display); font-size: 1.6rem; font-weight: 400; letter-spacing: -0.02em; opacity: 0; transform: translateX(-30px); }
+        
+        /* CTA Section */
+        .cta { padding: 10rem 2rem; text-align: center; }
+        .cta-title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 500; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+        .cta-desc { color: var(--muted); font-size: 1.2rem; margin-bottom: 3rem; }
+        
+        /* Footer */
+        .footer { padding: 4rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; }
+        .footer-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 500; }
+        .footer-links { display: flex; gap: 2rem; list-style: none; }
+        .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-links a:hover { color: white; }
+        .social-links { display: flex; gap: 1.5rem; }
+        .social-links a { color: var(--muted); transition: color 0.3s; }
+        .social-links a:hover { color: white; }
+        
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .stats-grid, .video-grid, .features-grid { grid-template-columns: 1fr; }
+            .header { padding: 1rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">PropAgent</a>
+        <nav><ul class="nav-links"><li><a href="#features">Features</a></li><li><a href="#values">Values</a></li><li><a href="#contact">Contact</a></li></ul></nav>
+        <a href="/register" class="cta-btn">Get Started</a>
+    </header>
+    
+    <section class="hero">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-modern-office-building-exterior-at-sunset-4416-large.mp4" type="video/mp4">
+        </video>
+        <div class="hero-gradient"></div>
+        <div class="hero-content">
+            <p class="hero-subtitle">South Africa's #1 Property Platform</p>
+            <h1 class="hero-title">Property management<br>reimagined.</h1>
+            <p class="hero-desc">The complete platform for South African property professionals. Streamline operations, delight tenants, and grow your portfolio with confidence.</p>
+            <div class="hero-btns">
+                <a href="/register" class="btn-primary">Start Free Trial</a>
+                <a href="#features" class="btn-secondary">See How It Works</a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="stats-banner">
+        <div class="stats-grid">
+            <div class="stat-item"><p class="stat-value">R2.5B+</p><p class="stat-label">Property Value Managed</p></div>
+            <div class="stat-item"><p class="stat-value">12,000+</p><p class="stat-label">Units Under Management</p></div>
+            <div class="stat-item"><p class="stat-value">98%</p><p class="stat-label">Client Satisfaction</p></div>
+            <div class="stat-item"><p class="stat-value">R180M+</p><p class="stat-label">Rent Collected Annually</p></div>
+        </div>
+    </section>
+    
+    <section class="video-section">
+        <h2 class="section-title">Platform Overview</h2>
+        <p class="section-desc">Everything you need to scale your property business</p>
+        <div class="video-grid">
+            <div class="video-card">
+                <video autoplay muted loop playsinline>
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-modern-office-building-exterior-at-sunset-4416-large.mp4" type="video/mp4">
+                </video>
+                <div class="video-overlay"><span class="video-label">Dashboard Overview</span></div>
+            </div>
+            <div class="video-card">
+                <video autoplay muted loop playsinline>
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-set-of-computers-in-a-modern-office-4417-large.mp4" type="video/mp4">
+                </video>
+                <div class="video-overlay"><span class="video-label">Tenant Management</span></div>
+            </div>
+            <div class="video-card">
+                <video autoplay muted loop playsinline>
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-people-working-in-the-office-4418-large.mp4" type="video/mp4">
+                </video>
+                <div class="video-overlay"><span class="video-label">Financial Tracking</span></div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <p class="feature-label">Analytics</p>
+                <h3 class="feature-title">Powerful Analytics</h3>
+                <p class="feature-text">Get deep insights into your portfolio performance with real-time dashboards and custom reports. Track revenue growth, occupancy rates, and more.</p>
+            </div>
+            <div class="feature-card">
+                <p class="feature-label">Properties</p>
+                <h3 class="feature-title">Property Portfolio</h3>
+                <p class="feature-text">Manage unlimited properties with detailed tracking, documentation, and lease management in one centralized platform.</p>
+            </div>
+            <div class="feature-card">
+                <p class="feature-label">Tenants</p>
+                <h3 class="feature-title">Tenant Management</h3>
+                <p class="feature-text">Full tenant profiles, lease tracking, communication, and payment history. Everything you need to delight your tenants.</p>
+            </div>
+            <div class="feature-card">
+                <p class="feature-label">Finance</p>
+                <h3 class="feature-title">Rent Collection</h3>
+                <p class="feature-text">Automated payments, invoicing, and financial reports. Collect rent on time, every time.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="values" id="values">
+        <h2 class="values-title">We believe in</h2>
+        <div class="values-list">
+            <div class="value-item">Backing property professionals who serve their communities.</div>
+            <div class="value-item">Choosing long-term relationships over short-term gains.</div>
+            <div class="value-item">Technology that empowers, not replaces, the human touch.</div>
+            <div class="value-item">Building wealth through smart property management.</div>
+        </div>
+    </section>
+    
+    <section class="cta" id="contact">
+        <h2 class="cta-title">Ready to transform your property management?</h2>
+        <p class="cta-desc">Join thousands of South African property professionals already using PropAgent</p>
+        <a href="/register" class="btn-primary">Start Your Free Trial</a>
+    </section>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">PropAgent — Your legacy, made.</div>
+            <ul class="footer-links"><li><a href="#">Features</a></li><li><a href="#">Pricing</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy</a></li></ul>
+            <div class="social-links"><a href="#">Instagram</a><a href="#">LinkedIn</a><a href="#">X</a></div>
+        </div>
+    </footer>
+    
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), orientation: 'vertical', smoothWheel: true });
+        function raf(time) { lenis.raf(time * 1000); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.lagSmoothing(0);
+        
+        // Hero animations
+        gsap.to('.hero-subtitle', { opacity: 1, duration: 0.8, delay: 0.3, ease: 'power3.out' });
+        gsap.to('.hero-title', { opacity: 1, duration: 0.8, delay: 0.5, ease: 'power3.out' });
+        gsap.to('.hero-desc', { opacity: 1, duration: 0.8, delay: 0.7, ease: 'power3.out' });
+        gsap.to('.hero-btns', { opacity: 1, duration: 0.8, delay: 0.9, ease: 'power3.out' });
+        
+        // Stats animation
+        gsap.utils.toArray('.stat-item').forEach((stat, i) => { 
+            gsap.to(stat, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.stats-banner', start: 'top 80%' } }); 
+        });
+        
+        // Video cards animation
+        gsap.utils.toArray('.video-card').forEach((card, i) => { 
+            gsap.to(card, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.2, ease: 'power3.out', scrollTrigger: { trigger: '.video-section', start: 'top 70%' } }); 
+        });
+        
+        // Features animation
+        gsap.utils.toArray('.feature-card').forEach((card, i) => { 
+            gsap.to(card, { opacity: 1, y: 0, duration: 0.8, delay: i * 0.15, ease: 'power3.out', scrollTrigger: { trigger: '.features', start: 'top 70%' } }); 
+        });
+        
+        // Values animation
+        gsap.utils.toArray('.value-item').forEach((item, i) => { 
+            gsap.to(item, { opacity: 1, x: 0, duration: 0.8, delay: i * 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.values', start: 'top 75%' } }); 
+        });
+        
+        // Header hide on scroll
+        gsap.to('.header', { y: -100, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+    </script>
+</body>
+</html>

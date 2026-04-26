@@ -269,9 +269,9 @@ export default function IPhoneScrollytelling() {
                   aria-label={`Go to step ${idx + 1}: ${s.label}`}
                   className="h-1.5 rounded-full transition-all duration-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00d4ff]"
                   style={{
-                    width: i === idx ? 48 : 16,
-                    backgroundColor: i === idx ? step.accent : 'rgba(255,255,255,0.08)',
-                    boxShadow: i === idx ? `0 0 12px ${step.accent}60` : 'none',
+                    width: activeIndex === idx ? 48 : 16,
+                    backgroundColor: activeIndex === idx ? step.accent : 'rgba(255,255,255,0.08)',
+                    boxShadow: activeIndex === idx ? `0 0 12px ${step.accent}60` : 'none',
                   }}
                 />
               ))}
@@ -283,22 +283,22 @@ export default function IPhoneScrollytelling() {
                 <div
                   key={idx}
                   className="flex items-center gap-3 transition-all duration-500"
-                  style={{ opacity: idx === i ? 1 : 0.25 }}
+                  style={{ opacity: idx === activeIndex ? 1 : 0.25 }}
                 >
                   <div
                     className="w-7 h-7 flex items-center justify-center rounded-full text-[10px] font-bold border transition-all duration-500"
                     style={{
-                      backgroundColor: idx === i ? `${s.accent}15` : 'transparent',
-                      color: idx === i ? s.accent : 'rgba(255,255,255,0.3)',
-                      borderColor: idx === i ? s.accent : 'rgba(255,255,255,0.08)',
-                      boxShadow: idx === i ? `0 0 8px ${s.accent}20` : 'none',
+                      backgroundColor: idx === activeIndex ? `${s.accent}15` : 'transparent',
+                      color: idx === activeIndex ? s.accent : 'rgba(255,255,255,0.3)',
+                      borderColor: idx === activeIndex ? s.accent : 'rgba(255,255,255,0.08)',
+                      boxShadow: idx === activeIndex ? `0 0 8px ${s.accent}20` : 'none',
                     }}
                   >
                     {idx + 1}
                   </div>
                   <span
                     className="text-[11px] tracking-[0.2em] font-bold uppercase"
-                    style={{ color: idx === i ? s.accent : 'rgba(255,255,255,0.3)' }}
+                    style={{ color: idx === activeIndex ? s.accent : 'rgba(255,255,255,0.3)' }}
                   >
                     {s.label}
                   </span>
