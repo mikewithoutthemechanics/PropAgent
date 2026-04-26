@@ -191,6 +191,7 @@ export default function DocumentsPage() {
       versions: [{ version: 1, uploadedAt: now, uploadedBy: 'Current User', fileName, fileSize }],
       expiryAlertSent: false,
       accessLevel: 'private',
+      notes: newDocument.notes || undefined,
     };
     
     addDocument(doc);
