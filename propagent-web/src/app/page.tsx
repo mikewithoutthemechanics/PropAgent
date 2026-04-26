@@ -418,7 +418,7 @@ export default function LandingPage() {
                     </button>
                   </form>
                 )}
-              </div>>
+              </div>
 
               {/* Secondary action */}
               <div className="hero-animate flex items-center gap-5">
