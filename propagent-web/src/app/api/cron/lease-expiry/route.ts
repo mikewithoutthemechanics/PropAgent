@@ -98,11 +98,12 @@ export async function GET(req: Request) {
   let sent = 0;
   let failed = 0;
   for (const { tenant, days, end } of toNotify) {
+    if (!tenant.email) continue;
     const name = [tenant.first_name, tenant.last_name].filter(Boolean).join(' ') || 'there';
     const address = (tenant.property_id && propertyMap.get(tenant.property_id)) || 'your property';
     const res = await sendEmail(
       leaseExpiryEmail({
-        to: tenant.email!,
+        to: tenant.email,
         tenantName: name,
         propertyAddress: address,
         daysUntilExpiry: days,
@@ -110,8 +111,12 @@ export async function GET(req: Request) {
         renewalUrl: `${siteUrl()}/tenants`,
       }),
     );
-    if (res.ok) sent++;
-    else failed++;
+    if (res.ok) {
+      sent++;
+    } else {
+      console.error('[lease-expiry] Email send failed:', res.error ?? 'unknown', 'to:', tenant.email);
+      failed++;
+    }
   }
 
   return NextResponse.json({ ok: true, scanned: rows.length, matched: toNotify.length, sent, failed });

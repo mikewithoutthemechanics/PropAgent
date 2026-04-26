@@ -42,6 +42,10 @@ export async function POST(req: Request) {
     return apiError(requestId, 'property_not_found', 404);
   }
 
+  if (property.user_id && property.user_id !== user.id) {
+    return apiError(requestId, 'forbidden', 403);
+  }
+
   const prompt = `Match this property with a buyer and return JSON with keys: overallScore (0-100), compatibility ("low"|"medium"|"high"), reasons (string[]).
 
 Property:
