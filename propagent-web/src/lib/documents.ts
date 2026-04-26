@@ -35,6 +35,7 @@ export interface PropertyDocument {
   category: DocumentCategory;
   title: string;
   description?: string;
+  notes?: string;
   fileName: string;
   fileUrl: string;
   fileSize: number;

@@ -2,7 +2,7 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { Badge } from './ui';
+import { Badge } from './index';
 
 // Page Header Component
 interface PageHeaderProps {

@@ -30,7 +30,7 @@ export interface AgentProfile {
   npsScore?: number;
   reviewCount?: number;
   avgRating?: number;
-  DealCount?: number;
+  dealCount?: number;
   matchSuccessRate?: number;
   
   // Subscription

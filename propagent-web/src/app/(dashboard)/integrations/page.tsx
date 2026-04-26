@@ -27,7 +27,13 @@ interface Integration {
   config?: Record<string, string>;
 }
 
-const INTEGRATION_CATALOG = [
+const INTEGRATION_CATALOG: {
+  type: string;
+  label: string;
+  description: string;
+  icon: string;
+  fields: { key: string; label: string; placeholder: string; type?: string }[];
+}[] = [
   {
     type: 'postgres' as const,
     label: 'PostgreSQL',

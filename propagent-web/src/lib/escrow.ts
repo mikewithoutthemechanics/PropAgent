@@ -19,7 +19,7 @@ export interface EscrowTransaction {
   agent1Id: string;
   agent1Name: string;
   agent1Deposit: number;
-  agent1DepositStatus: 'pending' | ' deposited' | 'released';
+  agent1DepositStatus: 'pending' | 'deposited' | 'released';
   agent1Share: number; // Their portion after fees
   
   // Agent 2 (Introducing Agent)  

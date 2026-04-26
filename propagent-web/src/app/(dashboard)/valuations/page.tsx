@@ -127,7 +127,7 @@ export default function ValuationsPage() {
     return () => observerRef.current?.disconnect();
   }, [valuation]);
 
-  const handleInputChange = (field: keyof AVMCalculationInput, value: string | number) => {
+  const handleInputChange = (field: keyof AVMCalculationInput, value: string | number | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -138,11 +138,11 @@ export default function ValuationsPage() {
       address: property.address,
       suburb: property.suburb || '',
       city: property.city || 'Johannesburg',
-      propertyType: property.type as AVMCalculationInput['propertyType'] || 'house',
-      size: property.size || 150,
+      propertyType: 'house',
+      size: 150,
       bedrooms: property.bedrooms || 3,
       bathrooms: property.bathrooms || 2,
-      yearBuilt: property.yearBuilt || 2015,
+      yearBuilt: 2015,
     }));
     setAddressInput(property.address);
     setShowPropertySuggestions(false);
@@ -302,7 +302,7 @@ Agent Loop Property Valuation System
   };
 
   type TabId = 'avm' | 'comparables' | 'trends' | 'neighborhood';
-type BadgeVariant = 'success' | 'warning' | 'error' | 'default';
+type BadgeVariant = 'success' | 'warning' | 'danger' | 'default';
 
 const getConfidenceColor = (confidence: string): BadgeVariant => {
     switch (confidence) {
@@ -390,7 +390,7 @@ const getConfidenceColor = (confidence: string): BadgeVariant => {
       {/* Input Form */}
       <Card className="bg-white border border-[var(--charcoal-100)] rounded-2xl transition-all duration-300">
         <CardHeader 
-          title={<span className="text-[var(--charcoal-900)]">Property Details</span>} 
+          title="Property Details"
           subtitle="Enter property information for valuation"
           action={
             <div className="flex gap-2">
@@ -455,7 +455,7 @@ const getConfidenceColor = (confidence: string): BadgeVariant => {
                     onClick={() => handlePropertySelect(property)}
                   >
                     <p className="text-sm font-medium text-[var(--charcoal-900)]">{property.address}</p>
-                    <p className="text-xs text-[var(--charcoal-400)]">{property.suburb} • {property.type}</p>
+                    <p className="text-xs text-[var(--charcoal-400)]">{property.suburb} • {property.bedrooms} bed</p>
                   </button>
                 ))}
               </div>
@@ -584,7 +584,7 @@ const getConfidenceColor = (confidence: string): BadgeVariant => {
                   <p className="text-2xl font-bold text-[var(--charcoal-900)] mt-1">
                     {formatCurrency(valuation.pricePerSqm)}
                   </p>
-                  <p className="text-xs text-[var(--charcoal-400)] mt-1">{valuation.size} sqm total</p>
+                  <p className="text-xs text-[var(--charcoal-400)] mt-1">per sqm</p>
                 </div>
                 <div className="w-12 h-12 bg-[var(--charcoal-50)] rounded-xl flex items-center justify-center">
                   <Square className="w-6 h-6 text-[var(--charcoal-400)]" />

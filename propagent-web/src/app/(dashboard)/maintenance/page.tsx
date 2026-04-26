@@ -1,5 +1,8 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type SpeechRecognitionCompat = any;
+
 import { useState, useRef, useEffect } from 'react';
 import { Plus, Search, AlertTriangle, Clock, CheckCircle, XCircle, Calendar, X, Mic, MicOff } from 'lucide-react';
 import { Card, Button, Badge } from '@/components/ui';
@@ -53,7 +56,7 @@ export default function MaintenancePage() {
   const [isRecording, setIsRecording] = useState(false);
   const [voiceTranscript, setVoiceTranscript] = useState('');
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionCompat | null>(null);
 
   // Check for reduced motion preference
   useEffect(() => {

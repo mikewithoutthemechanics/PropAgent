@@ -31,7 +31,7 @@ import { useAuth } from '@/lib/auth';
 interface NavItem {
   href: string;
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   tour?: string;
 }
 

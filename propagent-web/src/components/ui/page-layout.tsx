@@ -3,7 +3,7 @@
 
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { Button, Badge } from './ui';
+import { Button, Badge } from './index';
 
 // Layout Containers
 export function PageContainer({ children, className }: { children: ReactNode; className?: string }) {

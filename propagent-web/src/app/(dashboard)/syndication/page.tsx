@@ -38,7 +38,7 @@ const platformColors: Record<SyndicationPlatform, string> = {
 export default function SyndicationPage() {
   const [selectedPlatforms, setSelectedPlatforms] = useState<Set<SyndicationPlatform>>(new Set());
   const [isPosting, setIsPosting] = useState(false);
-  const [postResults, setPostResults] = useState<Record<SyndicationPlatform, { success: boolean; url?: string; error?: string }>>({});
+  const [postResults, setPostResults] = useState<Partial<Record<SyndicationPlatform, { success: boolean; url?: string; error?: string }>>>({});
   const [configMode, setConfigMode] = useState<SyndicationPlatform | null>(null);
   const [apiKeys, setApiKeys] = useLocalStorageState<Record<SyndicationPlatform, string>>('syndication_api_keys', {} as Record<SyndicationPlatform, string>);
 
@@ -86,7 +86,7 @@ export default function SyndicationPage() {
     setPostResults({});
 
     // Simulate posting to each platform
-    const results: Record<SyndicationPlatform, { success: boolean; url?: string; error?: string }> = {};
+    const results: Partial<Record<SyndicationPlatform, { success: boolean; url?: string; error?: string }>> = {};
     
     for (const platform of selectedPlatforms) {
       // Simulate API delay

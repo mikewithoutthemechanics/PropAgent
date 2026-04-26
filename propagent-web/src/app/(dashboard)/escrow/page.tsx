@@ -54,7 +54,7 @@ function GlassCard({ children, className, hoverEffect = false }: { children: Rea
         hoverEffect && isHovered && "transform -translate-y-1 shadow-lg border-lime-400 scale-[1.02]",
         className
       )}
-      onMouseEnter={() => setIsHovered(isHovered)}
+      onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{ transformStyle: 'preserve-3d' }}
     >
@@ -64,7 +64,7 @@ function GlassCard({ children, className, hoverEffect = false }: { children: Rea
 }
 
 function StatCard({ icon: Icon, iconBg, label, value, delay = 0 }: { 
-  icon: React.ElementType; 
+  icon: React.ComponentType<{ className?: string }>; 
   iconBg: string; 
   label: string; 
   value: string | number; 

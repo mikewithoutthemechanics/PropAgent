@@ -22,6 +22,7 @@ export interface PropertyFeatures {
   pool: boolean;
   garden: boolean;
   securitySystem: boolean;
+  nearBeach?: boolean;
   borehole: boolean;
   solarPanels: boolean;
   backupPower: boolean;
@@ -36,11 +37,13 @@ export interface PropertyFeatures {
   tennisCourt: boolean;
   gym: boolean;
   elevator: boolean;
+  view?: boolean;
+  [key: string]: boolean | undefined;
 }
 
 export interface PropertyPricing {
   price: number;
-  negotiable: boolean;
+  negotiable?: boolean;
   levies?: number;
   ratesAndTaxes?: number;
   transferDuty?: number;
@@ -64,7 +67,7 @@ export interface PropertyLocation {
 export interface PropertySpecs {
   bedrooms: number;
   bathrooms: number;
-  garages: number;
+  garages?: number;
   carports?: number;
   totalParking?: number;
   erfSize?: number; // in square meters
@@ -93,7 +96,7 @@ export interface Property {
   location: PropertyLocation;
   pricing: PropertyPricing;
   specs: PropertySpecs;
-  features: PropertyFeatures;
+  features: Partial<PropertyFeatures>;
   images: PropertyImage[];
   agent: PropertyAgent;
   
@@ -131,6 +134,7 @@ export interface PropertyFilters {
   propertyTypes?: PropertyType[];
   listingType?: ListingType;
   features?: Partial<PropertyFeatures>;
+  provinces?: string[];
   sortBy?: 'price_asc' | 'price_desc' | 'date_desc' | 'date_asc' | 'featured' | 'views';
 }
 
@@ -143,7 +147,7 @@ export interface PropertyFormData {
   location: PropertyLocation;
   pricing: PropertyPricing;
   specs: PropertySpecs;
-  features: PropertyFeatures;
+  features: Partial<PropertyFeatures>;
 }
 
 // Dashboard Types

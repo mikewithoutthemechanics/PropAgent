@@ -66,6 +66,7 @@ export const Large: Story = {
 };
 
 export const AllVariants: Story = {
+  args: { children: 'Button' },
   render: () => (
     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
       <Button variant="primary">Primary</Button>
@@ -77,6 +78,7 @@ export const AllVariants: Story = {
 };
 
 export const AllSizes: Story = {
+  args: { children: 'Button' },
   render: () => (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
       <Button size="sm">Small</Button>

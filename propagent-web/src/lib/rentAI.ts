@@ -370,7 +370,7 @@ async function fetchMarketResearchFromGroq(
   } catch {
     // If not valid JSON, try to extract prices manually
     const priceMatches = content.match(/R\s*([\d,]+)/g) || [];
-    return priceMatches.slice(0, 5).map((price, idx) => ({
+    return priceMatches.slice(0, 5).map((price: string, idx: number) => ({
       id: `groq-${idx}`,
       address: `${location} - Research ${idx + 1}`,
       suburb: location,
@@ -862,7 +862,7 @@ function generateRentFromLiveData(
   // Generate confidence factors
   const confidenceFactors: string[] = [];
   if (comparables.length >= 3) confidenceFactors.push(`${comparables.length} real market comparables`);
-  confidenceFactors.push(useRealData ? 'Live market data from SA sources' : 'Based on SA market trends');
+  confidenceFactors.push('Live market data from SA sources');
   if (input.location.suburb) confidenceFactors.push('Suburb-specific pricing');
   
   // Recommendations based on market position
@@ -995,9 +995,9 @@ export function generateRentSuggestion(input: RentAnalysisInput): RentSuggestion
   // 13. Generate recommendations
   const recommendations: string[] = [];
   
-  if (marketRent > input.currentRent) {
+  if (input.currentRent && marketRent > input.currentRent) {
     recommendations.push('Consider increasing rent to market rate');
-  } else if (marketRent < input.currentRent) {
+  } else if (input.currentRent && marketRent < input.currentRent) {
     recommendations.push('Current rent is above market - consider competitive pricing');
   }
   

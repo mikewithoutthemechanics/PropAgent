@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { useLocalStorageState } from '@/lib/persistence';
+import { useAuth } from '@/lib/auth';
+import { useEntitlements } from '@/hooks/useEntitlements';
+import { getPlan, PLANS } from '@/lib/plans';
 import { 
   User, 
   Lock, 
@@ -18,18 +21,22 @@ import {
   Eye,
   EyeOff,
   Check,
-  AlertTriangle
+  AlertTriangle,
+  CreditCard,
+  ArrowUpRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 interface Tab {
   id: string;
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const tabs: Tab[] = [
   { id: 'profile', label: 'Profile', icon: User },
+  { id: 'billing', label: 'Billing', icon: CreditCard },
   { id: 'security', label: 'Security', icon: Lock },
   { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'appearance', label: 'Appearance', icon: Palette },
@@ -62,14 +69,17 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
+  const { profile: authProfile, updateProfile } = useAuth();
+  const entitlements = useEntitlements();
+  const currentPlan = getPlan(entitlements.tier);
 
   const [profile, setProfile] = useLocalStorageState<ProfileForm>('settings_profile', {
-    firstName: 'Dean',
-    lastName: 'Hodgson',
-    email: 'dean@agentloop.co.za',
-    phone: '+27827686661',
+    firstName: authProfile?.first_name || 'Dean',
+    lastName: authProfile?.last_name || 'Hodgson',
+    email: authProfile?.email || 'dean@agentloop.co.za',
+    phone: authProfile?.phone || '+27827686661',
     agencyName: 'Agent Loop Consulting',
-    ffcNumber: 'FFC-2024-001234',
+    ffcNumber: authProfile?.ffc_number || 'FFC-2024-001234',
   });
 
   const [notifications, setNotifications] = useLocalStorageState<NotificationSettings>('settings_notifications', {
@@ -94,7 +104,22 @@ export default function SettingsPage() {
     { id: '2', name: 'Development API', key: 'pk_test_xxxxx...yyyyy', created: '2024-02-01', lastUsed: '2024-03-18' },
   ]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (updateProfile) {
+      try {
+        const { error } = await updateProfile({
+          first_name: profile.firstName,
+          last_name: profile.lastName,
+          phone: profile.phone,
+          ffc_number: profile.ffcNumber,
+        });
+        if (error) {
+          console.error('Profile update failed:', error);
+        }
+      } catch {
+        // Falls back to localStorage-only if Supabase fails
+      }
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -219,6 +244,73 @@ export default function SettingsPage() {
                   {saved ? 'Saved!' : 'Save Changes'}
                 </button>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'billing' && (
+            <div className="bg-white rounded-2xl border-2 border-charcoal-100 p-6 space-y-6">
+              <h2 className="text-xl font-semibold text-charcoal-900">Billing &amp; Subscription</h2>
+
+              <div className="rounded-xl border-2 border-charcoal-100 p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-charcoal-500">Current plan</p>
+                    <p className="text-2xl font-bold text-charcoal-900">{currentPlan?.name ?? 'Starter'}</p>
+                    <p className="text-charcoal-500 text-sm mt-1">
+                      {currentPlan?.priceLabel ?? 'Free'}{currentPlan?.period ?? ''}
+                    </p>
+                  </div>
+                  <Link
+                    href="/pricing"
+                    className="flex items-center gap-1 px-4 py-2 bg-lime-400 text-charcoal-900 rounded-lg font-medium text-sm hover:bg-lime-300 transition-colors"
+                  >
+                    {entitlements.tier === 'enterprise' ? 'Manage plan' : 'Upgrade'}
+                    <ArrowUpRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-medium text-charcoal-900 mb-3">Plan limits</h3>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="rounded-lg bg-charcoal-50 p-3">
+                    <p className="text-charcoal-500">Properties</p>
+                    <p className="font-semibold text-charcoal-900">
+                      {entitlements.maxProperties === Infinity ? 'Unlimited' : `Up to ${entitlements.maxProperties}`}
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-charcoal-50 p-3">
+                    <p className="text-charcoal-500">AI Matching</p>
+                    <p className="font-semibold text-charcoal-900">
+                      {entitlements.aiMatching ? 'Enabled' : 'Not included'}
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-charcoal-50 p-3">
+                    <p className="text-charcoal-500">Advanced Analytics</p>
+                    <p className="font-semibold text-charcoal-900">
+                      {entitlements.advancedAnalytics ? 'Enabled' : 'Not included'}
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-charcoal-50 p-3">
+                    <p className="text-charcoal-500">API Access</p>
+                    <p className="font-semibold text-charcoal-900">
+                      {entitlements.apiAccess ? 'Enabled' : 'Not included'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {authProfile?.subscription_status === 'active' && (
+                <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+                  <p className="text-sm text-charcoal-700">
+                    To cancel your subscription, please email{' '}
+                    <a href="mailto:hello@agentloop.co.za" className="underline font-medium">
+                      hello@agentloop.co.za
+                    </a>{' '}
+                    or contact PayFast directly from your PayFast dashboard.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 

@@ -12,7 +12,7 @@ import { cn, formatCurrency } from '@/lib/utils';
 import { saProvinces, propertyTypes, listingTypes, propertyFeatureOptions } from '@/lib/sample-data';
 import { generateListingDescription } from '@/lib/ai-listing';
 
-interface PropertyFormProps {
+export interface PropertyFormProps {
   initialData?: Partial<PropertyFormData>;
   onSubmit: (data: PropertyFormData) => void;
   onSaveDraft?: (data: PropertyFormData) => void;

@@ -166,27 +166,32 @@ export default function DocumentsPage() {
     }
     
     const property = mockProperties.find(p => p.id === newDocument.propertyId);
+    const fileName = `${newDocument.title.toLowerCase().replace(/\s+/g, '_')}.pdf`;
+    const fileSize = Math.floor(Math.random() * 1000000) + 50000;
+    const now = new Date().toISOString();
     const doc: PropertyDocument = {
       id: newId('doc'),
       title: newDocument.title,
-      fileName: `${newDocument.title.toLowerCase().replace(/\s+/g, '_')}.pdf`,
-      fileSize: Math.floor(Math.random() * 1000000) + 50000,
+      fileName,
+      fileUrl: '',
+      fileSize,
       mimeType: 'application/pdf',
       category: newDocument.category,
       propertyId: newDocument.propertyId,
       propertyAddress: property?.address || 'Unknown',
-      uploadDate: new Date().toISOString().split('T')[0],
-      expiryDate: newDocument.expiryDate || null,
       status: 'active',
       uploadedBy: 'Current User',
-      notes: newDocument.notes || undefined,
       tenantId: newDocument.tenantId || undefined,
       tenantName: undefined,
-      startDate: new Date().toISOString().split('T')[0],
+      startDate: now.split('T')[0],
       endDate: newDocument.expiryDate || undefined,
       monthlyRent: property?.monthlyRent,
-      uploadedAt: new Date().toISOString(),
-      versions: [{ version: 1, uploadedAt: new Date().toISOString(), uploadedBy: 'Current User' }]
+      uploadedAt: now,
+      currentVersion: 1,
+      versions: [{ version: 1, uploadedAt: now, uploadedBy: 'Current User', fileName, fileSize }],
+      expiryAlertSent: false,
+      accessLevel: 'private',
+      notes: newDocument.notes || undefined,
     };
     
     addDocument(doc);

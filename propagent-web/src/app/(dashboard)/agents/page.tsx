@@ -39,7 +39,7 @@ function GlassCard({ children, hoverEffect = false, className }: { children: Rea
   );
 }
 
-function StatCard({ icon: Icon, value, label, color, delay }: { icon: React.ElementType; value: string | number; label: string; color: 'amber' | 'green' | 'gold' | 'blue' | 'purple'; delay?: number }) {
+function StatCard({ icon: Icon, value, label, color, delay }: { icon: React.ComponentType<{ className?: string }>; value: string | number; label: string; color: 'amber' | 'green' | 'gold' | 'blue' | 'purple'; delay?: number }) {
   const [visible, setVisible] = useState(false);
   
   useEffect(() => {

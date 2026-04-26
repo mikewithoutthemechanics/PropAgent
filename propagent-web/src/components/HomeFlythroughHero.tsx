@@ -14,7 +14,7 @@ import {
 } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { useScroll } from '@react-three/fiber';
+
 
 /**
  * HomeFlythroughHero
