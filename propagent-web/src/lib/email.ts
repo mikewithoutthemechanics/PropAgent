@@ -10,6 +10,7 @@
 import 'server-only';
 
 import { Resend } from 'resend';
+import { siteUrl } from '@/lib/site-url';
 
 const apiKey = process.env.RESEND_API_KEY;
 const fromEmail = process.env.RESEND_FROM_EMAIL || 'Agent Loop <onboarding@resend.dev>';
@@ -85,7 +86,7 @@ function layout(title: string, bodyHtml: string, ctaHref?: string, ctaLabel?: st
         ${cta}
       </div>
       <p style="text-align:center;color:${muted};font-size:12px;margin-top:16px;">
-        Sent by Agent Loop · <a href="https://agentloop-web-one.vercel.app" style="color:${muted};">agentloop.ai</a>
+        Sent by Agent Loop · <a href="${siteUrl()}" style="color:${muted};">agentloop.co.za</a>
       </p>
     </div>
   </body>
@@ -114,7 +115,7 @@ export function welcomeEmail({
   to,
   recipientName,
   role,
-  dashboardUrl = 'https://agentloop-web-one.vercel.app/dashboard',
+  dashboardUrl = `${siteUrl()}/dashboard`,
 }: WelcomeEmailInput): SendEmailInput {
   const body =
     role === 'agent'
@@ -274,7 +275,7 @@ export function newLeadEmail({
   leadPhone,
   propertyAddress,
   message,
-  leadsUrl = 'https://agentloop-web-one.vercel.app/leads',
+  leadsUrl = `${siteUrl()}/leads`,
 }: NewLeadEmailInput): SendEmailInput {
   const subject = `New lead: ${leadName}${propertyAddress ? ` — ${propertyAddress}` : ''}`;
   const body = `<p>Hi ${escapeHtml(agentName)},</p>

@@ -1,50 +1,57 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { redis } from '@/lib/redis';
-import { aiChat } from '@/lib/ai-client';
 import { z } from 'zod';
+import { aiLimiter, checkLimit, cacheSet } from '@/lib/redis';
+import { chatComplete } from '@/lib/openai-server';
+import { getAuthUser } from '@/lib/auth-server';
+import { apiError, apiOk, getRequestId } from '@/lib/api-response';
+import { parseJsonBody } from '@/lib/validation';
 
-const EmailIntentSchema = z.object({
+export const runtime = 'nodejs';
+
+const bodySchema = z.object({
   emailContent: z.string().min(10),
-  intentType: z.enum(['enquiry', 'complaint', 'application', 'document-request', 'general']).optional()
+  intentType: z.enum(['enquiry', 'complaint', 'application', 'document-request', 'general']).optional(),
 });
 
 export async function POST(req: Request) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    const body = await req.json();
-    const validation = EmailIntentSchema.safeParse(body);
-    if (!validation.success) return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
-    const analysisId = `INT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-    const response = await aiChat({
-      messages: [{ role: 'system', content: 'Classify email intent for property management.' },
-      { role: 'user', content: body.emailContent.substring(0, 1000) }],
-      temperature: 0.3,
-      maxTokens: 1000
-    });
-    let aiResult;
-    try {
-      aiResult = JSON.parse(response.match(/\{[\s\S]*\}/)?.[0] || { intent: 'general' });
-    } catch {
-      aiResult = { intent: 'general', confidence: 60 };
-    }
-    const result = {
-      analysisId,
-      status: 'analyzed',
-      confidence: aiResult.confidence || 70,
-      intent: aiResult.intent || 'general',
-      action: aiResult.action || 'review',
-      processingTime: Date.now() - performance.now()
-    };
-    await redis.setex(`email-intent:${Date.now()}`, 3600, JSON.stringify(result));
-    return NextResponse.json(result, { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Service unavailable' }, { status: 500 });
-  }
-}
+  const requestId = getRequestId(req);
+  const user = await getAuthUser(req);
+  if (!user) return apiError(requestId, 'unauthenticated', 401);
 
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+  const parsedBody = await parseJsonBody(req, bodySchema, requestId);
+  if ('response' in parsedBody) return parsedBody.response;
+  const { emailContent } = parsedBody.data;
+
+  const limit = await checkLimit(aiLimiter, `ai:email-intent:${user.id}`);
+  if (!limit.success) {
+    return apiError(requestId, 'rate_limited', 429, { reset: limit.reset });
+  }
+
+  const raw = await chatComplete(
+    [
+      { role: 'system', content: 'Classify the intent of this property management email. Return JSON with keys: intent ("enquiry"|"complaint"|"application"|"maintenance"|"general"), confidence (0-100), action ("auto_reply"|"forward"|"review"|"escalate"), summary (string).' },
+      { role: 'user', content: emailContent.slice(0, 1000) },
+    ],
+    { temperature: 0.3 },
+  );
+
+  let aiResult: { intent?: string; confidence?: number; action?: string; summary?: string } = {};
+  try {
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (match) aiResult = JSON.parse(match[0]);
+  } catch {
+    aiResult = {};
+  }
+
+  const analysisId = `INT-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+  const result = {
+    analysisId,
+    status: 'analyzed',
+    confidence: aiResult.confidence ?? 70,
+    intent: aiResult.intent ?? 'general',
+    action: aiResult.action ?? 'review',
+    summary: aiResult.summary ?? '',
+  };
+
+  await cacheSet(`email-intent:${analysisId}`, result, 3600);
+  return apiOk(requestId, result);
+}

@@ -10,12 +10,8 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_APP_VERSION: '1.0.0',
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // TypeScript and ESLint checks run during build.
+  // Do NOT set ignoreBuildErrors or ignoreDuringBuilds in production.
 };
 
 export default nextConfig;

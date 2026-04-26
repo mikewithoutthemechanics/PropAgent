@@ -48,6 +48,10 @@ export interface Profile {
   // Integration fields
   db_type?: string;
   db_url?: string;
+  // Subscription fields (set by PayFast ITN webhook)
+  subscription_tier?: string;
+  subscription_status?: string;
+  subscription_updated_at?: string;
 }
 
 // Demo mode flag - set to true to bypass authentication for testing

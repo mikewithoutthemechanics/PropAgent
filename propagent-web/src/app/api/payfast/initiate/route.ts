@@ -20,7 +20,7 @@ function originFrom(req: Request): string {
   const proto = h.get('x-forwarded-proto') ?? 'https';
   const host = h.get('x-forwarded-host') ?? h.get('host');
   if (host) return `${proto}://${host}`;
-  return process.env.NEXT_PUBLIC_SITE_URL || 'https://propagent-web-one.vercel.app';
+  return process.env.NEXT_PUBLIC_SITE_URL || 'https://agentloop.co.za';
 }
 
 export async function POST(req: Request) {

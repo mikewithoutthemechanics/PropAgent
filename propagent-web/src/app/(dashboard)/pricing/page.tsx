@@ -69,9 +69,8 @@ export default function PricingPage() {
           Simple, transparent pricing
         </h1>
         <p className="mt-4 text-charcoal-500 max-w-2xl mx-auto">
-          Choose the plan that fits your property management needs. All plans
-          include a 14-day free trial. Payments are processed securely by
-          PayFast.
+          Choose the plan that fits your property management needs. Payments
+          are processed securely by PayFast.
         </p>
       </div>
 
@@ -173,11 +172,11 @@ export default function PricingPage() {
           </div>
           <div>
             <h4 className="font-medium text-charcoal-900">
-              Is there a free trial?
+              How do I get started?
             </h4>
             <p className="mt-2 text-charcoal-500">
-              Yes, all paid plans include a 14-day free trial. No credit card
-              required.
+              Sign up for the free Starter plan to explore Agent Loop. Upgrade
+              to a paid plan any time to unlock advanced features.
             </p>
           </div>
           <div>

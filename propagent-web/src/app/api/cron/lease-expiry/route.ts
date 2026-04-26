@@ -7,6 +7,7 @@
 import { NextResponse } from 'next/server';
 import { sendEmail, leaseExpiryEmail } from '@/lib/email';
 import { supabaseAdmin, supabaseAdminConfigured } from '@/lib/supabase-admin';
+import { siteUrl } from '@/lib/site-url';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -106,7 +107,7 @@ export async function GET(req: Request) {
         propertyAddress: address,
         daysUntilExpiry: days,
         leaseEndDate: end.toISOString().slice(0, 10),
-        renewalUrl: 'https://agentloop-web-one.vercel.app/tenants',
+        renewalUrl: `${siteUrl()}/tenants`,
       }),
     );
     if (res.ok) sent++;
