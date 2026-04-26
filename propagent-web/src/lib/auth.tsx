@@ -16,7 +16,8 @@ const getSupabaseClient = () => {
 };
 
 // Use a cached client instance
-let supabaseClient: ReturnType<typeof createClient> | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let supabaseClient: any = null;
 
 const getClient = () => {
   if (!supabaseClient) {
@@ -182,7 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!client) return;
     
     const { data: { subscription } } = client.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (_event: string, session: Session | null) => {
         setSession(session);
         setUser(session?.user || null);
         if (session?.user) {

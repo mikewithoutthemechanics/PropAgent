@@ -1,5 +1,8 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type SpeechRecognitionCompat = any;
+
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { 
   Sparkles, 
@@ -56,7 +59,7 @@ export default function RentAIPage() {
   const [transcript, setTranscript] = useState('');
   const [interimTranscript, setInterimTranscript] = useState('');
   const [voiceError, setVoiceError] = useState<string | null>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionCompat | null>(null);
   const [speechSupported, setSpeechSupported] = useState(false);
   const [dataSource, setDataSource] = useState(getMarketDataSourceStatus());
   
@@ -64,7 +67,7 @@ export default function RentAIPage() {
   const { source: dataSourceType, name: dataSourceName } = dataSource;
   
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       setSpeechSupported(true);
       recognitionRef.current = new SpeechRecognition();
@@ -72,7 +75,7 @@ export default function RentAIPage() {
       recognitionRef.current.interimResults = true;
       recognitionRef.current.lang = 'en-US';
       
-      recognitionRef.current.onresult = (event) => {
+      recognitionRef.current.onresult = (event: any) => {
         let final = '';
         let interim = '';
         for (let i = 0; i < event.results.length; i++) {
@@ -92,7 +95,7 @@ export default function RentAIPage() {
         }
       };
       
-      recognitionRef.current.onerror = (event) => {
+      recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         setVoiceError(event.error);
         setIsListening(false);
@@ -164,7 +167,7 @@ export default function RentAIPage() {
       }
     }
     
-    const propertyTypes = ['house', 'apartment', 'townhouse', 'flat', 'room'];
+    const propertyTypes = ['house', 'apartment', 'townhouse', 'flat', 'room'] as const;
     const foundType = propertyTypes.find(t => words.includes(t));
     if (foundType) {
       setPropertyInput(prev => ({ ...prev, propertyType: foundType }));
@@ -464,7 +467,7 @@ export default function RentAIPage() {
                     <button
                       key={key}
                       type="button"
-                      onClick={() => updateField(key, !isActive)}
+                      onClick={() => updateField(key as keyof RentAnalysisInput, !isActive)}
                       className={cn(
                         "flex items-center gap-2 px-3 py-2 rounded-full border text-sm font-medium transition-all",
                         isActive 
@@ -547,7 +550,7 @@ export default function RentAIPage() {
                       )}
                       <div>
                         <p className="font-medium">{competitiveness.message}</p>
-                        <p className="text-sm text-[#525252]">{competitiveness.suggestion}</p>
+                        <p className="text-sm text-[#525252]">{competitiveness.percentage.toFixed(1)}% from market rate</p>
                       </div>
                     </div>
                   </div>
@@ -567,7 +570,7 @@ export default function RentAIPage() {
                         <MapPin className="w-4 h-4 text-[#525252]" />
                         <div>
                           <p className="text-sm font-medium">{comp.address}</p>
-                          <p className="text-xs text-[#525252]">{comp.bedrooms} bed • {comp.bathrooms} bath • {comp.sqft}sqm</p>
+                          <p className="text-xs text-[#525252]">{comp.bedrooms} bed • {comp.bathrooms} bath • {comp.distance}km</p>
                         </div>
                       </div>
                       <div className="text-right">
@@ -584,7 +587,7 @@ export default function RentAIPage() {
                 <h3 className="text-lg font-semibold mb-3">Market Insight</h3>
                 <div className="p-4 rounded-xl bg-[#D8F053]/10 border border-[#D8F053]/30">
                   <p className="">{seasonalInfo.recommendation}</p>
-                  <p className="text-sm text-[#525252] mt-2">{seasonalInfo.rationale}</p>
+                  <p className="text-sm text-[#525252] mt-2">Seasonal factor: {seasonalInfo.factor}x ({seasonalInfo.currentSeason})</p>
                 </div>
               </Card>
             </>

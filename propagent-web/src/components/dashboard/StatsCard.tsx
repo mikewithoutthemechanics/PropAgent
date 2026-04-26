@@ -39,7 +39,7 @@ export function StatsCard({ title, value, subtitle, icon: Icon, trend, className
 }
 
 interface ActivityItemProps {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   time: string;

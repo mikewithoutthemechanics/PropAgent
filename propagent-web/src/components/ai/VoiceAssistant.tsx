@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Mic, 
@@ -44,7 +46,7 @@ export function VoiceAssistant({ isOpen: externalOpen, onClose: externalClose }:
   const [commandHistory, setCommandHistory] = useState<{command: string; response: string}[]>([]);
   const [suggestedCommands, setSuggestedCommands] = useState<string[]>([]);
   const [speechSupported, setSpeechSupported] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
   const router = useRouter();
 
   const commandExamples = [

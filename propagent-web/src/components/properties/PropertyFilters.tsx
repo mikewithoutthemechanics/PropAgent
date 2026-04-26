@@ -10,7 +10,7 @@ import { Button } from '@/components/ui';
 import { cn, formatCurrency } from '@/lib/utils';
 import { saProvinces, propertyTypes, listingTypes } from '@/lib/sample-data';
 
-interface PropertyFiltersProps {
+export interface PropertyFiltersProps {
   filters: PropertyFiltersType;
   onFiltersChange: (filters: PropertyFiltersType) => void;
   onReset: () => void;

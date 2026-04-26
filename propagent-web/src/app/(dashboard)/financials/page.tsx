@@ -923,7 +923,7 @@ export default function FinancialsPage() {
                   >
                     <option value="">Select Tenant</option>
                     {mockTenants.map(tenant => (
-                      <option key={tenant.id} value={tenant.name}>{tenant.name}</option>
+                      <option key={tenant.id} value={`${tenant.firstName} ${tenant.lastName}`}>{tenant.firstName} {tenant.lastName}</option>
                     ))}
                   </select>
                 </div>

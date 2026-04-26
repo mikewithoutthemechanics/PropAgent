@@ -31,7 +31,7 @@ import Link from 'next/link';
 interface Tab {
   id: string;
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const tabs: Tab[] = [
@@ -107,12 +107,15 @@ export default function SettingsPage() {
   const handleSave = async () => {
     if (updateProfile) {
       try {
-        await updateProfile({
+        const { error } = await updateProfile({
           first_name: profile.firstName,
           last_name: profile.lastName,
           phone: profile.phone,
           ffc_number: profile.ffcNumber,
         });
+        if (error) {
+          console.error('Profile update failed:', error);
+        }
       } catch {
         // Falls back to localStorage-only if Supabase fails
       }

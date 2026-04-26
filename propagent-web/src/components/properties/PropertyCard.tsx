@@ -12,7 +12,7 @@ import { Property } from '@/types/property';
 import { formatCurrency, getStatusBadgeStyles, cn } from '@/lib/utils';
 import { Button } from '@/components/ui';
 
-interface PropertyCardProps {
+export interface PropertyCardProps {
   property: Property;
   variant?: 'default' | 'compact' | 'featured';
   onEdit?: (id: string) => void;
@@ -115,7 +115,7 @@ export function PropertyCard({
             <span className="flex items-center gap-0.5">
               <Bath className="w-3 h-3" /> {property.specs.bathrooms}
             </span>
-            {property.specs.garages > 0 && (
+            {(property.specs.garages ?? 0) > 0 && (
               <span className="flex items-center gap-0.5">
                 <Car className="w-3 h-3" /> {property.specs.garages}
               </span>
@@ -261,7 +261,7 @@ export function PropertyCard({
               <Bath className="w-4 h-4 text-gold-500" />
               <span className="font-medium">{property.specs.bathrooms}</span> Baths
             </span>
-            {property.specs.garages > 0 && (
+            {(property.specs.garages ?? 0) > 0 && (
               <span className="flex items-center gap-1.5">
                 <Car className="w-4 h-4 text-gold-500" />
                 <span className="font-medium">{property.specs.garages}</span> Garage{property.specs.garages !== 1 ? 's' : ''}

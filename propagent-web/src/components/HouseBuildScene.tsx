@@ -201,7 +201,7 @@ function House({ progressRef }: { progressRef: React.MutableRefObject<number> })
           { pos: [-1.51, 1.25, 0], scale: [0.1, 1.8, 2.2] },
           { pos: [1.51, 1.25, 0], scale: [0.1, 1.8, 2.2] },
         ].map((win, i) => (
-          <group key={i} position={win.pos}>
+          <group key={i} position={win.pos as [number, number, number]}>
             <mesh scale={win.scale as [number, number, number]}>
               <boxGeometry args={[1, 1, 1]} />
               <meshStandardMaterial 

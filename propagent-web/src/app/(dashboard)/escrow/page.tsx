@@ -64,7 +64,7 @@ function GlassCard({ children, className, hoverEffect = false }: { children: Rea
 }
 
 function StatCard({ icon: Icon, iconBg, label, value, delay = 0 }: { 
-  icon: React.ElementType; 
+  icon: React.ComponentType<{ className?: string }>; 
   iconBg: string; 
   label: string; 
   value: string | number; 

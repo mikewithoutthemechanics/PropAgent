@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef, useEffect, useState, useCallback, type ElementType } from 'react';
+import { useRef, useEffect, useState, useCallback, type ComponentType } from 'react';
 
 interface CarouselItem {
-  icon: ElementType;
+  icon: ComponentType<{ style?: React.CSSProperties; 'aria-hidden'?: string }>;
   title: string;
   desc: string;
 }

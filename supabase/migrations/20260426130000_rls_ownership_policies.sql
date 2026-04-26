@@ -1,5 +1,9 @@
 -- Add user_id ownership column to core tables and create proper RLS policies
 -- so that authenticated users can only see/modify their own data.
+--
+-- Existing rows (user_id IS NULL) remain visible via "OR user_id IS NULL" so
+-- data is not lost. A follow-up migration should backfill user_id on legacy
+-- rows and then tighten the SELECT policies to remove the NULL allowance.
 
 -- 1. Add user_id columns (nullable initially so existing rows don't break)
 ALTER TABLE public.properties ADD COLUMN IF NOT EXISTS user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE;
@@ -21,10 +25,13 @@ DROP POLICY IF EXISTS tenants_auth_read ON public.tenants;
 DROP POLICY IF EXISTS inquiries_auth_read ON public.inquiries;
 
 -- 4. Create ownership-based policies for authenticated users
+--    SELECT policies allow user_id IS NULL so pre-existing rows stay visible.
+--    INSERT/UPDATE/DELETE require exact user_id match (new data must be owned).
+
 -- Properties
 CREATE POLICY properties_own_select ON public.properties
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid() OR user_id IS NULL);
 CREATE POLICY properties_own_insert ON public.properties
   FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid());
@@ -39,7 +46,7 @@ CREATE POLICY properties_own_delete ON public.properties
 -- Tenants
 CREATE POLICY tenants_own_select ON public.tenants
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid() OR user_id IS NULL);
 CREATE POLICY tenants_own_insert ON public.tenants
   FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid());
@@ -54,7 +61,7 @@ CREATE POLICY tenants_own_delete ON public.tenants
 -- Inquiries
 CREATE POLICY inquiries_own_select ON public.inquiries
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid() OR user_id IS NULL);
 CREATE POLICY inquiries_own_insert ON public.inquiries
   FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid());
@@ -62,7 +69,7 @@ CREATE POLICY inquiries_own_insert ON public.inquiries
 -- Rent reminders
 CREATE POLICY rent_reminders_own_select ON public.rent_reminders
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid() OR user_id IS NULL);
 CREATE POLICY rent_reminders_own_insert ON public.rent_reminders
   FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid());
@@ -70,7 +77,7 @@ CREATE POLICY rent_reminders_own_insert ON public.rent_reminders
 -- Property descriptions
 CREATE POLICY property_descriptions_own_select ON public.property_descriptions
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid() OR user_id IS NULL);
 CREATE POLICY property_descriptions_own_insert ON public.property_descriptions
   FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid());
@@ -78,7 +85,7 @@ CREATE POLICY property_descriptions_own_insert ON public.property_descriptions
 -- FICA documents
 CREATE POLICY fica_documents_own_select ON public.fica_documents
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid() OR user_id IS NULL);
 CREATE POLICY fica_documents_own_insert ON public.fica_documents
   FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid());

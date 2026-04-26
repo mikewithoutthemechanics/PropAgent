@@ -520,12 +520,3 @@ export function calculateRentalYield(
   };
 }
 
-// Export all types for external use
-export type {
-  AVMCalculationInput,
-  PropertyValuation,
-  ValuationFactor,
-  ComparableSale,
-  ValueTrend,
-  NeighborhoodFactor,
-};

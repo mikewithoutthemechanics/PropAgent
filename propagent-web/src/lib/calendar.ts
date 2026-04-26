@@ -488,6 +488,7 @@ export const sampleCalendarSyncConfig: CalendarSyncConfig = {
   provider: 'google',
   googleCalendarId: 'primary',
   googleSyncEnabled: true,
+  outlookSyncEnabled: false,
   syncDirection: 'bidirectional',
   autoSync: true,
   syncInterval: 15,

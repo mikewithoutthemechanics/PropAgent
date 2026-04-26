@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Html, PerspectiveCamera, Billboard } from '@react-three/drei';
+import { Html, PerspectiveCamera, Billboard, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
@@ -78,12 +78,9 @@ function DealArc({ from, to, progress = 1 }: { from: [number, number, number]; t
     return new THREE.CatmullRomCurve3([v0, mid, v1]);
   }, [from, to]);
 
-  const points = useMemo(() => curve.getPoints(40), [curve]);
-  const geom = useMemo(() => new THREE.BufferGeometry().setFromPoints(points), [points]);
+  const points = useMemo(() => curve.getPoints(40).map(p => [p.x, p.y, p.z] as [number, number, number]), [curve]);
   return (
-    <line geometry={geom}>
-      <lineBasicMaterial color={'#7cc0f5'} linewidth={1} transparent opacity={0.35} />
-    </line>
+    <Line points={points} color="#7cc0f5" lineWidth={1} transparent opacity={0.35} />
   );
 }
 

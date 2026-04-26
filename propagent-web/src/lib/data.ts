@@ -272,7 +272,7 @@ export const mockPayments: UIPayment[] = [
 export interface UIChatMessage {
   id: string;
   senderId: string;
-  senderType: 'agent' | 'tenant' | 'ai';
+  senderType: 'agent' | 'tenant' | 'ai' | 'landlord';
   content: string;
   timestamp: string;
   read: boolean;

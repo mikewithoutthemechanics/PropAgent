@@ -255,13 +255,13 @@ function calculateBuyerBudgetScore(criteria: BuyerCriteria, propertyPrice: numbe
   return Math.max(0, 100 - ((propertyPrice - max) / max) * 100);
 }
 
-function calculateBedroomScore(criteria: BuyerCriteria, propertyBedrooms: number): number {
+function calculateBuyerBedroomScore(criteria: BuyerCriteria, propertyBedrooms: number): number {
   if (propertyBedrooms >= criteria.bedrooms) return 100;
   const diff = criteria.bedrooms - propertyBedrooms;
   return Math.max(0, 100 - diff * 25);
 }
 
-function calculateLocationScore(criteria: BuyerCriteria, propertyCity: string, propertySuburb: string): number {
+function calculateBuyerLocationScore(criteria: BuyerCriteria, propertyCity: string, propertySuburb: string): number {
   if (!criteria.location?.city && !criteria.location?.suburb) return 100;
   if (criteria.location.city === propertyCity) return 100;
   if (criteria.location.suburb === propertySuburb) return 90;
@@ -284,8 +284,8 @@ export function matchBuyersToProperties(
   
   const matches = properties.map(property => {
     const budgetScore = calculateBuyerBudgetScore(criteria, property.price);
-    const bedroomScore = calculateBedroomScore(criteria, property.bedrooms);
-    const locationScore = calculateLocationScore(criteria, property.city, property.suburb);
+    const bedroomScore = calculateBuyerBedroomScore(criteria, property.bedrooms);
+    const locationScore = calculateBuyerLocationScore(criteria, property.city, property.suburb);
     const featuresScore = calculateFeaturesScore(criteria, property.features || []);
     
     const reasons: string[] = [];
@@ -327,8 +327,8 @@ export function calculateBuyerMatchScore(criteria: BuyerCriteria, property: {
 }): number {
   const score = (
     calculateBuyerBudgetScore(criteria, property.price) * 0.35 +
-    calculateBedroomScore(criteria, property.bedrooms) * 0.25 +
-    calculateLocationScore(criteria, property.city, property.suburb) * 0.25 +
+    calculateBuyerBedroomScore(criteria, property.bedrooms) * 0.25 +
+    calculateBuyerLocationScore(criteria, property.city, property.suburb) * 0.25 +
     calculateFeaturesScore(criteria, property.features || []) * 0.15
   );
   return Math.round(score);
